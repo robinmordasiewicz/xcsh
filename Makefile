@@ -1,0 +1,235 @@
+# F5XC CLI Makefile
+#
+# Usage:
+#   make build        - Build the f5xc binary for current platform
+#   make build-all    - Build binaries for all platforms (linux/darwin/windows)
+#   make test         - Run all tests
+#   make test-unit    - Run unit tests only
+#   make test-int     - Run integration tests only
+#   make clean        - Clean build artifacts
+#   make lint         - Run linter
+#   make fmt          - Format code
+#   make install      - Install binary to GOPATH/bin
+#   make release-dry  - Test GoReleaser without publishing
+
+BINARY_NAME=f5xc
+MODULE=github.com/robinmordasiewicz/f5xc
+VERSION?=$(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
+GIT_COMMIT?=$(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+BUILD_TIME=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+LDFLAGS=-ldflags "-s -w -X ${MODULE}/cmd.Version=${VERSION} -X ${MODULE}/cmd.GitCommit=${GIT_COMMIT} -X ${MODULE}/cmd.BuildDate=${BUILD_TIME}"
+
+# Build output directory
+DIST_DIR=dist
+
+# Platforms for cross-compilation
+PLATFORMS=linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64
+
+.PHONY: all build build-all test test-unit test-int clean lint fmt install help \
+        release-dry release-snapshot verify check watch \
+        build-linux-amd64 build-linux-arm64 build-darwin-amd64 build-darwin-arm64 build-windows-amd64
+
+# Default target
+all: build
+
+# Build the binary for current platform
+build:
+	@echo "Building $(BINARY_NAME) $(VERSION)..."
+	go build $(LDFLAGS) -o $(BINARY_NAME) .
+	@echo "Build complete: $(BINARY_NAME)"
+
+# Build binaries for all platforms
+build-all: clean-dist build-linux-amd64 build-linux-arm64 build-darwin-amd64 build-darwin-arm64 build-windows-amd64
+	@echo ""
+	@echo "All builds complete:"
+	@ls -lh $(DIST_DIR)/
+	@echo ""
+	@echo "Checksums:"
+	@cd $(DIST_DIR) && shasum -a 256 * 2>/dev/null || sha256sum * 2>/dev/null || echo "Install shasum or sha256sum for checksums"
+
+# Individual platform builds
+build-linux-amd64:
+	@echo "Building for Linux (amd64)..."
+	@mkdir -p $(DIST_DIR)
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build $(LDFLAGS) -o $(DIST_DIR)/$(BINARY_NAME)-linux-amd64 .
+
+build-linux-arm64:
+	@echo "Building for Linux (arm64)..."
+	@mkdir -p $(DIST_DIR)
+	GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build $(LDFLAGS) -o $(DIST_DIR)/$(BINARY_NAME)-linux-arm64 .
+
+build-darwin-amd64:
+	@echo "Building for macOS (amd64)..."
+	@mkdir -p $(DIST_DIR)
+	GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build $(LDFLAGS) -o $(DIST_DIR)/$(BINARY_NAME)-darwin-amd64 .
+
+build-darwin-arm64:
+	@echo "Building for macOS (arm64)..."
+	@mkdir -p $(DIST_DIR)
+	GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build $(LDFLAGS) -o $(DIST_DIR)/$(BINARY_NAME)-darwin-arm64 .
+
+build-windows-amd64:
+	@echo "Building for Windows (amd64)..."
+	@mkdir -p $(DIST_DIR)
+	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build $(LDFLAGS) -o $(DIST_DIR)/$(BINARY_NAME)-windows-amd64.exe .
+
+# Run all tests
+test: build
+	@echo "Running all tests..."
+	@if [ -f ./scripts/test.sh ]; then \
+		./scripts/test.sh; \
+	else \
+		go test -v ./pkg/...; \
+	fi
+
+# Run unit tests only
+test-unit:
+	@echo "Running unit tests..."
+	go test -v -race ./pkg/...
+
+# Run integration tests only (requires environment variables)
+test-int: build
+	@echo "Running integration tests..."
+	@if [ -z "$(F5XC_API_URL)" ]; then \
+		echo "Error: F5XC_API_URL not set"; \
+		echo ""; \
+		echo "Set these environment variables:"; \
+		echo "  export F5XC_API_URL=\"https://tenant.staging.volterra.us\""; \
+		echo "  export F5XC_API_P12_FILE=\"/path/to/cert.p12\""; \
+		echo "  export F5XC_P12_PASSWORD=\"password\""; \
+		exit 1; \
+	fi
+	VES_P12_PASSWORD="$(F5XC_P12_PASSWORD)" go test -v ./tests/integration/...
+
+# Run tests with coverage
+test-coverage: build
+	@echo "Running tests with coverage..."
+	go test -coverprofile=coverage.out -race ./pkg/...
+	go tool cover -html=coverage.out -o coverage.html
+	@echo "Coverage report: coverage.html"
+
+# Clean build artifacts
+clean: clean-dist
+	@echo "Cleaning..."
+	rm -f $(BINARY_NAME)
+	rm -f coverage.out coverage.html
+
+clean-dist:
+	@rm -rf $(DIST_DIR)/
+
+# Format code
+fmt:
+	@echo "Formatting code..."
+	go fmt ./...
+
+# Run linter (requires golangci-lint)
+lint:
+	@echo "Running linter..."
+	@if command -v golangci-lint > /dev/null; then \
+		golangci-lint run --timeout=5m; \
+	else \
+		echo "golangci-lint not installed. Install with:"; \
+		echo "  brew install golangci-lint"; \
+		echo "  # or"; \
+		echo "  go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest"; \
+	fi
+
+# Install binary to GOPATH/bin
+install: build
+	@echo "Installing $(BINARY_NAME)..."
+	@if [ -z "$(GOPATH)" ]; then \
+		echo "GOPATH not set, installing to ~/go/bin"; \
+		mkdir -p ~/go/bin; \
+		cp $(BINARY_NAME) ~/go/bin/; \
+		echo "Installed to ~/go/bin/$(BINARY_NAME)"; \
+	else \
+		cp $(BINARY_NAME) $(GOPATH)/bin/; \
+		echo "Installed to $(GOPATH)/bin/$(BINARY_NAME)"; \
+	fi
+
+# Verify code compiles
+verify:
+	@echo "Verifying code..."
+	go build ./...
+	go vet ./...
+
+# Run quick validation (format, vet, test)
+check: fmt verify test-unit
+	@echo "All checks passed!"
+
+# GoReleaser: dry run (test release without publishing)
+release-dry:
+	@echo "Running GoReleaser dry run..."
+	@if command -v goreleaser > /dev/null; then \
+		goreleaser check && \
+		goreleaser release --snapshot --skip=publish --clean; \
+	else \
+		echo "goreleaser not installed. Install with:"; \
+		echo "  brew install goreleaser"; \
+		echo "  # or"; \
+		echo "  go install github.com/goreleaser/goreleaser@latest"; \
+	fi
+
+# GoReleaser: snapshot build
+release-snapshot:
+	@echo "Building snapshot release..."
+	@if command -v goreleaser > /dev/null; then \
+		goreleaser release --snapshot --clean; \
+	else \
+		echo "goreleaser not installed. Install with:"; \
+		echo "  brew install goreleaser"; \
+	fi
+
+# Development helper - rebuild on changes (requires fswatch)
+watch:
+	@if command -v fswatch > /dev/null; then \
+		fswatch -o . -e ".*" -i "\\.go$$" | xargs -n1 -I{} make build; \
+	else \
+		echo "fswatch not installed. Install with: brew install fswatch"; \
+	fi
+
+# Show version info
+version:
+	@echo "Version: $(VERSION)"
+	@echo "Git Commit: $(GIT_COMMIT)"
+	@echo "Build Time: $(BUILD_TIME)"
+
+# Show help
+help:
+	@echo "F5XC CLI Makefile"
+	@echo ""
+	@echo "Build Commands:"
+	@echo "  make build          - Build binary for current platform"
+	@echo "  make build-all      - Build binaries for all platforms (linux/darwin/windows)"
+	@echo "  make install        - Install binary to GOPATH/bin"
+	@echo "  make clean          - Clean build artifacts"
+	@echo ""
+	@echo "Test Commands:"
+	@echo "  make test           - Run all tests"
+	@echo "  make test-unit      - Run unit tests only"
+	@echo "  make test-int       - Run integration tests (requires env vars)"
+	@echo "  make test-coverage  - Run tests with coverage report"
+	@echo ""
+	@echo "Quality Commands:"
+	@echo "  make fmt            - Format code"
+	@echo "  make lint           - Run linter"
+	@echo "  make verify         - Verify code compiles"
+	@echo "  make check          - Run all checks (fmt, vet, test)"
+	@echo ""
+	@echo "Release Commands:"
+	@echo "  make release-dry    - Test GoReleaser without publishing"
+	@echo "  make release-snapshot - Build snapshot release"
+	@echo "  make version        - Show version info"
+	@echo ""
+	@echo "Development Commands:"
+	@echo "  make watch          - Rebuild on file changes"
+	@echo ""
+	@echo "Environment Variables (for integration tests):"
+	@echo "  F5XC_API_URL        - API URL"
+	@echo "  F5XC_API_P12_FILE   - Path to P12 certificate bundle"
+	@echo "  F5XC_P12_PASSWORD   - Password for P12 bundle"
+	@echo ""
+	@echo "Creating a Release:"
+	@echo "  1. Update version: git tag v1.0.0"
+	@echo "  2. Push tag: git push origin v1.0.0"
+	@echo "  3. GitHub Actions will automatically build and publish"
