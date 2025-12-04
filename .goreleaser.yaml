@@ -1,0 +1,139 @@
+# GoReleaser configuration for f5xc CLI
+# Documentation: https://goreleaser.com
+
+version: 2
+
+project_name: f5xc
+
+before:
+  hooks:
+    - go mod tidy
+    - go generate ./...
+
+builds:
+  - id: f5xc
+    binary: f5xc
+    main: .
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s -w
+      - -X github.com/robinmordasiewicz/f5xc/cmd.Version={{.Version}}
+      - -X github.com/robinmordasiewicz/f5xc/cmd.GitCommit={{.Commit}}
+      - -X github.com/robinmordasiewicz/f5xc/cmd.BuildDate={{.Date}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+archives:
+  - id: default
+    format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- .Os }}_
+      {{- .Arch }}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE*
+
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-dev"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
+      - "^ci:"
+      - Merge pull request
+      - Merge branch
+  groups:
+    - title: "New Features"
+      regexp: '^.*?feat(\([[:word:]]+\))??!?:.+$'
+      order: 0
+    - title: "Bug Fixes"
+      regexp: '^.*?fix(\([[:word:]]+\))??!?:.+$'
+      order: 1
+    - title: "Performance Improvements"
+      regexp: '^.*?perf(\([[:word:]]+\))??!?:.+$'
+      order: 2
+    - title: "Other Changes"
+      order: 999
+
+release:
+  github:
+    owner: robinmordasiewicz
+    name: vesctl
+  draft: false
+  prerelease: auto
+  mode: replace
+  header: |
+    ## F5XC CLI {{ .Version }}
+
+    ### Installation
+
+    **macOS (Apple Silicon)**
+    ```bash
+    curl -LO https://github.com/robinmordasiewicz/vesctl/releases/download/{{ .Tag }}/f5xc_{{ .Version }}_darwin_arm64.tar.gz
+    tar -xzf f5xc_{{ .Version }}_darwin_arm64.tar.gz
+    sudo mv f5xc /usr/local/bin/
+    ```
+
+    **macOS (Intel)**
+    ```bash
+    curl -LO https://github.com/robinmordasiewicz/vesctl/releases/download/{{ .Tag }}/f5xc_{{ .Version }}_darwin_amd64.tar.gz
+    tar -xzf f5xc_{{ .Version }}_darwin_amd64.tar.gz
+    sudo mv f5xc /usr/local/bin/
+    ```
+
+    **Linux (amd64)**
+    ```bash
+    curl -LO https://github.com/robinmordasiewicz/vesctl/releases/download/{{ .Tag }}/f5xc_{{ .Version }}_linux_amd64.tar.gz
+    tar -xzf f5xc_{{ .Version }}_linux_amd64.tar.gz
+    sudo mv f5xc /usr/local/bin/
+    ```
+
+    **Linux (arm64)**
+    ```bash
+    curl -LO https://github.com/robinmordasiewicz/vesctl/releases/download/{{ .Tag }}/f5xc_{{ .Version }}_linux_arm64.tar.gz
+    tar -xzf f5xc_{{ .Version }}_linux_arm64.tar.gz
+    sudo mv f5xc /usr/local/bin/
+    ```
+
+    **Windows**
+    Download `f5xc_{{ .Version }}_windows_amd64.zip` and extract to your PATH.
+  footer: |
+    **Full Changelog**: https://github.com/robinmordasiewicz/vesctl/compare/{{ .PreviousTag }}...{{ .Tag }}
+
+# Homebrew tap (optional - uncomment to enable)
+# brews:
+#   - name: f5xc
+#     repository:
+#       owner: robinmordasiewicz
+#       name: homebrew-tap
+#     homepage: https://github.com/robinmordasiewicz/vesctl
+#     description: F5 Distributed Cloud CLI
+#     license: Apache-2.0
+#     install: |
+#       bin.install "f5xc"
+#     test: |
+#       system "#{bin}/f5xc", "version"
