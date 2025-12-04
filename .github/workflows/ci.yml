@@ -89,19 +89,19 @@ jobs:
           mkdir -p dist
 
           # Linux amd64
-          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/f5xc-linux-amd64 .
+          GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o dist/vesctl-linux-amd64 .
 
           # Linux arm64
-          GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o dist/f5xc-linux-arm64 .
+          GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o dist/vesctl-linux-arm64 .
 
           # macOS amd64
-          GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o dist/f5xc-darwin-amd64 .
+          GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o dist/vesctl-darwin-amd64 .
 
           # macOS arm64
-          GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o dist/f5xc-darwin-arm64 .
+          GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o dist/vesctl-darwin-arm64 .
 
           # Windows amd64
-          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/f5xc-windows-amd64.exe .
+          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o dist/vesctl-windows-amd64.exe .
 
       - name: List built binaries
         run: ls -la dist/

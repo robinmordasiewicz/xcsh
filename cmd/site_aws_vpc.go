@@ -133,7 +133,7 @@ func init() {
 	// Delete command
 	awsVPCDeleteCmd.Flags().StringVar(&awsVPCFlags.name, "name", "", "Site name (required)")
 	awsVPCDeleteCmd.Flags().StringVarP(&awsVPCFlags.namespace, "namespace", "n", "system", "Namespace")
-	awsVPCDeleteCmd.MarkFlagRequired("name")
+	_ = awsVPCDeleteCmd.MarkFlagRequired("name")
 	awsVPCCmd.AddCommand(awsVPCDeleteCmd)
 
 	// Replace command
@@ -145,7 +145,7 @@ func init() {
 	// Get command
 	awsVPCGetCmd.Flags().StringVar(&awsVPCFlags.name, "name", "", "Site name (required)")
 	awsVPCGetCmd.Flags().StringVarP(&awsVPCFlags.namespace, "namespace", "n", "system", "Namespace")
-	awsVPCGetCmd.MarkFlagRequired("name")
+	_ = awsVPCGetCmd.MarkFlagRequired("name")
 	awsVPCCmd.AddCommand(awsVPCGetCmd)
 
 	// Run (Terraform) command
@@ -155,7 +155,7 @@ func init() {
 	awsVPCRunCmd.Flags().StringVar(&awsVPCFlags.terraformDir, "terraform-dir", "", "Directory for Terraform files (default: temp dir)")
 	awsVPCRunCmd.Flags().BoolVar(&awsVPCFlags.autoApprove, "auto-approve", false, "Auto-approve Terraform apply/destroy")
 	awsVPCRunCmd.Flags().BoolVar(&awsVPCFlags.wait, "wait", true, "Wait for operation to complete")
-	awsVPCRunCmd.MarkFlagRequired("name")
+	_ = awsVPCRunCmd.MarkFlagRequired("name")
 	awsVPCCmd.AddCommand(awsVPCRunCmd)
 }
 

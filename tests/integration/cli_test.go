@@ -136,7 +136,7 @@ func TestCLI_ConfigureShow(t *testing.T) {
 	cmd.Stderr = &stderr
 
 	// This may fail if no config exists, which is OK
-	cmd.Run()
+	_ = cmd.Run()
 
 	// Just verify it runs without crashing
 	t.Log("Configure show executed")

@@ -26,8 +26,8 @@ func TestAuthentication_P12Bundle(t *testing.T) {
 	}
 
 	// Set password env var for client
-	os.Setenv("VES_P12_PASSWORD", p12Password)
-	defer os.Unsetenv("VES_P12_PASSWORD")
+	_ = os.Setenv("VES_P12_PASSWORD", p12Password)
+	defer func() { _ = os.Unsetenv("VES_P12_PASSWORD") }()
 
 	cfg := &client.Config{
 		ServerURLs:         []string{apiURL},
@@ -80,8 +80,8 @@ func TestAuthentication_Whoami(t *testing.T) {
 		t.Skipf("P12 file not found at %s", p12File)
 	}
 
-	os.Setenv("VES_P12_PASSWORD", p12Password)
-	defer os.Unsetenv("VES_P12_PASSWORD")
+	_ = os.Setenv("VES_P12_PASSWORD", p12Password)
+	defer func() { _ = os.Unsetenv("VES_P12_PASSWORD") }()
 
 	cfg := &client.Config{
 		ServerURLs:         []string{apiURL},
@@ -132,13 +132,13 @@ func TestAuthentication_InvalidP12(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to create temp file: %v", err)
 	}
-	defer os.Remove(tmpFile.Name())
+	defer func() { _ = os.Remove(tmpFile.Name()) }()
 
-	tmpFile.Write([]byte("not a valid p12 bundle"))
-	tmpFile.Close()
+	_, _ = tmpFile.Write([]byte("not a valid p12 bundle"))
+	_ = tmpFile.Close()
 
-	os.Setenv("VES_P12_PASSWORD", "dummy")
-	defer os.Unsetenv("VES_P12_PASSWORD")
+	_ = os.Setenv("VES_P12_PASSWORD", "dummy")
+	defer func() { _ = os.Unsetenv("VES_P12_PASSWORD") }()
 
 	cfg := &client.Config{
 		ServerURLs:         []string{apiURL},
@@ -167,8 +167,8 @@ func TestAuthentication_WrongPassword(t *testing.T) {
 	}
 
 	// Set wrong password
-	os.Setenv("VES_P12_PASSWORD", "wrong-password-12345")
-	defer os.Unsetenv("VES_P12_PASSWORD")
+	_ = os.Setenv("VES_P12_PASSWORD", "wrong-password-12345")
+	defer func() { _ = os.Unsetenv("VES_P12_PASSWORD") }()
 
 	cfg := &client.Config{
 		ServerURLs:         []string{apiURL},
@@ -198,7 +198,7 @@ func TestAuthentication_MissingPassword(t *testing.T) {
 	}
 
 	// Ensure password is not set
-	os.Unsetenv("VES_P12_PASSWORD")
+	_ = os.Unsetenv("VES_P12_PASSWORD")
 
 	cfg := &client.Config{
 		ServerURLs:         []string{apiURL},

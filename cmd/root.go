@@ -131,13 +131,13 @@ func init() {
 	pf.BoolVar(&noWait, "no-wait", false, "Do not wait for long-running operations to finish")
 	pf.BoolVar(&insecure, "insecure", false, "Skip TLS certificate verification (use for staging/testing)")
 
-	// Bind flags to viper
-	viper.BindPFlag("server-urls", pf.Lookup("server-urls"))
-	viper.BindPFlag("cert", pf.Lookup("cert"))
-	viper.BindPFlag("key", pf.Lookup("key"))
-	viper.BindPFlag("cacert", pf.Lookup("cacert"))
-	viper.BindPFlag("p12-bundle", pf.Lookup("p12-bundle"))
-	viper.BindPFlag("output", pf.Lookup("output"))
+	// Bind flags to viper (errors are ignored as flags are guaranteed to exist)
+	_ = viper.BindPFlag("server-urls", pf.Lookup("server-urls"))
+	_ = viper.BindPFlag("cert", pf.Lookup("cert"))
+	_ = viper.BindPFlag("key", pf.Lookup("key"))
+	_ = viper.BindPFlag("cacert", pf.Lookup("cacert"))
+	_ = viper.BindPFlag("p12-bundle", pf.Lookup("p12-bundle"))
+	_ = viper.BindPFlag("output", pf.Lookup("output"))
 }
 
 // initConfig reads in config file and ENV variables if set.

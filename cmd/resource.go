@@ -73,7 +73,7 @@ func buildListCommand(rt *types.ResourceType) *cobra.Command {
 
 	if rt.SupportsNamespace {
 		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", "", "Namespace (required)")
-		cmd.MarkFlagRequired("namespace")
+		_ = cmd.MarkFlagRequired("namespace")
 	}
 
 	return cmd
@@ -101,7 +101,7 @@ func buildShowCommand(rt *types.ResourceType) *cobra.Command {
 
 	if rt.SupportsNamespace {
 		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", "", "Namespace (required)")
-		cmd.MarkFlagRequired("namespace")
+		_ = cmd.MarkFlagRequired("namespace")
 	}
 
 	return cmd
@@ -126,7 +126,7 @@ func buildCreateCommand(rt *types.ResourceType) *cobra.Command {
 
 	cmd.Flags().StringVarP(&flags.file, "file", "f", "", "Path to resource definition file (YAML or JSON)")
 	cmd.Flags().StringVarP(&flags.file, "input-file", "i", "", "Path to resource definition file (vesctl compatible)")
-	cmd.MarkFlagRequired("file")
+	_ = cmd.MarkFlagRequired("file")
 
 	if rt.SupportsNamespace {
 		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", "", "Namespace (overrides file)")
@@ -155,7 +155,7 @@ func buildUpdateCommand(rt *types.ResourceType) *cobra.Command {
 
 	cmd.Flags().StringVarP(&flags.file, "file", "f", "", "Path to resource definition file (YAML or JSON)")
 	cmd.Flags().StringVarP(&flags.file, "input-file", "i", "", "Path to resource definition file (vesctl compatible)")
-	cmd.MarkFlagRequired("file")
+	_ = cmd.MarkFlagRequired("file")
 
 	if rt.SupportsNamespace {
 		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", "", "Namespace (overrides file)")
@@ -186,7 +186,7 @@ func buildDeleteCommand(rt *types.ResourceType) *cobra.Command {
 
 	if rt.SupportsNamespace {
 		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", "", "Namespace (required)")
-		cmd.MarkFlagRequired("namespace")
+		_ = cmd.MarkFlagRequired("namespace")
 	}
 
 	cmd.Flags().BoolVarP(&flags.yes, "yes", "y", false, "Skip confirmation prompt")
@@ -214,7 +214,7 @@ func buildStatusCommand(rt *types.ResourceType) *cobra.Command {
 
 	if rt.SupportsNamespace {
 		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", "", "Namespace (required)")
-		cmd.MarkFlagRequired("namespace")
+		_ = cmd.MarkFlagRequired("namespace")
 	}
 
 	return cmd
@@ -398,7 +398,7 @@ func runDelete(rt *types.ResourceType, flags *resourceFlags) error {
 	if !flags.yes {
 		fmt.Printf("Are you sure you want to delete %s '%s'? [y/N]: ", rt.CLIName, flags.name)
 		var confirm string
-		fmt.Scanln(&confirm)
+		_, _ = fmt.Scanln(&confirm)
 		if confirm != "y" && confirm != "Y" && confirm != "yes" {
 			output.PrintInfo("Deletion cancelled")
 			return nil

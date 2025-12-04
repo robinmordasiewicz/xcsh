@@ -103,14 +103,14 @@ func (f *Formatter) formatTable(data interface{}) error {
 	w := tabwriter.NewWriter(f.writer, 0, 0, 2, ' ', 0)
 
 	// Print headers
-	fmt.Fprintln(w, strings.Join(headers, "\t"))
+	_, _ = fmt.Fprintln(w, strings.Join(headers, "\t"))
 
 	// Print separator
 	separators := make([]string, len(headers))
 	for i, h := range headers {
 		separators[i] = strings.Repeat("-", len(h))
 	}
-	fmt.Fprintln(w, strings.Join(separators, "\t"))
+	_, _ = fmt.Fprintln(w, strings.Join(separators, "\t"))
 
 	// Print rows
 	for _, row := range rows {
@@ -120,7 +120,7 @@ func (f *Formatter) formatTable(data interface{}) error {
 				values[i] = formatValue(v)
 			}
 		}
-		fmt.Fprintln(w, strings.Join(values, "\t"))
+		_, _ = fmt.Fprintln(w, strings.Join(values, "\t"))
 	}
 
 	return w.Flush()
@@ -140,7 +140,7 @@ func (f *Formatter) formatTSV(data interface{}) error {
 				values[i] = formatValue(v)
 			}
 		}
-		fmt.Fprintln(f.writer, strings.Join(values, "\t"))
+		_, _ = fmt.Fprintln(f.writer, strings.Join(values, "\t"))
 	}
 
 	return nil

@@ -41,7 +41,7 @@ func TestClient_Get(t *testing.T) {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+		_ = json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 	}))
 	defer server.Close()
 
@@ -100,7 +100,7 @@ func TestClient_Post(t *testing.T) {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(map[string]interface{}{
+		_ = json.NewEncoder(w).Encode(map[string]interface{}{
 			"metadata": map[string]string{"name": "test-resource"},
 			"spec":     map[string]string{},
 		})
@@ -141,7 +141,7 @@ func TestClient_Put(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]string{"updated": "true"})
+		_ = json.NewEncoder(w).Encode(map[string]string{"updated": "true"})
 	}))
 	defer server.Close()
 
@@ -204,7 +204,7 @@ func TestClient_Patch(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(map[string]string{"patched": "true"})
+		_ = json.NewEncoder(w).Encode(map[string]string{"patched": "true"})
 	}))
 	defer server.Close()
 
@@ -240,7 +240,7 @@ func TestClient_QueryParameters(t *testing.T) {
 		}
 
 		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode([]string{})
+		_ = json.NewEncoder(w).Encode([]string{})
 	}))
 	defer server.Close()
 
@@ -323,7 +323,7 @@ func TestClient_ErrorResponse(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]string{
+		_ = json.NewEncoder(w).Encode(map[string]string{
 			"error":   "bad_request",
 			"message": "Invalid parameter",
 		})

@@ -135,7 +135,7 @@ func init() {
 	// Delete command
 	azureVNetDeleteCmd.Flags().StringVar(&azureVNetFlags.name, "name", "", "Site name (required)")
 	azureVNetDeleteCmd.Flags().StringVarP(&azureVNetFlags.namespace, "namespace", "n", "system", "Namespace")
-	azureVNetDeleteCmd.MarkFlagRequired("name")
+	_ = azureVNetDeleteCmd.MarkFlagRequired("name")
 	azureVNetCmd.AddCommand(azureVNetDeleteCmd)
 
 	// Replace command
@@ -147,7 +147,7 @@ func init() {
 	// Get command
 	azureVNetGetCmd.Flags().StringVar(&azureVNetFlags.name, "name", "", "Site name (required)")
 	azureVNetGetCmd.Flags().StringVarP(&azureVNetFlags.namespace, "namespace", "n", "system", "Namespace")
-	azureVNetGetCmd.MarkFlagRequired("name")
+	_ = azureVNetGetCmd.MarkFlagRequired("name")
 	azureVNetCmd.AddCommand(azureVNetGetCmd)
 
 	// Run (Terraform) command
@@ -157,7 +157,7 @@ func init() {
 	azureVNetRunCmd.Flags().StringVar(&azureVNetFlags.terraformDir, "terraform-dir", "", "Directory for Terraform files (default: temp dir)")
 	azureVNetRunCmd.Flags().BoolVar(&azureVNetFlags.autoApprove, "auto-approve", false, "Auto-approve Terraform apply/destroy")
 	azureVNetRunCmd.Flags().BoolVar(&azureVNetFlags.wait, "wait", true, "Wait for operation to complete")
-	azureVNetRunCmd.MarkFlagRequired("name")
+	_ = azureVNetRunCmd.MarkFlagRequired("name")
 	azureVNetCmd.AddCommand(azureVNetRunCmd)
 }
 

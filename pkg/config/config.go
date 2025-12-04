@@ -10,16 +10,16 @@ import (
 // Config represents the vesctl configuration file structure
 type Config struct {
 	// ServerURLs are the API server endpoints
-	ServerURLs []string `yaml:"-"`
+	ServerURLs []string `yaml:"server-urls"`
 
 	// P12Bundle is the path to the P12 certificate bundle
-	P12Bundle string `yaml:"p12-bundle"`
+	P12Bundle string `yaml:"p12-bundle,omitempty"`
 
 	// Cert is the path to the client certificate file
-	Cert string `yaml:"cert"`
+	Cert string `yaml:"cert,omitempty"`
 
 	// Key is the path to the client key file
-	Key string `yaml:"key"`
+	Key string `yaml:"key,omitempty"`
 }
 
 // rawConfig is used for flexible YAML parsing (supports both single string and array)

@@ -159,8 +159,8 @@ func init() {
 	buildBlindfoldBundleCmd.Flags().StringVar(&buildBundleFlags.namespace, "namespace", "default", "Kubernetes namespace")
 	buildBlindfoldBundleCmd.Flags().StringVar(&buildBundleFlags.dataFile, "data", "", "File containing secret data to encrypt")
 	buildBlindfoldBundleCmd.Flags().StringVar(&buildBundleFlags.outfile, "outfile", "", "Output file for the bundle")
-	buildBlindfoldBundleCmd.MarkFlagRequired("name")
-	buildBlindfoldBundleCmd.MarkFlagRequired("data")
+	_ = buildBlindfoldBundleCmd.MarkFlagRequired("name")
+	_ = buildBlindfoldBundleCmd.MarkFlagRequired("data")
 	secretsCmd.AddCommand(buildBlindfoldBundleCmd)
 }
 

@@ -276,10 +276,6 @@ func buildPolicyFromFlags() *ServicePolicy {
 
 	// Client selector
 	if controlFlags.srcService != "" {
-		srcNs := controlFlags.srcNamespace
-		if srcNs == "" {
-			srcNs = controlFlags.namespace
-		}
 		rule.Spec.ClientSelector = &ClientSelector{
 			Expressions: []string{
 				fmt.Sprintf("service.metadata.name in {%q}", controlFlags.srcService),

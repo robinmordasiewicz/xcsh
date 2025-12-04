@@ -24,7 +24,7 @@ func getTestClient(t *testing.T) *client.Client {
 		t.Skipf("P12 file not found at %s", p12File)
 	}
 
-	os.Setenv("VES_P12_PASSWORD", p12Password)
+	_ = os.Setenv("VES_P12_PASSWORD", p12Password)
 
 	cfg := &client.Config{
 		ServerURLs:         []string{apiURL},

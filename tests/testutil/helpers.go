@@ -53,26 +53,26 @@ func SetupTestEnv(cfg *TestConfig) func() {
 	origPass := os.Getenv("VES_P12_PASSWORD")
 
 	// Set test values
-	os.Setenv("F5XC_API_URL", cfg.APIURL)
-	os.Setenv("F5XC_API_P12_FILE", cfg.P12File)
-	os.Setenv("VES_P12_PASSWORD", cfg.P12Password)
+	_ = os.Setenv("F5XC_API_URL", cfg.APIURL)
+	_ = os.Setenv("F5XC_API_P12_FILE", cfg.P12File)
+	_ = os.Setenv("VES_P12_PASSWORD", cfg.P12Password)
 
 	// Return cleanup function
 	return func() {
 		if origURL != "" {
-			os.Setenv("F5XC_API_URL", origURL)
+			_ = os.Setenv("F5XC_API_URL", origURL)
 		} else {
-			os.Unsetenv("F5XC_API_URL")
+			_ = os.Unsetenv("F5XC_API_URL")
 		}
 		if origP12 != "" {
-			os.Setenv("F5XC_API_P12_FILE", origP12)
+			_ = os.Setenv("F5XC_API_P12_FILE", origP12)
 		} else {
-			os.Unsetenv("F5XC_API_P12_FILE")
+			_ = os.Unsetenv("F5XC_API_P12_FILE")
 		}
 		if origPass != "" {
-			os.Setenv("VES_P12_PASSWORD", origPass)
+			_ = os.Setenv("VES_P12_PASSWORD", origPass)
 		} else {
-			os.Unsetenv("VES_P12_PASSWORD")
+			_ = os.Unsetenv("VES_P12_PASSWORD")
 		}
 	}
 }

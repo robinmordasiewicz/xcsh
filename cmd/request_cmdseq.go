@@ -66,7 +66,7 @@ func init() {
 	commandSequenceCmd.Flags().StringVarP(&cmdSeqFlags.inputFile, "input-file", "i", "", "File containing command sequence data (required)")
 	commandSequenceCmd.Flags().StringVar(&cmdSeqFlags.oldFile, "old-file", "", "File containing old command sequence data (for replace operation)")
 	commandSequenceCmd.Flags().StringVar(&cmdSeqFlags.operation, "operation", "", "Operation to perform: create, delete, replace")
-	commandSequenceCmd.MarkFlagRequired("input-file")
+	_ = commandSequenceCmd.MarkFlagRequired("input-file")
 }
 
 func runCommandSequence(cmd *cobra.Command, args []string) error {

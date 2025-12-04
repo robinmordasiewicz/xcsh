@@ -107,7 +107,7 @@ func runConfigure(cmd *cobra.Command, args []string) error {
 	// Load existing config if it exists
 	config := &ConfigFile{}
 	if data, err := os.ReadFile(configPath); err == nil {
-		yaml.Unmarshal(data, config)
+		_ = yaml.Unmarshal(data, config)
 	}
 
 	// Non-interactive mode
@@ -249,7 +249,7 @@ func runConfigureSet(cmd *cobra.Command, args []string) error {
 	// Load existing config
 	config := &ConfigFile{}
 	if data, err := os.ReadFile(configPath); err == nil {
-		yaml.Unmarshal(data, config)
+		_ = yaml.Unmarshal(data, config)
 	}
 
 	// Set the value

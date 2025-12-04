@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -821,22 +820,3 @@ func loadConfigResource(inputFile, jsonData string) (map[string]interface{}, err
 	return resource, nil
 }
 
-// getResourceTypeByName finds a resource type by its Name (underscore format)
-func getResourceTypeByName(name string) *types.ResourceType {
-	// First try exact match
-	for _, rt := range types.All() {
-		if rt.Name == name {
-			return rt
-		}
-	}
-
-	// Try with underscores converted to match
-	normalized := strings.ReplaceAll(name, "-", "_")
-	for _, rt := range types.All() {
-		if rt.Name == normalized {
-			return rt
-		}
-	}
-
-	return nil
-}

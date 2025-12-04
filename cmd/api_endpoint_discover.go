@@ -58,7 +58,7 @@ func init() {
 	discoverCmd.Flags().StringVar(&discoverFlags.timeRange, "time-range", "24h", "Time range for discovery (e.g., 1h, 24h, 7d)")
 	discoverCmd.Flags().BoolVar(&discoverFlags.includeSystem, "include-system", false, "Include system/internal endpoints")
 	discoverCmd.Flags().StringVar(&discoverFlags.format, "format", "", "Output format: table, json, yaml")
-	discoverCmd.MarkFlagRequired("namespace")
+	_ = discoverCmd.MarkFlagRequired("namespace")
 }
 
 // DiscoveredEndpoint represents a discovered API endpoint
@@ -155,19 +155,19 @@ func parseTimeRange(rangeStr string) time.Duration {
 
 	if strings.HasSuffix(rangeStr, "d") {
 		days := 1
-		fmt.Sscanf(rangeStr, "%dd", &days)
+		_, _ = fmt.Sscanf(rangeStr, "%dd", &days)
 		return time.Duration(days) * 24 * time.Hour
 	}
 
 	if strings.HasSuffix(rangeStr, "h") {
 		hours := 24
-		fmt.Sscanf(rangeStr, "%dh", &hours)
+		_, _ = fmt.Sscanf(rangeStr, "%dh", &hours)
 		return time.Duration(hours) * time.Hour
 	}
 
 	if strings.HasSuffix(rangeStr, "m") {
 		minutes := 60
-		fmt.Sscanf(rangeStr, "%dm", &minutes)
+		_, _ = fmt.Sscanf(rangeStr, "%dm", &minutes)
 		return time.Duration(minutes) * time.Minute
 	}
 
