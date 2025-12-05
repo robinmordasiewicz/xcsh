@@ -15,9 +15,9 @@ type TestConfig struct {
 // LoadTestConfig loads test configuration from environment variables
 func LoadTestConfig(t *testing.T) *TestConfig {
 	cfg := &TestConfig{
-		APIURL:      os.Getenv("F5XC_API_URL"),
-		P12File:     os.Getenv("F5XC_API_P12_FILE"),
-		P12Password: os.Getenv("F5XC_P12_PASSWORD"),
+		APIURL:      os.Getenv("VES_API_URL"),
+		P12File:     os.Getenv("VES_API_P12_FILE"),
+		P12Password: os.Getenv("VES_P12_PASSWORD"),
 	}
 
 	return cfg
@@ -28,13 +28,13 @@ func RequireIntegrationEnv(t *testing.T) *TestConfig {
 	cfg := LoadTestConfig(t)
 
 	if cfg.APIURL == "" {
-		t.Skip("F5XC_API_URL not set, skipping integration test")
+		t.Skip("VES_API_URL not set, skipping integration test")
 	}
 	if cfg.P12File == "" {
-		t.Skip("F5XC_API_P12_FILE not set, skipping integration test")
+		t.Skip("VES_API_P12_FILE not set, skipping integration test")
 	}
 	if cfg.P12Password == "" {
-		t.Skip("F5XC_P12_PASSWORD not set, skipping integration test")
+		t.Skip("VES_P12_PASSWORD not set, skipping integration test")
 	}
 
 	// Verify P12 file exists
@@ -48,26 +48,26 @@ func RequireIntegrationEnv(t *testing.T) *TestConfig {
 // SetupTestEnv sets up environment for integration tests
 func SetupTestEnv(cfg *TestConfig) func() {
 	// Store original values
-	origURL := os.Getenv("F5XC_API_URL")
-	origP12 := os.Getenv("F5XC_API_P12_FILE")
+	origURL := os.Getenv("VES_API_URL")
+	origP12 := os.Getenv("VES_API_P12_FILE")
 	origPass := os.Getenv("VES_P12_PASSWORD")
 
 	// Set test values
-	_ = os.Setenv("F5XC_API_URL", cfg.APIURL)
-	_ = os.Setenv("F5XC_API_P12_FILE", cfg.P12File)
+	_ = os.Setenv("VES_API_URL", cfg.APIURL)
+	_ = os.Setenv("VES_API_P12_FILE", cfg.P12File)
 	_ = os.Setenv("VES_P12_PASSWORD", cfg.P12Password)
 
 	// Return cleanup function
 	return func() {
 		if origURL != "" {
-			_ = os.Setenv("F5XC_API_URL", origURL)
+			_ = os.Setenv("VES_API_URL", origURL)
 		} else {
-			_ = os.Unsetenv("F5XC_API_URL")
+			_ = os.Unsetenv("VES_API_URL")
 		}
 		if origP12 != "" {
-			_ = os.Setenv("F5XC_API_P12_FILE", origP12)
+			_ = os.Setenv("VES_API_P12_FILE", origP12)
 		} else {
-			_ = os.Unsetenv("F5XC_API_P12_FILE")
+			_ = os.Unsetenv("VES_API_P12_FILE")
 		}
 		if origPass != "" {
 			_ = os.Setenv("VES_P12_PASSWORD", origPass)

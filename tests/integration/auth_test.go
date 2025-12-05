@@ -12,12 +12,12 @@ import (
 
 // TestAuthentication_P12Bundle tests authentication using P12 bundle
 func TestAuthentication_P12Bundle(t *testing.T) {
-	apiURL := os.Getenv("F5XC_API_URL")
-	p12File := os.Getenv("F5XC_API_P12_FILE")
-	p12Password := os.Getenv("F5XC_P12_PASSWORD")
+	apiURL := os.Getenv("VES_API_URL")
+	p12File := os.Getenv("VES_API_P12_FILE")
+	p12Password := os.Getenv("VES_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
-		t.Skip("Integration test environment not configured (F5XC_API_URL, F5XC_API_P12_FILE, F5XC_P12_PASSWORD)")
+		t.Skip("Integration test environment not configured (VES_API_URL, VES_API_P12_FILE, VES_P12_PASSWORD)")
 	}
 
 	// Verify P12 file exists
@@ -68,9 +68,9 @@ func TestAuthentication_P12Bundle(t *testing.T) {
 
 // TestAuthentication_Whoami tests the whoami endpoint
 func TestAuthentication_Whoami(t *testing.T) {
-	apiURL := os.Getenv("F5XC_API_URL")
-	p12File := os.Getenv("F5XC_API_P12_FILE")
-	p12Password := os.Getenv("F5XC_P12_PASSWORD")
+	apiURL := os.Getenv("VES_API_URL")
+	p12File := os.Getenv("VES_API_P12_FILE")
+	p12Password := os.Getenv("VES_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
 		t.Skip("Integration test environment not configured")
@@ -122,9 +122,9 @@ func TestAuthentication_Whoami(t *testing.T) {
 
 // TestAuthentication_InvalidP12 tests that invalid P12 fails appropriately
 func TestAuthentication_InvalidP12(t *testing.T) {
-	apiURL := os.Getenv("F5XC_API_URL")
+	apiURL := os.Getenv("VES_API_URL")
 	if apiURL == "" {
-		t.Skip("F5XC_API_URL not set")
+		t.Skip("VES_API_URL not set")
 	}
 
 	// Create a temporary invalid P12 file
@@ -155,8 +155,8 @@ func TestAuthentication_InvalidP12(t *testing.T) {
 
 // TestAuthentication_WrongPassword tests that wrong P12 password fails
 func TestAuthentication_WrongPassword(t *testing.T) {
-	apiURL := os.Getenv("F5XC_API_URL")
-	p12File := os.Getenv("F5XC_API_P12_FILE")
+	apiURL := os.Getenv("VES_API_URL")
+	p12File := os.Getenv("VES_API_P12_FILE")
 
 	if apiURL == "" || p12File == "" {
 		t.Skip("Integration test environment not configured")
@@ -186,8 +186,8 @@ func TestAuthentication_WrongPassword(t *testing.T) {
 
 // TestAuthentication_MissingPassword tests that missing P12 password fails
 func TestAuthentication_MissingPassword(t *testing.T) {
-	apiURL := os.Getenv("F5XC_API_URL")
-	p12File := os.Getenv("F5XC_API_P12_FILE")
+	apiURL := os.Getenv("VES_API_URL")
+	p12File := os.Getenv("VES_API_P12_FILE")
 
 	if apiURL == "" || p12File == "" {
 		t.Skip("Integration test environment not configured")

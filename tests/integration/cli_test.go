@@ -146,9 +146,9 @@ func TestCLI_ConfigureShow(t *testing.T) {
 func TestCLI_ListNamespaces(t *testing.T) {
 	binary := getBinaryPath(t)
 
-	apiURL := os.Getenv("F5XC_API_URL")
-	p12File := os.Getenv("F5XC_API_P12_FILE")
-	p12Password := os.Getenv("F5XC_P12_PASSWORD")
+	apiURL := os.Getenv("VES_API_URL")
+	p12File := os.Getenv("VES_API_P12_FILE")
+	p12Password := os.Getenv("VES_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
 		t.Skip("Integration test environment not configured")
@@ -175,9 +175,9 @@ func TestCLI_ListNamespaces(t *testing.T) {
 func TestCLI_HTTPLoadBalancerList(t *testing.T) {
 	binary := getBinaryPath(t)
 
-	apiURL := os.Getenv("F5XC_API_URL")
-	p12File := os.Getenv("F5XC_API_P12_FILE")
-	p12Password := os.Getenv("F5XC_P12_PASSWORD")
+	apiURL := os.Getenv("VES_API_URL")
+	p12File := os.Getenv("VES_API_P12_FILE")
+	p12Password := os.Getenv("VES_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
 		t.Skip("Integration test environment not configured")
@@ -202,9 +202,9 @@ func TestCLI_HTTPLoadBalancerList(t *testing.T) {
 func TestCLI_OutputFormatJSON(t *testing.T) {
 	binary := getBinaryPath(t)
 
-	apiURL := os.Getenv("F5XC_API_URL")
-	p12File := os.Getenv("F5XC_API_P12_FILE")
-	p12Password := os.Getenv("F5XC_P12_PASSWORD")
+	apiURL := os.Getenv("VES_API_URL")
+	p12File := os.Getenv("VES_API_P12_FILE")
+	p12Password := os.Getenv("VES_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
 		t.Skip("Integration test environment not configured")
@@ -236,9 +236,9 @@ func TestCLI_OutputFormatJSON(t *testing.T) {
 func TestCLI_OutputFormatTable(t *testing.T) {
 	binary := getBinaryPath(t)
 
-	apiURL := os.Getenv("F5XC_API_URL")
-	p12File := os.Getenv("F5XC_API_P12_FILE")
-	p12Password := os.Getenv("F5XC_P12_PASSWORD")
+	apiURL := os.Getenv("VES_API_URL")
+	p12File := os.Getenv("VES_API_P12_FILE")
+	p12Password := os.Getenv("VES_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
 		t.Skip("Integration test environment not configured")
