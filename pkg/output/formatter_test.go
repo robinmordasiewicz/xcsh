@@ -44,15 +44,15 @@ func TestNew_NoneFormat(t *testing.T) {
 
 func TestNew_EmptyDefault(t *testing.T) {
 	f := New("")
-	if f.format != FormatYAML {
-		t.Errorf("Expected YAML format as default, got %v", f.format)
+	if f.format != FormatTable {
+		t.Errorf("Expected Table format as default (matching original vesctl), got %v", f.format)
 	}
 }
 
 func TestNew_InvalidDefault(t *testing.T) {
 	f := New("invalid")
-	if f.format != FormatYAML {
-		t.Errorf("Expected YAML format for invalid input, got %v", f.format)
+	if f.format != FormatTable {
+		t.Errorf("Expected Table format for invalid input (matching original vesctl), got %v", f.format)
 	}
 }
 
@@ -152,8 +152,9 @@ func TestFormatter_FormatTable(t *testing.T) {
 	}
 
 	output := buf.String()
-	if !strings.Contains(output, "name") {
-		t.Errorf("Expected table header 'name', got: %s", output)
+	// Table format uses box-style headers: NAMESPACE | NAME | LABELS
+	if !strings.Contains(output, "NAME") {
+		t.Errorf("Expected table header 'NAME', got: %s", output)
 	}
 	if !strings.Contains(output, "resource1") {
 		t.Errorf("Expected row 'resource1', got: %s", output)
