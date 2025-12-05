@@ -3,8 +3,10 @@
 
 # Binary paths (relative to project root)
 # Original F5 proprietary binary - download with: ./claudedocs/compatibility/scripts/download-original.sh
-ORIGINAL_VESCTL="${ORIGINAL_VESCTL:-./vesctl-0.2.47-original}"
-OUR_VESCTL="${OUR_VESCTL:-./vesctl.darwin-arm64}"
+# On Linux amd64: use vesctl-0.2.35 (last working version)
+# On macOS: use vesctl-0.2.47-original (only for offline tests - has TLS bug)
+ORIGINAL_VESCTL="${ORIGINAL_VESCTL:-./vesctl-0.2.35}"
+OUR_VESCTL="${OUR_VESCTL:-./vesctl}"
 
 # Colors for output
 RED='\033[0;31m'

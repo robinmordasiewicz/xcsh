@@ -90,7 +90,12 @@ func init() {
 	// Connection settings (vesctl compatible)
 	pf.StringVarP(&cacert, "cacert", "a", "", "Server CA cert file path")
 	pf.StringVarP(&cert, "cert", "c", "", "Client cert file path")
-	pf.StringVar(&cfgFile, "config", "", "A configuration file to use for API gateway URL and credentials (default \"/Users/r.mordasiewicz/.vesconfig\")")
+	// Get default config path for help text (matches original vesctl behavior)
+	defaultConfigPath := "$HOME/.vesconfig"
+	if home, err := os.UserHomeDir(); err == nil {
+		defaultConfigPath = filepath.Join(home, ".vesconfig")
+	}
+	pf.StringVar(&cfgFile, "config", "", fmt.Sprintf("A configuration file to use for API gateway URL and credentials (default %q)", defaultConfigPath))
 	pf.BoolVar(&hardwareKey, "hardwareKey", false, "Use yubikey for TLS connection")
 	pf.StringVarP(&key, "key", "k", "", "Client key file path")
 	pf.StringVar(&outfmt, "outfmt", "", "Output format for command")

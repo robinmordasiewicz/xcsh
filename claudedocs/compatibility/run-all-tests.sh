@@ -1,7 +1,8 @@
 #!/bin/bash
 # run-all-tests.sh - Master test runner for vesctl compatibility testing
 
-set -e
+# Don't use set -e so we can continue running phases even when some fail
+# We track failures manually and exit with appropriate code at the end
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
@@ -12,6 +13,7 @@ PHASE=""
 VERBOSE=false
 WITH_API=false
 HELP=false
+OVERALL_RESULT=0  # Track if any phase failed
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -118,6 +120,7 @@ fi
 run_phase() {
     local phase=$1
     local script=$2
+    local phase_result=0
 
     if [[ -n "$PHASE" ]] && [[ "$PHASE" != "$phase" ]]; then
         return 0
@@ -130,9 +133,15 @@ run_phase() {
         echo "=========================================="
 
         if [[ "$VERBOSE" == "true" ]]; then
-            bash "$script"
+            bash "$script" || phase_result=$?
         else
-            bash "$script" 2>&1
+            bash "$script" 2>&1 || phase_result=$?
+        fi
+
+        if [[ $phase_result -ne 0 ]]; then
+            echo ""
+            echo "Phase $phase completed with failures (exit code: $phase_result)"
+            OVERALL_RESULT=1
         fi
     else
         echo "Phase $phase script not found or not executable: $script"
@@ -140,19 +149,26 @@ run_phase() {
 }
 
 # Execute phases
+# Phase 1: Configure/behavior tests (no API required)
 run_phase 1 "${SCRIPT_DIR}/tests/phase1-configure/test-configure.sh"
 
-# Phase 2-4 can be added later
+# Phase 2: Version/completion tests (no API required)
 if [[ -x "${SCRIPT_DIR}/tests/phase2-simple/test-simple.sh" ]]; then
     run_phase 2 "${SCRIPT_DIR}/tests/phase2-simple/test-simple.sh"
 fi
 
-if [[ -x "${SCRIPT_DIR}/tests/phase3-crud/test-crud.sh" ]]; then
-    run_phase 3 "${SCRIPT_DIR}/tests/phase3-crud/test-crud.sh"
+# Phase 3: Auth structure tests (no API required for test-no-api.sh)
+if [[ -x "${SCRIPT_DIR}/tests/phase3-auth-crud/test-no-api.sh" ]]; then
+    run_phase 3 "${SCRIPT_DIR}/tests/phase3-auth-crud/test-no-api.sh"
 fi
 
-if [[ -x "${SCRIPT_DIR}/tests/phase4-other/test-other.sh" ]]; then
-    run_phase 4 "${SCRIPT_DIR}/tests/phase4-other/test-other.sh"
+# Phase 4: Namespace CRUD tests (requires API credentials)
+if [[ "$WITH_API" == "true" ]]; then
+    if [[ -x "${SCRIPT_DIR}/tests/phase4-namespace/test-namespace-crud.sh" ]]; then
+        run_phase 4 "${SCRIPT_DIR}/tests/phase4-namespace/test-namespace-crud.sh"
+    else
+        echo "Phase 4 script not found: ${SCRIPT_DIR}/tests/phase4-namespace/test-namespace-crud.sh"
+    fi
 fi
 
 echo ""
@@ -164,3 +180,6 @@ echo "Results: ${SCRIPT_DIR}/results/latest/"
 echo ""
 echo "View summary:"
 echo "  cat ${SCRIPT_DIR}/results/latest/summary.md"
+
+# Exit with overall result (0 = all passed, 1 = some failed)
+exit $OVERALL_RESULT
