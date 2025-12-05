@@ -1,0 +1,21 @@
+{
+  "tracked_resources": [
+    {
+      "type": "namespace",
+      "name": "vesctl-test-ns-1764921183-1",
+      "namespace": "",
+      "created_at": "2025-12-05T07:53:14Z",
+      "deleted": true
+    },
+    {
+      "type": "namespace",
+      "name": "vesctl-test-ns-1764921183-2",
+      "namespace": "",
+      "created_at": "2025-12-05T07:53:17Z",
+      "deleted": true
+    }
+  ],
+  "orphaned_cleanup": [],
+  "test_run_id": "1764921183",
+  "started_at": "2025-12-05T07:53:03Z"
+}

@@ -1,0 +1,4 @@
+Flags:
+  -h, --help               help for delete
+  -n, --namespace string   Namespace in which to delete object (default "default")
+

@@ -1,0 +1,50 @@
+Configure the F5 Distributed Cloud CLI settings.
+
+This command helps you set up your CLI configuration including:
+  - API server URL (your tenant URL)
+  - Authentication credentials (P12 bundle or cert/key pair)
+  - Default output format
+
+The configuration is saved to ~/.vesconfig (or the path specified by --config).
+
+Usage:
+  vesctl configure [flags]
+  vesctl configure [command]
+
+Examples:
+  # Interactive configuration
+  vesctl configure
+
+  # Non-interactive configuration
+  vesctl configure --server-url https://my-tenant.console.ves.volterra.io/api \
+    --p12-bundle ~/.vesctl/my-cert.p12
+
+  # Configure with certificate and key
+  vesctl configure --server-url https://my-tenant.console.ves.volterra.io/api \
+    --cert ~/.vesctl/cert.pem --key ~/.vesctl/key.pem
+
+Available Commands:
+  set         Set a configuration value
+  show        Show current configuration
+
+Flags:
+      --cert string            Path to client certificate
+  -h, --help                   help for configure
+      --key string             Path to client key
+      --non-interactive        Run in non-interactive mode
+      --output-format string   Default output format
+      --p12-bundle string      Path to P12 certificate bundle
+      --server-url string      API server URL
+      --tenant string          Tenant name
+
+Global Flags:
+  -a, --cacert string         Server CA cert file path
+      --config string         A configuration file to use for API gateway URL and credentials (default "/Users/r.mordasiewicz/.vesconfig")
+      --hardwareKey           Use yubikey for TLS connection
+      --outfmt string         Output format for command
+  -o, --output string         Output dir for command (default "./")
+  -u, --server-urls strings   API endpoint URL (default [http://localhost:8001])
+      --show-curl             Emit requests from program in CURL format
+      --timeout int           Timeout (in seconds) for command to finish (default 5)
+
+Use "vesctl configure [command] --help" for more information about a command.

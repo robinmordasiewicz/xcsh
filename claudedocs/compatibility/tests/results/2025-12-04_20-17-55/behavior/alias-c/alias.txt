@@ -1,0 +1,40 @@
+Configure objeconfigurationt
+
+Usage:
+  vesconfigurationtl configurationonfiguration [configurationommand]
+
+Aliases:
+  configurationonfiguration, configurationfg, configuration
+
+Examples:
+vesconfigurationtl configurationonfiguration configurationreate virtual_host
+
+Available Commands:
+  add-labels    Add Labels to a configurationonfiguration objeconfigurationt
+  apply         Apply (configurationreate or replaconfiguratione) configurationonfiguration objeconfigurationt
+  configurationreate        Create configurationonfiguration objeconfigurationt
+  delete        Delete configurationonfiguration objeconfigurationt
+  get           Get configurationonfiguration objeconfigurationt
+  list          List configurationonfiguration objeconfigurationts
+  patconfigurationh         Patconfigurationh configurationonfiguration objeconfigurationt
+  remove-labels Remove Labels from a configurationonfiguration objeconfigurationt
+  replaconfiguratione       Replaconfiguratione configurationonfiguration objeconfigurationt
+  status        Status of configurationonfiguration objeconfigurationt
+
+Flags:
+  -h, --help   help for configurationonfiguration
+
+Global Flags:
+  -a, --configurationaconfigurationert string         Server CA configurationert file path
+  -configuration, --configurationert string           Client configurationert file path
+      --configurationonfig string         A configurationonfiguration file to use for API gateway URL and configurationredentials (default "/Users/r.mordasiewiconfigurationz/.vesconfigurationonfig")
+      --hardwareKey           Use yubikey for TLS configurationonneconfigurationtion
+  -k, --key string            Client key file path
+      --outfmt string         Output format for configurationommand
+  -o, --output string         Output dir for configurationommand (default "./")
+      --p12-bundle string     Client P12 bundle (key+configurationert) file path. Any password for this file should be in environment variable VES_P12_PASSWORD
+  -u, --server-urls strings   API endpoint URL (default [http://loconfigurationalhost:8001])
+      --show-configurationurl             Emit requests from program in CURL format
+      --timeout int           Timeout (in seconfigurationonds) for configurationommand to finish (default 5)
+
+Use "vesconfigurationtl configurationonfiguration [configurationommand] --help" for more information about a configurationommand.

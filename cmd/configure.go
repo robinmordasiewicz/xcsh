@@ -24,8 +24,9 @@ var configureFlags struct {
 }
 
 var configureCmd = &cobra.Command{
-	Use:   "configure",
-	Short: "Configure CLI settings",
+	Use:    "configure",
+	Short:  "Configure CLI settings",
+	Hidden: true, // Hide from help to match original vesctl
 	Long: `Configure the F5 Distributed Cloud CLI settings.
 
 This command helps you set up your CLI configuration including:
@@ -35,14 +36,14 @@ This command helps you set up your CLI configuration including:
 
 The configuration is saved to ~/.vesconfig (or the path specified by --config).`,
 	Example: `  # Interactive configuration
-  f5xc configure
+  vesctl configure
 
   # Non-interactive configuration
-  f5xc configure --server-url https://my-tenant.console.ves.volterra.io/api \
+  vesctl configure --server-url https://my-tenant.console.ves.volterra.io/api \
     --p12-bundle ~/.vesctl/my-cert.p12
 
   # Configure with certificate and key
-  f5xc configure --server-url https://my-tenant.console.ves.volterra.io/api \
+  vesctl configure --server-url https://my-tenant.console.ves.volterra.io/api \
     --cert ~/.vesctl/cert.pem --key ~/.vesctl/key.pem`,
 	RunE: runConfigure,
 }
@@ -52,7 +53,7 @@ var configureShowCmd = &cobra.Command{
 	Short: "Show current configuration",
 	Long:  `Display the current CLI configuration settings.`,
 	Example: `  # Show current configuration
-  f5xc configure show`,
+  vesctl configure show`,
 	RunE: runConfigureShow,
 }
 
@@ -68,10 +69,10 @@ Available keys:
   - key: Path to client key
   - output: Default output format (json, yaml, table)`,
 	Example: `  # Set the server URL
-  f5xc configure set server-url https://my-tenant.console.ves.volterra.io/api
+  vesctl configure set server-url https://my-tenant.console.ves.volterra.io/api
 
   # Set the default output format
-  f5xc configure set output yaml`,
+  vesctl configure set output yaml`,
 	Args: cobra.ExactArgs(2),
 	RunE: runConfigureSet,
 }
@@ -101,13 +102,57 @@ type ConfigFile struct {
 	Output     string   `yaml:"output,omitempty"`
 }
 
+// rawConfigFile is used for flexible YAML parsing (supports both single string and array for server-urls)
+type rawConfigFile struct {
+	ServerURLs interface{} `yaml:"server-urls"`
+	P12Bundle  string      `yaml:"p12-bundle"`
+	Cert       string      `yaml:"cert"`
+	Key        string      `yaml:"key"`
+	Tenant     string      `yaml:"tenant"`
+	Output     string      `yaml:"output"`
+}
+
+// parseConfigFile parses a config file with flexible server-urls format
+func parseConfigFile(data []byte) (*ConfigFile, error) {
+	var raw rawConfigFile
+	if err := yaml.Unmarshal(data, &raw); err != nil {
+		return nil, err
+	}
+
+	cfg := &ConfigFile{
+		P12Bundle: raw.P12Bundle,
+		Cert:      raw.Cert,
+		Key:       raw.Key,
+		Tenant:    raw.Tenant,
+		Output:    raw.Output,
+	}
+
+	// Handle server-urls as either single string or array
+	switch v := raw.ServerURLs.(type) {
+	case string:
+		if v != "" {
+			cfg.ServerURLs = []string{v}
+		}
+	case []interface{}:
+		for _, item := range v {
+			if s, ok := item.(string); ok {
+				cfg.ServerURLs = append(cfg.ServerURLs, s)
+			}
+		}
+	}
+
+	return cfg, nil
+}
+
 func runConfigure(cmd *cobra.Command, args []string) error {
 	configPath := getConfigPath()
 
 	// Load existing config if it exists
 	config := &ConfigFile{}
 	if data, err := os.ReadFile(configPath); err == nil {
-		_ = yaml.Unmarshal(data, config)
+		if parsed, err := parseConfigFile(data); err == nil {
+			config = parsed
+		}
 	}
 
 	// Non-interactive mode
@@ -199,18 +244,18 @@ func runConfigure(cmd *cobra.Command, args []string) error {
 func runConfigureShow(cmd *cobra.Command, args []string) error {
 	configPath := getConfigPath()
 
-	config := &ConfigFile{}
 	data, err := os.ReadFile(configPath)
 	if err != nil {
 		if os.IsNotExist(err) {
 			fmt.Printf("No configuration file found at %s\n", configPath)
-			fmt.Println("Run 'f5xc configure' to create one.")
+			fmt.Println("Run 'vesctl configure' to create one.")
 			return nil
 		}
 		return fmt.Errorf("failed to read config: %w", err)
 	}
 
-	if err := yaml.Unmarshal(data, config); err != nil {
+	config, err := parseConfigFile(data)
+	if err != nil {
 		return fmt.Errorf("failed to parse config: %w", err)
 	}
 
@@ -249,7 +294,9 @@ func runConfigureSet(cmd *cobra.Command, args []string) error {
 	// Load existing config
 	config := &ConfigFile{}
 	if data, err := os.ReadFile(configPath); err == nil {
-		_ = yaml.Unmarshal(data, config)
+		if parsed, err := parseConfigFile(data); err == nil {
+			config = parsed
+		}
 	}
 
 	// Set the value

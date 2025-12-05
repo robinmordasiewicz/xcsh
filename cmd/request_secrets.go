@@ -20,26 +20,10 @@ import (
 )
 
 var secretsCmd = &cobra.Command{
-	Use:   "secrets",
-	Short: "Secret management operations",
-	Long: `Execute secret management operations for F5 Distributed Cloud.
-
-This command group provides operations for managing secrets including:
-  - Encrypting secrets using blindfold encryption
-  - Getting public keys for encryption
-  - Getting policy documents
-  - Building Kubernetes secret bundles`,
-	Example: `  # Get the public key for encryption
-  f5xc request secrets get-public-key
-
-  # Encrypt a secret file
-  f5xc request secrets encrypt --policy-doc policy.json --public-key key.pem secret.txt
-
-  # Get policy document
-  f5xc request secrets get-policy-document
-
-  # Build a Kubernetes blindfold secret bundle
-  f5xc request secrets build-blindfold-bundle --name my-secret --data secret.txt`,
+	Use:     "secrets",
+	Short:   "Execute commands for secret_management",
+	Long:    `Execute commands for secret_management`,
+	Example: `vesctl request secrets encrypt --policy-doc temp_policy --public-key pub_key secret`,
 }
 
 // Encrypt command
@@ -51,7 +35,7 @@ var encryptFlags struct {
 
 var encryptCmd = &cobra.Command{
 	Use:   "encrypt [secret-file]",
-	Short: "Encrypt a secret using blindfold encryption",
+	Short: "Encrypt secret",
 	Long: `Encrypt a secret file using F5 XC blindfold encryption.
 
 The encryption uses the public key obtained from the F5 XC API
@@ -72,7 +56,7 @@ var getPublicKeyFlags struct {
 
 var getPublicKeyCmd = &cobra.Command{
 	Use:   "get-public-key",
-	Short: "Get the public key for secret encryption",
+	Short: "Get Public Key",
 	Long: `Retrieve the public key from F5 Distributed Cloud for encrypting secrets.
 
 The public key is used with the blindfold encryption mechanism to
@@ -88,7 +72,7 @@ encrypt secrets that can only be decrypted by the F5 XC platform.`,
 // GetPolicyDocument command
 var getPolicyDocumentCmd = &cobra.Command{
 	Use:   "get-policy-document",
-	Short: "Get the secret policy document",
+	Short: "Get Policy Document",
 	Long: `Retrieve the policy document for secret encryption from F5 Distributed Cloud.
 
 The policy document defines which services and conditions can decrypt
@@ -101,7 +85,7 @@ the encrypted secrets.`,
 // SecretInfo command
 var secretInfoCmd = &cobra.Command{
 	Use:   "secret-info [encrypted-secret-file]",
-	Short: "Display information about an encrypted secret",
+	Short: "Secret Info",
 	Long: `Parse and display information about an encrypted secret.
 
 This command reads an encrypted secret file and displays metadata
@@ -122,7 +106,7 @@ var buildBundleFlags struct {
 
 var buildBlindfoldBundleCmd = &cobra.Command{
 	Use:   "build-blindfold-bundle",
-	Short: "Build a Kubernetes blindfold secret bundle",
+	Short: "Build blindfold secret bundle for k8s secret",
 	Long: `Build a Kubernetes secret manifest with blindfold-encrypted data.
 
 This command creates a Kubernetes Secret resource with the encrypted

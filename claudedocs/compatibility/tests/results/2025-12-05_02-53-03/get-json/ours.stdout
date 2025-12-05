@@ -1,0 +1,40 @@
+{
+  "create_form": null,
+  "deleted_referred_objects": [],
+  "disabled_referred_objects": [],
+  "metadata": {
+    "annotations": {
+      "description": "Test namespace for vesctl compatibility testing"
+    },
+    "description": "",
+    "disable": false,
+    "labels": {
+      "created-by": "vesctl-test",
+      "test-type": "compatibility"
+    },
+    "name": "vesctl-test-ns-1764921183-1",
+    "namespace": ""
+  },
+  "referring_objects": [],
+  "replace_form": null,
+  "resource_version": "5214623527",
+  "spec": {},
+  "status": [],
+  "system_metadata": {
+    "creation_timestamp": "2025-12-05T07:53:14.514127916Z",
+    "creator_class": "prism",
+    "creator_id": "r.mordasiewicz@f5.com",
+    "deletion_timestamp": null,
+    "finalizers": [],
+    "initializers": {
+      "pending": [],
+      "result": null
+    },
+    "labels": {},
+    "modification_timestamp": "2025-12-05T07:53:14.588466004Z",
+    "object_index": 0,
+    "owner_view": null,
+    "tenant": "nferreira-cuxnbbdn",
+    "uid": "cb6c8735-a421-4cfa-a99a-d6819f7d6150"
+  }
+}

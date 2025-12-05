@@ -1,0 +1,4 @@
+Flags:
+  -h, --help               help for status
+  -n, --namespace string   Namespace of object (default "default")
+

@@ -1,0 +1,6 @@
+Flags:
+  -h, --help                help for apply
+  -i, --input-file string   File containing CreateRequest contents
+      --json-data string    Inline CreateRequest contents in json form
+      --mode string         Either new(create fails if object exists) or always(object replaced if it exists) (default "always")
+

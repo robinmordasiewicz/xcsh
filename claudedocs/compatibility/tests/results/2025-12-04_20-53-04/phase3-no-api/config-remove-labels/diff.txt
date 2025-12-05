@@ -1,0 +1,18 @@
+--- /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_20-53-04/phase3-no-api/config-remove-labels/original_structure.txt	2025-12-04 20:53:28.926938831 -0500
++++ /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_20-53-04/phase3-no-api/config-remove-labels/ours_structure.txt	2025-12-04 20:53:28.941822028 -0500
+@@ -3,13 +3,13 @@
+ Usage:
+ 
+ Examples:
+-vesctl configuration remove-labels virtual_host <name> --label-key acmecorp.com/attr-1
++vesctl configuration remove-labels http_loadbalancer my-lb -n my-namespace --label-key env
+ 
+ Available Commands:
+ 
+ Flags:
+   -h, --help                help for remove-labels
+-      --label-key strings   Key part of label
++      --label-key strings   Key part of label to remove
+   -n, --namespace string    Namespace of configuration object (default "default")
+ 
+ Global Flags:

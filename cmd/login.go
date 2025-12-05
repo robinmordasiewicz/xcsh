@@ -23,8 +23,9 @@ var loginFlags struct {
 }
 
 var loginCmd = &cobra.Command{
-	Use:   "login",
-	Short: "Log in to F5 Distributed Cloud",
+	Use:    "login",
+	Short:  "Log in to F5 Distributed Cloud",
+	Hidden: true, // Hide from help to match original vesctl
 	Long: `Authenticate with F5 Distributed Cloud.
 
 This command validates your credentials and saves them to the configuration file.
@@ -32,33 +33,35 @@ You can authenticate using either:
   - A P12 certificate bundle (set VES_P12_PASSWORD environment variable)
   - Certificate and key files
 
-After successful login, you can use all f5xc commands to manage your resources.`,
+After successful login, you can use all vesctl commands to manage your resources.`,
 	Example: `  # Login with P12 bundle
-  f5xc login --tenant my-tenant --p12-bundle ~/.vesctl/my-cert.p12
+  vesctl login --tenant my-tenant --p12-bundle ~/.vesctl/my-cert.p12
 
   # Login with certificate and key
-  f5xc login --tenant my-tenant --cert ~/.vesctl/cert.pem --key ~/.vesctl/key.pem
+  vesctl login --tenant my-tenant --cert ~/.vesctl/cert.pem --key ~/.vesctl/key.pem
 
   # Login (using existing configuration)
-  f5xc login`,
+  vesctl login`,
 	RunE: runLogin,
 }
 
 var logoutCmd = &cobra.Command{
-	Use:   "logout",
-	Short: "Log out from F5 Distributed Cloud",
+	Use:    "logout",
+	Short:  "Log out from F5 Distributed Cloud",
+	Hidden: true, // Hide from help to match original vesctl
 	Long:  `Clear saved credentials from the configuration file.`,
 	Example: `  # Log out
-  f5xc logout`,
+  vesctl logout`,
 	RunE: runLogout,
 }
 
 var whoamiCmd = &cobra.Command{
-	Use:   "whoami",
-	Short: "Show current user information",
+	Use:    "whoami",
+	Short:  "Show current user information",
+	Hidden: true, // Hide from help to match original vesctl
 	Long:  `Display information about the currently authenticated user.`,
 	Example: `  # Show current user
-  f5xc whoami`,
+  vesctl whoami`,
 	RunE: runWhoami,
 }
 
@@ -79,7 +82,7 @@ func runLogin(cmd *cobra.Command, args []string) error {
 	// Load existing config
 	config := &ConfigFile{}
 	if data, err := os.ReadFile(configPath); err == nil {
-		_ = yaml.Unmarshal(data, config)
+		yaml.Unmarshal(data, config)
 	}
 
 	// Update from flags
@@ -195,7 +198,7 @@ func runLogout(cmd *cobra.Command, args []string) error {
 	// Load existing config
 	config := &ConfigFile{}
 	if data, err := os.ReadFile(configPath); err == nil {
-		_ = yaml.Unmarshal(data, config)
+		yaml.Unmarshal(data, config)
 	}
 
 	// Clear credentials but keep server URL
@@ -217,7 +220,7 @@ func runLogout(cmd *cobra.Command, args []string) error {
 func runWhoami(cmd *cobra.Command, args []string) error {
 	client := GetClient()
 	if client == nil {
-		return fmt.Errorf("not logged in - run 'f5xc login' first")
+		return fmt.Errorf("not logged in - run 'vesctl login' first")
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
@@ -250,7 +253,7 @@ func runWhoami(cmd *cobra.Command, args []string) error {
 	configPath := getConfigPath()
 	config := &ConfigFile{}
 	if data, err := os.ReadFile(configPath); err == nil {
-		_ = yaml.Unmarshal(data, config)
+		yaml.Unmarshal(data, config)
 	}
 
 	userInfo := map[string]interface{}{

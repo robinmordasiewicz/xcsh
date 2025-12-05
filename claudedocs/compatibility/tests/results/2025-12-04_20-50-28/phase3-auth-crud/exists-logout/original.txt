@@ -1,0 +1,3 @@
+Error: unknown command "logout" for "vesctl"
+Run 'vesctl --help' for usage.
+unknown command "logout" for "vesctl"

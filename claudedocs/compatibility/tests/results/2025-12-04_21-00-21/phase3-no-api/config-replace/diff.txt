@@ -1,0 +1,18 @@
+--- /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_21-00-21/phase3-no-api/config-replace/original_structure.txt	2025-12-04 21:00:49.323637438 -0500
++++ /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_21-00-21/phase3-no-api/config-replace/ours_structure.txt	2025-12-04 21:00:49.337994429 -0500
+@@ -3,13 +3,13 @@
+ Usage:
+ 
+ Examples:
+-vesctl configuration replace virtual_host -i <file>
++vesctl configuration replace virtual_host -i file.yaml
+ 
+ Available Commands:
+ 
+ Flags:
+   -h, --help                help for replace
+-  -i, --input-file string   File containing ReplaceRequest content in yaml form
++  -i, --input-file string   File containing ReplaceRequest contents in yaml form
+       --json-data string    Inline ReplaceRequest contents in json form
+ 
+ Global Flags:

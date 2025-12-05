@@ -1,0 +1,5 @@
+Flags:
+  -h, --help                help for replace
+  -i, --input-file string   File containing ReplaceRequest contents in yaml form
+      --json-data string    Inline ReplaceRequest contents in json form
+

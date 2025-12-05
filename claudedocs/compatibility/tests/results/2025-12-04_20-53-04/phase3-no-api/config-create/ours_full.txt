@@ -1,0 +1,265 @@
+Create configuration object
+
+Usage:
+  vesctl configuration create [command]
+
+Examples:
+vesctl configuration create virtual_host
+
+Available Commands:
+  address_allocator                          Create address_allocator
+  advertise_policy                           Create advertise_policy
+  ai_data_bfdp_subscription                  Create ai_data_bfdp_subscription
+  alert                                      Create alert
+  alert_policy                               Create alert_policy
+  alert_receiver                             Create alert_receiver
+  api_credential                             Create api_credential
+  api_definition                             Create api_definition
+  api_group                                  Create api_group
+  api_group_element                          Create api_group_element
+  api_sec_api_crawler                        Create api_sec_api_crawler
+  api_sec_api_discovery                      Create api_sec_api_discovery
+  api_sec_api_testing                        Create api_sec_api_testing
+  api_sec_code_base_integration              Create api_sec_code_base_integration
+  app_api_group                              Create app_api_group
+  app_firewall                               Create app_firewall
+  app_setting                                Create app_setting
+  app_type                                   Create app_type
+  authentication                             Create authentication
+  aws_tgw_site                               Create aws_tgw_site
+  aws_vpc_site                               Create aws_vpc_site
+  azure_vnet_site                            Create azure_vnet_site
+  bgp                                        Create bgp
+  bgp_asn_set                                Create bgp_asn_set
+  bgp_routing_policy                         Create bgp_routing_policy
+  bigcne_data_group                          Create bigcne_data_group
+  bigcne_irule                               Create bigcne_irule
+  bigip_apm                                  Create bigip_apm
+  bigip_irule                                Create bigip_irule
+  bigip_virtual_server                       Create bigip_virtual_server
+  billing_payment_method                     Create billing_payment_method
+  billing_plan_transition                    Create billing_plan_transition
+  bot_defense_app_infrastructure             Create bot_defense_app_infrastructure
+  cdn_cache_rule                             Create cdn_cache_rule
+  cdn_loadbalancer                           Create cdn_loadbalancer
+  certificate                                Create certificate
+  certificate_chain                          Create certificate_chain
+  cloud_connect                              Create cloud_connect
+  cloud_credentials                          Create cloud_credentials
+  cloud_elastic_ip                           Create cloud_elastic_ip
+  cloud_link                                 Create cloud_link
+  cloud_region                               Create cloud_region
+  cluster                                    Create cluster
+  cminstance                                 Create cminstance
+  contact                                    Create contact
+  container_registry                         Create container_registry
+  crl                                        Create crl
+  customer_support                           Create customer_support
+  data_privacy_lma_region                    Create data_privacy_lma_region
+  data_type                                  Create data_type
+  dc_cluster_group                           Create dc_cluster_group
+  discovered_service                         Create discovered_service
+  discovery                                  Create discovery
+  dns_compliance_checks                      Create dns_compliance_checks
+  dns_domain                                 Create dns_domain
+  dns_lb_health_check                        Create dns_lb_health_check
+  dns_lb_pool                                Create dns_lb_pool
+  dns_load_balancer                          Create dns_load_balancer
+  dns_zone                                   Create dns_zone
+  dns_zone_rrset                             Create dns_zone_rrset
+  dns_zone_subscription                      Create dns_zone_subscription
+  endpoint                                   Create endpoint
+  enhanced_firewall_policy                   Create enhanced_firewall_policy
+  external_connector                         Create external_connector
+  fast_acl                                   Create fast_acl
+  fast_acl_rule                              Create fast_acl_rule
+  filter_set                                 Create filter_set
+  fleet                                      Create fleet
+  flow_anomaly                               Create flow_anomaly
+  forward_proxy_policy                       Create forward_proxy_policy
+  forwarding_class                           Create forwarding_class
+  gcp_vpc_site                               Create gcp_vpc_site
+  geo_location_set                           Create geo_location_set
+  gia                                        Create gia
+  global_log_receiver                        Create global_log_receiver
+  graph_connectivity                         Create graph_connectivity
+  graph_l3l4                                 Create graph_l3l4
+  graph_service                              Create graph_service
+  graph_site                                 Create graph_site
+  healthcheck                                Create healthcheck
+  http_loadbalancer                          Create http_loadbalancer
+  ike1                                       Create ike1
+  ike2                                       Create ike2
+  ike_phase1_profile                         Create ike_phase1_profile
+  ike_phase2_profile                         Create ike_phase2_profile
+  infraprotect                               Create infraprotect
+  infraprotect_asn                           Create infraprotect_asn
+  infraprotect_asn_prefix                    Create infraprotect_asn_prefix
+  infraprotect_deny_list_rule                Create infraprotect_deny_list_rule
+  infraprotect_firewall_rule                 Create infraprotect_firewall_rule
+  infraprotect_firewall_rule_group           Create infraprotect_firewall_rule_group
+  infraprotect_internet_prefix_advertisement Create infraprotect_internet_prefix_advertisement
+  infraprotect_tunnel                        Create infraprotect_tunnel
+  ip_prefix_set                              Create ip_prefix_set
+  k8s_cluster                                Create k8s_cluster
+  k8s_cluster_role                           Create k8s_cluster_role
+  k8s_cluster_role_binding                   Create k8s_cluster_role_binding
+  k8s_pod_security_admission                 Create k8s_pod_security_admission
+  k8s_pod_security_policy                    Create k8s_pod_security_policy
+  known_label                                Create known_label
+  known_label_key                            Create known_label_key
+  log                                        Create log
+  log_receiver                               Create log_receiver
+  malicious_user_mitigation                  Create malicious_user_mitigation
+  malware_protection_subscription            Create malware_protection_subscription
+  marketplace_aws_account                    Create marketplace_aws_account
+  marketplace_xc_saas                        Create marketplace_xc_saas
+  namespace                                  Create namespace
+  namespace_role                             Create namespace_role
+  nat_policy                                 Create nat_policy
+  network_connector                          Create network_connector
+  network_firewall                           Create network_firewall
+  network_interface                          Create network_interface
+  network_policy                             Create network_policy
+  network_policy_rule                        Create network_policy_rule
+  network_policy_set                         Create network_policy_set
+  network_policy_view                        Create network_policy_view
+  nfv_service                                Create nfv_service
+  nginx_one_nginx_csg                        Create nginx_one_nginx_csg
+  nginx_one_nginx_instance                   Create nginx_one_nginx_instance
+  nginx_one_nginx_server                     Create nginx_one_nginx_server
+  nginx_one_nginx_service_discovery          Create nginx_one_nginx_service_discovery
+  nginx_one_subscription                     Create nginx_one_subscription
+  observability_subscription                 Create observability_subscription
+  oidc_provider                              Create oidc_provider
+  operate_crl                                Create operate_crl
+  operate_debug                              Create operate_debug
+  operate_flow                               Create operate_flow
+  operate_lte                                Create operate_lte
+  operate_ping                               Create operate_ping
+  operate_route                              Create operate_route
+  operate_tcpdump                            Create operate_tcpdump
+  operate_traceroute                         Create operate_traceroute
+  operate_usb                                Create operate_usb
+  operate_wifi                               Create operate_wifi
+  origin_pool                                Create origin_pool
+  pbac_addon_service                         Create pbac_addon_service
+  pbac_addon_subscription                    Create pbac_addon_subscription
+  pbac_navigation_tile                       Create pbac_navigation_tile
+  pbac_plan                                  Create pbac_plan
+  policer                                    Create policer
+  policy_based_routing                       Create policy_based_routing
+  protocol_inspection                        Create protocol_inspection
+  protocol_policer                           Create protocol_policer
+  proxy                                      Create proxy
+  public_ip                                  Create public_ip
+  rate_limiter                               Create rate_limiter
+  rate_limiter_policy                        Create rate_limiter_policy
+  rbac_policy                                Create rbac_policy
+  registration                               Create registration
+  report                                     Create report
+  report_config                              Create report_config
+  role                                       Create role
+  route                                      Create route
+  scim                                       Create scim
+  secret_management_access                   Create secret_management_access
+  secret_policy                              Create secret_policy
+  secret_policy_rule                         Create secret_policy_rule
+  securemesh_site                            Create securemesh_site
+  securemesh_site_v2                         Create securemesh_site_v2
+  segment                                    Create segment
+  segment_connection                         Create segment_connection
+  sensitive_data_policy                      Create sensitive_data_policy
+  service_policy                             Create service_policy
+  service_policy_rule                        Create service_policy_rule
+  service_policy_set                         Create service_policy_set
+  shape_bot_defense_bot_infrastructure       Create shape_bot_defense_bot_infrastructure
+  shape_bot_defense_instance                 Create shape_bot_defense_instance
+  shape_bot_defense_mobile_base_config       Create shape_bot_defense_mobile_base_config
+  shape_bot_defense_protected_application    Create shape_bot_defense_protected_application
+  shape_bot_defense_reporting                Create shape_bot_defense_reporting
+  shape_bot_defense_subscription             Create shape_bot_defense_subscription
+  shape_bot_detection_rule                   Create shape_bot_detection_rule
+  shape_brmalerts_alert_gen_policy           Create shape_brmalerts_alert_gen_policy
+  shape_brmalerts_alert_template             Create shape_brmalerts_alert_template
+  shape_client_side_defense                  Create shape_client_side_defense
+  shape_client_side_defense_allowed_domain   Create shape_client_side_defense_allowed_domain
+  shape_client_side_defense_mitigated_domain Create shape_client_side_defense_mitigated_domain
+  shape_client_side_defense_protected_domain Create shape_client_side_defense_protected_domain
+  shape_client_side_defense_subscription     Create shape_client_side_defense_subscription
+  shape_data_delivery                        Create shape_data_delivery
+  shape_data_delivery_receiver               Create shape_data_delivery_receiver
+  shape_data_delivery_subscription           Create shape_data_delivery_subscription
+  shape_device_id                            Create shape_device_id
+  shape_mobile_app_shield_subscription       Create shape_mobile_app_shield_subscription
+  shape_mobile_integrator_subscription       Create shape_mobile_integrator_subscription
+  shape_recognize                            Create shape_recognize
+  shape_safe                                 Create shape_safe
+  shape_safeap                               Create shape_safeap
+  signup                                     Create signup
+  site                                       Create site
+  site_mesh_group                            Create site_mesh_group
+  srv6_network_slice                         Create srv6_network_slice
+  subnet                                     Create subnet
+  subscription                               Create subscription
+  synthetic_monitor                          Create synthetic_monitor
+  synthetic_monitor_dns                      Create synthetic_monitor_dns
+  synthetic_monitor_http                     Create synthetic_monitor_http
+  tcp_loadbalancer                           Create tcp_loadbalancer
+  tenant                                     Create tenant
+  tenant_configuration                       Create tenant_configuration
+  tenant_management                          Create tenant_management
+  tenant_management_allowed_tenant           Create tenant_management_allowed_tenant
+  tenant_management_child_tenant             Create tenant_management_child_tenant
+  tenant_management_child_tenant_manager     Create tenant_management_child_tenant_manager
+  tenant_management_managed_tenant           Create tenant_management_managed_tenant
+  tenant_management_tenant_profile           Create tenant_management_tenant_profile
+  third_party_application                    Create third_party_application
+  ticket_management_ticket_tracking_system   Create ticket_management_ticket_tracking_system
+  token                                      Create token
+  topology                                   Create topology
+  tpm_api_key                                Create tpm_api_key
+  tpm_category                               Create tpm_category
+  tpm_manager                                Create tpm_manager
+  tpm_provision                              Create tpm_provision
+  trusted_ca_list                            Create trusted_ca_list
+  tunnel                                     Create tunnel
+  udp_loadbalancer                           Create udp_loadbalancer
+  ui_static_component                        Create ui_static_component
+  usb_policy                                 Create usb_policy
+  user_group                                 Create user_group
+  user_identification                        Create user_identification
+  views_terraform_parameters                 Create views_terraform_parameters
+  virtual_appliance                          Create virtual_appliance
+  virtual_host                               Create virtual_host
+  virtual_k8s                                Create virtual_k8s
+  virtual_network                            Create virtual_network
+  virtual_site                               Create virtual_site
+  voltshare                                  Create voltshare
+  voltshare_admin_policy                     Create voltshare_admin_policy
+  voltstack_site                             Create voltstack_site
+  waf                                        Create waf
+  waf_exclusion_policy                       Create waf_exclusion_policy
+  waf_signatures_changelog                   Create waf_signatures_changelog
+  workload                                   Create workload
+  workload_flavor                            Create workload_flavor
+
+Flags:
+  -h, --help                help for create
+  -i, --input-file string   File containing CreateRequest contents in yaml form
+      --json-data string    Inline CreateRequest contents in json form
+
+Global Flags:
+  -a, --cacert string         Server CA cert file path
+  -c, --cert string           Client cert file path
+      --config string         A configuration file to use for API gateway URL and credentials (default "/Users/r.mordasiewicz/.vesconfig")
+      --hardwareKey           Use yubikey for TLS connection
+  -k, --key string            Client key file path
+      --outfmt string         Output format for command
+  -o, --output string         Output dir for command (default "./")
+      --p12-bundle string     Client P12 bundle (key+cert) file path. Any password for this file should be in environment variable VES_P12_PASSWORD
+  -u, --server-urls strings   API endpoint URL (default [http://localhost:8001])
+      --show-curl             Emit requests from program in CURL format
+      --timeout int           Timeout (in seconds) for command to finish (default 5)
+
+Use "vesctl configuration create [command] --help" for more information about a command.

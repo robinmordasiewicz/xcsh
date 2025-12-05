@@ -2,38 +2,7 @@
 
 An open-source command-line interface for managing F5 Distributed Cloud (formerly Volterra) resources.
 
-## Features
-
-- **Azure CLI-style interface** - Intuitive command structure following cloud industry standards
-- **Multiple output formats** - JSON, YAML, table, and TSV output formats
-- **Secure authentication** - Support for P12 bundles and certificate/key pairs with mTLS
-- **Resource management** - Full CRUD operations for all F5 XC resource types
-- **Shell completion** - Auto-completion for Bash, Zsh, Fish, and PowerShell
-
 ## Installation
-
-### From Source
-
-```bash
-# Clone the repository
-git clone https://github.com/robinmordasiewicz/f5xc.git
-cd f5xc
-
-# Build the binary
-go build -o f5xc .
-
-# Move to a directory in your PATH
-sudo mv f5xc /usr/local/bin/
-```
-
-### Build with Version Info
-
-```bash
-go build -ldflags "-X github.com/robinmordasiewicz/f5xc/cmd.Version=1.0.0 \
-  -X github.com/robinmordasiewicz/f5xc/cmd.GitCommit=$(git rev-parse HEAD) \
-  -X github.com/robinmordasiewicz/f5xc/cmd.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-  -o f5xc .
-```
 
 ## Quick Start
 

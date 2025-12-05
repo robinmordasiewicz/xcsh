@@ -24,6 +24,7 @@ type configurationFlags struct {
 	mode           string
 	labelKeys      []string
 	labelValues    []string
+	atSite         string
 }
 
 // configurationCmd represents the configuration command (vesctl compatibility)
@@ -31,10 +32,8 @@ var configurationCmd = &cobra.Command{
 	Use:     "configuration",
 	Aliases: []string{"cfg", "c"},
 	Short:   "Configure object",
-	Long:    `Configure object - vesctl compatible interface for CRUD operations on F5 XC resources.`,
-	Example: `vesctl configuration create virtual_host
-vesctl configuration list http_loadbalancer -n my-namespace
-vesctl configuration get origin_pool my-pool -n my-namespace`,
+	Long:    `Configure object`,
+	Example: `vesctl configuration create virtual_host`,
 }
 
 func init() {
@@ -88,7 +87,7 @@ func buildConfigGetCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "get",
 		Short:   "Get configuration object",
-		Example: "vesctl configuration get virtual_host",
+		Example: "vesctl configuration get virtual_host <name>",
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Namespace in which to get object")
@@ -119,7 +118,7 @@ func buildConfigCreateCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "create",
 		Short:   "Create configuration object",
-		Example: "vesctl configuration create virtual_host",
+		Example: "vesctl configuration create virtual_host -i <file>",
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.inputFile, "input-file", "i", "", "File containing CreateRequest contents in yaml form")
@@ -151,7 +150,7 @@ func buildConfigDeleteCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "delete",
 		Short:   "Delete configuration object",
-		Example: "vesctl configuration delete virtual_host my-vhost -n my-namespace",
+		Example: "vesctl configuration delete virtual_host <name>",
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Namespace in which to delete object")
@@ -184,10 +183,10 @@ func buildConfigReplaceCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "replace",
 		Short:   "Replace configuration object",
-		Example: "vesctl configuration replace virtual_host -i file.yaml",
+		Example: "vesctl configuration replace virtual_host -i <file>",
 	}
 
-	cmd.PersistentFlags().StringVarP(&flags.inputFile, "input-file", "i", "", "File containing ReplaceRequest contents in yaml form")
+	cmd.PersistentFlags().StringVarP(&flags.inputFile, "input-file", "i", "", "File containing ReplaceRequest content in yaml form")
 	cmd.PersistentFlags().StringVar(&flags.jsonData, "json-data", "", "Inline ReplaceRequest contents in json form")
 
 	// Add resource type subcommands
@@ -216,10 +215,11 @@ func buildConfigStatusCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "status",
 		Short:   "Status of configuration object",
-		Example: "vesctl configuration status virtual_host my-vhost -n my-namespace",
+		Example: "vesctl configuration status virtual_host <name>",
 	}
 
-	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Namespace of object")
+	cmd.PersistentFlags().StringVar(&flags.atSite, "at-site", "", "Site name (e.g. ce01) at which to query configuration object status")
+	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Namespace of configuration object")
 
 	// Add resource type subcommands
 	for _, rt := range types.All() {
@@ -282,7 +282,7 @@ func buildConfigPatchCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "patch",
 		Short:   "Patch configuration object",
-		Example: "vesctl configuration patch virtual_host --name my-vhost -n my-namespace",
+		Example: "vesctl configuration replace virtual_host add /metadata/description \"desc\"",
 	}
 
 	cmd.PersistentFlags().StringVar(&flags.name, "name", "", "Name of object")
@@ -314,7 +314,7 @@ func buildConfigAddLabelsCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "add-labels",
 		Short:   "Add Labels to a configuration object",
-		Example: "vesctl configuration add-labels http_loadbalancer my-lb -n my-namespace --label-key env --label-value prod",
+		Example: "vesctl configuration add-labels virtual_host <name> --label-key acmecorp.com/attr-1 --label-value val-1",
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Namespace of configuration object")
@@ -346,11 +346,11 @@ func buildConfigRemoveLabelsCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "remove-labels",
 		Short:   "Remove Labels from a configuration object",
-		Example: "vesctl configuration remove-labels http_loadbalancer my-lb -n my-namespace --label-key env",
+		Example: "vesctl configuration remove-labels virtual_host <name> --label-key acmecorp.com/attr-1",
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Namespace of configuration object")
-	cmd.PersistentFlags().StringSliceVar(&flags.labelKeys, "label-key", nil, "Key part of label to remove")
+	cmd.PersistentFlags().StringSliceVar(&flags.labelKeys, "label-key", nil, "Key part of label")
 
 	// Add resource type subcommands
 	for _, rt := range types.All() {

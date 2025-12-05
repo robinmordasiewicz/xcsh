@@ -4,26 +4,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Site-specific flags matching original vesctl
+var (
+	siteLogColor    bool
+	siteLogFabulous bool
+	siteLogLevel    int
+)
+
 var siteCmd = &cobra.Command{
-	Use:   "site",
-	Short: "Cloud site management operations",
-	Long: `Manage cloud sites for F5 Distributed Cloud.
-
-This command group provides operations for managing cloud sites including:
-  - AWS VPC sites
-  - Azure VNet sites
-
-Each site type supports create, delete, replace, and run (Terraform) operations.`,
-	Example: `  # Create an AWS VPC site
-  f5xc site aws-vpc create --name my-site --region us-east-1
-
-  # Run Terraform plan for an AWS site
-  f5xc site aws-vpc run --name my-site --action plan
-
-  # Delete an Azure VNet site
-  f5xc site azure-vnet delete --name my-site`,
+	Use:     "site",
+	Aliases: []string{"s"},
+	Short:   "Manage site creation through view public cloud site apis",
+	Long:    `Manage site creation through view public cloud site apis`,
+	Example: `vesctl site aws_vpc create`,
 }
 
 func init() {
 	rootCmd.AddCommand(siteCmd)
+
+	// Site-specific flags matching original vesctl
+	siteCmd.PersistentFlags().BoolVar(&siteLogColor, "log-color", true, "enable color for your logs")
+	siteCmd.PersistentFlags().BoolVar(&siteLogFabulous, "log-fabulous", true, "enable fabulous writer for your logs")
+	siteCmd.PersistentFlags().IntVar(&siteLogLevel, "log-level", 3, "Log Level for Site Deployment")
 }

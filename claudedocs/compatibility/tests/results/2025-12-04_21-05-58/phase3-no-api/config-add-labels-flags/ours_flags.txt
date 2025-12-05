@@ -1,0 +1,6 @@
+Flags:
+  -h, --help                  help for add-labels
+      --label-key strings     Key part of label
+      --label-value strings   Value part of label
+  -n, --namespace string      Namespace of configuration object (default "default")
+

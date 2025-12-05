@@ -1,0 +1,4 @@
+Flags:
+  -h, --help               help for list
+  -n, --namespace string   Namespace in which to list objects (default "default")
+

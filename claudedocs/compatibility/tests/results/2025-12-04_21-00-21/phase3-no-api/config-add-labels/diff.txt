@@ -1,0 +1,11 @@
+--- /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_21-00-21/phase3-no-api/config-add-labels/original_structure.txt	2025-12-04 21:00:30.199117858 -0500
++++ /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_21-00-21/phase3-no-api/config-add-labels/ours_structure.txt	2025-12-04 21:00:30.212677639 -0500
+@@ -3,7 +3,7 @@
+ Usage:
+ 
+ Examples:
+-vesctl configuration add-labels virtual_host <name> --label-key acmecorp.com/attr-1 --label-value val-1
++vesctl configuration add-labels http_loadbalancer my-lb -n my-namespace --label-key env --label-value prod
+ 
+ Available Commands:
+ 

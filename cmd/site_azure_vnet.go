@@ -33,87 +33,38 @@ var azureVNetFlags struct {
 }
 
 var azureVNetCmd = &cobra.Command{
-	Use:   "azure-vnet",
-	Short: "Azure VNet site operations",
-	Long: `Manage Azure VNet sites for F5 Distributed Cloud.
-
-Azure VNet sites deploy F5 Distributed Cloud nodes into your Azure Virtual Network,
-enabling secure connectivity and application delivery.`,
-	Example: `  # Create an Azure VNet site from a YAML file
-  f5xc site azure-vnet create -i site.yaml
-
-  # Create an Azure VNet site with flags
-  f5xc site azure-vnet create --name my-site --region eastus --vnet-cidr 10.0.0.0/16
-
-  # Run Terraform plan
-  f5xc site azure-vnet run --name my-site --action plan
-
-  # Apply Terraform changes
-  f5xc site azure-vnet run --name my-site --action apply --auto-approve`,
+	Use:     "azure_vnet",
+	Short:   "Manage Azure Vnet site creation through view apis",
+	Long:    `Manage Azure Vnet site creation through view apis`,
+	Example: `vesctl site azure_vnet create`,
 }
 
 var azureVNetCreateCmd = &cobra.Command{
 	Use:   "create",
-	Short: "Create an Azure VNet site",
-	Long: `Create a new Azure VNet site in F5 Distributed Cloud.
-
-The site can be defined via an input file (YAML/JSON) or command-line flags.`,
-	Example: `  # Create from input file
-  f5xc site azure-vnet create -i site.yaml
-
-  # Create with flags
-  f5xc site azure-vnet create --name my-site --region eastus \
-    --vnet-cidr 10.0.0.0/16 --resource-group my-rg \
-    --cloud-creds my-azure-creds --namespace system`,
-	RunE: runAzureVNetCreate,
+	Short: "create azure_vnet volterra site",
+	Long:  `create azure_vnet volterra site`,
+	RunE:  runAzureVNetCreate,
 }
 
 var azureVNetDeleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "Delete an Azure VNet site",
-	Long:  `Delete an existing Azure VNet site from F5 Distributed Cloud.`,
-	Example: `  # Delete a site
-  f5xc site azure-vnet delete --name my-site --namespace system`,
-	RunE: runAzureVNetDelete,
+	Short: "delete azure_vnet site",
+	Long:  `delete azure_vnet site`,
+	RunE:  runAzureVNetDelete,
 }
 
 var azureVNetReplaceCmd = &cobra.Command{
 	Use:   "replace",
-	Short: "Replace an Azure VNet site",
-	Long:  `Replace an existing Azure VNet site configuration.`,
-	Example: `  # Replace from input file
-  f5xc site azure-vnet replace -i site.yaml
-
-  # Replace with name
-  f5xc site azure-vnet replace --name my-site -i updated-site.yaml`,
-	RunE: runAzureVNetReplace,
+	Short: "replace azure_vnet site",
+	Long:  `replace azure_vnet site`,
+	RunE:  runAzureVNetReplace,
 }
 
 var azureVNetRunCmd = &cobra.Command{
 	Use:   "run",
-	Short: "Run Terraform action for Azure VNet site",
-	Long: `Execute Terraform actions (plan, apply, destroy) for an Azure VNet site.
-
-This command retrieves the Terraform parameters from F5 XC and runs
-the specified Terraform action locally.`,
-	Example: `  # Run Terraform plan
-  f5xc site azure-vnet run --name my-site --action plan
-
-  # Apply with auto-approve
-  f5xc site azure-vnet run --name my-site --action apply --auto-approve
-
-  # Destroy site infrastructure
-  f5xc site azure-vnet run --name my-site --action destroy --auto-approve`,
-	RunE: runAzureVNetTerraform,
-}
-
-var azureVNetGetCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Get Azure VNet site details",
-	Long:  `Retrieve details of an Azure VNet site.`,
-	Example: `  # Get site details
-  f5xc site azure-vnet get --name my-site --namespace system`,
-	RunE: runAzureVNetGet,
+	Short: "run terraform action, valid actions are plan, apply and destroy",
+	Long:  `run terraform action, valid actions are plan, apply and destroy`,
+	RunE:  runAzureVNetTerraform,
 }
 
 func init() {
@@ -143,12 +94,6 @@ func init() {
 	azureVNetReplaceCmd.Flags().StringVar(&azureVNetFlags.name, "name", "", "Site name")
 	azureVNetReplaceCmd.Flags().StringVarP(&azureVNetFlags.namespace, "namespace", "n", "system", "Namespace")
 	azureVNetCmd.AddCommand(azureVNetReplaceCmd)
-
-	// Get command
-	azureVNetGetCmd.Flags().StringVar(&azureVNetFlags.name, "name", "", "Site name (required)")
-	azureVNetGetCmd.Flags().StringVarP(&azureVNetFlags.namespace, "namespace", "n", "system", "Namespace")
-	_ = azureVNetGetCmd.MarkFlagRequired("name")
-	azureVNetCmd.AddCommand(azureVNetGetCmd)
 
 	// Run (Terraform) command
 	azureVNetRunCmd.Flags().StringVar(&azureVNetFlags.name, "name", "", "Site name (required)")
@@ -309,33 +254,6 @@ func runAzureVNetReplace(cmd *cobra.Command, args []string) error {
 	}
 
 	output.PrintInfo(fmt.Sprintf("Azure VNet site '%s' replaced successfully", name))
-	return output.Print(result, GetOutputFormat())
-}
-
-func runAzureVNetGet(cmd *cobra.Command, args []string) error {
-	apiClient := GetClient()
-	if apiClient == nil {
-		return fmt.Errorf("client not initialized - check configuration")
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-	defer cancel()
-
-	path := fmt.Sprintf("/api/config/namespaces/%s/azure_vnet_sites/%s", azureVNetFlags.namespace, azureVNetFlags.name)
-	resp, err := apiClient.Get(ctx, path, nil)
-	if err != nil {
-		return fmt.Errorf("failed to get Azure VNet site: %w", err)
-	}
-
-	if resp.StatusCode >= 400 {
-		return fmt.Errorf("API error (status %d): %s", resp.StatusCode, string(resp.Body))
-	}
-
-	var result interface{}
-	if err := json.Unmarshal(resp.Body, &result); err != nil {
-		return fmt.Errorf("failed to parse response: %w", err)
-	}
-
 	return output.Print(result, GetOutputFormat())
 }
 

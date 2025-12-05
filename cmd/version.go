@@ -26,9 +26,10 @@ type VersionInfo struct {
 }
 
 var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Show the f5xc CLI version",
-	Long:  `Display version information for the F5 Distributed Cloud CLI.`,
+	Use:     "version",
+	Short:   "Print build version",
+	Long:    `Print build version`,
+	Example: `vesctl version`,
 	Run: func(cmd *cobra.Command, args []string) {
 		info := VersionInfo{
 			Version:   Version,
@@ -41,7 +42,7 @@ var versionCmd = &cobra.Command{
 		format := GetOutputFormat()
 		if format == "table" || format == "tsv" {
 			// For version, just print simple output
-			fmt.Printf("f5xc %s\n", Version)
+			fmt.Printf("vesctl %s\n", Version)
 			return
 		}
 

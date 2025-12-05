@@ -1,0 +1,1 @@
+/Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase1-configure/../results/2025-12-04_20-43-53/behavior/error-invalid-flag/original.stderr:Error: unknown flag: --invalid-flag

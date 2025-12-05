@@ -519,7 +519,8 @@ func RegisterAllResourceCommands() {
 	}
 }
 
-func init() {
-	// Register all resource commands
-	RegisterAllResourceCommands()
-}
+// init() removed - original vesctl does not have individual resource commands
+// All resource operations go through: vesctl configuration <operation> <object_type>
+// func init() {
+// 	RegisterAllResourceCommands()
+// }

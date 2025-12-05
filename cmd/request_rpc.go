@@ -23,25 +23,12 @@ var rpcFlags struct {
 }
 
 var rpcCmd = &cobra.Command{
-	Use:   "rpc [endpoint] [flags]",
-	Short: "Execute a generic RPC call",
-	Long: `Execute a generic RPC call to the F5 Distributed Cloud API.
-
-This command allows you to invoke any API endpoint directly by specifying
-the endpoint path and providing the request body via an input file.
-
-The endpoint can be specified in dotted notation (e.g., namespace.CustomAPI.List)
-or as a URI path (e.g., /api/web/namespaces).`,
-	Example: `  # Call a custom API with input file
-  f5xc request rpc namespace.CustomAPI.List -i request.yaml
-
-  # Call an API endpoint with URI
-  f5xc request rpc --uri /api/web/namespaces -i request.yaml
-
-  # Specify HTTP method explicitly
-  f5xc request rpc --uri /api/config/namespaces/default/http_loadbalancers --http-method GET`,
-	Args: cobra.MaximumNArgs(1),
-	RunE: runRPC,
+	Use:     "rpc",
+	Short:   "RPC Invocation",
+	Long:    `RPC Invocation`,
+	Example: `vesctl request rpc registration.CustomAPI.RegistrationApprove -i approval_req.yaml`,
+	Args:    cobra.MaximumNArgs(1),
+	RunE:    runRPC,
 }
 
 func init() {

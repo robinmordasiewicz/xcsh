@@ -1,7 +1,7 @@
 package types
 
 // Code generated from OpenAPI specifications. DO NOT EDIT.
-// This file contains 150 resource types parsed from F5 XC API specs
+// This file contains 269 resource types parsed from F5 XC API specs
 
 func init() {
 	registerGeneratedResources()
@@ -1361,6 +1361,1306 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/workload_flavors",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
+	})
+
+	// ============================================================
+	// Additional API Resources (119 missing specs)
+	// ============================================================
+
+	// AI & Machine Learning
+	Register(&ResourceType{
+		Name:              "ai_assistant",
+		CLIName:           "ai-assistant",
+		Description:       "AI Assistant for query and feedback operations",
+		APIPath:           "/api/gen-ai/namespaces/{namespace}/query",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "ai_data_bfdp",
+		CLIName:           "ai-data-bfdp",
+		Description:       "AI Data BFDP operations",
+		APIPath:           "/api/ai_data/bfdp",
+		SupportsNamespace: false,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "ai_data_bfdp_subscription",
+		CLIName:           "ai-data-bfdp-subscription",
+		Description:       "AI Data BFDP subscription management",
+		APIPath:           "/api/ai_data/bfdp/subscription",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	// Alerts & Monitoring
+	Register(&ResourceType{
+		Name:              "alert",
+		CLIName:           "alert",
+		Description:       "Alert management and history",
+		APIPath:           "/api/data/namespaces/{namespace}/alerts",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "api_sec_rule_suggestion",
+		CLIName:           "api-sec-rule-suggestion",
+		Description:       "API Security rule suggestions",
+		APIPath:           "/api/config/namespaces/{namespace}/rule_suggestions",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "maintenance_status",
+		CLIName:           "maintenance-status",
+		Description:       "Maintenance status information",
+		APIPath:           "/api/config/namespaces/system/maintenance_status",
+		SupportsNamespace: false,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "upgrade_status",
+		CLIName:           "upgrade-status",
+		Description:       "Upgrade status information",
+		APIPath:           "/api/config/namespaces/{namespace}/upgrade_statuss",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	// Application Security
+	Register(&ResourceType{
+		Name:              "app_security",
+		CLIName:           "app-security",
+		Description:       "Application security suggestions and configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/app_securitys",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "bigip_irule",
+		CLIName:           "bigip-irule",
+		Description:       "BIG-IP iRule management",
+		APIPath:           "/api/bigipconnector/namespaces/{namespace}/bigip_irules",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	// Billing & Commerce
+	Register(&ResourceType{
+		Name:              "billing_payment_method",
+		CLIName:           "billing-payment-method",
+		Description:       "Billing payment method management",
+		APIPath:           "/api/web/namespaces/{namespace}/payment_methods",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Create: true,
+			Delete: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "billing_plan_transition",
+		CLIName:           "billing-plan-transition",
+		Description:       "Billing plan transition management",
+		APIPath:           "/api/web/namespaces/{namespace}/plan_transitions",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "marketplace_aws_account",
+		CLIName:           "marketplace-aws-account",
+		Description:       "AWS Marketplace account management",
+		APIPath:           "/api/marketplace/aws/accounts",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "marketplace_xc_saas",
+		CLIName:           "marketplace-xc-saas",
+		Description:       "XC SaaS marketplace management",
+		APIPath:           "/api/marketplace/xc_saas",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	// Data Management & Privacy
+	Register(&ResourceType{
+		Name:              "data_privacy_geo_config",
+		CLIName:           "data-privacy-geo-config",
+		Description:       "Data privacy geo configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/geo_configs",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "secret_management",
+		CLIName:           "secret-management",
+		Description:       "Secret management operations",
+		APIPath:           "/api/config/namespaces/{namespace}/secret_managements",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "secret_policy",
+		CLIName:           "secret-policy",
+		Description:       "Secret policy configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/secret_policys",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "secret_policy_rule",
+		CLIName:           "secret-policy-rule",
+		Description:       "Secret policy rule configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/secret_policy_rules",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	// DNS Services
+	Register(&ResourceType{
+		Name:              "dns_load_balancer",
+		CLIName:           "dns-load-balancer",
+		Description:       "DNS load balancer configuration",
+		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_load_balancers",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "dns_lb_health_check",
+		CLIName:           "dns-lb-health-check",
+		Description:       "DNS load balancer health check configuration",
+		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_lb_health_checks",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "dns_lb_pool",
+		CLIName:           "dns-lb-pool",
+		Description:       "DNS load balancer pool configuration",
+		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_lb_pools",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "dns_zone",
+		CLIName:           "dns-zone",
+		Description:       "DNS zone configuration",
+		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_zones",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "dns_zone_rrset",
+		CLIName:           "dns-zone-rrset",
+		Description:       "DNS zone resource record set management",
+		APIPath:           "/api/config/dns/dns_zones/{dns_zone_name}/rrsets",
+		SupportsNamespace: false,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "dns_zone_subscription",
+		CLIName:           "dns-zone-subscription",
+		Description:       "DNS zone subscription management",
+		APIPath:           "/api/config/dns/subscription",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	// Flow & Network Analytics
+	Register(&ResourceType{
+		Name:              "flow",
+		CLIName:           "flow",
+		Description:       "Network flow data queries",
+		APIPath:           "/api/data/namespaces/{namespace}/flows",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "discovered_service",
+		CLIName:           "discovered-service",
+		Description:       "Discovered service information",
+		APIPath:           "/api/config/namespaces/{namespace}/discovered_services",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	// Graph & Visualization
+	Register(&ResourceType{
+		Name:              "graph_connectivity",
+		CLIName:           "graph-connectivity",
+		Description:       "Connectivity graph analysis",
+		APIPath:           "/api/graph/namespaces/{namespace}/connectivity",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "graph_l3l4",
+		CLIName:           "graph-l3l4",
+		Description:       "L3/L4 topology graph",
+		APIPath:           "/api/graph/namespaces/{namespace}/l3l4",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "graph_service",
+		CLIName:           "graph-service",
+		Description:       "Service graph queries",
+		APIPath:           "/api/graph/namespaces/{namespace}/services",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "graph_site",
+		CLIName:           "graph-site",
+		Description:       "Site topology graph",
+		APIPath:           "/api/graph/namespaces/{namespace}/sites",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	// Geo-Location
+	Register(&ResourceType{
+		Name:              "geo_location_set",
+		CLIName:           "geo-location-set",
+		Description:       "Geo location set configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/geo_location_sets",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "gia",
+		CLIName:           "gia",
+		Description:       "GIA operations",
+		APIPath:           "/api/config/namespaces/system/gias",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+			Delete: true,
+		},
+	})
+
+	// Infrastructure Protection
+	Register(&ResourceType{
+		Name:              "infraprotect",
+		CLIName:           "infraprotect",
+		Description:       "Infrastructure protection configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotects",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_asn",
+		CLIName:           "infraprotect-asn",
+		Description:       "Infrastructure protection ASN configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_asns",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_asn_prefix",
+		CLIName:           "infraprotect-asn-prefix",
+		Description:       "Infrastructure protection ASN prefix configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_asn_prefixs",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_deny_list_rule",
+		CLIName:           "infraprotect-deny-list-rule",
+		Description:       "Infrastructure protection deny list rule",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_deny_list_rules",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_firewall_rule",
+		CLIName:           "infraprotect-firewall-rule",
+		Description:       "Infrastructure protection firewall rule",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_firewall_rules",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_firewall_rule_group",
+		CLIName:           "infraprotect-firewall-rule-group",
+		Description:       "Infrastructure protection firewall rule group",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_firewall_rule_groups",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_firewall_ruleset",
+		CLIName:           "infraprotect-firewall-ruleset",
+		Description:       "Infrastructure protection firewall ruleset",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_firewall_rulesets",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Update: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_information",
+		CLIName:           "infraprotect-information",
+		Description:       "Infrastructure protection information",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_informations",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_internet_prefix_advertisement",
+		CLIName:           "infraprotect-internet-prefix-advertisement",
+		Description:       "Infrastructure protection internet prefix advertisement",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_internet_prefix_advertisements",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_tunnel",
+		CLIName:           "infraprotect-tunnel",
+		Description:       "Infrastructure protection tunnel configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_tunnels",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	// Logging & Events
+	Register(&ResourceType{
+		Name:              "log",
+		CLIName:           "log",
+		Description:       "Log data queries",
+		APIPath:           "/api/data/namespaces/{namespace}/logs",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	// Management & Administration
+	Register(&ResourceType{
+		Name:              "module_management",
+		CLIName:           "module-management",
+		Description:       "Module management information",
+		APIPath:           "/api/config/namespaces/{namespace}/module_managements",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "oidc_provider",
+		CLIName:           "oidc-provider",
+		Description:       "OIDC provider configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/oidc_providers",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+			Update: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "registration",
+		CLIName:           "registration",
+		Description:       "Registration management",
+		APIPath:           "/api/config/namespaces/{namespace}/registrations",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "scim",
+		CLIName:           "scim",
+		Description:       "SCIM user and group management",
+		APIPath:           "/api/scim/v2",
+		SupportsNamespace: false,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "tenant",
+		CLIName:           "tenant",
+		Description:       "Tenant management",
+		APIPath:           "/api/config/namespaces/{namespace}/tenants",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "tenant_management",
+		CLIName:           "tenant-management",
+		Description:       "Tenant management operations",
+		APIPath:           "/api/config/namespaces/{namespace}/tenant_managements",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "token",
+		CLIName:           "token",
+		Description:       "Token management",
+		APIPath:           "/api/config/namespaces/{namespace}/tokens",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "tpm_api_key",
+		CLIName:           "tpm-api-key",
+		Description:       "TPM API key management",
+		APIPath:           "/api/config/namespaces/{namespace}/tpm_api_keys",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+			Update: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "tpm_category",
+		CLIName:           "tpm-category",
+		Description:       "TPM category management",
+		APIPath:           "/api/config/namespaces/{namespace}/tpm_categorys",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+			Update: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "tpm_manager",
+		CLIName:           "tpm-manager",
+		Description:       "TPM manager operations",
+		APIPath:           "/api/config/namespaces/{namespace}/tpm_managers",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "tpm_provision",
+		CLIName:           "tpm-provision",
+		Description:       "TPM provisioning operations",
+		APIPath:           "/api/config/namespaces/system/tpm_provisions",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "user",
+		CLIName:           "user",
+		Description:       "User management",
+		APIPath:           "/api/web/namespaces/system/users",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Update: true,
+			Delete: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "user_setting",
+		CLIName:           "user-setting",
+		Description:       "User settings management",
+		APIPath:           "/api/web/namespaces/system/user_settings",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Update: true,
+			Delete: true,
+		},
+	})
+
+	// Monitoring & Observability
+	Register(&ResourceType{
+		Name:              "observability_subscription",
+		CLIName:           "observability-subscription",
+		Description:       "Observability subscription management",
+		APIPath:           "/api/config/namespaces/system/observability_subscriptions",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "synthetic_monitor",
+		CLIName:           "synthetic-monitor",
+		Description:       "Synthetic monitoring configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/synthetic_monitors",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "synthetic_monitor_dns",
+		CLIName:           "synthetic-monitor-dns",
+		Description:       "DNS synthetic monitor configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/v1_dns_monitors",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "synthetic_monitor_http",
+		CLIName:           "synthetic-monitor-http",
+		Description:       "HTTP synthetic monitor configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/v1_http_monitors",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "report",
+		CLIName:           "report",
+		Description:       "Report management",
+		APIPath:           "/api/config/namespaces/{namespace}/reports",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "report_config",
+		CLIName:           "report-config",
+		Description:       "Report configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/report_configs",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	// Network Operations
+	Register(&ResourceType{
+		Name:              "operate_bgp",
+		CLIName:           "operate-bgp",
+		Description:       "BGP operational data",
+		APIPath:           "/api/operate/namespaces/{namespace}/bgp",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_crl",
+		CLIName:           "operate-crl",
+		Description:       "CRL operations",
+		APIPath:           "/api/operate/namespaces/{namespace}/crl",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_debug",
+		CLIName:           "operate-debug",
+		Description:       "Debug operations",
+		APIPath:           "/api/operate/namespaces/{namespace}/debug",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_dhcp",
+		CLIName:           "operate-dhcp",
+		Description:       "DHCP operational status",
+		APIPath:           "/api/operate/namespaces/{namespace}/dhcp",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_flow",
+		CLIName:           "operate-flow",
+		Description:       "Flow operations",
+		APIPath:           "/api/operate/namespaces/{namespace}/flow",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_lte",
+		CLIName:           "operate-lte",
+		Description:       "LTE operations",
+		APIPath:           "/api/operate/namespaces/{namespace}/lte",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_ping",
+		CLIName:           "operate-ping",
+		Description:       "Ping operation",
+		APIPath:           "/api/operate/namespaces/{namespace}/ping",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_route",
+		CLIName:           "operate-route",
+		Description:       "Route operations",
+		APIPath:           "/api/operate/namespaces/{namespace}/route",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_tcpdump",
+		CLIName:           "operate-tcpdump",
+		Description:       "TCP dump operation",
+		APIPath:           "/api/operate/namespaces/{namespace}/tcpdump",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_traceroute",
+		CLIName:           "operate-traceroute",
+		Description:       "Traceroute operation",
+		APIPath:           "/api/operate/namespaces/{namespace}/traceroute",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_usb",
+		CLIName:           "operate-usb",
+		Description:       "USB operations",
+		APIPath:           "/api/operate/namespaces/{namespace}/usb",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_wifi",
+		CLIName:           "operate-wifi",
+		Description:       "WiFi operations",
+		APIPath:           "/api/operate/namespaces/{namespace}/wifi",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	// Platform Services
+	Register(&ResourceType{
+		Name:              "signup",
+		CLIName:           "signup",
+		Description:       "User signup operations",
+		APIPath:           "/api/signup",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Get:    true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "status_at_site",
+		CLIName:           "status-at-site",
+		Description:       "Status at site information",
+		APIPath:           "/api/config/namespaces/{namespace}/status_at_sites",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "topology",
+		CLIName:           "topology",
+		Description:       "Topology queries and generation",
+		APIPath:           "/api/topology",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Get:    true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "stored_object",
+		CLIName:           "stored-object",
+		Description:       "Stored object management",
+		APIPath:           "/api/config/namespaces/{namespace}/stored_objects",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Update: true,
+			Delete: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "subscription",
+		CLIName:           "subscription",
+		Description:       "Subscription management",
+		APIPath:           "/api/usage/namespaces/{namespace}/subscriptions",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "usage_plan",
+		CLIName:           "usage-plan",
+		Description:       "Usage plan information",
+		APIPath:           "/api/usage/namespaces/{namespace}/plans",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "usage_invoice",
+		CLIName:           "usage-invoice",
+		Description:       "Usage invoice information",
+		APIPath:           "/api/usage/namespaces/{namespace}/invoices",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	// Shape Bot Defense
+	Register(&ResourceType{
+		Name:              "shape_bot_defense_bot_allowlist_policy",
+		CLIName:           "shape-bot-defense-bot-allowlist-policy",
+		Description:       "Shape bot defense allowlist policy",
+		APIPath:           "/api/config/namespaces/{namespace}/bot_allowlist_policys",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Update: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_bot_defense_bot_endpoint_policy",
+		CLIName:           "shape-bot-defense-bot-endpoint-policy",
+		Description:       "Shape bot defense endpoint policy",
+		APIPath:           "/api/config/namespaces/{namespace}/bot_endpoint_policys",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Update: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_bot_defense_bot_infrastructure",
+		CLIName:           "shape-bot-defense-bot-infrastructure",
+		Description:       "Shape bot defense infrastructure",
+		APIPath:           "/api/config/namespaces/{namespace}/bot_infrastructures",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+			Update: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_bot_defense_bot_network_policy",
+		CLIName:           "shape-bot-defense-bot-network-policy",
+		Description:       "Shape bot defense network policy",
+		APIPath:           "/api/config/namespaces/{namespace}/bot_network_policys",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Update: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_bot_defense_mobile_base_config",
+		CLIName:           "shape-bot-defense-mobile-base-config",
+		Description:       "Shape bot defense mobile base configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/mobile_base_configs",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_bot_defense_mobile_sdk",
+		CLIName:           "shape-bot-defense-mobile-sdk",
+		Description:       "Shape bot defense mobile SDK",
+		APIPath:           "/api/config/namespaces/{namespace}/mobile_sdks",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_bot_defense_protected_application",
+		CLIName:           "shape-bot-defense-protected-application",
+		Description:       "Shape bot defense protected application",
+		APIPath:           "/api/config/namespaces/{namespace}/protected_applications",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_bot_defense_reporting",
+		CLIName:           "shape-bot-defense-reporting",
+		Description:       "Shape bot defense reporting",
+		APIPath:           "/api/config/namespaces/{namespace}/bot_defense_reporting",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_bot_defense_subscription",
+		CLIName:           "shape-bot-defense-subscription",
+		Description:       "Shape bot defense subscription",
+		APIPath:           "/api/config/namespaces/system/bot_defense_subscriptions",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_bot_detection_rule",
+		CLIName:           "shape-bot-detection-rule",
+		Description:       "Shape bot detection rule",
+		APIPath:           "/api/config/namespaces/{namespace}/bot_detection_rules",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+			Delete: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_bot_detection_update",
+		CLIName:           "shape-bot-detection-update",
+		Description:       "Shape bot detection update",
+		APIPath:           "/api/config/namespaces/{namespace}/bot_detection_updates",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	// Shape BRM Alerts
+	Register(&ResourceType{
+		Name:              "shape_brmalerts_alert_gen_policy",
+		CLIName:           "shape-brmalerts-alert-gen-policy",
+		Description:       "Shape BRM alerts generation policy",
+		APIPath:           "/api/config/namespaces/{namespace}/alert_gen_policys",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_brmalerts_alert_template",
+		CLIName:           "shape-brmalerts-alert-template",
+		Description:       "Shape BRM alerts template",
+		APIPath:           "/api/config/namespaces/{namespace}/alert_templates",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+			Delete: true,
+		},
+	})
+
+	// Shape Client Side Defense
+	Register(&ResourceType{
+		Name:              "shape_client_side_defense",
+		CLIName:           "shape-client-side-defense",
+		Description:       "Shape client side defense",
+		APIPath:           "/api/config/namespaces/system/client_side_defenses",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_client_side_defense_allowed_domain",
+		CLIName:           "shape-client-side-defense-allowed-domain",
+		Description:       "Shape client side defense allowed domain",
+		APIPath:           "/api/config/namespaces/{namespace}/allowed_domains",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+			Delete: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_client_side_defense_mitigated_domain",
+		CLIName:           "shape-client-side-defense-mitigated-domain",
+		Description:       "Shape client side defense mitigated domain",
+		APIPath:           "/api/config/namespaces/{namespace}/mitigated_domains",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+			Delete: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_client_side_defense_protected_domain",
+		CLIName:           "shape-client-side-defense-protected-domain",
+		Description:       "Shape client side defense protected domain",
+		APIPath:           "/api/config/namespaces/{namespace}/protected_domains",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+			Delete: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_client_side_defense_subscription",
+		CLIName:           "shape-client-side-defense-subscription",
+		Description:       "Shape client side defense subscription",
+		APIPath:           "/api/config/namespaces/system/client_side_defense_subscriptions",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_device_id",
+		CLIName:           "shape-device-id",
+		Description:       "Shape device ID",
+		APIPath:           "/api/config/namespaces/system/device_ids",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+			Delete: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_mobile_app_shield_subscription",
+		CLIName:           "shape-mobile-app-shield-subscription",
+		Description:       "Shape mobile app shield subscription",
+		APIPath:           "/api/config/namespaces/system/mobile_app_shield_subscriptions",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_mobile_integrator_subscription",
+		CLIName:           "shape-mobile-integrator-subscription",
+		Description:       "Shape mobile integrator subscription",
+		APIPath:           "/api/config/namespaces/system/mobile_integrator_subscriptions",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	// Shape Data Delivery
+	Register(&ResourceType{
+		Name:              "shape_data_delivery",
+		CLIName:           "shape-data-delivery",
+		Description:       "Shape data delivery",
+		APIPath:           "/api/config/namespaces/{namespace}/data_deliverys",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_data_delivery_receiver",
+		CLIName:           "shape-data-delivery-receiver",
+		Description:       "Shape data delivery receiver",
+		APIPath:           "/api/config/namespaces/{namespace}/data_delivery_receivers",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_data_delivery_subscription",
+		CLIName:           "shape-data-delivery-subscription",
+		Description:       "Shape data delivery subscription",
+		APIPath:           "/api/config/namespaces/system/data_delivery_subscriptions",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_recognize",
+		CLIName:           "shape-recognize",
+		Description:       "Shape recognize",
+		APIPath:           "/api/shape/recognize",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Get:    true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_safe",
+		CLIName:           "shape-safe",
+		Description:       "Shape safe",
+		APIPath:           "/api/shape/safe",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Get:    true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_safeap",
+		CLIName:           "shape-safeap",
+		Description:       "Shape safe AP",
+		APIPath:           "/api/shape/safeap",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Get:    true,
+			Create: true,
+		},
+	})
+
+	// WAF & Application Protection
+	Register(&ResourceType{
+		Name:              "waf",
+		CLIName:           "waf",
+		Description:       "WAF configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/wafs",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "waf_signatures_changelog",
+		CLIName:           "waf-signatures-changelog",
+		Description:       "WAF signatures changelog",
+		APIPath:           "/api/config/namespaces/{namespace}/waf_signatures_changelogs",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	// Miscellaneous
+	Register(&ResourceType{
+		Name:              "malware_protection_subscription",
+		CLIName:           "malware-protection-subscription",
+		Description:       "Malware protection subscription",
+		APIPath:           "/api/config/namespaces/system/malware_protection_subscriptions",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "nginx_one_subscription",
+		CLIName:           "nginx-one-subscription",
+		Description:       "NGINX One subscription",
+		APIPath:           "/api/config/namespaces/system/nginx_one_subscriptions",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "pbac_catalog",
+		CLIName:           "pbac-catalog",
+		Description:       "PBAC catalog",
+		APIPath:           "/api/web/namespaces/system/catalogs",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Update: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "virtual_appliance",
+		CLIName:           "virtual-appliance",
+		Description:       "Virtual appliance",
+		APIPath:           "/api/config/namespaces/system/virtual_appliances",
+		SupportsNamespace: false,
+		Operations: ResourceOperations{
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "voltshare",
+		CLIName:           "voltshare",
+		Description:       "Voltshare",
+		APIPath:           "/api/config/namespaces/{namespace}/voltshares",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "voltshare_admin_policy",
+		CLIName:           "voltshare-admin-policy",
+		Description:       "Voltshare admin policy",
+		APIPath:           "/api/config/namespaces/{namespace}/voltshare_admin_policys",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "was_user_token",
+		CLIName:           "was-user-token",
+		Description:       "WAS user token",
+		APIPath:           "/api/web/namespaces/system/was_user_tokens",
+		SupportsNamespace: false,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	// Views/Read-Only Resources
+	Register(&ResourceType{
+		Name:              "views_terraform_parameters",
+		CLIName:           "views-terraform-parameters",
+		Description:       "Terraform parameters view",
+		APIPath:           "/api/config/namespaces/{namespace}/terraform_parameters",
+		SupportsNamespace: true,
+		Operations: ResourceOperations{
+			Get:    true,
+			List:   true,
+			Create: true,
+		},
+	})
+
+	Register(&ResourceType{
+		Name:              "views_view_internal",
+		CLIName:           "views-view-internal",
+		Description:       "Internal view",
+		APIPath:           "/api/config/namespaces/{namespace}/view_internals",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
 	})
 
 }

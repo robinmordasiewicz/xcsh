@@ -1,0 +1,11 @@
+--- /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_20-53-04/phase3-no-api/config-create/original_structure.txt	2025-12-04 20:53:17.954751527 -0500
++++ /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_20-53-04/phase3-no-api/config-create/ours_structure.txt	2025-12-04 20:53:17.968443010 -0500
+@@ -3,7 +3,7 @@
+ Usage:
+ 
+ Examples:
+-vesctl configuration create virtual_host -i <file>
++vesctl configuration create virtual_host
+ 
+ Available Commands:
+ 

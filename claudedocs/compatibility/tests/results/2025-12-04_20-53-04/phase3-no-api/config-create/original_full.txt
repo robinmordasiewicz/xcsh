@@ -1,0 +1,155 @@
+Create configuration object
+
+Usage:
+  vesctl configuration create [command]
+
+Examples:
+vesctl configuration create virtual_host -i <file>
+
+Available Commands:
+  address_allocator                          Create address_allocator
+  advertise_policy                           Create advertise_policy
+  alert_policy                               Create alert_policy
+  alert_receiver                             Create alert_receiver
+  allowed_domain                             Create allowed_domain
+  allowed_tenant                             Create allowed_tenant
+  api_definition                             Create api_definition
+  apm                                        Create apm
+  app_api_group                              Create app_api_group
+  app_firewall                               Create app_firewall
+  app_setting                                Create app_setting
+  app_type                                   Create app_type
+  authentication                             Create authentication
+  aws_tgw_site                               Create aws_tgw_site
+  aws_vpc_site                               Create aws_vpc_site
+  azure_vnet_site                            Create azure_vnet_site
+  bgp                                        Create bgp
+  bgp_asn_set                                Create bgp_asn_set
+  cdn_loadbalancer                           Create cdn_loadbalancer
+  certificate                                Create certificate
+  certificate_chain                          Create certificate_chain
+  child_tenant                               Create child_tenant
+  child_tenant_manager                       Create child_tenant_manager
+  cloud_connect                              Create cloud_connect
+  cloud_credentials                          Create cloud_credentials
+  cloud_link                                 Create cloud_link
+  cluster                                    Create cluster
+  contact                                    Create contact
+  container_registry                         Create container_registry
+  crl                                        Create crl
+  customer_support                           Create customer_support
+  dc_cluster_group                           Create dc_cluster_group
+  deployment                                 Create deployment
+  discovery                                  Create discovery
+  dns_compliance_checks                      Create dns_compliance_checks
+  dns_domain                                 Create dns_domain
+  dns_lb_health_check                        Create dns_lb_health_check
+  dns_lb_pool                                Create dns_lb_pool
+  dns_load_balancer                          Create dns_load_balancer
+  dns_proxy                                  Create dns_proxy
+  dns_zone                                   Create dns_zone
+  endpoint                                   Create endpoint
+  enhanced_firewall_policy                   Create enhanced_firewall_policy
+  fast_acl                                   Create fast_acl
+  fast_acl_rule                              Create fast_acl_rule
+  fleet                                      Create fleet
+  forward_proxy_policy                       Create forward_proxy_policy
+  forwarding_class                           Create forwarding_class
+  gcp_vpc_site                               Create gcp_vpc_site
+  geo_location_set                           Create geo_location_set
+  global_log_receiver                        Create global_log_receiver
+  healthcheck                                Create healthcheck
+  http_loadbalancer                          Create http_loadbalancer
+  infraprotect_asn                           Create infraprotect_asn
+  infraprotect_asn_prefix                    Create infraprotect_asn_prefix
+  infraprotect_internet_prefix_advertisement Create infraprotect_internet_prefix_advertisement
+  infraprotect_ta_server                     Create infraprotect_ta_server
+  infraprotect_tunnel                        Create infraprotect_tunnel
+  ip_prefix_set                              Create ip_prefix_set
+  k8s_cluster                                Create k8s_cluster
+  k8s_cluster_role                           Create k8s_cluster_role
+  k8s_cluster_role_binding                   Create k8s_cluster_role_binding
+  k8s_pod_security_policy                    Create k8s_pod_security_policy
+  kms_key                                    Create kms_key
+  kms_policy                                 Create kms_policy
+  kms_policy_rule                            Create kms_policy_rule
+  log_receiver                               Create log_receiver
+  malicious_user_mitigation                  Create malicious_user_mitigation
+  managed_tenant                             Create managed_tenant
+  mitigated_domain                           Create mitigated_domain
+  mobile_base_config                         Create mobile_base_config
+  namespace                                  Create namespace
+  namespace_role                             Create namespace_role
+  network_connector                          Create network_connector
+  network_firewall                           Create network_firewall
+  network_interface                          Create network_interface
+  network_policy                             Create network_policy
+  network_policy_rule                        Create network_policy_rule
+  network_policy_view                        Create network_policy_view
+  nfv_service                                Create nfv_service
+  origin_pool                                Create origin_pool
+  policer                                    Create policer
+  policy_based_routing                       Create policy_based_routing
+  protected_application                      Create protected_application
+  protected_domain                           Create protected_domain
+  protocol_inspection                        Create protocol_inspection
+  protocol_policer                           Create protocol_policer
+  proxy                                      Create proxy
+  quota                                      Create quota
+  rate_limiter                               Create rate_limiter
+  rate_limiter_policy                        Create rate_limiter_policy
+  registration                               Create registration
+  report_config                              Create report_config
+  role                                       Create role
+  route                                      Create route
+  secret_management_access                   Create secret_management_access
+  secret_policy                              Create secret_policy
+  secret_policy_rule                         Create secret_policy_rule
+  securemesh_site                            Create securemesh_site
+  segment                                    Create segment
+  service_policy                             Create service_policy
+  service_policy_rule                        Create service_policy_rule
+  site_mesh_group                            Create site_mesh_group
+  srv6_network_slice                         Create srv6_network_slice
+  subnet                                     Create subnet
+  tcp_loadbalancer                           Create tcp_loadbalancer
+  tenant_configuration                       Create tenant_configuration
+  tenant_profile                             Create tenant_profile
+  token                                      Create token
+  tpm_api_key                                Create tpm_api_key
+  tpm_category                               Create tpm_category
+  tpm_manager                                Create tpm_manager
+  trusted_ca_list                            Create trusted_ca_list
+  tunnel                                     Create tunnel
+  usb_policy                                 Create usb_policy
+  user_identification                        Create user_identification
+  v1_dns_monitor                             Create v1_dns_monitor
+  v1_http_monitor                            Create v1_http_monitor
+  virtual_host                               Create virtual_host
+  virtual_k8s                                Create virtual_k8s
+  virtual_network                            Create virtual_network
+  virtual_site                               Create virtual_site
+  voltshare_admin_policy                     Create voltshare_admin_policy
+  voltstack_site                             Create voltstack_site
+  workload                                   Create workload
+  workload_flavor                            Create workload_flavor
+
+Flags:
+  -h, --help                help for create
+  -i, --input-file string   File containing CreateRequest contents in yaml form
+      --json-data string    Inline CreateRequest contents in json form
+
+Global Flags:
+  -a, --cacert string         Server CA cert file path
+  -c, --cert string           Client cert file path
+      --config string         A configuration file to use for API gateway URL and credentials (default "/Users/r.mordasiewicz/.vesconfig")
+      --hardwareKey           Use yubikey for TLS connection
+  -k, --key string            Client key file path
+      --outfmt string         Output format for command
+  -o, --output string         Output dir for command (default "./")
+      --p12-bundle string     Client P12 bundle (key+cert) file path. Any password for this file should be in environment variable VES_P12_PASSWORD
+  -u, --server-urls strings   API endpoint URL (default [http://localhost:8001])
+      --show-curl             Emit requests from program in CURL format
+      --timeout int           Timeout (in seconds) for command to finish (default 5)
+
+Use "vesctl configuration create [command] --help" for more information about a command.

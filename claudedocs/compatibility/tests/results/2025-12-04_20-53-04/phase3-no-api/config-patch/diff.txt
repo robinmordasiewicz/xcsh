@@ -1,0 +1,11 @@
+--- /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_20-53-04/phase3-no-api/config-patch/original_structure.txt	2025-12-04 20:53:26.764254957 -0500
++++ /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_20-53-04/phase3-no-api/config-patch/ours_structure.txt	2025-12-04 20:53:26.778514736 -0500
+@@ -3,7 +3,7 @@
+ Usage:
+ 
+ Examples:
+-vesctl configuration replace virtual_host add /metadata/description "desc"
++vesctl configuration patch virtual_host --name my-vhost -n my-namespace
+ 
+ Available Commands:
+ 

@@ -1,0 +1,30 @@
+panic: runtime error: invalid memory address or nil pointer dereference
+[signal SIGSEGV: segmentation violation code=0x2 addr=0x0 pc=0x100962e18]
+
+goroutine 1 [running]:
+gopkg.volterra.us/stdlib/util/tls.(*CertManager).SetStopCh(0x0, 0x140004ed020)
+	/builds/f5/volterra/ves.io/vesctl/.cache/go-mod/gopkg.volterra.us/stdlib@v1.0.3/util/tls/cert_manager.go:96 +0x28
+gopkg.volterra.us/stdlib/util/tls.(*CertManager).StartExpiryRotater(0x0)
+	/builds/f5/volterra/ves.io/vesctl/.cache/go-mod/gopkg.volterra.us/stdlib@v1.0.3/util/tls/cert_manager.go:187 +0x38
+gopkg.volterra.us/stdlib/client.(*Client).ConnectRest(0x140001c6ea0, {0x110fa1788?, 0x1400020a000})
+	/builds/f5/volterra/ves.io/vesctl/.cache/go-mod/gopkg.volterra.us/stdlib@v1.0.3/client/client.go:426 +0x124
+gopkg.volterra.us/stdlib/client.NewClient({0x14003e188d0, 0x2f}, {0x14003d0fa28?, 0x1000d836c?, 0x18?})
+	/builds/f5/volterra/ves.io/vesctl/.cache/go-mod/gopkg.volterra.us/stdlib@v1.0.3/client/client.go:630 +0x61c
+gopkg.volterra.us/stdlib/client/vesapi.NewAPIClient({0x14003e188d0, 0x2f}, 0x14003a48270?, {0x140022aa900?, 0x14003df55f0?, 0x100000073?})
+	/builds/f5/volterra/ves.io/vesctl/.cache/go-mod/gopkg.volterra.us/stdlib@v1.0.3/client/vesapi/vesapi.go:382 +0x218
+gopkg.volterra.us/stdlib/vesctl/command.GetConfigAPIClient(0x117c3e940?, 0x110aeaea0?)
+	/builds/f5/volterra/ves.io/vesctl/.cache/go-mod/gopkg.volterra.us/stdlib@v1.0.3/vesctl/command/crudobj.go:101 +0x224
+gopkg.volterra.us/stdlib/vesctl/command.getCfgObjCmdFunc.func1(0x0?, {0x14003df4ea0?, 0x0?, 0x0?})
+	/builds/f5/volterra/ves.io/vesctl/.cache/go-mod/gopkg.volterra.us/stdlib@v1.0.3/vesctl/command/crudobj.go:200 +0x194
+gopkg.volterra.us/stdlib/vesctl/command.WithLoadConfig.func1(0x14003b93500?, {0x14003df4ea0, 0x1, 0x1})
+	/builds/f5/volterra/ves.io/vesctl/.cache/go-mod/gopkg.volterra.us/stdlib@v1.0.3/vesctl/command/root.go:622 +0x64
+github.com/spf13/cobra.(*Command).execute(0x14003b93500, {0x14003df4e70, 0x1, 0x1})
+	/builds/f5/volterra/ves.io/vesctl/.cache/go-mod/github.com/spf13/cobra@v1.7.0/command.go:940 +0x5c8
+github.com/spf13/cobra.(*Command).ExecuteC(0x117c79a40)
+	/builds/f5/volterra/ves.io/vesctl/.cache/go-mod/github.com/spf13/cobra@v1.7.0/command.go:1068 +0x35c
+github.com/spf13/cobra.(*Command).Execute(...)
+	/builds/f5/volterra/ves.io/vesctl/.cache/go-mod/github.com/spf13/cobra@v1.7.0/command.go:992
+gopkg.volterra.us/vesctl/cmd/vesctl/command.Execute()
+	/builds/f5/volterra/ves.io/vesctl/cmd/vesctl/command/root.go:101 +0x28
+main.main()
+	/builds/f5/volterra/ves.io/vesctl/cmd/vesctl/vesctl.go:13 +0x1c

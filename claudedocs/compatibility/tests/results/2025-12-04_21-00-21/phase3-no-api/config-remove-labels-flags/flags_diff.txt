@@ -1,0 +1,9 @@
+--- /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_21-00-21/phase3-no-api/config-remove-labels-flags/original_flags.txt	2025-12-04 21:00:47.763508355 -0500
++++ /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_21-00-21/phase3-no-api/config-remove-labels-flags/ours_flags.txt	2025-12-04 21:00:47.808614749 -0500
+@@ -1,5 +1,5 @@
+ Flags:
+   -h, --help                help for remove-labels
+-      --label-key strings   Key part of label
++      --label-key strings   Key part of label to remove
+   -n, --namespace string    Namespace of configuration object (default "default")
+ 

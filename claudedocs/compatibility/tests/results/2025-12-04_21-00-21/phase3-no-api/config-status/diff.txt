@@ -1,0 +1,19 @@
+--- /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_21-00-21/phase3-no-api/config-status/original_structure.txt	2025-12-04 21:00:51.726536891 -0500
++++ /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_21-00-21/phase3-no-api/config-status/ours_structure.txt	2025-12-04 21:00:51.738575044 -0500
+@@ -3,14 +3,13 @@
+ Usage:
+ 
+ Examples:
+-vesctl configuration status virtual_host <name>
++vesctl configuration status virtual_host my-vhost -n my-namespace
+ 
+ Available Commands:
+ 
+ Flags:
+-      --at-site string     Site name (e.g. ce01) at which to query configuration object status
+   -h, --help               help for status
+-  -n, --namespace string   Namespace of configuration object (default "default")
++  -n, --namespace string   Namespace of object (default "default")
+ 
+ Global Flags:
+   -a, --cacert string         Server CA cert file path

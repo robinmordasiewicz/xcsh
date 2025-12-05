@@ -1,0 +1,38 @@
+Authenticate with F5 Distributed Cloud.
+
+This command validates your credentials and saves them to the configuration file.
+You can authenticate using either:
+  - A P12 certificate bundle (set VES_P12_PASSWORD environment variable)
+  - Certificate and key files
+
+After successful login, you can use all vesctl commands to manage your resources.
+
+Usage:
+  vesctl login [flags]
+
+Examples:
+  # Login with P12 bundle
+  vesctl login --tenant my-tenant --p12-bundle ~/.vesctl/my-cert.p12
+
+  # Login with certificate and key
+  vesctl login --tenant my-tenant --cert ~/.vesctl/cert.pem --key ~/.vesctl/key.pem
+
+  # Login (using existing configuration)
+  vesctl login
+
+Flags:
+      --cert string         Path to client certificate
+  -h, --help                help for login
+      --key string          Path to client key
+      --p12-bundle string   Path to P12 certificate bundle
+      --tenant string       Tenant name (e.g., my-tenant from my-tenant.console.ves.volterra.io)
+
+Global Flags:
+  -a, --cacert string         Server CA cert file path
+      --config string         A configuration file to use for API gateway URL and credentials (default "/Users/r.mordasiewicz/.vesconfig")
+      --hardwareKey           Use yubikey for TLS connection
+      --outfmt string         Output format for command
+  -o, --output string         Output dir for command (default "./")
+  -u, --server-urls strings   API endpoint URL (default [http://localhost:8001])
+      --show-curl             Emit requests from program in CURL format
+      --timeout int           Timeout (in seconds) for command to finish (default 5)

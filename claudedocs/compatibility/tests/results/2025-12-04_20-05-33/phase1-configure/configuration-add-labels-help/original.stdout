@@ -1,0 +1,171 @@
+Add Labels to a configuration object
+
+Usage:
+  vesctl configuration add-labels [command]
+
+Examples:
+vesctl configuration add-labels virtual_host <name> --label-key acmecorp.com/attr-1 --label-value val-1
+
+Available Commands:
+  addon_service                              Add Labels to addon_service
+  address_allocator                          Add Labels to address_allocator
+  advertise_policy                           Add Labels to advertise_policy
+  alert_policy                               Add Labels to alert_policy
+  alert_receiver                             Add Labels to alert_receiver
+  allowed_domain                             Add Labels to allowed_domain
+  allowed_tenant                             Add Labels to allowed_tenant
+  api_definition                             Add Labels to api_definition
+  api_group                                  Add Labels to api_group
+  api_group_element                          Add Labels to api_group_element
+  apm                                        Add Labels to apm
+  app_api_group                              Add Labels to app_api_group
+  app_firewall                               Add Labels to app_firewall
+  app_setting                                Add Labels to app_setting
+  app_type                                   Add Labels to app_type
+  authentication                             Add Labels to authentication
+  aws_tgw_site                               Add Labels to aws_tgw_site
+  aws_vpc_site                               Add Labels to aws_vpc_site
+  azure_vnet_site                            Add Labels to azure_vnet_site
+  bgp                                        Add Labels to bgp
+  bgp_asn_set                                Add Labels to bgp_asn_set
+  cdn_loadbalancer                           Add Labels to cdn_loadbalancer
+  certificate                                Add Labels to certificate
+  certificate_chain                          Add Labels to certificate_chain
+  certified_hardware                         Add Labels to certified_hardware
+  child_tenant                               Add Labels to child_tenant
+  child_tenant_manager                       Add Labels to child_tenant_manager
+  cloud_connect                              Add Labels to cloud_connect
+  cloud_credentials                          Add Labels to cloud_credentials
+  cloud_link                                 Add Labels to cloud_link
+  cluster                                    Add Labels to cluster
+  contact                                    Add Labels to contact
+  container_registry                         Add Labels to container_registry
+  crl                                        Add Labels to crl
+  customer_support                           Add Labels to customer_support
+  dc_cluster_group                           Add Labels to dc_cluster_group
+  deployment                                 Add Labels to deployment
+  discovery                                  Add Labels to discovery
+  dns_compliance_checks                      Add Labels to dns_compliance_checks
+  dns_domain                                 Add Labels to dns_domain
+  dns_lb_health_check                        Add Labels to dns_lb_health_check
+  dns_lb_pool                                Add Labels to dns_lb_pool
+  dns_load_balancer                          Add Labels to dns_load_balancer
+  dns_proxy                                  Add Labels to dns_proxy
+  dns_zone                                   Add Labels to dns_zone
+  endpoint                                   Add Labels to endpoint
+  enhanced_firewall_policy                   Add Labels to enhanced_firewall_policy
+  fast_acl                                   Add Labels to fast_acl
+  fast_acl_rule                              Add Labels to fast_acl_rule
+  fleet                                      Add Labels to fleet
+  forward_proxy_policy                       Add Labels to forward_proxy_policy
+  forwarding_class                           Add Labels to forwarding_class
+  gcp_vpc_site                               Add Labels to gcp_vpc_site
+  geo_location_set                           Add Labels to geo_location_set
+  global_log_receiver                        Add Labels to global_log_receiver
+  healthcheck                                Add Labels to healthcheck
+  http_loadbalancer                          Add Labels to http_loadbalancer
+  infraprotect_asn                           Add Labels to infraprotect_asn
+  infraprotect_asn_prefix                    Add Labels to infraprotect_asn_prefix
+  infraprotect_information                   Add Labels to infraprotect_information
+  infraprotect_internet_prefix_advertisement Add Labels to infraprotect_internet_prefix_advertisement
+  infraprotect_ta_server                     Add Labels to infraprotect_ta_server
+  infraprotect_tunnel                        Add Labels to infraprotect_tunnel
+  ip_prefix_set                              Add Labels to ip_prefix_set
+  k8s_cluster                                Add Labels to k8s_cluster
+  k8s_cluster_role                           Add Labels to k8s_cluster_role
+  k8s_cluster_role_binding                   Add Labels to k8s_cluster_role_binding
+  k8s_pod_security_policy                    Add Labels to k8s_pod_security_policy
+  kms_key                                    Add Labels to kms_key
+  kms_policy                                 Add Labels to kms_policy
+  kms_policy_rule                            Add Labels to kms_policy_rule
+  log_receiver                               Add Labels to log_receiver
+  malicious_user_mitigation                  Add Labels to malicious_user_mitigation
+  managed_tenant                             Add Labels to managed_tenant
+  mitigated_domain                           Add Labels to mitigated_domain
+  mobile_base_config                         Add Labels to mobile_base_config
+  namespace                                  Add Labels to namespace
+  namespace_role                             Add Labels to namespace_role
+  navigation_tile                            Add Labels to navigation_tile
+  network_connector                          Add Labels to network_connector
+  network_firewall                           Add Labels to network_firewall
+  network_interface                          Add Labels to network_interface
+  network_policy                             Add Labels to network_policy
+  network_policy_rule                        Add Labels to network_policy_rule
+  network_policy_set                         Add Labels to network_policy_set
+  network_policy_view                        Add Labels to network_policy_view
+  nfv_service                                Add Labels to nfv_service
+  origin_pool                                Add Labels to origin_pool
+  plan                                       Add Labels to plan
+  policer                                    Add Labels to policer
+  policy_based_routing                       Add Labels to policy_based_routing
+  protected_application                      Add Labels to protected_application
+  protected_domain                           Add Labels to protected_domain
+  protocol_inspection                        Add Labels to protocol_inspection
+  protocol_policer                           Add Labels to protocol_policer
+  proxy                                      Add Labels to proxy
+  public_ip                                  Add Labels to public_ip
+  quota                                      Add Labels to quota
+  rate_limiter                               Add Labels to rate_limiter
+  rate_limiter_policy                        Add Labels to rate_limiter_policy
+  rbac_policy                                Add Labels to rbac_policy
+  registration                               Add Labels to registration
+  report                                     Add Labels to report
+  report_config                              Add Labels to report_config
+  role                                       Add Labels to role
+  route                                      Add Labels to route
+  secret_management_access                   Add Labels to secret_management_access
+  secret_policy                              Add Labels to secret_policy
+  secret_policy_rule                         Add Labels to secret_policy_rule
+  securemesh_site                            Add Labels to securemesh_site
+  segment                                    Add Labels to segment
+  service_policy                             Add Labels to service_policy
+  service_policy_rule                        Add Labels to service_policy_rule
+  service_policy_set                         Add Labels to service_policy_set
+  shape_bot_defense_instance                 Add Labels to shape_bot_defense_instance
+  site                                       Add Labels to site
+  site_mesh_group                            Add Labels to site_mesh_group
+  srv6_network_slice                         Add Labels to srv6_network_slice
+  subnet                                     Add Labels to subnet
+  tcp_loadbalancer                           Add Labels to tcp_loadbalancer
+  tenant_configuration                       Add Labels to tenant_configuration
+  tenant_profile                             Add Labels to tenant_profile
+  token                                      Add Labels to token
+  tpm_api_key                                Add Labels to tpm_api_key
+  tpm_category                               Add Labels to tpm_category
+  tpm_manager                                Add Labels to tpm_manager
+  trusted_ca_list                            Add Labels to trusted_ca_list
+  tunnel                                     Add Labels to tunnel
+  usb_policy                                 Add Labels to usb_policy
+  user_group                                 Add Labels to user_group
+  user_identification                        Add Labels to user_identification
+  v1_dns_monitor                             Add Labels to v1_dns_monitor
+  v1_http_monitor                            Add Labels to v1_http_monitor
+  virtual_host                               Add Labels to virtual_host
+  virtual_k8s                                Add Labels to virtual_k8s
+  virtual_network                            Add Labels to virtual_network
+  virtual_site                               Add Labels to virtual_site
+  voltshare_admin_policy                     Add Labels to voltshare_admin_policy
+  voltstack_site                             Add Labels to voltstack_site
+  workload                                   Add Labels to workload
+  workload_flavor                            Add Labels to workload_flavor
+
+Flags:
+  -h, --help                  help for add-labels
+      --label-key strings     Key part of label
+      --label-value strings   Value part of label
+  -n, --namespace string      Namespace of configuration object (default "default")
+
+Global Flags:
+  -a, --cacert string         Server CA cert file path
+  -c, --cert string           Client cert file path
+      --config string         A configuration file to use for API gateway URL and credentials (default "/Users/r.mordasiewicz/.vesconfig")
+      --hardwareKey           Use yubikey for TLS connection
+  -k, --key string            Client key file path
+      --outfmt string         Output format for command
+  -o, --output string         Output dir for command (default "./")
+      --p12-bundle string     Client P12 bundle (key+cert) file path. Any password for this file should be in environment variable VES_P12_PASSWORD
+  -u, --server-urls strings   API endpoint URL (default [http://localhost:8001])
+      --show-curl             Emit requests from program in CURL format
+      --timeout int           Timeout (in seconds) for command to finish (default 5)
+
+Use "vesctl configuration add-labels [command] --help" for more information about a command.

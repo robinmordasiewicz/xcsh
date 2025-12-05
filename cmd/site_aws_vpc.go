@@ -32,87 +32,38 @@ var awsVPCFlags struct {
 }
 
 var awsVPCCmd = &cobra.Command{
-	Use:   "aws-vpc",
-	Short: "AWS VPC site operations",
-	Long: `Manage AWS VPC sites for F5 Distributed Cloud.
-
-AWS VPC sites deploy F5 Distributed Cloud nodes into your AWS VPC,
-enabling secure connectivity and application delivery.`,
-	Example: `  # Create an AWS VPC site from a YAML file
-  f5xc site aws-vpc create -i site.yaml
-
-  # Create an AWS VPC site with flags
-  f5xc site aws-vpc create --name my-site --region us-east-1 --vpc-cidr 10.0.0.0/16
-
-  # Run Terraform plan
-  f5xc site aws-vpc run --name my-site --action plan
-
-  # Apply Terraform changes
-  f5xc site aws-vpc run --name my-site --action apply --auto-approve`,
+	Use:     "aws_vpc",
+	Short:   "Manage AWS VPC site creation through view apis",
+	Long:    `Manage AWS VPC site creation through view apis`,
+	Example: `vesctl site aws_vpc create`,
 }
 
 var awsVPCCreateCmd = &cobra.Command{
 	Use:   "create",
-	Short: "Create an AWS VPC site",
-	Long: `Create a new AWS VPC site in F5 Distributed Cloud.
-
-The site can be defined via an input file (YAML/JSON) or command-line flags.`,
-	Example: `  # Create from input file
-  f5xc site aws-vpc create -i site.yaml
-
-  # Create with flags
-  f5xc site aws-vpc create --name my-site --region us-east-1 \
-    --vpc-cidr 10.0.0.0/16 --azs us-east-1a,us-east-1b \
-    --cloud-creds my-aws-creds --namespace system`,
-	RunE: runAWSVPCCreate,
+	Short: "Create AWS VPC volterra site",
+	Long:  `Create AWS VPC volterra site`,
+	RunE:  runAWSVPCCreate,
 }
 
 var awsVPCDeleteCmd = &cobra.Command{
 	Use:   "delete",
-	Short: "Delete an AWS VPC site",
-	Long:  `Delete an existing AWS VPC site from F5 Distributed Cloud.`,
-	Example: `  # Delete a site
-  f5xc site aws-vpc delete --name my-site --namespace system`,
-	RunE: runAWSVPCDelete,
+	Short: "delete AWS VPC volterra site",
+	Long:  `delete AWS VPC volterra site`,
+	RunE:  runAWSVPCDelete,
 }
 
 var awsVPCReplaceCmd = &cobra.Command{
 	Use:   "replace",
-	Short: "Replace an AWS VPC site",
-	Long:  `Replace an existing AWS VPC site configuration.`,
-	Example: `  # Replace from input file
-  f5xc site aws-vpc replace -i site.yaml
-
-  # Replace with name
-  f5xc site aws-vpc replace --name my-site -i updated-site.yaml`,
-	RunE: runAWSVPCReplace,
+	Short: "Replace AWS VPC volterra site",
+	Long:  `Replace AWS VPC volterra site`,
+	RunE:  runAWSVPCReplace,
 }
 
 var awsVPCRunCmd = &cobra.Command{
 	Use:   "run",
-	Short: "Run Terraform action for AWS VPC site",
-	Long: `Execute Terraform actions (plan, apply, destroy) for an AWS VPC site.
-
-This command retrieves the Terraform parameters from F5 XC and runs
-the specified Terraform action locally.`,
-	Example: `  # Run Terraform plan
-  f5xc site aws-vpc run --name my-site --action plan
-
-  # Apply with auto-approve
-  f5xc site aws-vpc run --name my-site --action apply --auto-approve
-
-  # Destroy site infrastructure
-  f5xc site aws-vpc run --name my-site --action destroy --auto-approve`,
-	RunE: runAWSVPCTerraform,
-}
-
-var awsVPCGetCmd = &cobra.Command{
-	Use:   "get",
-	Short: "Get AWS VPC site details",
-	Long:  `Retrieve details of an AWS VPC site.`,
-	Example: `  # Get site details
-  f5xc site aws-vpc get --name my-site --namespace system`,
-	RunE: runAWSVPCGet,
+	Short: "run terraform action, valid actions are plan, apply and destroy",
+	Long:  `run terraform action, valid actions are plan, apply and destroy`,
+	RunE:  runAWSVPCTerraform,
 }
 
 func init() {
@@ -141,12 +92,6 @@ func init() {
 	awsVPCReplaceCmd.Flags().StringVar(&awsVPCFlags.name, "name", "", "Site name")
 	awsVPCReplaceCmd.Flags().StringVarP(&awsVPCFlags.namespace, "namespace", "n", "system", "Namespace")
 	awsVPCCmd.AddCommand(awsVPCReplaceCmd)
-
-	// Get command
-	awsVPCGetCmd.Flags().StringVar(&awsVPCFlags.name, "name", "", "Site name (required)")
-	awsVPCGetCmd.Flags().StringVarP(&awsVPCFlags.namespace, "namespace", "n", "system", "Namespace")
-	_ = awsVPCGetCmd.MarkFlagRequired("name")
-	awsVPCCmd.AddCommand(awsVPCGetCmd)
 
 	// Run (Terraform) command
 	awsVPCRunCmd.Flags().StringVar(&awsVPCFlags.name, "name", "", "Site name (required)")
@@ -307,33 +252,6 @@ func runAWSVPCReplace(cmd *cobra.Command, args []string) error {
 	}
 
 	output.PrintInfo(fmt.Sprintf("AWS VPC site '%s' replaced successfully", name))
-	return output.Print(result, GetOutputFormat())
-}
-
-func runAWSVPCGet(cmd *cobra.Command, args []string) error {
-	apiClient := GetClient()
-	if apiClient == nil {
-		return fmt.Errorf("client not initialized - check configuration")
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-	defer cancel()
-
-	path := fmt.Sprintf("/api/config/namespaces/%s/aws_vpc_sites/%s", awsVPCFlags.namespace, awsVPCFlags.name)
-	resp, err := apiClient.Get(ctx, path, nil)
-	if err != nil {
-		return fmt.Errorf("failed to get AWS VPC site: %w", err)
-	}
-
-	if resp.StatusCode >= 400 {
-		return fmt.Errorf("API error (status %d): %s", resp.StatusCode, string(resp.Body))
-	}
-
-	var result interface{}
-	if err := json.Unmarshal(resp.Body, &result); err != nil {
-		return fmt.Errorf("failed to parse response: %w", err)
-	}
-
 	return output.Print(result, GetOutputFormat())
 }
 

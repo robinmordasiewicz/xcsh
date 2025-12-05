@@ -1,0 +1,5 @@
+metadata:
+  name: vesctl-test-nonexistent-replace
+  labels:
+    test-type: compatibility
+spec: {}

@@ -1,0 +1,9 @@
+Original output:
+branch: 0-2-47 amd64 <br>commit-sha: 49f77d9aea7f608daf7422b9d47c7b2fbc337d16 2023-10-11T09:36:06+00:00 mceloud 5268387816 nil <br>
+
+Our output:
+version: dev
+git_commit: unknown
+build_date: unknown
+go_version: go1.25.5
+platform: darwin/arm64
