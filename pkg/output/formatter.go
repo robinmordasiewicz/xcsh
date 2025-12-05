@@ -8,7 +8,6 @@ import (
 	"reflect"
 	"sort"
 	"strings"
-	"text/tabwriter"
 
 	"gopkg.in/yaml.v3"
 )
@@ -39,16 +38,16 @@ func New(format string) *Formatter {
 	switch strings.ToLower(format) {
 	case "json":
 		f.format = FormatJSON
-	case "yaml", "":
+	case "yaml":
 		f.format = FormatYAML
-	case "table":
-		f.format = FormatTable
+	case "table", "":
+		f.format = FormatTable // Default to table for compatibility with original vesctl
 	case "tsv":
 		f.format = FormatTSV
 	case "none":
 		f.format = FormatNone
 	default:
-		f.format = FormatYAML
+		f.format = FormatTable
 	}
 
 	return f
@@ -93,37 +92,169 @@ func (f *Formatter) formatYAML(data interface{}) error {
 	return encoder.Encode(data)
 }
 
-// formatTable outputs data as an ASCII table
+// formatTable outputs data as an ASCII box table matching original vesctl format
 func (f *Formatter) formatTable(data interface{}) error {
-	rows, headers := extractTableData(data)
-	if len(rows) == 0 {
+	// Extract items from list response
+	items := extractItems(data)
+	if len(items) == 0 {
 		return nil
 	}
 
-	w := tabwriter.NewWriter(f.writer, 0, 0, 2, ' ', 0)
+	// Define columns for namespace list (matching original vesctl)
+	// Original format: NAMESPACE | NAME | LABELS
+	headers := []string{"NAMESPACE", "NAME", "LABELS"}
 
-	// Print headers
-	_, _ = fmt.Fprintln(w, strings.Join(headers, "\t"))
-
-	// Print separator
-	separators := make([]string, len(headers))
+	// Calculate column widths
+	widths := make([]int, len(headers))
 	for i, h := range headers {
-		separators[i] = strings.Repeat("-", len(h))
+		widths[i] = len(h)
 	}
-	_, _ = fmt.Fprintln(w, strings.Join(separators, "\t"))
 
-	// Print rows
-	for _, row := range rows {
-		values := make([]string, len(headers))
-		for i, h := range headers {
-			if v, ok := row[h]; ok {
-				values[i] = formatValue(v)
+	// Build rows and track max widths
+	var rows [][]string
+	for _, item := range items {
+		row := make([]string, len(headers))
+
+		// NAMESPACE column - namespace field (empty for namespaces themselves)
+		ns := getStringField(item, "namespace")
+		if ns == "" {
+			row[0] = "<None>"
+		} else {
+			row[0] = ns
+		}
+
+		// NAME column
+		row[1] = getStringField(item, "name")
+		if row[1] == "" {
+			row[1] = "<None>"
+		}
+
+		// LABELS column
+		labels := getLabelsString(item)
+		if labels == "" {
+			row[2] = "<None>"
+		} else {
+			row[2] = labels
+		}
+
+		rows = append(rows, row)
+
+		// Update widths
+		for i, cell := range row {
+			if len(cell) > widths[i] {
+				widths[i] = len(cell)
 			}
 		}
-		_, _ = fmt.Fprintln(w, strings.Join(values, "\t"))
 	}
 
-	return w.Flush()
+	// Print ASCII box table
+	printBoxLine(f.writer, widths)
+	printBoxRowCentered(f.writer, headers, widths) // Headers centered
+	printBoxLine(f.writer, widths)
+	for _, row := range rows {
+		printBoxRowLeft(f.writer, row, widths) // Data left-aligned
+		printBoxLine(f.writer, widths)
+	}
+
+	return nil
+}
+
+// extractItems extracts the items array from a list response
+func extractItems(data interface{}) []map[string]interface{} {
+	// Handle map with "items" key
+	if m, ok := data.(map[string]interface{}); ok {
+		if items, ok := m["items"]; ok {
+			if itemSlice, ok := items.([]interface{}); ok {
+				var result []map[string]interface{}
+				for _, item := range itemSlice {
+					if itemMap, ok := item.(map[string]interface{}); ok {
+						result = append(result, itemMap)
+					}
+				}
+				return result
+			}
+		}
+		// Single item, wrap it
+		return []map[string]interface{}{m}
+	}
+
+	// Handle slice directly
+	v := reflect.ValueOf(data)
+	if v.Kind() == reflect.Slice {
+		var result []map[string]interface{}
+		for i := 0; i < v.Len(); i++ {
+			if itemMap, ok := v.Index(i).Interface().(map[string]interface{}); ok {
+				result = append(result, itemMap)
+			}
+		}
+		return result
+	}
+
+	return nil
+}
+
+// getStringField gets a string field from a map
+func getStringField(m map[string]interface{}, key string) string {
+	if v, ok := m[key]; ok {
+		if s, ok := v.(string); ok {
+			return s
+		}
+	}
+	return ""
+}
+
+// getLabelsString formats labels as key=value pairs
+func getLabelsString(m map[string]interface{}) string {
+	labels, ok := m["labels"]
+	if !ok {
+		return ""
+	}
+
+	labelMap, ok := labels.(map[string]interface{})
+	if !ok || len(labelMap) == 0 {
+		return ""
+	}
+
+	var parts []string
+	for k, v := range labelMap {
+		parts = append(parts, fmt.Sprintf("%s=%v", k, v))
+	}
+	sort.Strings(parts)
+	return strings.Join(parts, ", ")
+}
+
+// printBoxLine prints a horizontal line: +-----+-----+
+func printBoxLine(w io.Writer, widths []int) {
+	_, _ = fmt.Fprint(w, "+")
+	for _, width := range widths {
+		_, _ = fmt.Fprint(w, strings.Repeat("-", width+2))
+		_, _ = fmt.Fprint(w, "+")
+	}
+	_, _ = fmt.Fprintln(w)
+}
+
+// printBoxRowCentered prints a row with centered content (for headers)
+func printBoxRowCentered(w io.Writer, cells []string, widths []int) {
+	_, _ = fmt.Fprint(w, "|")
+	for i, cell := range cells {
+		// Center the cell content
+		padding := widths[i] - len(cell)
+		leftPad := padding / 2
+		rightPad := padding - leftPad
+		_, _ = fmt.Fprintf(w, " %s%s%s |", strings.Repeat(" ", leftPad), cell, strings.Repeat(" ", rightPad))
+	}
+	_, _ = fmt.Fprintln(w)
+}
+
+// printBoxRowLeft prints a row with left-aligned content (for data)
+func printBoxRowLeft(w io.Writer, cells []string, widths []int) {
+	_, _ = fmt.Fprint(w, "|")
+	for i, cell := range cells {
+		// Left-align the cell content
+		padding := widths[i] - len(cell)
+		_, _ = fmt.Fprintf(w, " %s%s |", cell, strings.Repeat(" ", padding))
+	}
+	_, _ = fmt.Fprintln(w)
 }
 
 // formatTSV outputs data as tab-separated values (no headers)

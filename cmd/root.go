@@ -196,7 +196,7 @@ func GetOutputFormat() string {
 	if outfmt != "" {
 		return outfmt
 	}
-	return "yaml"
+	return "table" // Default to table for compatibility with original vesctl
 }
 
 // GetOutputDir returns the output directory
