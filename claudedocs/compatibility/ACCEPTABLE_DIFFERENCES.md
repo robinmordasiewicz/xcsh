@@ -444,6 +444,48 @@ Neither implementation has proper TSV support for list operations:
 
 ---
 
+## 14. Phase 9 Error Handling Findings
+
+Phase 9 tested error handling and edge cases comprehensively.
+
+### Test Results Summary
+
+| Test Category | Tests | Pass | Warn | Fail |
+|---------------|-------|------|------|------|
+| Invalid resource names | 3 | 3 | 0 | 0 |
+| Missing required arguments | 3 | 1 | 2 | 0 |
+| Invalid flag values | 2 | 2 | 0 | 0 |
+| Non-existent resources | 2 | 2 | 0 | 0 |
+| Invalid input files | 3 | 3 | 0 | 0 |
+| Help on errors | 2 | 2 | 0 | 0 |
+| **Total** | **15** | **13** | **2** | **0** |
+
+### Missing Argument Exit Code Behavior
+
+The 2 warnings relate to missing required argument handling:
+
+| Command | Original Exit | Our Exit | Analysis |
+|---------|---------------|----------|----------|
+| `configuration get namespace` (no name) | 0 | 1 | Ours is correct |
+| `configuration delete namespace` (no name) | 0 | 1 | Ours is correct |
+
+**Original Behavior**: Shows help and exits with code 0 (success)
+**Our Behavior**: Shows help and exits with code 1 (error)
+
+**Rationale**: Our behavior is more correct. When a required argument is missing, the command has failed and should exit with a non-zero code. Scripts relying on exit codes will get better error detection with our implementation.
+
+### Consistent Error Handling
+
+All other error scenarios behave identically:
+- Invalid resources: Both show help (exit 0)
+- Unknown commands: Both error (exit 1)
+- Invalid flag values: Both handle gracefully
+- Non-existent API resources: Both error (exit 1) with appropriate messages
+- Invalid YAML/empty files: Both error (exit 1)
+- Unknown flags: Both error (exit 1) and show usage
+
+---
+
 ## Summary
 
 These differences are documented and accepted:
@@ -462,3 +504,4 @@ These differences are documented and accepted:
 11. **Request command enhancements**: RPC evolution (54 deprecated, 376 new), enhanced secrets/command-sequence help text
 12. **Site commands**: Simplified interface (input-file approach vs 39+ CLI flags)
 13. **Output formats**: Table/YAML identical, JSON semantically identical (key order differs)
+14. **Error handling**: Missing argument exit codes improved (we return 1, original returns 0)
