@@ -4,6 +4,59 @@ An open-source command-line interface for managing F5 Distributed Cloud (formerl
 
 ## Installation
 
+### Quick Install (Recommended)
+
+Install vesctl with a single command:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/robinmordasiewicz/vesctl/main/install.sh | sh
+```
+
+This will:
+- Detect your platform (Linux/macOS, amd64/arm64)
+- Download the latest release
+- Verify the checksum
+- Install to `/usr/local/bin`
+- Set up shell completion
+
+### Install Options
+
+```bash
+# Install a specific version
+curl -fsSL https://raw.githubusercontent.com/robinmordasiewicz/vesctl/main/install.sh | VESCTL_VERSION=0.1.0 sh
+
+# Install to a custom directory
+curl -fsSL https://raw.githubusercontent.com/robinmordasiewicz/vesctl/main/install.sh | VESCTL_INSTALL_DIR=$HOME/.local/bin sh
+
+# Uninstall
+curl -fsSL https://raw.githubusercontent.com/robinmordasiewicz/vesctl/main/install.sh | sh -s -- --uninstall
+```
+
+### Manual Installation
+
+Download the appropriate binary from [GitHub Releases](https://github.com/robinmordasiewicz/vesctl/releases):
+
+```bash
+# Linux (amd64)
+curl -LO https://github.com/robinmordasiewicz/vesctl/releases/latest/download/vesctl_linux_amd64.tar.gz
+tar -xzf vesctl_linux_amd64.tar.gz
+sudo mv vesctl /usr/local/bin/
+
+# macOS (Apple Silicon)
+curl -LO https://github.com/robinmordasiewicz/vesctl/releases/latest/download/vesctl_darwin_arm64.tar.gz
+tar -xzf vesctl_darwin_arm64.tar.gz
+sudo mv vesctl /usr/local/bin/
+```
+
+### Build from Source
+
+```bash
+git clone https://github.com/robinmordasiewicz/vesctl.git
+cd vesctl
+go build -o vesctl .
+sudo mv vesctl /usr/local/bin/
+```
+
 ## Quick Start
 
 ### 1. Configure Authentication
