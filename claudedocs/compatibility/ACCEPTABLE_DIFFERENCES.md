@@ -264,6 +264,73 @@ When testing a resource that doesn't exist in the original:
 
 ---
 
+## 11. Phase 6 Request Commands Findings
+
+Phase 6 testing validated the `request` command family: `request rpc`, `request secrets`, and `request command-sequence`.
+
+### Test Results Summary
+
+| Test | Result | Notes |
+|------|--------|-------|
+| request --help | PASS | Identical |
+| request secrets --help | PASS | Identical |
+| request rpc flags | FAIL | Enhanced flags (documented in 3a) |
+| request rpc commands | WARN | API evolution: 501 common, 54 deprecated, 376 new |
+| request secrets subcommands | FAIL | Enhanced help text descriptions |
+| request command-sequence flags | FAIL | Enhanced flag descriptions |
+
+### RPC Commands (API Evolution)
+
+Similar to configuration resources, the RPC command list reflects API evolution:
+
+| Metric | Count |
+|--------|-------|
+| Common RPCs | 501 |
+| Deprecated (original only) | 54 |
+| New (ours only) | 376 |
+
+**Rationale**: Our implementation uses current API specifications, which includes new RPC endpoints and deprecates obsolete ones.
+
+### Request Secrets Subcommands
+
+Our implementation provides enhanced help text for secrets subcommands:
+
+| Subcommand | Difference |
+|------------|------------|
+| `encrypt` | Enhanced description, clearer examples |
+| `get-public-key` | Enhanced description with context |
+| `get-policy-document` | Enhanced description with context |
+| `secret-info` | Enhanced description with context |
+| `build-blindfold-bundle` | Enhanced description with context |
+
+**Example - Original:**
+```
+Encrypt secret
+Usage: vesctl request secrets encrypt [<flags>] <path-to-file-with-secret> [flags]
+```
+
+**Example - Ours:**
+```
+Encrypt a secret file using F5 XC blindfold encryption.
+The encryption uses the public key obtained from the F5 XC API
+and a policy document that defines the decryption policy.
+Usage: vesctl request secrets encrypt [secret-file] [flags]
+```
+
+### Request Command-Sequence
+
+Flag descriptions are enhanced for clarity:
+
+| Flag | Original | Ours |
+|------|----------|------|
+| `-i, --input-file` | "File containing command sequence data" | "File containing command sequence data (required)" |
+| `--old-file` | "File containing old command sequence data" | "File containing old command sequence data (for replace operation)" |
+| `--operation` | "Operation to do on all sequence items" | "Operation to perform: create, delete, replace" |
+
+**Rationale**: These are documentation improvements that make the CLI more user-friendly.
+
+---
+
 ## Summary
 
 These differences are documented and accepted:
@@ -279,3 +346,4 @@ These differences are documented and accepted:
 8. **Response format validation**: Original rejects valid values (our fix)
 9. **Create test race condition**: Test framework limitation, not implementation difference
 10. **New resources**: certificate, user (and others from current API specs)
+11. **Request command enhancements**: RPC evolution (54 deprecated, 376 new), enhanced secrets/command-sequence help text

@@ -41,10 +41,10 @@ var encryptCmd = &cobra.Command{
 The encryption uses the public key obtained from the F5 XC API
 and a policy document that defines the decryption policy.`,
 	Example: `  # Encrypt a secret with policy and public key
-  f5xc request secrets encrypt --policy-doc policy.json --public-key key.pem secret.txt
+  vesctl request secrets encrypt --policy-doc policy.json --public-key key.pem secret.txt
 
   # Encrypt and save to file
-  f5xc request secrets encrypt --policy-doc policy.json --public-key key.pem --outfile encrypted.txt secret.txt`,
+  vesctl request secrets encrypt --policy-doc policy.json --public-key key.pem --outfile encrypted.txt secret.txt`,
 	Args: cobra.ExactArgs(1),
 	RunE: runEncrypt,
 }
@@ -62,10 +62,10 @@ var getPublicKeyCmd = &cobra.Command{
 The public key is used with the blindfold encryption mechanism to
 encrypt secrets that can only be decrypted by the F5 XC platform.`,
 	Example: `  # Get the current public key
-  f5xc request secrets get-public-key
+  vesctl request secrets get-public-key
 
   # Get a specific key version
-  f5xc request secrets get-public-key --key-version 1`,
+  vesctl request secrets get-public-key --key-version 1`,
 	RunE: runGetPublicKey,
 }
 
@@ -78,7 +78,7 @@ var getPolicyDocumentCmd = &cobra.Command{
 The policy document defines which services and conditions can decrypt
 the encrypted secrets.`,
 	Example: `  # Get the policy document
-  f5xc request secrets get-policy-document`,
+  vesctl request secrets get-policy-document`,
 	RunE: runGetPolicyDocument,
 }
 
@@ -91,7 +91,7 @@ var secretInfoCmd = &cobra.Command{
 This command reads an encrypted secret file and displays metadata
 about the encryption, including the policy and key version used.`,
 	Example: `  # Show info about an encrypted secret
-  f5xc request secrets secret-info encrypted-secret.txt`,
+  vesctl request secrets secret-info encrypted-secret.txt`,
 	Args: cobra.ExactArgs(1),
 	RunE: runSecretInfo,
 }
@@ -112,10 +112,10 @@ var buildBlindfoldBundleCmd = &cobra.Command{
 This command creates a Kubernetes Secret resource with the encrypted
 secret data, ready to be applied to a cluster managed by F5 XC.`,
 	Example: `  # Build a secret bundle
-  f5xc request secrets build-blindfold-bundle --name my-secret --data secret.txt
+  vesctl request secrets build-blindfold-bundle --name my-secret --data secret.txt
 
   # Build with custom namespace
-  f5xc request secrets build-blindfold-bundle --name my-secret --namespace my-ns --data secret.txt`,
+  vesctl request secrets build-blindfold-bundle --name my-secret --namespace my-ns --data secret.txt`,
 	RunE: runBuildBlindfoldBundle,
 }
 
