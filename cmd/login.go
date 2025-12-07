@@ -82,7 +82,7 @@ func runLogin(cmd *cobra.Command, args []string) error {
 	// Load existing config
 	config := &ConfigFile{}
 	if data, err := os.ReadFile(configPath); err == nil {
-		yaml.Unmarshal(data, config)
+		_ = yaml.Unmarshal(data, config) // Ignore error - we'll use defaults if parsing fails
 	}
 
 	// Update from flags
@@ -198,7 +198,7 @@ func runLogout(cmd *cobra.Command, args []string) error {
 	// Load existing config
 	config := &ConfigFile{}
 	if data, err := os.ReadFile(configPath); err == nil {
-		yaml.Unmarshal(data, config)
+		_ = yaml.Unmarshal(data, config) // Ignore error - we'll use defaults if parsing fails
 	}
 
 	// Clear credentials but keep server URL
@@ -253,7 +253,7 @@ func runWhoami(cmd *cobra.Command, args []string) error {
 	configPath := getConfigPath()
 	config := &ConfigFile{}
 	if data, err := os.ReadFile(configPath); err == nil {
-		yaml.Unmarshal(data, config)
+		_ = yaml.Unmarshal(data, config) // Ignore error - we'll use defaults if parsing fails
 	}
 
 	userInfo := map[string]interface{}{

@@ -152,10 +152,9 @@ func runAPIEndpointControl(cmd *cobra.Command, args []string) error {
 		ns = "default"
 	}
 
-	ctrlNs := controlNs
-	if ctrlNs == "" {
-		ctrlNs = ns
-	}
+	// Note: controlNs flag exists but isn't currently used in the API path
+	// It's reserved for future use when applying service policies to a different namespace
+	_ = controlNs
 
 	path := fmt.Sprintf("/api/config/namespaces/%s/api_endpoint_control", ns)
 	resp, err := apiClient.Get(ctx, path, params)

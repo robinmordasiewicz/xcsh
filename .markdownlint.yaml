@@ -1,0 +1,24 @@
+# Markdownlint configuration
+# Documentation: https://github.com/DavidAnson/markdownlint
+
+# Default state for all rules
+default: true
+
+# Line length - allow longer lines for documentation
+MD013:
+  line_length: 120
+  code_blocks: false
+  tables: false
+
+# Allow inline HTML (needed for some documentation features)
+MD033: false
+
+# Allow duplicate headings in different sections
+MD024:
+  siblings_only: true
+
+# First line should be a top-level heading
+MD041: true
+
+# Allow bare URLs (common in CLIs)
+MD034: false
