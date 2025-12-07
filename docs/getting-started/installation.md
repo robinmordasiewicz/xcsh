@@ -2,6 +2,27 @@
 
 This guide covers all methods for installing vesctl.
 
+## Homebrew (Recommended for macOS/Linux)
+
+The easiest way to install vesctl on macOS or Linux:
+
+```bash
+brew tap robinmordasiewicz/tap
+brew install vesctl
+```
+
+**Upgrade to latest version:**
+
+```bash
+brew upgrade vesctl
+```
+
+**Uninstall:**
+
+```bash
+brew uninstall vesctl
+```
+
 ## Quick Install
 
 The easiest way to install vesctl is with the install script:

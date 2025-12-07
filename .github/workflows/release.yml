@@ -34,17 +34,4 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  # Optional: Update package managers after release
-  # homebrew:
-  #   name: Update Homebrew
-  #   needs: release
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Update Homebrew tap
-  #       uses: mislav/bump-homebrew-formula-action@v3
-  #       with:
-  #         formula-name: f5xc
-  #         homebrew-tap: robinmordasiewicz/homebrew-tap
-  #       env:
-  #         COMMITTER_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}

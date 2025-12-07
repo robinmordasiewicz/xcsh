@@ -4,7 +4,14 @@ An open-source command-line interface for managing F5 Distributed Cloud (formerl
 
 ## Installation
 
-### Quick Install (Recommended)
+### Homebrew (macOS/Linux)
+
+```bash
+brew tap robinmordasiewicz/tap
+brew install vesctl
+```
+
+### Quick Install Script
 
 Install vesctl with a single command:
 
@@ -13,6 +20,7 @@ curl -fsSL https://raw.githubusercontent.com/robinmordasiewicz/vesctl/main/insta
 ```
 
 This will:
+
 - Detect your platform (Linux/macOS, amd64/arm64)
 - Download the latest release
 - Verify the checksum

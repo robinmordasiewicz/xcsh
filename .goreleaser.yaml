@@ -126,16 +126,27 @@ release:
   footer: |
     **Full Changelog**: https://github.com/robinmordasiewicz/vesctl/compare/{{ .PreviousTag }}...{{ .Tag }}
 
-# Homebrew tap (optional - uncomment to enable)
-# brews:
-#   - name: vesctl
-#     repository:
-#       owner: robinmordasiewicz
-#       name: homebrew-tap
-#     homepage: https://github.com/robinmordasiewicz/vesctl
-#     description: F5 Distributed Cloud CLI
-#     license: Apache-2.0
-#     install: |
-#       bin.install "vesctl"
-#     test: |
-#       system "#{bin}/vesctl", "version"
+# Homebrew tap
+brews:
+  - name: vesctl
+    repository:
+      owner: robinmordasiewicz
+      name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    directory: Formula
+    commit_author:
+      name: goreleaserbot
+      email: bot@goreleaser.com
+    commit_msg_template: "chore: Update {{ .ProjectName }} formula to {{ .Tag }}"
+    homepage: https://github.com/robinmordasiewicz/vesctl
+    description: Command-line interface for F5 Distributed Cloud
+    license: Apache-2.0
+    install: |
+      bin.install "vesctl"
+    test: |
+      system "#{bin}/vesctl", "version"
+    caveats: |
+      To get started with vesctl:
+        1. Configure authentication: vesctl configure
+        2. List namespaces: vesctl configuration list namespace
+        3. Get help: vesctl --help
