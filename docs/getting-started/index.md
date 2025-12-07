@@ -8,7 +8,7 @@ Before installing vesctl, ensure you have:
 
 - A terminal or command prompt
 - Network access to download the binary
-- (Optional) Go 1.23+ if building from source
+- (Optional) Go 1.22+ if building from source
 
 ## Installation Methods
 
