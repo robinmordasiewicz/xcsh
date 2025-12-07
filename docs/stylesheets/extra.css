@@ -1,0 +1,66 @@
+/* vesctl Documentation Custom Styles */
+
+/* Terminal-style code blocks */
+.md-typeset code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* Command output styling */
+.md-typeset pre > code {
+  font-size: 0.85em;
+}
+
+/* Admonition styling */
+.md-typeset .admonition.note {
+  border-left-color: #7c4dff;
+}
+
+/* Table styling */
+.md-typeset table:not([class]) {
+  font-size: 0.85em;
+}
+
+.md-typeset table:not([class]) th {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Code in tables */
+.md-typeset table:not([class]) code {
+  font-size: 0.9em;
+  padding: 0.1em 0.4em;
+}
+
+/* Header styling */
+.md-typeset h1 {
+  font-weight: 700;
+}
+
+/* Footer link styling */
+.md-footer-meta__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* Navigation improvements */
+.md-nav__link {
+  font-size: 0.75rem;
+}
+
+/* Search improvements */
+.md-search__input {
+  font-size: 0.9rem;
+}
+
+/* Inline code improvements */
+.md-typeset :not(pre) > code {
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+}
+
+/* Tab styling */
+.md-typeset .tabbed-labels > label {
+  font-size: 0.75rem;
+  font-weight: 600;
+}

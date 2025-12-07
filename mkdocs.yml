@@ -1,0 +1,93 @@
+site_name: vesctl Documentation
+site_description: Open-source CLI for F5 Distributed Cloud
+site_url: https://robinmordasiewicz.github.io/vesctl/
+repo_name: robinmordasiewicz/vesctl
+repo_url: https://github.com/robinmordasiewicz/vesctl
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: date
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.mark
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/robinmordasiewicz/vesctl
+  generator: false
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - getting-started/index.md
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart.md
+    - Authentication: getting-started/authentication.md
+  - Commands:
+    - commands/index.md
+    - Configuration: commands/configuration.md
+    - Request: commands/request.md
+    - Site: commands/site.md
+    - API Endpoint: commands/api-endpoint.md
+    - Utilities: commands/utilities.md
+  - Reference:
+    - reference/index.md
+    - Global Flags: reference/global-flags.md
+    - Environment Variables: reference/environment-variables.md
+    - Resources: reference/resources.md
+  - Examples:
+    - examples/index.md
+    - Load Balancers: examples/load-balancer.md
+    - Cloud Sites: examples/cloud-sites.md
