@@ -28,7 +28,7 @@ theme:
   features:
     - navigation.tabs
     - navigation.sections
-    - navigation.expand
+    - navigation.indexes
     - navigation.path
     - navigation.top
     - navigation.footer
@@ -66,8 +66,13 @@ markdown_extensions:
       alternate_style: true
   - pymdownx.details
   - pymdownx.mark
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - admonition
   - tables
+  - attr_list
+  - md_in_html
   - toc:
       permalink: true
 

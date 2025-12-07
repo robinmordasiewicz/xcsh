@@ -1,0 +1,18 @@
+{% extends "main.html" %}
+
+{% block tabs %}
+{{ super() }}
+{% endblock %}
+
+{% block htmltitle %}
+{{ super() }}
+<script>document.documentElement.setAttribute('data-md-page', 'home');</script>
+{% endblock %}
+
+{% block content %}
+<div class="md-content" data-md-component="content">
+  <article class="md-content__inner md-typeset">
+    {{ page.content }}
+  </article>
+</div>
+{% endblock %}
