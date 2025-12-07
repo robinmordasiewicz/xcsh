@@ -85,6 +85,7 @@ nav:
   - Getting Started:
     - getting-started/index.md
     - Installation: getting-started/installation.md
+    - Install Script: getting-started/install-script.md
     - Quick Start: getting-started/quickstart.md
     - Authentication: getting-started/authentication.md
   - Commands:
