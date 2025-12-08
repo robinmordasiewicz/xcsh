@@ -72,7 +72,7 @@ Examples:
 vesctl configuration list namespace
 
 # List HTTP load balancers in a namespace
-vesctl configuration list http_loadbalancer -n my-namespace
+vesctl configuration list http_loadbalancer -n example-namespace
 ```
 
 ### Get Resource
@@ -85,10 +85,10 @@ Examples:
 
 ```bash
 # Get namespace details
-vesctl configuration get namespace my-namespace
+vesctl configuration get namespace example-namespace
 
 # Get with JSON output
-vesctl configuration get http_loadbalancer my-lb -n my-ns --outfmt json
+vesctl configuration get http_loadbalancer example-lb -n example-ns --outfmt json
 ```
 
 ### Create Resource
@@ -104,7 +104,7 @@ Examples:
 vesctl configuration create http_loadbalancer -i lb.yaml
 
 # Create in specific namespace
-vesctl configuration create origin_pool -i pool.yaml -n my-namespace
+vesctl configuration create origin_pool -i pool.yaml -n example-namespace
 ```
 
 ### Delete Resource
@@ -117,10 +117,10 @@ Examples:
 
 ```bash
 # Delete with confirmation
-vesctl configuration delete http_loadbalancer my-lb -n my-namespace
+vesctl configuration delete http_loadbalancer example-lb -n example-namespace
 
 # Delete without confirmation
-vesctl configuration delete origin_pool my-pool -n my-namespace --yes
+vesctl configuration delete origin_pool example-pool -n example-namespace --yes
 ```
 
 ## Resource YAML Format
@@ -130,7 +130,7 @@ Resources are defined in YAML format:
 ```yaml
 metadata:
   name: resource-name
-  namespace: my-namespace
+  namespace: example-namespace
   labels:
     key: value
 spec:
@@ -141,8 +141,8 @@ spec:
 
 ```yaml
 metadata:
-  name: my-http-lb
-  namespace: my-namespace
+  name: example-http-lb
+  namespace: example-namespace
 spec:
   domains:
     - example.com
@@ -150,22 +150,22 @@ spec:
     port: 80
   default_route_pools:
     - pool:
-        name: my-origin-pool
-        namespace: my-namespace
+        name: example-origin-pool
+        namespace: example-namespace
 ```
 
 ### Example: Origin Pool
 
 ```yaml
 metadata:
-  name: my-origin-pool
-  namespace: my-namespace
+  name: example-origin-pool
+  namespace: example-namespace
 spec:
   origin_servers:
     - public_ip:
         ip: 192.168.1.100
   port: 8080
   healthcheck:
-    - name: my-healthcheck
-      namespace: my-namespace
+    - name: example-healthcheck
+      namespace: example-namespace
 ```

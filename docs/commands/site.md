@@ -76,5 +76,5 @@ For detailed site resource management, use the `configuration` commands:
 vesctl configuration create aws_vpc_site -i aws-site.yaml -n system
 
 # Get site details
-vesctl configuration get aws_vpc_site my-aws-site -n system --outfmt yaml
+vesctl configuration get aws_vpc_site example-aws-site -n system --outfmt yaml
 ```

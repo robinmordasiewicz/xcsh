@@ -22,7 +22,7 @@ vesctl configuration list namespace
 ```text
 NAME           DESCRIPTION
 default        Default namespace
-my-namespace   My application namespace
+example-namespace   My application namespace
 system         System namespace
 ```
 
@@ -35,14 +35,14 @@ vesctl configuration create http_loadbalancer -i lb.yaml
 ### Get Resource as YAML
 
 ```bash
-vesctl configuration get namespace my-namespace --outfmt yaml
+vesctl configuration get namespace example-namespace --outfmt yaml
 ```
 
 **Output:**
 
 ```yaml
 metadata:
-  name: my-namespace
+  name: example-namespace
   uid: abc123
 spec:
   description: My application namespace
@@ -51,7 +51,7 @@ spec:
 ### Delete Resource
 
 ```bash
-vesctl configuration delete http_loadbalancer my-lb -n my-namespace --yes
+vesctl configuration delete http_loadbalancer example-lb -n example-namespace --yes
 ```
 
 ## Common Workflows
@@ -79,7 +79,7 @@ vesctl configuration create http_loadbalancer -i lb.yaml
 4. Verify deployment:
 
 ```bash
-vesctl configuration get http_loadbalancer my-lb -n my-namespace
+vesctl configuration get http_loadbalancer example-lb -n example-namespace
 ```
 
 ### Update Configuration
@@ -87,7 +87,7 @@ vesctl configuration get http_loadbalancer my-lb -n my-namespace
 1. Export current configuration:
 
 ```bash
-vesctl configuration get http_loadbalancer my-lb -n my-namespace --outfmt yaml > lb.yaml
+vesctl configuration get http_loadbalancer example-lb -n example-namespace --outfmt yaml > lb.yaml
 ```
 
 2. Edit the file as needed
@@ -102,11 +102,11 @@ vesctl configuration replace http_loadbalancer -i lb.yaml
 
 ```bash
 # Delete load balancer
-vesctl configuration delete http_loadbalancer my-lb -n my-namespace --yes
+vesctl configuration delete http_loadbalancer example-lb -n example-namespace --yes
 
 # Delete origin pool
-vesctl configuration delete origin_pool my-pool -n my-namespace --yes
+vesctl configuration delete origin_pool example-pool -n example-namespace --yes
 
 # Delete health check
-vesctl configuration delete healthcheck my-hc -n my-namespace --yes
+vesctl configuration delete healthcheck example-hc -n example-namespace --yes
 ```

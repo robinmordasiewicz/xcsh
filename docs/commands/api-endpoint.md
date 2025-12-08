@@ -26,17 +26,17 @@ and documentation.
 View all discovered API endpoints in a namespace:
 
 ```bash
-vesctl api-endpoint list -n my-namespace
+vesctl api-endpoint list -n example-namespace
 ```
 
 **Example Output:**
 
 ```text
 NAME                    METHOD    PATH              LOAD BALANCER
-api-users-get           GET       /api/users        my-http-lb
-api-users-post          POST      /api/users        my-http-lb
-api-orders-get          GET       /api/orders       my-http-lb
-api-health              GET       /health           my-http-lb
+api-users-get           GET       /api/users        example-http-lb
+api-users-post          POST      /api/users        example-http-lb
+api-orders-get          GET       /api/orders       example-http-lb
+api-health              GET       /health           example-http-lb
 ```
 
 ### Get Endpoint Details
@@ -44,13 +44,13 @@ api-health              GET       /health           my-http-lb
 Retrieve detailed information about a specific endpoint:
 
 ```bash
-vesctl api-endpoint get api-users-get -n my-namespace
+vesctl api-endpoint get api-users-get -n example-namespace
 ```
 
 **With YAML output:**
 
 ```bash
-vesctl api-endpoint get api-users-get -n my-namespace --outfmt yaml
+vesctl api-endpoint get api-users-get -n example-namespace --outfmt yaml
 ```
 
 ### Filter by Load Balancer
@@ -58,7 +58,7 @@ vesctl api-endpoint get api-users-get -n my-namespace --outfmt yaml
 List endpoints for a specific HTTP load balancer:
 
 ```bash
-vesctl api-endpoint list -n my-namespace --lb my-http-lb
+vesctl api-endpoint list -n example-namespace --lb example-http-lb
 ```
 
 ## Discovery Workflow
@@ -69,8 +69,8 @@ API discovery is configured on your HTTP load balancer. Ensure your load balance
 
 ```yaml
 metadata:
-  name: my-http-lb
-  namespace: my-namespace
+  name: example-http-lb
+  namespace: example-namespace
 spec:
   domains:
     - api.example.com
@@ -95,10 +95,10 @@ analyzes request patterns to identify API endpoints.
 
 ```bash
 # List all discovered endpoints
-vesctl api-endpoint list -n my-namespace
+vesctl api-endpoint list -n example-namespace
 
 # Export to JSON for analysis
-vesctl api-endpoint list -n my-namespace --outfmt json > endpoints.json
+vesctl api-endpoint list -n example-namespace --outfmt json > endpoints.json
 ```
 
 ### Step 5: Create API Definition
@@ -107,7 +107,7 @@ Use discovered endpoints to create a formal API definition:
 
 ```bash
 # Get endpoint details
-vesctl api-endpoint get api-users-get -n my-namespace --outfmt yaml > endpoint.yaml
+vesctl api-endpoint get api-users-get -n example-namespace --outfmt yaml > endpoint.yaml
 
 # Create API definition
 vesctl configuration create api_definition -i api-def.yaml
@@ -120,7 +120,7 @@ For comprehensive API management, use configuration commands with API definition
 ### List API Definitions
 
 ```bash
-vesctl configuration list api_definition -n my-namespace
+vesctl configuration list api_definition -n example-namespace
 ```
 
 ### Create API Definition
@@ -129,8 +129,8 @@ vesctl configuration list api_definition -n my-namespace
 
 ```yaml
 metadata:
-  name: my-api-definition
-  namespace: my-namespace
+  name: example-api-definition
+  namespace: example-namespace
 spec:
   swagger:
     openapi: "3.0.0"
@@ -152,7 +152,7 @@ vesctl configuration create api_definition -i api-definition.yaml
 ### Get API Definition
 
 ```bash
-vesctl configuration get api_definition my-api-definition -n my-namespace --outfmt yaml
+vesctl configuration get api_definition example-api-definition -n example-namespace --outfmt yaml
 ```
 
 ## Integration with Security Policies
@@ -164,7 +164,7 @@ Discovered endpoints can be protected with service policies:
 ```yaml
 metadata:
   name: protect-user-api
-  namespace: my-namespace
+  namespace: example-namespace
 spec:
   algo: FIRST_MATCH
   rules:
@@ -213,7 +213,7 @@ If no endpoints appear:
 
 ```bash
 # Check load balancer configuration
-vesctl configuration get http_loadbalancer my-lb -n my-namespace --outfmt yaml | grep -A5 api_discovery
+vesctl configuration get http_loadbalancer example-lb -n example-namespace --outfmt yaml | grep -A5 api_discovery
 ```
 
 ### Debug Mode
@@ -221,7 +221,7 @@ vesctl configuration get http_loadbalancer my-lb -n my-namespace --outfmt yaml |
 Enable verbose output for troubleshooting:
 
 ```bash
-vesctl --debug api-endpoint list -n my-namespace
+vesctl --debug api-endpoint list -n example-namespace
 ```
 
 ## Related Commands

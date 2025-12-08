@@ -29,7 +29,7 @@ vesctl configuration list <resource-type> [flags]
 vesctl configuration list namespace
 
 # List HTTP load balancers in a namespace
-vesctl configuration list http_loadbalancer -n my-namespace
+vesctl configuration list http_loadbalancer -n example-namespace
 
 # List with JSON output
 vesctl configuration list namespace --outfmt json
@@ -47,10 +47,10 @@ vesctl configuration get <resource-type> <name> [flags]
 
 ```bash
 # Get namespace details
-vesctl configuration get namespace my-namespace
+vesctl configuration get namespace example-namespace
 
 # Get with YAML output
-vesctl configuration get http_loadbalancer my-lb -n my-namespace --outfmt yaml
+vesctl configuration get http_loadbalancer example-lb -n example-namespace --outfmt yaml
 ```
 
 ### Create Resource
@@ -68,7 +68,7 @@ vesctl configuration create <resource-type> -i <file> [flags]
 vesctl configuration create http_loadbalancer -i lb.yaml
 
 # Create with namespace
-vesctl configuration create origin_pool -i pool.yaml -n my-namespace
+vesctl configuration create origin_pool -i pool.yaml -n example-namespace
 ```
 
 ### Replace Resource
@@ -98,10 +98,10 @@ vesctl configuration delete <resource-type> <name> [flags]
 
 ```bash
 # Delete a resource
-vesctl configuration delete http_loadbalancer my-lb -n my-namespace
+vesctl configuration delete http_loadbalancer example-lb -n example-namespace
 
 # Delete with confirmation bypass
-vesctl configuration delete origin_pool my-pool -n my-namespace --yes
+vesctl configuration delete origin_pool example-pool -n example-namespace --yes
 ```
 
 ## Common Flags

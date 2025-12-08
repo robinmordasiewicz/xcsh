@@ -29,13 +29,13 @@ vesctl <command-group> <action> [resource-type] [name] [flags]
 vesctl configuration list namespace
 
 # Get a specific resource
-vesctl configuration get http_loadbalancer my-lb -n my-namespace
+vesctl configuration get http_loadbalancer example-lb -n example-namespace
 
 # Create from file
 vesctl configuration create origin_pool -i pool.yaml
 
 # Delete a resource
-vesctl configuration delete healthcheck my-hc -n my-namespace
+vesctl configuration delete healthcheck example-hc -n example-namespace
 ```
 
 ## Global Flags

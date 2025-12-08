@@ -12,8 +12,8 @@ Create a simple HTTP load balancer with a single origin pool.
 
 ```yaml
 metadata:
-  name: my-origin-pool
-  namespace: my-namespace
+  name: example-origin-pool
+  namespace: example-namespace
 spec:
   origin_servers:
     - public_ip:
@@ -26,8 +26,8 @@ spec:
 
 ```yaml
 metadata:
-  name: my-http-lb
-  namespace: my-namespace
+  name: example-http-lb
+  namespace: example-namespace
 spec:
   domains:
     - example.com
@@ -35,8 +35,8 @@ spec:
     port: 80
   default_route_pools:
     - pool:
-        name: my-origin-pool
-        namespace: my-namespace
+        name: example-origin-pool
+        namespace: example-namespace
 ```
 
 **Deploy:**
@@ -49,7 +49,7 @@ vesctl configuration create origin_pool -i origin-pool.yaml
 vesctl configuration create http_loadbalancer -i http-lb.yaml
 
 # Verify
-vesctl configuration get http_loadbalancer my-http-lb -n my-namespace
+vesctl configuration get http_loadbalancer example-http-lb -n example-namespace
 ```
 
 ### HTTPS Load Balancer
@@ -60,8 +60,8 @@ Add TLS termination to your load balancer.
 
 ```yaml
 metadata:
-  name: my-https-lb
-  namespace: my-namespace
+  name: example-https-lb
+  namespace: example-namespace
 spec:
   domains:
     - example.com
@@ -70,8 +70,8 @@ spec:
     add_hsts: true
   default_route_pools:
     - pool:
-        name: my-origin-pool
-        namespace: my-namespace
+        name: example-origin-pool
+        namespace: example-namespace
 ```
 
 ### Load Balancer with WAF
@@ -82,8 +82,8 @@ Add Web Application Firewall protection.
 
 ```yaml
 metadata:
-  name: my-waf-lb
-  namespace: my-namespace
+  name: example-waf-lb
+  namespace: example-namespace
 spec:
   domains:
     - example.com
@@ -91,11 +91,11 @@ spec:
     http_redirect: true
   default_route_pools:
     - pool:
-        name: my-origin-pool
-        namespace: my-namespace
+        name: example-origin-pool
+        namespace: example-namespace
   app_firewall:
-    name: my-waf-policy
-    namespace: my-namespace
+    name: example-waf-policy
+    namespace: example-namespace
 ```
 
 ## TCP Load Balancer
@@ -106,14 +106,14 @@ spec:
 
 ```yaml
 metadata:
-  name: my-tcp-lb
-  namespace: my-namespace
+  name: example-tcp-lb
+  namespace: example-namespace
 spec:
   listen_port: 3306
   origin_pools:
     - pool:
-        name: my-db-pool
-        namespace: my-namespace
+        name: example-db-pool
+        namespace: example-namespace
 ```
 
 **Deploy:**
@@ -130,8 +130,8 @@ vesctl configuration create tcp_loadbalancer -i tcp-lb.yaml
 
 ```yaml
 metadata:
-  name: my-healthcheck
-  namespace: my-namespace
+  name: example-healthcheck
+  namespace: example-namespace
 spec:
   http_health_check:
     path: /health
@@ -149,8 +149,8 @@ spec:
 
 ```yaml
 metadata:
-  name: my-tcp-healthcheck
-  namespace: my-namespace
+  name: example-tcp-healthcheck
+  namespace: example-namespace
 spec:
   tcp_health_check: {}
   interval: 15
@@ -164,7 +164,7 @@ spec:
 ```yaml
 metadata:
   name: multi-origin-pool
-  namespace: my-namespace
+  namespace: example-namespace
 spec:
   origin_servers:
     - public_ip:
@@ -176,8 +176,8 @@ spec:
   port: 8080
   loadbalancer_algorithm: ROUND_ROBIN
   healthcheck:
-    - name: my-healthcheck
-      namespace: my-namespace
+    - name: example-healthcheck
+      namespace: example-namespace
 ```
 
 ### Origin Pool with DNS
@@ -185,7 +185,7 @@ spec:
 ```yaml
 metadata:
   name: dns-origin-pool
-  namespace: my-namespace
+  namespace: example-namespace
 spec:
   origin_servers:
     - public_name:
@@ -201,30 +201,30 @@ spec:
 
 ```bash
 # List all HTTP load balancers
-vesctl configuration list http_loadbalancer -n my-namespace
+vesctl configuration list http_loadbalancer -n example-namespace
 
 # List all TCP load balancers
-vesctl configuration list tcp_loadbalancer -n my-namespace
+vesctl configuration list tcp_loadbalancer -n example-namespace
 ```
 
 ### Get Details
 
 ```bash
 # Get as table
-vesctl configuration get http_loadbalancer my-lb -n my-namespace
+vesctl configuration get http_loadbalancer example-lb -n example-namespace
 
 # Get as YAML
-vesctl configuration get http_loadbalancer my-lb -n my-namespace --outfmt yaml
+vesctl configuration get http_loadbalancer example-lb -n example-namespace --outfmt yaml
 
 # Get as JSON
-vesctl configuration get http_loadbalancer my-lb -n my-namespace --outfmt json
+vesctl configuration get http_loadbalancer example-lb -n example-namespace --outfmt json
 ```
 
 ### Update Load Balancer
 
 ```bash
 # Export current config
-vesctl configuration get http_loadbalancer my-lb -n my-namespace --outfmt yaml > lb.yaml
+vesctl configuration get http_loadbalancer example-lb -n example-namespace --outfmt yaml > lb.yaml
 
 # Edit lb.yaml...
 
@@ -236,8 +236,8 @@ vesctl configuration replace http_loadbalancer -i lb.yaml
 
 ```bash
 # With confirmation
-vesctl configuration delete http_loadbalancer my-lb -n my-namespace
+vesctl configuration delete http_loadbalancer example-lb -n example-namespace
 
 # Skip confirmation
-vesctl configuration delete http_loadbalancer my-lb -n my-namespace --yes
+vesctl configuration delete http_loadbalancer example-lb -n example-namespace --yes
 ```

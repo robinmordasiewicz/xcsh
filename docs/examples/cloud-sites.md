@@ -12,7 +12,7 @@ Deploy an F5 XC site in an AWS VPC.
 
 ```yaml
 metadata:
-  name: my-aws-site
+  name: example-aws-site
   namespace: system
 spec:
   aws:
@@ -38,7 +38,7 @@ vesctl configuration create cloud_credentials -i aws-creds.yaml -n system
 vesctl configuration create aws_vpc_site -i aws-vpc-site.yaml -n system
 
 # Check status
-vesctl configuration get aws_vpc_site my-aws-site -n system
+vesctl configuration get aws_vpc_site example-aws-site -n system
 ```
 
 ### AWS Site with Multiple Nodes
@@ -47,7 +47,7 @@ vesctl configuration get aws_vpc_site my-aws-site -n system
 
 ```yaml
 metadata:
-  name: my-multi-az-site
+  name: example-multi-az-site
   namespace: system
 spec:
   aws:
@@ -79,14 +79,14 @@ Deploy an F5 XC site in an Azure VNet.
 
 ```yaml
 metadata:
-  name: my-azure-site
+  name: example-azure-site
   namespace: system
 spec:
   azure:
     region: eastus
-  resource_group: my-resource-group
+  resource_group: example-resource-group
   vnet:
-    vnet_name: my-vnet
+    vnet_name: example-vnet
   ingress_egress_gw:
     azure_certified_hw: azure-byol-voltmesh
     instance_type: Standard_D3_v2
@@ -114,7 +114,7 @@ vesctl configuration create azure_vnet_site -i azure-vnet-site.yaml -n system
 
 ```yaml
 metadata:
-  name: my-aws-creds
+  name: example-aws-creds
   namespace: system
 spec:
   aws_secret_key:
@@ -130,7 +130,7 @@ spec:
 
 ```yaml
 metadata:
-  name: my-azure-creds
+  name: example-azure-creds
   namespace: system
 spec:
   azure_client_secret:
@@ -158,27 +158,27 @@ vesctl configuration list azure_vnet_site -n system
 
 ```bash
 # Get AWS site
-vesctl configuration get aws_vpc_site my-aws-site -n system --outfmt yaml
+vesctl configuration get aws_vpc_site example-aws-site -n system --outfmt yaml
 
 # Get Azure site
-vesctl configuration get azure_vnet_site my-azure-site -n system --outfmt yaml
+vesctl configuration get azure_vnet_site example-azure-site -n system --outfmt yaml
 ```
 
 ### Site Status
 
 ```bash
 # Check site registration status
-vesctl site status my-aws-site -n system
+vesctl site status example-aws-site -n system
 ```
 
 ### Delete Site
 
 ```bash
 # Delete AWS site
-vesctl configuration delete aws_vpc_site my-aws-site -n system --yes
+vesctl configuration delete aws_vpc_site example-aws-site -n system --yes
 
 # Delete Azure site
-vesctl configuration delete azure_vnet_site my-azure-site -n system --yes
+vesctl configuration delete azure_vnet_site example-azure-site -n system --yes
 ```
 
 ## Troubleshooting
@@ -186,7 +186,7 @@ vesctl configuration delete azure_vnet_site my-azure-site -n system --yes
 ### Check Site Status
 
 ```bash
-vesctl configuration get aws_vpc_site my-site -n system --outfmt json | jq '.status'
+vesctl configuration get aws_vpc_site example-site -n system --outfmt json | jq '.status'
 ```
 
 ### List All Cloud Resources
@@ -203,5 +203,5 @@ vesctl configuration list azure_vnet_site -n system
 ### Debug Mode
 
 ```bash
-vesctl --debug configuration get aws_vpc_site my-site -n system
+vesctl --debug configuration get aws_vpc_site example-site -n system
 ```

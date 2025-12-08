@@ -42,7 +42,7 @@ vesctl request rpc GET /api/web/tenant
 
 ```json
 {
-  "name": "my-tenant",
+  "name": "example-tenant",
   "uid": "abc123-def456",
   "tenant_type": "CUSTOMER"
 }
@@ -57,7 +57,7 @@ vesctl request rpc GET /api
 ### Query Namespace Details
 
 ```bash
-vesctl request rpc GET /api/web/namespaces/my-namespace
+vesctl request rpc GET /api/web/namespaces/example-namespace
 ```
 
 ### Execute Custom Queries
@@ -68,7 +68,7 @@ For complex queries, use a request body file:
 
 ```json
 {
-  "namespace": "my-namespace",
+  "namespace": "example-namespace",
   "label_selector": "app=web"
 }
 ```
@@ -98,8 +98,8 @@ Create a custom resource using a JSON payload:
 ```json
 {
   "metadata": {
-    "name": "my-resource",
-    "namespace": "my-namespace"
+    "name": "example-resource",
+    "namespace": "example-namespace"
   },
   "spec": {
     "description": "Created via RPC"
@@ -108,7 +108,7 @@ Create a custom resource using a JSON payload:
 ```
 
 ```bash
-vesctl request rpc POST /api/config/namespaces/my-namespace/resources -i payload.json
+vesctl request rpc POST /api/config/namespaces/example-namespace/resources -i payload.json
 ```
 
 ### Debug API Calls
@@ -136,13 +136,13 @@ vesctl request secrets [subcommand] [flags]
 ### List Secrets
 
 ```bash
-vesctl request secrets list -n my-namespace
+vesctl request secrets list -n example-namespace
 ```
 
 ### Get Secret Details
 
 ```bash
-vesctl request secrets get my-secret -n my-namespace
+vesctl request secrets get example-secret -n example-namespace
 ```
 
 ## Flags

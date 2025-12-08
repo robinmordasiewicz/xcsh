@@ -70,7 +70,7 @@ vesctl --outfmt json configuration list namespace
 ### Combine Flags
 
 ```bash
-vesctl --verbose --outfmt yaml configuration get namespace my-ns
+vesctl --verbose --outfmt yaml configuration get namespace example-ns
 ```
 
 ## Precedence

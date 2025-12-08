@@ -61,7 +61,7 @@ vesctl configuration get namespace default --outfmt yaml
 ### List HTTP Load Balancers
 
 ```bash
-vesctl configuration list http_loadbalancer -n my-namespace
+vesctl configuration list http_loadbalancer -n example-namespace
 ```
 
 ## Common Commands
