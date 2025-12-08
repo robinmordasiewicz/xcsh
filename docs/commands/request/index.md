@@ -163,8 +163,3 @@ vesctl request secrets get example-secret -n example-namespace
 ```bash
 vesctl request rpc GET /api/web/namespaces --outfmt json > namespaces.json
 ```
-
-## Related Commands
-
-- [configuration](configuration.md) - Standard resource management
-- [api-endpoint](api-endpoint.md) - API endpoint discovery
