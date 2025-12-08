@@ -2,14 +2,8 @@
 # test-no-api.sh - Comprehensive test of all commands that don't require API credentials
 # Tests help text, flags, and structure consistency
 #
-# KNOWN ISSUE: vesctl-0.2.35 has bugs where certain help commands hang at 100% CPU.
-# The full list of buggy commands is defined in lib/common.sh (KNOWN_BUGGY_COMMANDS).
-# These are skipped when testing against the original binary.
-#
-# Known buggy help commands in vesctl-0.2.35:
-#   - configuration status/patch/replace/add-labels/remove-labels --help
-#   - configuration list <any-resource> --help
-# These commands never return and consume 100% CPU.
+# NOTE: vesctl-0.2.35 help commands can take 20-25 seconds to complete.
+# The timeout is set to 60 seconds in lib/common.sh to accommodate this.
 
 set +e
 

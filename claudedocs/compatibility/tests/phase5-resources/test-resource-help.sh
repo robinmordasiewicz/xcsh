@@ -2,9 +2,8 @@
 # test-resource-help.sh - Test help text compatibility for multiple resource types
 # Phase 5: Multi-Resource Validation
 #
-# NOTE: vesctl-0.2.35 has bugs where "configuration list <resource> --help" hangs.
-# All "list" tests are skipped for this reason.
-# The is_buggy_command() function from lib/common.sh handles this detection.
+# NOTE: vesctl-0.2.35 help commands can take 20-25 seconds to complete.
+# The timeout is set to 60 seconds in lib/common.sh to accommodate this.
 
 set +e
 

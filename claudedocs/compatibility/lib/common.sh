@@ -9,20 +9,11 @@ ORIGINAL_VESCTL="${ORIGINAL_VESCTL:-./vesctl-0.2.35}"
 OUR_VESCTL="${OUR_VESCTL:-./vesctl}"
 
 # Timeout for original vesctl commands (in seconds)
-# KNOWN ISSUE: vesctl-0.2.35 has bugs where certain commands hang at 100% CPU
-# See: KNOWN_BUGGY_COMMANDS below
-ORIGINAL_VESCTL_TIMEOUT=${ORIGINAL_VESCTL_TIMEOUT:-10}
+# NOTE: vesctl-0.2.35 help commands can take 20-25 seconds to complete
+ORIGINAL_VESCTL_TIMEOUT=${ORIGINAL_VESCTL_TIMEOUT:-60}
 
-# Known buggy commands in vesctl-0.2.35 that hang on --help
-# These commands cause 100% CPU and never return
-KNOWN_BUGGY_COMMANDS=(
-    "configuration status"
-    "configuration patch"
-    "configuration replace"
-    "configuration add-labels"
-    "configuration remove-labels"
-    "configuration list"      # Any list subcommand can hang
-)
+# Known buggy commands array (currently empty - commands are slow but work)
+KNOWN_BUGGY_COMMANDS=()
 
 # Colors for output
 RED='\033[0;31m'
