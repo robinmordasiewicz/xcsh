@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/robinmordasiewicz/f5xc/pkg/client"
+	"github.com/robinmordasiewicz/vesctl/pkg/client"
 )
 
 // getTestClient creates a client for integration tests

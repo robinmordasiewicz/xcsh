@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/robinmordasiewicz/f5xc/pkg/output"
+	"github.com/robinmordasiewicz/vesctl/pkg/output"
 )
 
 // Build-time variables (set via ldflags)

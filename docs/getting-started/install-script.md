@@ -190,14 +190,6 @@ apk add curl
 # macOS (curl is pre-installed)
 ```
 
-### Checksum Verification Failed
-
-If checksum verification fails:
-
-1. Try downloading again - the file may have been corrupted
-2. Check your internet connection
-3. Verify the release exists on [GitHub](https://github.com/robinmordasiewicz/vesctl/releases)
-
 ### Version Not Found
 
 If the specified version doesn't exist:

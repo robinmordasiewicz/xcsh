@@ -63,38 +63,6 @@ curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | sh -s -- --un
 
 Download the appropriate binary from [GitHub Releases](https://github.com/robinmordasiewicz/vesctl/releases).
 
-### Linux (amd64)
-
-```bash
-curl -LO https://github.com/robinmordasiewicz/vesctl/releases/latest/download/vesctl_linux_amd64.tar.gz
-tar -xzf vesctl_linux_amd64.tar.gz
-sudo mv vesctl /usr/local/bin/
-```
-
-### Linux (arm64)
-
-```bash
-curl -LO https://github.com/robinmordasiewicz/vesctl/releases/latest/download/vesctl_linux_arm64.tar.gz
-tar -xzf vesctl_linux_arm64.tar.gz
-sudo mv vesctl /usr/local/bin/
-```
-
-### macOS (Intel)
-
-```bash
-curl -LO https://github.com/robinmordasiewicz/vesctl/releases/latest/download/vesctl_darwin_amd64.tar.gz
-tar -xzf vesctl_darwin_amd64.tar.gz
-sudo mv vesctl /usr/local/bin/
-```
-
-### macOS (Apple Silicon)
-
-```bash
-curl -LO https://github.com/robinmordasiewicz/vesctl/releases/latest/download/vesctl_darwin_arm64.tar.gz
-tar -xzf vesctl_darwin_arm64.tar.gz
-sudo mv vesctl /usr/local/bin/
-```
-
 ## Build from Source
 
 Build vesctl from source code:
@@ -110,11 +78,6 @@ go build -o vesctl .
 # Install (optional)
 sudo mv vesctl /usr/local/bin/
 ```
-
-### Build Requirements
-
-- Go 1.23 or later
-- Git
 
 ## Verify Installation
 
@@ -193,7 +156,3 @@ Ensure the installation directory is in your PATH:
 # Add to ~/.bashrc or ~/.zshrc
 export PATH="$PATH:/usr/local/bin"
 ```
-
-### Checksum Verification Failed
-
-If the checksum doesn't match, try downloading again or verify the release on GitHub.

@@ -9,22 +9,22 @@ import (
 	"testing"
 )
 
-// getBinaryPath returns the path to the f5xc binary
+// getBinaryPath returns the path to the vesctl binary
 func getBinaryPath(t *testing.T) string {
 	// Try current directory first
 	cwd, _ := os.Getwd()
-	binary := filepath.Join(cwd, "..", "..", "f5xc")
+	binary := filepath.Join(cwd, "..", "..", "vesctl")
 	if _, err := os.Stat(binary); err == nil {
 		return binary
 	}
 
 	// Try relative to project root
-	binary = "./f5xc"
+	binary = "./vesctl"
 	if _, err := os.Stat(binary); err == nil {
 		return binary
 	}
 
-	t.Skip("f5xc binary not found - run 'go build' first")
+	t.Skip("vesctl binary not found - run 'go build' first")
 	return ""
 }
 
@@ -43,7 +43,7 @@ func TestCLI_Version(t *testing.T) {
 	}
 
 	output := stdout.String()
-	if !strings.Contains(output, "f5xc") && !strings.Contains(output, "version") {
+	if !strings.Contains(output, "vesctl") && !strings.Contains(output, "version") {
 		t.Errorf("Expected version output, got: %s", output)
 	}
 

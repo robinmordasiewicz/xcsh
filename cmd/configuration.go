@@ -11,8 +11,8 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/f5xc/pkg/output"
-	"github.com/robinmordasiewicz/f5xc/pkg/types"
+	"github.com/robinmordasiewicz/vesctl/pkg/output"
+	"github.com/robinmordasiewicz/vesctl/pkg/types"
 )
 
 // configurationFlags holds flags for configuration commands (vesctl compatibility)

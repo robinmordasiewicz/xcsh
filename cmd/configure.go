@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/f5xc/pkg/output"
+	"github.com/robinmordasiewicz/vesctl/pkg/output"
 )
 
 var configureFlags struct {

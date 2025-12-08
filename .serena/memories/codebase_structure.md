@@ -4,7 +4,7 @@
 ```
 vesctl/
 ├── main.go              # Entry point - calls cmd.Execute()
-├── go.mod               # Go module definition (github.com/robinmordasiewicz/f5xc)
+├── go.mod               # Go module definition (github.com/robinmordasiewicz/vesctl)
 ├── go.sum               # Dependency checksums
 ├── Makefile             # Build, test, lint commands
 ├── .goreleaser.yaml     # GoReleaser configuration

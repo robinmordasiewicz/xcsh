@@ -73,7 +73,7 @@ Add to your shell profile for persistent configuration:
 
 ```bash
 export VES_SERVER_URLS="https://your-tenant.console.ves.volterra.io/api"
-export VES_P12_BUNDLE="$HOME/.f5xc/api-creds.p12"
+export VES_P12_BUNDLE="$HOME/.vesconfig/api-creds.p12"
 export VES_P12_PASSWORD="your-password"
 ```
 
@@ -81,7 +81,7 @@ export VES_P12_PASSWORD="your-password"
 
 ```bash
 export VES_SERVER_URLS="https://your-tenant.console.ves.volterra.io/api"
-export VES_P12_BUNDLE="$HOME/.f5xc/api-creds.p12"
+export VES_P12_BUNDLE="$HOME/.vesconfig/api-creds.p12"
 export VES_P12_PASSWORD="your-password"
 ```
 
@@ -89,7 +89,7 @@ export VES_P12_PASSWORD="your-password"
 
 ```fish
 set -x VES_SERVER_URLS "https://your-tenant.console.ves.volterra.io/api"
-set -x VES_P12_BUNDLE "$HOME/.f5xc/api-creds.p12"
+set -x VES_P12_BUNDLE "$HOME/.vesconfig/api-creds.p12"
 set -x VES_P12_PASSWORD "your-password"
 ```
 

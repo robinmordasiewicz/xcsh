@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/f5xc/pkg/output"
+	"github.com/robinmordasiewicz/vesctl/pkg/output"
 )
 
 var azureVNetFlags struct {
@@ -296,7 +296,7 @@ func runAzureVNetTerraform(cmd *cobra.Command, args []string) error {
 	// Setup Terraform directory
 	tfDir := azureVNetFlags.terraformDir
 	if tfDir == "" {
-		tfDir = filepath.Join(os.TempDir(), "f5xc-terraform", azureVNetFlags.name)
+		tfDir = filepath.Join(os.TempDir(), "vesctl-terraform", azureVNetFlags.name)
 	}
 
 	if err := os.MkdirAll(tfDir, 0755); err != nil {

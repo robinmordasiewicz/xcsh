@@ -2,15 +2,7 @@
 
 This guide will help you get started with vesctl, the command-line interface for F5 Distributed Cloud.
 
-## Prerequisites
-
-Before installing vesctl, ensure you have:
-
-- A terminal or command prompt
-- Network access to download the binary
-- (Optional) Go 1.22+ if building from source
-
-## Installation Methods
+## Installation
 
 Choose the installation method that works best for you:
 

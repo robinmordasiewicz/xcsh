@@ -564,7 +564,7 @@ func PrintAPIError(statusCode int, body []byte, operation string) {
 	// Provide helpful hints based on status code
 	switch statusCode {
 	case 401:
-		fmt.Fprintf(os.Stderr, "\nHint: Authentication failed. Check your credentials with 'f5xc configure show'\n")
+		fmt.Fprintf(os.Stderr, "\nHint: Authentication failed. Check your credentials with 'vesctl configure show'\n")
 	case 403:
 		fmt.Fprintf(os.Stderr, "\nHint: Permission denied. You may not have access to this resource.\n")
 	case 404:

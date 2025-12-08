@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/robinmordasiewicz/f5xc/cmd"
+	"github.com/robinmordasiewicz/vesctl/cmd"
 )
 
 func main() {

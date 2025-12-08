@@ -25,7 +25,7 @@ Create `~/.vesconfig`:
 ```yaml
 server-urls:
   - https://your-tenant.console.ves.volterra.io/api
-p12-bundle: ~/.f5xc/api-creds.p12
+p12-bundle: ~/.vesconfig/api-creds.p12
 ```
 
 Set the P12 password:

@@ -19,7 +19,7 @@ hide:
       </div>
       <h3>Getting Started</h3>
     </div>
-    <p>Install vesctl and configure authentication to start managing your F5 XC resources.</p>
+    <p>Install vesctl and configure authentication</p>
   </a>
 
   <a href="commands/" class="feature-card">
@@ -39,7 +39,7 @@ hide:
       </div>
       <h3>Reference</h3>
     </div>
-    <p>Detailed documentation on global flags, environment variables, and supported resource types.</p>
+    <p>CLI documentation on arguments, global flags, environment variables, and supported resource types.</p>
   </a>
 
   <a href="examples/" class="feature-card">
@@ -49,6 +49,6 @@ hide:
       </div>
       <h3>Examples</h3>
     </div>
-    <p>Real-world examples for load balancers, cloud sites, and common deployment patterns.</p>
+    <p>HTTP load balancers, cloud sites, and common deployment patterns.</p>
   </a>
 </div>

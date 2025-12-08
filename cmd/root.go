@@ -8,8 +8,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/robinmordasiewicz/f5xc/pkg/client"
-	"github.com/robinmordasiewicz/f5xc/pkg/config"
+	"github.com/robinmordasiewicz/vesctl/pkg/client"
+	"github.com/robinmordasiewicz/vesctl/pkg/config"
 )
 
 var (

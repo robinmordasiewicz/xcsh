@@ -1,7 +1,5 @@
 # Binaries
-f5xc
-f5xc.exe
-vesctl*
+vesctl
 *.exe
 *.exe~
 *.dll

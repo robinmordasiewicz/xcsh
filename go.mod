@@ -1,4 +1,4 @@
-module github.com/robinmordasiewicz/f5xc
+module github.com/robinmordasiewicz/vesctl
 
 go 1.22
 

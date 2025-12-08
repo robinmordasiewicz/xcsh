@@ -25,9 +25,9 @@ builds:
       - arm64
     ldflags:
       - -s -w
-      - -X github.com/robinmordasiewicz/f5xc/cmd.Version={{.Version}}
-      - -X github.com/robinmordasiewicz/f5xc/cmd.GitCommit={{.Commit}}
-      - -X github.com/robinmordasiewicz/f5xc/cmd.BuildDate={{.Date}}
+      - -X github.com/robinmordasiewicz/vesctl/cmd.Version={{.Version}}
+      - -X github.com/robinmordasiewicz/vesctl/cmd.GitCommit={{.Commit}}
+      - -X github.com/robinmordasiewicz/vesctl/cmd.BuildDate={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
 archives:

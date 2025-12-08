@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/robinmordasiewicz/f5xc/pkg/client"
+	"github.com/robinmordasiewicz/vesctl/pkg/client"
 )
 
 // TestAuthentication_P12Bundle tests authentication using P12 bundle
