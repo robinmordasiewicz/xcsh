@@ -20,6 +20,9 @@ type Config struct {
 
 	// Key is the path to the client key file
 	Key string `yaml:"key,omitempty"`
+
+	// APIToken indicates API token authentication mode (actual token from VES_API_TOKEN env var)
+	APIToken bool `yaml:"api-token,omitempty"`
 }
 
 // rawConfig is used for flexible YAML parsing (supports both single string and array)
@@ -28,6 +31,7 @@ type rawConfig struct {
 	P12Bundle  string      `yaml:"p12-bundle"`
 	Cert       string      `yaml:"cert"`
 	Key        string      `yaml:"key"`
+	APIToken   bool        `yaml:"api-token"`
 }
 
 // Load reads and parses a vesctl config file
@@ -50,6 +54,7 @@ func Load(path string) (*Config, error) {
 		P12Bundle: raw.P12Bundle,
 		Cert:      raw.Cert,
 		Key:       raw.Key,
+		APIToken:  raw.APIToken,
 	}
 
 	// Handle server-urls as either single string or array
@@ -89,12 +94,13 @@ func (c *Config) Validate() error {
 		return fmt.Errorf("server-urls is required")
 	}
 
-	// Must have either P12 bundle or cert/key pair
+	// Must have either P12 bundle, cert/key pair, or API token
 	hasP12 := c.P12Bundle != ""
 	hasCertKey := c.Cert != "" && c.Key != ""
+	hasAPIToken := c.APIToken
 
-	if !hasP12 && !hasCertKey {
-		return fmt.Errorf("either p12-bundle or cert/key pair is required for authentication")
+	if !hasP12 && !hasCertKey && !hasAPIToken {
+		return fmt.Errorf("authentication required: p12-bundle, cert/key pair, or api-token")
 	}
 
 	return nil

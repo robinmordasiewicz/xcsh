@@ -14,12 +14,12 @@ import (
 )
 
 var configureFlags struct {
-	serverURL  string
-	p12Bundle  string
-	cert       string
-	key        string
-	tenant     string
-	outputFmt  string
+	serverURL      string
+	p12Bundle      string
+	cert           string
+	key            string
+	outputFmt      string
+	apiToken       bool
 	nonInteractive bool
 }
 
@@ -67,9 +67,13 @@ Available keys:
   - p12-bundle: Path to P12 certificate bundle
   - cert: Path to client certificate
   - key: Path to client key
+  - api-token: Enable API token auth (true/false)
   - output: Default output format (json, yaml, table)`,
 	Example: `  # Set the server URL
   vesctl configure set server-url https://my-tenant.console.ves.volterra.io/api
+
+  # Enable API token authentication
+  vesctl configure set api-token true
 
   # Set the default output format
   vesctl configure set output yaml`,
@@ -84,8 +88,8 @@ func init() {
 	configureCmd.Flags().StringVar(&configureFlags.p12Bundle, "p12-bundle", "", "Path to P12 certificate bundle")
 	configureCmd.Flags().StringVar(&configureFlags.cert, "cert", "", "Path to client certificate")
 	configureCmd.Flags().StringVar(&configureFlags.key, "key", "", "Path to client key")
-	configureCmd.Flags().StringVar(&configureFlags.tenant, "tenant", "", "Tenant name")
 	configureCmd.Flags().StringVar(&configureFlags.outputFmt, "output-format", "", "Default output format")
+	configureCmd.Flags().BoolVar(&configureFlags.apiToken, "api-token", false, "Use API token authentication (token from VES_API_TOKEN env var)")
 	configureCmd.Flags().BoolVar(&configureFlags.nonInteractive, "non-interactive", false, "Run in non-interactive mode")
 
 	configureCmd.AddCommand(configureShowCmd)
@@ -98,8 +102,8 @@ type ConfigFile struct {
 	P12Bundle  string   `yaml:"p12-bundle,omitempty"`
 	Cert       string   `yaml:"cert,omitempty"`
 	Key        string   `yaml:"key,omitempty"`
-	Tenant     string   `yaml:"tenant,omitempty"`
 	Output     string   `yaml:"output,omitempty"`
+	APIToken   bool     `yaml:"api-token,omitempty"`
 }
 
 // rawConfigFile is used for flexible YAML parsing (supports both single string and array for server-urls)
@@ -108,8 +112,8 @@ type rawConfigFile struct {
 	P12Bundle  string      `yaml:"p12-bundle"`
 	Cert       string      `yaml:"cert"`
 	Key        string      `yaml:"key"`
-	Tenant     string      `yaml:"tenant"`
 	Output     string      `yaml:"output"`
+	APIToken   bool        `yaml:"api-token"`
 }
 
 // parseConfigFile parses a config file with flexible server-urls format
@@ -123,8 +127,8 @@ func parseConfigFile(data []byte) (*ConfigFile, error) {
 		P12Bundle: raw.P12Bundle,
 		Cert:      raw.Cert,
 		Key:       raw.Key,
-		Tenant:    raw.Tenant,
 		Output:    raw.Output,
+		APIToken:  raw.APIToken,
 	}
 
 	// Handle server-urls as either single string or array
@@ -183,12 +187,24 @@ func runConfigure(cmd *cobra.Command, args []string) error {
 	fmt.Println("Authentication Method:")
 	fmt.Println("  1. P12 Certificate Bundle (recommended)")
 	fmt.Println("  2. Certificate and Key files")
-	fmt.Print("Choose [1/2] (default: 1): ")
+	fmt.Println("  3. API Token (via VES_API_TOKEN environment variable)")
+	fmt.Print("Choose [1/2/3] (default: 1): ")
 	authChoice, _ := reader.ReadString('\n')
 	authChoice = strings.TrimSpace(authChoice)
 
-	if authChoice == "2" {
+	switch authChoice {
+	case "3":
+		// API Token
+		config.APIToken = true
+		config.P12Bundle = "" // Clear other auth methods
+		config.Cert = ""
+		config.Key = ""
+		fmt.Println()
+		fmt.Println("Note: Set the VES_API_TOKEN environment variable:")
+		fmt.Println("  export VES_API_TOKEN='your-api-token'")
+	case "2":
 		// Cert and Key
+		config.APIToken = false // Clear API token
 		cert := promptWithDefault(reader, "Certificate file path", config.Cert, "")
 		if cert != "" {
 			config.Cert = expandPath(cert)
@@ -199,8 +215,9 @@ func runConfigure(cmd *cobra.Command, args []string) error {
 		if key != "" {
 			config.Key = expandPath(key)
 		}
-	} else {
+	default:
 		// P12 Bundle
+		config.APIToken = false // Clear API token
 		p12 := promptWithDefault(reader, "P12 Bundle path", config.P12Bundle, "")
 		if p12 != "" {
 			config.P12Bundle = expandPath(p12)
@@ -275,11 +292,11 @@ func runConfigureShow(cmd *cobra.Command, args []string) error {
 	if config.Key != "" {
 		displayConfig["key"] = config.Key
 	}
-	if config.Tenant != "" {
-		displayConfig["tenant"] = config.Tenant
-	}
 	if config.Output != "" {
 		displayConfig["output"] = config.Output
+	}
+	if config.APIToken {
+		displayConfig["api_token"] = "enabled (token from VES_API_TOKEN)"
 	}
 
 	return output.Print(displayConfig, GetOutputFormat())
@@ -305,14 +322,24 @@ func runConfigureSet(cmd *cobra.Command, args []string) error {
 		config.ServerURLs = []string{value}
 	case "p12-bundle":
 		config.P12Bundle = expandPath(value)
+		config.APIToken = false // Clear API token when setting P12
 	case "cert":
 		config.Cert = expandPath(value)
+		config.APIToken = false // Clear API token when setting cert
 	case "key":
 		config.Key = expandPath(value)
-	case "tenant":
-		config.Tenant = value
+		config.APIToken = false // Clear API token when setting key
 	case "output":
 		config.Output = value
+	case "api-token":
+		if value == "true" || value == "1" || value == "enabled" {
+			config.APIToken = true
+			config.P12Bundle = "" // Clear other auth methods
+			config.Cert = ""
+			config.Key = ""
+		} else {
+			config.APIToken = false
+		}
 	default:
 		return fmt.Errorf("unknown configuration key: %s", key)
 	}
@@ -330,17 +357,24 @@ func updateConfigFromFlags(config *ConfigFile, configPath string) error {
 	if configureFlags.serverURL != "" {
 		config.ServerURLs = []string{configureFlags.serverURL}
 	}
-	if configureFlags.p12Bundle != "" {
-		config.P12Bundle = expandPath(configureFlags.p12Bundle)
-	}
-	if configureFlags.cert != "" {
-		config.Cert = expandPath(configureFlags.cert)
-	}
-	if configureFlags.key != "" {
-		config.Key = expandPath(configureFlags.key)
-	}
-	if configureFlags.tenant != "" {
-		config.Tenant = configureFlags.tenant
+	if configureFlags.apiToken {
+		config.APIToken = true
+		config.P12Bundle = "" // Clear other auth methods
+		config.Cert = ""
+		config.Key = ""
+	} else {
+		if configureFlags.p12Bundle != "" {
+			config.P12Bundle = expandPath(configureFlags.p12Bundle)
+			config.APIToken = false
+		}
+		if configureFlags.cert != "" {
+			config.Cert = expandPath(configureFlags.cert)
+			config.APIToken = false
+		}
+		if configureFlags.key != "" {
+			config.Key = expandPath(configureFlags.key)
+			config.APIToken = false
+		}
 	}
 	if configureFlags.outputFmt != "" {
 		config.Output = configureFlags.outputFmt

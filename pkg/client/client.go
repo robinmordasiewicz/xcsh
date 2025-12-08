@@ -23,6 +23,7 @@ type Config struct {
 	Key                string
 	CACert             string
 	P12Bundle          string
+	APIToken           string // API token for token-based authentication
 	Debug              bool
 	Timeout            int
 	InsecureSkipVerify bool // Skip TLS certificate verification (for staging/testing)
@@ -34,6 +35,7 @@ type Client struct {
 	serverURLs []string
 	debug      bool
 	tlsConfig  *tls.Config
+	apiToken   string // API token for Authorization header
 }
 
 // New creates a new API client
@@ -41,10 +43,11 @@ func New(cfg *Config) (*Client, error) {
 	client := &Client{
 		serverURLs: cfg.ServerURLs,
 		debug:      cfg.Debug,
+		apiToken:   cfg.APIToken,
 	}
 
-	// Create TLS config if credentials are provided
-	if cfg.P12Bundle != "" || (cfg.Cert != "" && cfg.Key != "") || cfg.CACert != "" {
+	// Create TLS config if certificate credentials are provided (not for API token auth)
+	if cfg.APIToken == "" && (cfg.P12Bundle != "" || (cfg.Cert != "" && cfg.Key != "") || cfg.CACert != "") {
 		tlsConfig, err := createTLSConfig(cfg)
 		if err != nil {
 			return nil, fmt.Errorf("failed to create TLS config: %w", err)
@@ -52,7 +55,7 @@ func New(cfg *Config) (*Client, error) {
 		client.tlsConfig = tlsConfig
 	}
 
-	// Create HTTP transport with TLS
+	// Create HTTP transport with TLS (for API token, use default TLS without client cert)
 	transport := &http.Transport{
 		TLSClientConfig: client.tlsConfig,
 	}
@@ -130,6 +133,12 @@ func (c *Client) Do(ctx context.Context, req *Request) (*Response, error) {
 	// Set headers
 	httpReq.Header.Set("Content-Type", "application/json")
 	httpReq.Header.Set("Accept", "application/json")
+
+	// Add API token Authorization header if configured
+	if c.apiToken != "" {
+		httpReq.Header.Set("Authorization", "APIToken "+c.apiToken)
+	}
+
 	for k, v := range req.Headers {
 		httpReq.Header.Set(k, v)
 	}

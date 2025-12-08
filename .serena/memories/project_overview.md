@@ -22,7 +22,7 @@ vesctl is an open-source command-line interface for managing F5 Distributed Clou
 ## Authentication Methods
 1. **P12 Bundle** (recommended): Downloaded from F5 XC Console
 2. **Certificate + Key**: Extracted from P12 or separate files
-3. **Environment Variables**: VES_P12_PASSWORD, VES_SERVER_URLS, etc.
+3. **Environment Variables**: VES_P12_PASSWORD, VES_API_URL, VES_API_TOKEN, etc.
 
 ## Configuration
 - Default config file: `~/.vesconfig`

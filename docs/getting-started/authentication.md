@@ -64,6 +64,57 @@ key: /path/to/key.pem
 vesctl --cert /path/to/cert.pem --key /path/to/key.pem configuration list namespace
 ```
 
+## API Token
+
+Use an API token for authentication without managing certificate files. Ideal for CI/CD pipelines and automation.
+
+### Obtaining an API Token
+
+1. Log in to the F5 XC Console
+2. Navigate to **Administration** > **Personal Management** > **Credentials**
+3. Click **Create Credentials**
+4. Select type **API Token**
+5. Copy the generated token
+
+### Configuration
+
+**Using environment variables (recommended):**
+
+```bash
+export VES_API_TOKEN="your-api-token"
+export VES_API_URL="https://your-tenant.console.ves.volterra.io"  # Optional, overrides config
+
+vesctl configuration list namespace
+```
+
+**Using configuration file (~/.vesconfig):**
+
+```yaml
+server-urls:
+  - https://your-tenant.console.ves.volterra.io/api
+api-token: true  # Token value from VES_API_TOKEN environment variable
+```
+
+**Using interactive configuration:**
+
+```bash
+vesctl configure
+# Select option 3: API Token
+```
+
+**Using command-line flag:**
+
+```bash
+vesctl --api-token configuration list namespace
+```
+
+**Using login command:**
+
+```bash
+export VES_API_TOKEN='your-api-token'
+vesctl login --tenant my-tenant --api-token
+```
+
 ## Configuration File
 
 The default configuration file location is `~/.vesconfig`.
@@ -81,6 +132,9 @@ p12-bundle: /path/to/api-creds.p12
 # OR certificate/key authentication
 # cert: /path/to/cert.pem
 # key: /path/to/key.pem
+
+# OR API token authentication (token from VES_API_TOKEN env var)
+# api-token: true
 
 # Optional CA certificate for custom trust
 # cacert: /path/to/ca.pem
@@ -100,17 +154,19 @@ Override configuration with environment variables:
 
 | Variable | Description |
 |----------|-------------|
+| `VES_API_TOKEN` | API token for authentication |
+| `VES_API_URL` | API server URL (overrides server-urls in config) |
 | `VES_P12_PASSWORD` | Password for P12 bundle |
-| `VES_SERVER_URLS` | API server URL(s) |
-| `VES_P12_BUNDLE` | Path to P12 bundle |
+| `VES_API_URL` | API server URL(s) |
+| `VES_P12_FILE` | Path to P12 bundle |
 | `VES_CERT` | Path to client certificate |
 | `VES_KEY` | Path to client key |
 
 ### Example
 
 ```bash
-export VES_SERVER_URLS="https://your-tenant.console.ves.volterra.io/api"
-export VES_P12_BUNDLE="/path/to/api-creds.p12"
+export VES_API_URL="https://your-tenant.console.ves.volterra.io/api"
+export VES_P12_FILE="/path/to/api-creds.p12"
 export VES_P12_PASSWORD="your-password"
 
 vesctl configuration list namespace
@@ -127,9 +183,9 @@ vesctl configure
 This will prompt for:
 
 1. API server URL
-2. Authentication method (P12 or cert/key)
-3. File paths
-4. (Optional) P12 password
+2. Authentication method (P12, cert/key, or API token)
+3. File paths (for P12 or cert/key) or environment variable instructions (for API token)
+4. Default output format
 
 ## Verifying Authentication
 

@@ -359,3 +359,160 @@ func TestClient_ErrorResponse(t *testing.T) {
 		t.Errorf("Expected error 'bad_request', got '%s'", errorResp["error"])
 	}
 }
+
+func TestNew_WithAPIToken(t *testing.T) {
+	cfg := &Config{
+		ServerURLs: []string{"http://localhost:8080"},
+		APIToken:   "test-api-token",
+		Timeout:    30,
+	}
+
+	client, err := New(cfg)
+	if err != nil {
+		t.Fatalf("Expected no error, got: %v", err)
+	}
+
+	if client == nil {
+		t.Fatal("Expected client to be created")
+	}
+
+	if client.apiToken != "test-api-token" {
+		t.Errorf("Expected apiToken to be 'test-api-token', got '%s'", client.apiToken)
+	}
+}
+
+func TestClient_APITokenHeader(t *testing.T) {
+	// Create mock server that verifies the Authorization header
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		authHeader := r.Header.Get("Authorization")
+		expectedAuth := "APIToken test-api-token"
+
+		if authHeader != expectedAuth {
+			t.Errorf("Expected Authorization header '%s', got '%s'", expectedAuth, authHeader)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_ = json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+	}))
+	defer server.Close()
+
+	cfg := &Config{
+		ServerURLs: []string{server.URL},
+		APIToken:   "test-api-token",
+		Timeout:    30,
+	}
+
+	client, err := New(cfg)
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	resp, err := client.Get(ctx, "/api/test", nil)
+	if err != nil {
+		t.Fatalf("Get request failed: %v", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", resp.StatusCode)
+	}
+}
+
+func TestClient_NoAPITokenHeader_WhenNotConfigured(t *testing.T) {
+	// Create mock server that verifies NO Authorization header is sent
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		authHeader := r.Header.Get("Authorization")
+
+		if authHeader != "" {
+			t.Errorf("Expected no Authorization header, got '%s'", authHeader)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_ = json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+	}))
+	defer server.Close()
+
+	cfg := &Config{
+		ServerURLs: []string{server.URL},
+		Timeout:    30,
+		// No APIToken set
+	}
+
+	client, err := New(cfg)
+	if err != nil {
+		t.Fatalf("Failed to create client: %v", err)
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	resp, err := client.Get(ctx, "/api/test", nil)
+	if err != nil {
+		t.Fatalf("Get request failed: %v", err)
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		t.Errorf("Expected status 200, got %d", resp.StatusCode)
+	}
+}
+
+func TestClient_APIToken_AllMethods(t *testing.T) {
+	// Test that API token is sent for all HTTP methods
+	methods := []string{http.MethodGet, http.MethodPost, http.MethodPut, http.MethodDelete, http.MethodPatch}
+
+	for _, method := range methods {
+		t.Run(method, func(t *testing.T) {
+			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				authHeader := r.Header.Get("Authorization")
+				expectedAuth := "APIToken test-token"
+
+				if authHeader != expectedAuth {
+					t.Errorf("Expected Authorization header '%s' for %s, got '%s'", expectedAuth, method, authHeader)
+				}
+
+				w.WriteHeader(http.StatusOK)
+				_ = json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+			}))
+			defer server.Close()
+
+			cfg := &Config{
+				ServerURLs: []string{server.URL},
+				APIToken:   "test-token",
+				Timeout:    30,
+			}
+
+			client, err := New(cfg)
+			if err != nil {
+				t.Fatalf("Failed to create client: %v", err)
+			}
+
+			ctx := context.Background()
+			var resp *Response
+
+			switch method {
+			case http.MethodGet:
+				resp, err = client.Get(ctx, "/api/test", nil)
+			case http.MethodPost:
+				resp, err = client.Post(ctx, "/api/test", map[string]string{})
+			case http.MethodPut:
+				resp, err = client.Put(ctx, "/api/test", map[string]string{})
+			case http.MethodDelete:
+				resp, err = client.Delete(ctx, "/api/test")
+			case http.MethodPatch:
+				resp, err = client.Patch(ctx, "/api/test", map[string]string{})
+			}
+
+			if err != nil {
+				t.Fatalf("%s request failed: %v", method, err)
+			}
+
+			if resp.StatusCode != http.StatusOK {
+				t.Errorf("Expected status 200 for %s, got %d", method, resp.StatusCode)
+			}
+		})
+	}
+}

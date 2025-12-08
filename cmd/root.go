@@ -23,6 +23,7 @@ var (
 	cacert      string
 	p12Bundle   string
 	hardwareKey bool // Use yubikey for TLS connection
+	useAPIToken bool // Use API token from VES_API_TOKEN environment variable
 
 	// Output control (vesctl compatible)
 	outfmt    string // Output format for command
@@ -66,6 +67,15 @@ var rootCmd = &cobra.Command{
 			Timeout:    timeout,
 		}
 
+		// Handle API token authentication
+		if useAPIToken {
+			token := os.Getenv("VES_API_TOKEN")
+			if token == "" {
+				return fmt.Errorf("VES_API_TOKEN environment variable not set")
+			}
+			cfg.APIToken = token
+		}
+
 		var err error
 		apiClient, err = client.New(cfg)
 		if err != nil {
@@ -104,6 +114,7 @@ func init() {
 	pf.StringSliceVarP(&serverURLs, "server-urls", "u", nil, "API endpoint URL (default [http://localhost:8001])")
 	pf.BoolVar(&showCurl, "show-curl", false, "Emit requests from program in CURL format")
 	pf.IntVar(&timeout, "timeout", 5, "Timeout (in seconds) for command to finish")
+	pf.BoolVar(&useAPIToken, "api-token", false, "Use API token from VES_API_TOKEN environment variable")
 
 	// Bind flags to viper (errors are ignored as flags are guaranteed to exist)
 	_ = viper.BindPFlag("server-urls", pf.Lookup("server-urls"))
@@ -159,10 +170,14 @@ func applyConfigToFlags() {
 		return
 	}
 
-	// Apply config values if CLI flags not set
-	if len(serverURLs) == 0 && len(cfg.ServerURLs) > 0 {
+	// VES_API_URL environment variable overrides server-urls from config
+	if envURL := os.Getenv("VES_API_URL"); envURL != "" {
+		serverURLs = []string{envURL}
+	} else if len(serverURLs) == 0 && len(cfg.ServerURLs) > 0 {
+		// Apply config values if CLI flags not set
 		serverURLs = cfg.ServerURLs
 	}
+
 	if cert == "" && cfg.Cert != "" {
 		cert = expandPath(cfg.Cert)
 	}
@@ -171,6 +186,11 @@ func applyConfigToFlags() {
 	}
 	if p12Bundle == "" && cfg.P12Bundle != "" {
 		p12Bundle = expandPath(cfg.P12Bundle)
+	}
+
+	// Apply API token config if not already set via CLI flag
+	if !useAPIToken && cfg.APIToken {
+		useAPIToken = true
 	}
 
 	// Apply fallback default if still not set

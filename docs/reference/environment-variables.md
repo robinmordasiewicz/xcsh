@@ -7,7 +7,7 @@ vesctl can be configured using environment variables.
 | Variable | Description | Example |
 |----------|-------------|---------|
 | `VES_P12_PASSWORD` | Password for P12 bundle | `export VES_P12_PASSWORD="secret"` |
-| `VES_P12_BUNDLE` | Path to P12 bundle | `export VES_P12_BUNDLE="/path/to/creds.p12"` |
+| `VES_P12_FILE` | Path to P12 bundle | `export VES_P12_FILE="/path/to/creds.p12"` |
 | `VES_CERT` | Path to client certificate | `export VES_CERT="/path/to/cert.pem"` |
 | `VES_KEY` | Path to client key | `export VES_KEY="/path/to/key.pem"` |
 
@@ -15,7 +15,7 @@ vesctl can be configured using environment variables.
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `VES_SERVER_URLS` | API server URL(s) | `export VES_SERVER_URLS="https://tenant.console.ves.volterra.io/api"` |
+| `VES_API_URL` | API server URL(s) | `export VES_API_URL="https://tenant.console.ves.volterra.io/api"` |
 | `VES_CACERT` | Path to CA certificate | `export VES_CACERT="/path/to/ca.pem"` |
 
 ## Output Variables
@@ -36,10 +36,10 @@ vesctl can be configured using environment variables.
 
 ```bash
 # Set server URL
-export VES_SERVER_URLS="https://your-tenant.console.ves.volterra.io/api"
+export VES_API_URL="https://your-tenant.console.ves.volterra.io/api"
 
 # Set P12 credentials
-export VES_P12_BUNDLE="/path/to/api-creds.p12"
+export VES_P12_FILE="/path/to/api-creds.p12"
 export VES_P12_PASSWORD="your-password"
 
 # Run command
@@ -49,7 +49,7 @@ vesctl configuration list namespace
 ### Certificate Authentication
 
 ```bash
-export VES_SERVER_URLS="https://your-tenant.console.ves.volterra.io/api"
+export VES_API_URL="https://your-tenant.console.ves.volterra.io/api"
 export VES_CERT="/path/to/cert.pem"
 export VES_KEY="/path/to/key.pem"
 
@@ -72,24 +72,24 @@ Add to your shell profile for persistent configuration:
 ### Bash (~/.bashrc)
 
 ```bash
-export VES_SERVER_URLS="https://your-tenant.console.ves.volterra.io/api"
-export VES_P12_BUNDLE="$HOME/.vesconfig/api-creds.p12"
+export VES_API_URL="https://your-tenant.console.ves.volterra.io/api"
+export VES_P12_FILE="$HOME/api-creds.p12"
 export VES_P12_PASSWORD="your-password"
 ```
 
 ### Zsh (~/.zshrc)
 
 ```bash
-export VES_SERVER_URLS="https://your-tenant.console.ves.volterra.io/api"
-export VES_P12_BUNDLE="$HOME/.vesconfig/api-creds.p12"
+export VES_API_URL="https://your-tenant.console.ves.volterra.io/api"
+export VES_P12_FILE="$HOME/api-creds.p12"
 export VES_P12_PASSWORD="your-password"
 ```
 
 ### Fish (~/.config/fish/config.fish)
 
 ```fish
-set -x VES_SERVER_URLS "https://your-tenant.console.ves.volterra.io/api"
-set -x VES_P12_BUNDLE "$HOME/.vesconfig/api-creds.p12"
+set -x VES_API_URL "https://your-tenant.console.ves.volterra.io/api"
+set -x VES_P12_FILE "$HOME/api-creds.p12"
 set -x VES_P12_PASSWORD "your-password"
 ```
 

@@ -224,3 +224,80 @@ p12-bundle: /path/to/cert.p12
 		t.Errorf("Expected 2 server URLs, got %d", len(cfg.ServerURLs))
 	}
 }
+
+func TestLoad_APITokenConfig(t *testing.T) {
+	tmpDir := t.TempDir()
+	configPath := filepath.Join(tmpDir, ".vesconfig")
+
+	configContent := `server-urls:
+  - https://test.console.ves.volterra.io/api
+api-token: true
+`
+	if err := os.WriteFile(configPath, []byte(configContent), 0600); err != nil {
+		t.Fatalf("Failed to create test config: %v", err)
+	}
+
+	cfg, err := Load(configPath)
+	if err != nil {
+		t.Fatalf("Load failed: %v", err)
+	}
+
+	if !cfg.APIToken {
+		t.Error("Expected APIToken to be true")
+	}
+
+	if cfg.P12Bundle != "" {
+		t.Error("Expected P12Bundle to be empty when using API token")
+	}
+
+	if cfg.Cert != "" || cfg.Key != "" {
+		t.Error("Expected Cert and Key to be empty when using API token")
+	}
+}
+
+func TestConfig_Validate_Valid_APIToken(t *testing.T) {
+	cfg := &Config{
+		ServerURLs: []string{"https://test.console.ves.volterra.io/api"},
+		APIToken:   true,
+	}
+
+	if err := cfg.Validate(); err != nil {
+		t.Errorf("Expected valid config with API token, got error: %v", err)
+	}
+}
+
+func TestConfig_Save_APIToken(t *testing.T) {
+	tmpDir := t.TempDir()
+	configPath := filepath.Join(tmpDir, ".vesconfig")
+
+	cfg := &Config{
+		ServerURLs: []string{"https://test.console.ves.volterra.io/api"},
+		APIToken:   true,
+	}
+
+	if err := cfg.Save(configPath); err != nil {
+		t.Fatalf("Save failed: %v", err)
+	}
+
+	// Reload and verify
+	loaded, err := Load(configPath)
+	if err != nil {
+		t.Fatalf("Failed to reload config: %v", err)
+	}
+
+	if !loaded.APIToken {
+		t.Error("Expected APIToken to be true after reload")
+	}
+}
+
+func TestConfig_Validate_APIToken_NoOtherAuth(t *testing.T) {
+	// API token should be valid without P12 or cert/key
+	cfg := &Config{
+		ServerURLs: []string{"https://test.console.ves.volterra.io/api"},
+		APIToken:   true,
+	}
+
+	if err := cfg.Validate(); err != nil {
+		t.Errorf("API token config should be valid: %v", err)
+	}
+}

@@ -20,6 +20,7 @@ var loginFlags struct {
 	p12Bundle string
 	cert      string
 	key       string
+	apiToken  bool
 }
 
 var loginCmd = &cobra.Command{
@@ -29,9 +30,10 @@ var loginCmd = &cobra.Command{
 	Long: `Authenticate with F5 Distributed Cloud.
 
 This command validates your credentials and saves them to the configuration file.
-You can authenticate using either:
+You can authenticate using:
   - A P12 certificate bundle (set VES_P12_PASSWORD environment variable)
   - Certificate and key files
+  - API token (set VES_API_TOKEN environment variable)
 
 After successful login, you can use all vesctl commands to manage your resources.`,
 	Example: `  # Login with P12 bundle
@@ -39,6 +41,10 @@ After successful login, you can use all vesctl commands to manage your resources
 
   # Login with certificate and key
   vesctl login --tenant my-tenant --cert ~/.vesctl/cert.pem --key ~/.vesctl/key.pem
+
+  # Login with API token
+  export VES_API_TOKEN='your-api-token'
+  vesctl login --tenant my-tenant --api-token
 
   # Login (using existing configuration)
   vesctl login`,
@@ -74,6 +80,7 @@ func init() {
 	loginCmd.Flags().StringVar(&loginFlags.p12Bundle, "p12-bundle", "", "Path to P12 certificate bundle")
 	loginCmd.Flags().StringVar(&loginFlags.cert, "cert", "", "Path to client certificate")
 	loginCmd.Flags().StringVar(&loginFlags.key, "key", "", "Path to client key")
+	loginCmd.Flags().BoolVar(&loginFlags.apiToken, "api-token", false, "Use API token from VES_API_TOKEN environment variable")
 }
 
 func runLogin(cmd *cobra.Command, args []string) error {
@@ -89,30 +96,44 @@ func runLogin(cmd *cobra.Command, args []string) error {
 	if loginFlags.tenant != "" {
 		serverURL := fmt.Sprintf("https://%s.console.ves.volterra.io/api", loginFlags.tenant)
 		config.ServerURLs = []string{serverURL}
-		config.Tenant = loginFlags.tenant
 	}
 
-	if loginFlags.p12Bundle != "" {
-		config.P12Bundle = expandPath(loginFlags.p12Bundle)
+	// Handle API token authentication
+	if loginFlags.apiToken {
+		token := os.Getenv("VES_API_TOKEN")
+		if token == "" {
+			return fmt.Errorf("VES_API_TOKEN environment variable not set")
+		}
+		config.APIToken = true
+		config.P12Bundle = "" // Clear other auth methods
 		config.Cert = ""
 		config.Key = ""
-	}
+	} else {
+		config.APIToken = false // Ensure API token is cleared when using other auth methods
 
-	if loginFlags.cert != "" {
-		config.Cert = expandPath(loginFlags.cert)
-		config.P12Bundle = ""
-	}
+		if loginFlags.p12Bundle != "" {
+			config.P12Bundle = expandPath(loginFlags.p12Bundle)
+			config.Cert = ""
+			config.Key = ""
+		}
 
-	if loginFlags.key != "" {
-		config.Key = expandPath(loginFlags.key)
+		if loginFlags.cert != "" {
+			config.Cert = expandPath(loginFlags.cert)
+			config.P12Bundle = ""
+		}
+
+		if loginFlags.key != "" {
+			config.Key = expandPath(loginFlags.key)
+		}
 	}
 
 	// Validate we have credentials
 	hasP12 := config.P12Bundle != ""
 	hasCertKey := config.Cert != "" && config.Key != ""
+	hasAPIToken := config.APIToken
 
-	if !hasP12 && !hasCertKey {
-		return fmt.Errorf("authentication credentials required: provide --p12-bundle or --cert and --key")
+	if !hasP12 && !hasCertKey && !hasAPIToken {
+		return fmt.Errorf("authentication credentials required: provide --p12-bundle, --cert and --key, or --api-token")
 	}
 
 	if hasP12 {
@@ -176,9 +197,9 @@ func runLogin(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("authentication failed (status %d): check your credentials", resp.StatusCode)
 	}
 
-	tenant := config.Tenant
-	if tenant == "" && len(config.ServerURLs) > 0 {
-		// Extract tenant from URL
+	// Extract tenant from URL
+	tenant := ""
+	if len(config.ServerURLs) > 0 {
 		parts := strings.Split(config.ServerURLs[0], ".")
 		if len(parts) > 0 {
 			tenant = strings.TrimPrefix(parts[0], "https://")
@@ -205,6 +226,7 @@ func runLogout(cmd *cobra.Command, args []string) error {
 	config.P12Bundle = ""
 	config.Cert = ""
 	config.Key = ""
+	config.APIToken = false
 
 	// Save configuration
 	if err := saveConfig(config, configPath); err != nil {
@@ -256,15 +278,20 @@ func runWhoami(cmd *cobra.Command, args []string) error {
 		_ = yaml.Unmarshal(data, config) // Ignore error - we'll use defaults if parsing fails
 	}
 
-	userInfo := map[string]interface{}{
-		"tenant": config.Tenant,
-	}
+	userInfo := map[string]interface{}{}
 
 	if len(config.ServerURLs) > 0 {
 		userInfo["server"] = config.ServerURLs[0]
+		// Extract tenant from URL
+		parts := strings.Split(config.ServerURLs[0], ".")
+		if len(parts) > 0 {
+			userInfo["tenant"] = strings.TrimPrefix(parts[0], "https://")
+		}
 	}
 
-	if config.P12Bundle != "" {
+	if config.APIToken {
+		userInfo["auth_method"] = "API Token"
+	} else if config.P12Bundle != "" {
 		userInfo["auth_method"] = "P12 Bundle"
 		userInfo["p12_bundle"] = filepath.Base(config.P12Bundle)
 	} else if config.Cert != "" {
