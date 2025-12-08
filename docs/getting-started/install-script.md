@@ -46,29 +46,29 @@ Configure the installer behavior with these environment variables:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `VESCTL_VERSION` | Specific version to install | latest |
-| `VESCTL_INSTALL_DIR` | Installation directory | `/usr/local/bin` |
-| `VESCTL_NO_SUDO` | Skip sudo usage if set | unset |
-| `VESCTL_NO_VERIFY` | Skip checksum verification | unset |
+| `VES_VERSION` | Specific version to install | latest |
+| `VES_INSTALL_DIR` | Installation directory | `/usr/local/bin` |
+| `VES_NO_SUDO` | Skip sudo usage if set | unset |
+| `VES_NO_VERIFY` | Skip checksum verification | unset |
 
 ### Examples
 
 **Install a specific version:**
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | VESCTL_VERSION=1.1.0 sh
+curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | VES_VERSION=1.1.0 sh
 ```
 
 **Install to a custom directory (no sudo required):**
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | VESCTL_INSTALL_DIR=$HOME/.local/bin sh
+curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | VES_INSTALL_DIR=$HOME/.local/bin sh
 ```
 
 **Skip checksum verification (not recommended):**
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | VESCTL_NO_VERIFY=1 sh
+curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | VES_NO_VERIFY=1 sh
 ```
 
 ## Command Line Options
@@ -158,58 +158,3 @@ autoload -Uz compinit && compinit
 Completion files are installed to:
 
 - `~/.config/fish/completions/vesctl.fish`
-
-## Troubleshooting
-
-### Permission Denied
-
-If you encounter permission errors:
-
-```bash
-# Option 1: Use a custom directory
-VESCTL_INSTALL_DIR=$HOME/.local/bin sh install.sh
-
-# Option 2: Run as root (not recommended)
-sudo sh install.sh
-```
-
-### HTTP Client Not Found
-
-Install curl or wget:
-
-```bash
-# Debian/Ubuntu
-sudo apt-get install curl
-
-# RHEL/CentOS
-sudo yum install curl
-
-# Alpine
-apk add curl
-
-# macOS (curl is pre-installed)
-```
-
-### Version Not Found
-
-If the specified version doesn't exist:
-
-```bash
-# List available versions
-curl -s https://api.github.com/repos/robinmordasiewicz/vesctl/releases | grep tag_name
-
-# Install latest instead
-curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | sh
-```
-
-### Binary Not in PATH
-
-If `vesctl` is not found after installation:
-
-```bash
-# Add to your shell profile (~/.bashrc, ~/.zshrc, etc.)
-export PATH="$PATH:/usr/local/bin"
-
-# Or if using custom directory
-export PATH="$PATH:$HOME/.local/bin"
-```

@@ -3,10 +3,10 @@
 # Usage: curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | sh
 #
 # Environment variables:
-#   VESCTL_VERSION      - Specific version to install (default: latest)
-#   VESCTL_INSTALL_DIR  - Installation directory (default: /usr/local/bin)
-#   VESCTL_NO_SUDO      - Skip sudo if set to any value
-#   VESCTL_NO_VERIFY    - Skip checksum verification if set
+#   VES_VERSION      - Specific version to install (default: latest)
+#   VES_INSTALL_DIR  - Installation directory (default: /usr/local/bin)
+#   VES_NO_SUDO      - Skip sudo if set to any value
+#   VES_NO_VERIFY    - Skip checksum verification if set
 
 set -e
 
@@ -240,12 +240,12 @@ need_sudo() {
     fi
 
     # Check if sudo is available
-    if [ -n "$VESCTL_NO_SUDO" ]; then
-        error "Cannot write to $INSTALL_DIR and VESCTL_NO_SUDO is set.
+    if [ -n "$VES_NO_SUDO" ]; then
+        error "Cannot write to $INSTALL_DIR and VES_NO_SUDO is set.
 
 Try one of:
-  - Set VESCTL_INSTALL_DIR to a writable location:
-    VESCTL_INSTALL_DIR=\$HOME/.local/bin sh install.sh
+  - Set VES_INSTALL_DIR to a writable location:
+    VES_INSTALL_DIR=\$HOME/.local/bin sh install.sh
 
   - Run as root:
     sudo sh install.sh"
@@ -255,8 +255,8 @@ Try one of:
         error "Cannot write to $INSTALL_DIR and sudo is not available.
 
 Try one of:
-  - Set VESCTL_INSTALL_DIR to a writable location:
-    VESCTL_INSTALL_DIR=\$HOME/.local/bin sh install.sh
+  - Set VES_INSTALL_DIR to a writable location:
+    VES_INSTALL_DIR=\$HOME/.local/bin sh install.sh
 
   - Run as root"
     fi
@@ -277,7 +277,7 @@ get_latest_version() {
         error "Failed to fetch latest version from GitHub.
 
 Please check your internet connection or specify a version:
-  VESCTL_VERSION=1.1.0 sh install.sh
+  VES_VERSION=1.1.0 sh install.sh
 
 Or download manually from:
   https://github.com/${GITHUB_REPO}/releases/latest"
@@ -294,7 +294,7 @@ Or download manually from:
         error "Failed to parse version from GitHub API response.
 
 Please specify a version manually:
-  VESCTL_VERSION=1.1.0 sh install.sh
+  VES_VERSION=1.1.0 sh install.sh
 
 Or download manually from:
   https://github.com/${GITHUB_REPO}/releases/latest"
@@ -312,8 +312,8 @@ verify_checksum() {
     CHECKSUMS_FILE="$2"
     ARCHIVE_NAME="$3"
 
-    if [ -n "$VESCTL_NO_VERIFY" ]; then
-        warning "Skipping checksum verification (VESCTL_NO_VERIFY is set)"
+    if [ -n "$VES_NO_VERIFY" ]; then
+        warning "Skipping checksum verification (VES_NO_VERIFY is set)"
         return 0
     fi
 
@@ -588,10 +588,10 @@ OPTIONS
     --help, -h      Show this help message
 
 ENVIRONMENT VARIABLES
-    VESCTL_VERSION      Specific version to install (default: latest)
-    VESCTL_INSTALL_DIR  Installation directory (default: /usr/local/bin)
-    VESCTL_NO_SUDO      Skip sudo even if needed (for custom install dirs)
-    VESCTL_NO_VERIFY    Skip checksum verification
+    VES_VERSION      Specific version to install (default: latest)
+    VES_INSTALL_DIR  Installation directory (default: /usr/local/bin)
+    VES_NO_SUDO      Skip sudo even if needed (for custom install dirs)
+    VES_NO_VERIFY    Skip checksum verification
 
 SUPPORTED PLATFORMS
     Linux       amd64 (x86_64), arm64 (aarch64)
@@ -603,10 +603,10 @@ EXAMPLES
     curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | sh
 
     # Install specific version
-    curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | VESCTL_VERSION=1.1.0 sh
+    curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | VES_VERSION=1.1.0 sh
 
     # Install to custom directory (no sudo required)
-    curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | VESCTL_INSTALL_DIR=$HOME/.local/bin sh
+    curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | VES_INSTALL_DIR=$HOME/.local/bin sh
 
     # Install using wget instead of curl
     wget -qO- https://robinmordasiewicz.github.io/vesctl/install.sh | sh
@@ -680,16 +680,16 @@ On Alpine:        apk add curl"
     status "Detected platform: ${OS_DISPLAY} ${ARCH_DISPLAY}"
 
     # Get version
-    if [ -n "$VESCTL_VERSION" ]; then
-        VERSION="$VESCTL_VERSION"
+    if [ -n "$VES_VERSION" ]; then
+        VERSION="$VES_VERSION"
         status "Using specified version: v${VERSION}"
     else
         VERSION=$(get_latest_version)
-        status "Latest version: v${VERSION}"
+        status "Fetching latest version: v${VERSION}"
     fi
 
     # Check for existing installation
-    INSTALL_DIR="${VESCTL_INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
+    INSTALL_DIR="${VES_INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
     if [ -f "${INSTALL_DIR}/${BINARY_NAME}" ]; then
         EXISTING_VERSION=$("${INSTALL_DIR}/${BINARY_NAME}" version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "unknown")
         if [ "$EXISTING_VERSION" = "$VERSION" ]; then
