@@ -93,6 +93,7 @@ nav:
     - Scripted: install/script.md
     - Source: install/source.md
     - Shell Completions: install/completions.md
+    - Environment Variables: install/environment-variables.md
     - Authentication: install/authentication.md
   - Commands:
     - commands/index.md
@@ -103,11 +104,6 @@ nav:
     - Request: commands/request/index.md
     - Sites: commands/site/index.md
     - Version: commands/version/index.md
-  - Reference:
-    - reference/index.md
-    - Global Flags: reference/global-flags.md
-    - Environment Variables: reference/environment-variables.md
-    - Resources: reference/resources.md
   - Guides:
     - guides/index.md
     - Load Balancers: guides/load-balancer.md
