@@ -96,11 +96,13 @@ nav:
     - Authentication: install/authentication.md
   - Commands:
     - commands/index.md
-    - Configuration: commands/configuration.md
-    - Request: commands/request.md
-    - Site: commands/site.md
-    - API Endpoint: commands/api-endpoint.md
-    - Utilities: commands/utilities.md
+    - API Endpoint: commands/api-endpoint/index.md
+    - Shell Completions: commands/completion/index.md
+    - Configuration: commands/configuration/index.md
+    - Help: commands/configuration/index.md
+    - Request: commands/request/index.md
+    - Sites: commands/site/index.md
+    - Version: commands/version/index.md
   - Reference:
     - reference/index.md
     - Global Flags: reference/global-flags.md

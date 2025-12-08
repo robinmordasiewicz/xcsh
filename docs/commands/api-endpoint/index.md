@@ -223,9 +223,3 @@ Enable verbose output for troubleshooting:
 ```bash
 vesctl --debug api-endpoint list -n example-namespace
 ```
-
-## Related Commands
-
-- [configuration](configuration.md) - Manage API definitions and policies
-- [request](request.md) - Low-level API access
-- [Load Balancer Examples](../examples/load-balancer.md) - HTTP load balancer configuration
