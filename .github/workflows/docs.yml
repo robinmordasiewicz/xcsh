@@ -52,10 +52,10 @@ jobs:
       - name: Build vesctl
         run: go build -o vesctl .
 
-      - name: Generate command documentation
-        run: |
-          chmod +x scripts/generate-docs.sh
-          ./scripts/generate-docs.sh
+#      - name: Generate command documentation
+#        run: |
+#          chmod +x scripts/generate-docs.sh
+#          ./scripts/generate-docs.sh
 
       - name: Upload generated docs
         uses: actions/upload-artifact@v4
