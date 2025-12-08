@@ -13,11 +13,11 @@ import (
 // getTestClient creates a client for integration tests
 func getTestClient(t *testing.T) *client.Client {
 	apiURL := os.Getenv("VES_API_URL")
-	p12File := os.Getenv("VES_API_P12_FILE")
+	p12File := os.Getenv("VES_P12_FILE")
 	p12Password := os.Getenv("VES_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
-		t.Skip("Integration test environment not configured (VES_API_URL, VES_API_P12_FILE, VES_P12_PASSWORD)")
+		t.Skip("Integration test environment not configured (VES_API_URL, VES_P12_FILE, VES_P12_PASSWORD)")
 	}
 
 	if _, err := os.Stat(p12File); os.IsNotExist(err) {

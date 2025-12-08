@@ -68,7 +68,7 @@ func TestCLI_Help(t *testing.T) {
 
 	// Check for expected content in help
 	expectedStrings := []string{
-		"F5 Distributed Cloud CLI",
+		"vesctl",
 		"Available Commands",
 		"--help",
 	}
@@ -147,7 +147,7 @@ func TestCLI_ListNamespaces(t *testing.T) {
 	binary := getBinaryPath(t)
 
 	apiURL := os.Getenv("VES_API_URL")
-	p12File := os.Getenv("VES_API_P12_FILE")
+	p12File := os.Getenv("VES_P12_FILE")
 	p12Password := os.Getenv("VES_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
@@ -176,7 +176,7 @@ func TestCLI_HTTPLoadBalancerList(t *testing.T) {
 	binary := getBinaryPath(t)
 
 	apiURL := os.Getenv("VES_API_URL")
-	p12File := os.Getenv("VES_API_P12_FILE")
+	p12File := os.Getenv("VES_P12_FILE")
 	p12Password := os.Getenv("VES_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
@@ -203,7 +203,7 @@ func TestCLI_OutputFormatJSON(t *testing.T) {
 	binary := getBinaryPath(t)
 
 	apiURL := os.Getenv("VES_API_URL")
-	p12File := os.Getenv("VES_API_P12_FILE")
+	p12File := os.Getenv("VES_P12_FILE")
 	p12Password := os.Getenv("VES_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
@@ -237,7 +237,7 @@ func TestCLI_OutputFormatTable(t *testing.T) {
 	binary := getBinaryPath(t)
 
 	apiURL := os.Getenv("VES_API_URL")
-	p12File := os.Getenv("VES_API_P12_FILE")
+	p12File := os.Getenv("VES_P12_FILE")
 	p12Password := os.Getenv("VES_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {

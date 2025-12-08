@@ -340,9 +340,9 @@ test_outfmt_flag
 echo ""
 print_summary
 
-# Generate reports
+# Generate reports (function not yet implemented)
 export RESULTS_DIR=$(dirname "$PHASE_DIR")
-generate_markdown_report "$RESULTS_DIR"
+# generate_markdown_report "$RESULTS_DIR"
 
 echo ""
 echo "Phase 2 test results: ${RESULTS_DIR}/summary.md"

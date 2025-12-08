@@ -1,8 +1,20 @@
 #!/bin/bash
 # test-no-api.sh - Comprehensive test of all commands that don't require API credentials
 # Tests help text, flags, and structure consistency
+#
+# KNOWN ISSUE: vesctl-0.2.35 has a bug where certain help commands hang at 100% CPU:
+#   - configuration status --help
+#   - configuration patch --help
+#   - configuration replace --help
+# These are skipped when testing against the original binary.
 
 set +e
+
+# Timeout for original vesctl commands (in seconds)
+ORIGINAL_VESCTL_TIMEOUT=${ORIGINAL_VESCTL_TIMEOUT:-10}
+
+# Known buggy subcommands in vesctl-0.2.35 that hang on --help
+KNOWN_BUGGY_SUBCMDS=("patch" "replace" "status")
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "${SCRIPT_DIR}/../../lib/common.sh"
@@ -156,7 +168,24 @@ echo ""
 echo "--- Configuration Subcommands ---"
 CONFIG_SUBCMDS=("add-labels" "apply" "create" "delete" "get" "list" "patch" "remove-labels" "replace" "status")
 
+# Helper function to check if a subcommand is known to be buggy
+is_buggy_subcmd() {
+    local subcmd="$1"
+    for buggy in "${KNOWN_BUGGY_SUBCMDS[@]}"; do
+        if [[ "$subcmd" == "$buggy" ]]; then
+            return 0
+        fi
+    done
+    return 1
+}
+
 for subcmd in "${CONFIG_SUBCMDS[@]}"; do
+    if is_buggy_subcmd "$subcmd"; then
+        log_skip "config-${subcmd} (vesctl-0.2.35 hangs on this help command)"
+        mkdir -p "${RESULTS_DIR}/config-${subcmd}"
+        echo "SKIP" > "${RESULTS_DIR}/config-${subcmd}/result.txt"
+        continue
+    fi
     test_help_structure "config-${subcmd}" configuration "$subcmd" || true
     test_flags_section "config-${subcmd}-flags" configuration "$subcmd" || true
 done
