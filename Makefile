@@ -15,9 +15,12 @@
 BINARY_NAME=vesctl
 MODULE=github.com/robinmordasiewicz/vesctl
 VERSION?=$(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
-GIT_COMMIT?=$(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+GIT_COMMIT?=$(shell git rev-parse HEAD 2>/dev/null || echo "unknown")
 BUILD_TIME=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
-LDFLAGS=-ldflags "-s -w -X ${MODULE}/cmd.Version=${VERSION} -X ${MODULE}/cmd.GitCommit=${GIT_COMMIT} -X ${MODULE}/cmd.BuildDate=${BUILD_TIME}"
+BRANCH?=$(shell git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
+BUILD_AUTHOR?=$(shell git log -1 --format='%an' 2>/dev/null || echo "unknown")
+BUILD_NUMBER?=0
+LDFLAGS=-ldflags "-s -w -X ${MODULE}/cmd.Version=${VERSION} -X ${MODULE}/cmd.GitCommit=${GIT_COMMIT} -X ${MODULE}/cmd.BuildDate=${BUILD_TIME} -X ${MODULE}/cmd.Branch=${BRANCH} -X '${MODULE}/cmd.BuildAuthor=${BUILD_AUTHOR}' -X ${MODULE}/cmd.BuildNumber=${BUILD_NUMBER}"
 
 # Build output directory
 DIST_DIR=dist
@@ -193,6 +196,9 @@ version:
 	@echo "Version: $(VERSION)"
 	@echo "Git Commit: $(GIT_COMMIT)"
 	@echo "Build Time: $(BUILD_TIME)"
+	@echo "Branch: $(BRANCH)"
+	@echo "Build Author: $(BUILD_AUTHOR)"
+	@echo "Build Number: $(BUILD_NUMBER)"
 
 # Show help
 help:

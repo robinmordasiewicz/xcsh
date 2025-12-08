@@ -26,8 +26,11 @@ builds:
     ldflags:
       - -s -w
       - -X github.com/robinmordasiewicz/vesctl/cmd.Version={{.Version}}
-      - -X github.com/robinmordasiewicz/vesctl/cmd.GitCommit={{.Commit}}
+      - -X github.com/robinmordasiewicz/vesctl/cmd.GitCommit={{.FullCommit}}
       - -X github.com/robinmordasiewicz/vesctl/cmd.BuildDate={{.Date}}
+      - -X github.com/robinmordasiewicz/vesctl/cmd.Branch={{.Branch}}
+      - -X github.com/robinmordasiewicz/vesctl/cmd.BuildAuthor=goreleaser
+      - -X github.com/robinmordasiewicz/vesctl/cmd.BuildNumber={{.Env.GITHUB_RUN_NUMBER}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
 archives:

@@ -2,28 +2,19 @@ package cmd
 
 import (
 	"fmt"
-	"runtime"
 
 	"github.com/spf13/cobra"
-
-	"github.com/robinmordasiewicz/vesctl/pkg/output"
 )
 
 // Build-time variables (set via ldflags)
 var (
-	Version   = "dev"
-	GitCommit = "unknown"
-	BuildDate = "unknown"
+	Version     = "dev"
+	GitCommit   = "unknown"
+	BuildDate   = "unknown"
+	Branch      = "unknown"
+	BuildAuthor = "unknown"
+	BuildNumber = "0"
 )
-
-// VersionInfo contains version information
-type VersionInfo struct {
-	Version   string `json:"version" yaml:"version"`
-	GitCommit string `json:"git_commit" yaml:"git_commit"`
-	BuildDate string `json:"build_date" yaml:"build_date"`
-	GoVersion string `json:"go_version" yaml:"go_version"`
-	Platform  string `json:"platform" yaml:"platform"`
-}
 
 var versionCmd = &cobra.Command{
 	Use:     "version",
@@ -31,24 +22,10 @@ var versionCmd = &cobra.Command{
 	Long:    `Print build version`,
 	Example: `vesctl version`,
 	Run: func(cmd *cobra.Command, args []string) {
-		info := VersionInfo{
-			Version:   Version,
-			GitCommit: GitCommit,
-			BuildDate: BuildDate,
-			GoVersion: runtime.Version(),
-			Platform:  fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH),
-		}
-
-		format := GetOutputFormat()
-		if format == "table" || format == "tsv" {
-			// For version, just print simple output
-			fmt.Printf("vesctl %s\n", Version)
-			return
-		}
-
-		if err := output.Print(info, format); err != nil {
-			output.PrintError(err)
-		}
+		// Match original vesctl format exactly:
+		// branch: 0-2-35 <br>commit-sha: 997bd8865ab5740ad6a787ac1c4619da3e5761c5 2022-09-27T09:11:13+00:00 mceloud 3089719293 nil <br>
+		fmt.Printf("branch: %s <br>commit-sha: %s %s %s %s nil <br>\n",
+			Branch, GitCommit, BuildDate, BuildAuthor, BuildNumber)
 	},
 }
 
