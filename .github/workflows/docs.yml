@@ -23,6 +23,7 @@ on:
       - 'mkdocs.yml'
       - 'scripts/generate-docs.py'
       - 'scripts/generate-homebrew-docs.py'
+      - 'scripts/generate-source-docs.py'
       - 'scripts/templates/**'
       - '.github/workflows/docs.yml'
 
@@ -227,16 +228,43 @@ jobs:
           echo "Full version output:"
           echo "$VERSION_OUTPUT"
 
-          # Parse individual components
-          VERSION=$(echo "$VERSION_OUTPUT" | grep -oP 'version \K[0-9]+\.[0-9]+\.[0-9]+' || echo "")
-          COMMIT=$(echo "$VERSION_OUTPUT" | grep -oP 'commit:\s+\K[a-f0-9]+' || echo "")
-          BUILT=$(echo "$VERSION_OUTPUT" | grep -oP 'built:\s+\K\S+' || echo "")
+          # Parse new format: vesctl version X.Y.Z
+          VERSION=$(echo "$VERSION_OUTPUT" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo "")
+          COMMIT=$(echo "$VERSION_OUTPUT" | grep 'commit:' | awk '{print $2}' || echo "")
+          BUILT=$(echo "$VERSION_OUTPUT" | grep 'built:' | awk '{print $2}' || echo "")
+          GO_VERSION=$(echo "$VERSION_OUTPUT" | grep 'go:' | awk '{print $2}' || echo "")
+          PLATFORM=$(echo "$VERSION_OUTPUT" | grep 'platform:' | awk '{print $2}' || echo "")
 
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "commit=$COMMIT" >> $GITHUB_OUTPUT
           echo "built=$BUILT" >> $GITHUB_OUTPUT
+          echo "go_version=$GO_VERSION" >> $GITHUB_OUTPUT
+          echo "platform=$PLATFORM" >> $GITHUB_OUTPUT
 
-          echo "Parsed - Version: $VERSION, Commit: $COMMIT, Built: $BUILT"
+          echo "Parsed - Version: $VERSION, Commit: $COMMIT, Built: $BUILT, Go: $GO_VERSION, Platform: $PLATFORM"
+
+      - name: Fetch release info from GitHub API
+        id: release-info
+        run: |
+          RELEASE_JSON=$(gh api repos/${{ github.repository }}/releases/latest 2>/dev/null || echo '{}')
+
+          if [ "$RELEASE_JSON" != "{}" ]; then
+            VERSION=$(echo "$RELEASE_JSON" | jq -r '.tag_name' | sed 's/^v//')
+            PUBLISHED=$(echo "$RELEASE_JSON" | jq -r '.published_at')
+            TAG_NAME=$(echo "$RELEASE_JSON" | jq -r '.tag_name')
+            COMMIT=$(gh api repos/${{ github.repository }}/git/refs/tags/$TAG_NAME --jq '.object.sha' 2>/dev/null | cut -c1-7 || echo "unknown")
+
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "commit=$COMMIT" >> $GITHUB_OUTPUT
+            echo "built=$PUBLISHED" >> $GITHUB_OUTPUT
+            echo "has_release=true" >> $GITHUB_OUTPUT
+            echo "GitHub API - Version: $VERSION, Commit: $COMMIT, Built: $PUBLISHED"
+          else
+            echo "has_release=false" >> $GITHUB_OUTPUT
+            echo "No release found via GitHub API"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -247,14 +275,182 @@ jobs:
         run: pip install -r requirements-docs.txt
 
       - name: Generate homebrew docs with real version
-        if: steps.homebrew-install.outputs.homebrew_success == 'true'
         run: |
           pip install jinja2
+
+          # Use Homebrew output if available, otherwise use GitHub API data
+          if [ "${{ steps.homebrew-install.outputs.homebrew_success }}" == "true" ]; then
+            VERSION="${{ steps.vesctl-version.outputs.version }}"
+            COMMIT="${{ steps.vesctl-version.outputs.commit }}"
+            BUILT="${{ steps.vesctl-version.outputs.built }}"
+            GO_VERSION="${{ steps.vesctl-version.outputs.go_version }}"
+            PLATFORM="${{ steps.vesctl-version.outputs.platform }}"
+          elif [ "${{ steps.release-info.outputs.has_release }}" == "true" ]; then
+            VERSION="${{ steps.release-info.outputs.version }}"
+            COMMIT="${{ steps.release-info.outputs.commit }}"
+            BUILT="${{ steps.release-info.outputs.built }}"
+            GO_VERSION=""
+            PLATFORM=""
+          else
+            VERSION=""
+            COMMIT=""
+            BUILT=""
+            GO_VERSION=""
+            PLATFORM=""
+          fi
+
+          echo "Using - Version: $VERSION, Commit: $COMMIT, Built: $BUILT, Go: $GO_VERSION, Platform: $PLATFORM"
+
           python scripts/generate-homebrew-docs.py \
-            --version "${{ steps.vesctl-version.outputs.version }}" \
-            --commit "${{ steps.vesctl-version.outputs.commit }}" \
-            --built "${{ steps.vesctl-version.outputs.built }}" \
+            --version "$VERSION" \
+            --commit "$COMMIT" \
+            --built "$BUILT" \
+            --go-version "$GO_VERSION" \
+            --platform "$PLATFORM" \
             --output docs/install/homebrew.md
+
+      - name: Test install script and capture output
+        if: github.event_name == 'release' || github.event.inputs.test_homebrew == 'true'
+        id: script-install
+        run: |
+          # Uninstall homebrew version first if present
+          if command -v vesctl &>/dev/null; then
+            brew uninstall vesctl 2>/dev/null || true
+          fi
+
+          # Run install script and capture output
+          INSTALL_OUTPUT=$(curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | VES_NO_SUDO=1 VES_INSTALL_DIR=$HOME/.local/bin sh 2>&1) || true
+
+          # Save output to file (handle multiline)
+          echo "$INSTALL_OUTPUT" > install-output.txt
+
+          # Extract version for docs
+          VERSION=$(echo "$INSTALL_OUTPUT" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1 | sed 's/^v//' || echo "")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "script_success=true" >> $GITHUB_OUTPUT
+
+          echo "Install output captured:"
+          cat install-output.txt
+
+      - name: Generate script docs with real output
+        if: steps.script-install.outputs.script_success == 'true'
+        run: |
+          python scripts/generate-script-docs.py \
+            --version "${{ steps.script-install.outputs.version }}" \
+            --install-output "$(cat install-output.txt)" \
+            --output docs/install/script.md
+
+      - name: Set up Go for source build test
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Test source build and capture output
+        id: source-build
+        run: |
+          # Capture prerequisites
+          echo "Capturing prerequisites..."
+          GO_VER=$(go version)
+          GIT_VER=$(git --version)
+
+          PREREQ_OUTPUT=$(cat <<EOF
+          $ go version
+          $GO_VER
+
+          $ git --version
+          $GIT_VER
+          EOF
+          )
+          echo "prereq_output<<EOFPREREQ" >> $GITHUB_OUTPUT
+          echo "$PREREQ_OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOFPREREQ" >> $GITHUB_OUTPUT
+
+          # Extract Go version for template
+          GO_VERSION_SHORT=$(echo "$GO_VER" | grep -oE 'go[0-9]+\.[0-9]+\.[0-9]+')
+          echo "go_version=$GO_VERSION_SHORT" >> $GITHUB_OUTPUT
+
+          # Create temp directory for clean build test
+          TEMP_DIR=$(mktemp -d)
+          echo "Building in temp directory: $TEMP_DIR"
+          cd "$TEMP_DIR"
+
+          # Capture clone output
+          echo "Cloning repository..."
+          CLONE_OUTPUT_RAW=$(git clone https://github.com/${{ github.repository }}.git vesctl 2>&1)
+          CLONE_OUTPUT=$(cat <<EOF
+          $ git clone https://github.com/${{ github.repository }}.git
+          $CLONE_OUTPUT_RAW
+          $ cd vesctl
+          EOF
+          )
+          echo "clone_output<<EOFCLONE" >> $GITHUB_OUTPUT
+          echo "$CLONE_OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOFCLONE" >> $GITHUB_OUTPUT
+
+          cd vesctl
+
+          # Capture build output
+          echo "Building vesctl..."
+          BUILD_OUTPUT_RAW=$(go build -o vesctl . 2>&1) || true
+          if [ -z "$BUILD_OUTPUT_RAW" ]; then
+            BUILD_OUTPUT_RAW="(no output - build successful)"
+          fi
+          BUILD_OUTPUT=$(cat <<EOF
+          $ go build -o vesctl .
+          $BUILD_OUTPUT_RAW
+          EOF
+          )
+          echo "build_output<<EOFBUILD" >> $GITHUB_OUTPUT
+          echo "$BUILD_OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOFBUILD" >> $GITHUB_OUTPUT
+
+          # Capture version output
+          echo "Verifying build..."
+          VERSION_OUTPUT_RAW=$(./vesctl version 2>&1)
+          VERSION_OUTPUT=$(cat <<EOF
+          $ ./vesctl version
+          $VERSION_OUTPUT_RAW
+          EOF
+          )
+          echo "version_output<<EOFVERSION" >> $GITHUB_OUTPUT
+          echo "$VERSION_OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOFVERSION" >> $GITHUB_OUTPUT
+
+          # Capture ldflags build
+          echo "Building with ldflags..."
+          COMMIT=$(git rev-parse --short HEAD)
+          BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+          go build -ldflags="-X github.com/robinmordasiewicz/vesctl/cmd.Version=dev -X github.com/robinmordasiewicz/vesctl/cmd.GitCommit=$COMMIT -X github.com/robinmordasiewicz/vesctl/cmd.BuildDate=$BUILD_DATE" -o vesctl .
+
+          LDFLAGS_VERSION_RAW=$(./vesctl version 2>&1)
+          LDFLAGS_BUILD_OUTPUT=$(cat <<EOF
+          $ ./vesctl version
+          $LDFLAGS_VERSION_RAW
+          EOF
+          )
+          echo "ldflags_build_output<<EOFLDFLAGS" >> $GITHUB_OUTPUT
+          echo "$LDFLAGS_BUILD_OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOFLDFLAGS" >> $GITHUB_OUTPUT
+
+          # Cleanup
+          cd /
+          rm -rf "$TEMP_DIR"
+
+          echo "source_success=true" >> $GITHUB_OUTPUT
+          echo "Source build test completed successfully"
+
+      - name: Generate source docs with real output
+        if: steps.source-build.outputs.source_success == 'true'
+        run: |
+          python scripts/generate-source-docs.py \
+            --go-version "${{ steps.source-build.outputs.go_version }}" \
+            --prereq-output "${{ steps.source-build.outputs.prereq_output }}" \
+            --clone-output "${{ steps.source-build.outputs.clone_output }}" \
+            --build-output "${{ steps.source-build.outputs.build_output }}" \
+            --version-output "${{ steps.source-build.outputs.version_output }}" \
+            --ldflags-build-output "${{ steps.source-build.outputs.ldflags_build_output }}" \
+            --output docs/install/source.md
 
       - name: Build site
         run: mkdocs build --strict

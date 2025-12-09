@@ -8,18 +8,16 @@ Building from source requires:
 
 | Requirement | Version | Check Command |
 |-------------|---------|---------------|
-| Go | go1.23.4 | `go version` |
+| Go | {{ go_version or '1.23+' }} | `go version` |
 | Git | any | `git --version` |
 
+{% if prereq_output %}
 **Verify prerequisites:**
 
 ```text
-$ go version
-go version go1.23.4 darwin/arm64
-
-$ git --version
-git version 2.44.0
+{{ prereq_output }}
 ```
+{% endif %}
 
 ## Clone Repository
 
@@ -28,19 +26,13 @@ git clone https://github.com/robinmordasiewicz/vesctl.git
 cd vesctl
 ```
 
+{% if clone_output %}
 **Example output:**
 
 ```text
-$ git clone https://github.com/robinmordasiewicz/vesctl.git
-Cloning into 'vesctl'...
-remote: Enumerating objects: 1234, done.
-remote: Counting objects: 100% (234/234), done.
-remote: Compressing objects: 100% (156/156), done.
-remote: Total 1234 (delta 89), reused 180 (delta 72), pack-reused 1000
-Receiving objects: 100% (1234/1234), 256.00 KiB | 2.00 MiB/s, done.
-Resolving deltas: 100% (678/678), done.
-$ cd vesctl
+{{ clone_output }}
 ```
+{% endif %}
 
 ## Build
 
@@ -48,12 +40,13 @@ $ cd vesctl
 go build -o vesctl .
 ```
 
+{% if build_output %}
 **Example output:**
 
 ```text
-$ go build -o vesctl .
-(no output - build successful)
+{{ build_output }}
 ```
+{% endif %}
 
 ## Verify Build
 
@@ -61,18 +54,17 @@ $ go build -o vesctl .
 ./vesctl version
 ```
 
+{% if version_output %}
 **Example output:**
 
 ```text
-$ ./vesctl version
-vesctl version dev
-  commit:   unknown
-  built:    unknown
-  go:       go1.23.4
-  platform: darwin/arm64
+{{ version_output }}
 ```
 
-*Built from source on 2025-12-09*
+*Built from source on {{ generation_date }}*
+{% else %}
+Expected output shows version, commit hash, build timestamp, Go version, and platform.
+{% endif %}
 
 ## Install (Optional)
 
@@ -102,13 +94,10 @@ go build -ldflags="-X github.com/robinmordasiewicz/vesctl/cmd.Version=dev \
   -o vesctl .
 ```
 
+{% if ldflags_build_output %}
 **Example output:**
 
 ```text
-$ ./vesctl version
-vesctl version dev
-  commit:   abc1234
-  built:    2024-12-09T15:30:00Z
-  go:       go1.23.4
-  platform: darwin/arm64
+{{ ldflags_build_output }}
 ```
+{% endif %}

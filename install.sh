@@ -15,6 +15,7 @@ GITHUB_REPO="robinmordasiewicz/vesctl"
 GITHUB_API="https://api.github.com/repos/${GITHUB_REPO}/releases/latest"
 GITHUB_RELEASES="https://github.com/${GITHUB_REPO}/releases/download"
 DEFAULT_INSTALL_DIR="/usr/local/bin"
+USER_INSTALL_DIR="$HOME/.local/bin"
 BINARY_NAME="vesctl"
 
 # Colors for output (check if terminal supports colors)
@@ -253,7 +254,7 @@ Try one of:
     sudo sh install.sh"
     fi
 
-    # Default behavior: try /usr/local/bin with sudo, fall back to ~/bin
+    # Default behavior: try /usr/local/bin with sudo, fall back to ~/.local/bin
     if [ -w "$DEFAULT_INSTALL_DIR" ] || [ "$(id -u)" -eq 0 ]; then
         echo "system:"
         return
@@ -268,51 +269,173 @@ Try one of:
     echo "user:"
 }
 
-# Check if install directory is in PATH and provide guidance if not
-check_path_and_guide() {
-    CHECK_DIR="$1"
+# ============================================
+# Shell RC File Management
+# ============================================
 
-    # Check if install dir is in PATH
+# Get the appropriate RC file for the current shell
+get_shell_rc_file() {
+    CURRENT_SHELL=$(basename "${SHELL:-/bin/sh}")
+    case "$CURRENT_SHELL" in
+        bash)
+            if [ -f "$HOME/.bashrc" ]; then
+                echo "$HOME/.bashrc"
+            elif [ -f "$HOME/.bash_profile" ]; then
+                echo "$HOME/.bash_profile"
+            else
+                echo "$HOME/.bashrc"
+            fi
+            ;;
+        zsh)
+            echo "${ZDOTDIR:-$HOME}/.zshrc"
+            ;;
+        fish)
+            echo "${XDG_CONFIG_HOME:-$HOME/.config}/fish/config.fish"
+            ;;
+        *)
+            echo "$HOME/.profile"
+            ;;
+    esac
+}
+
+# Check if a line exists in a file (exact match or pattern)
+line_exists_in_file() {
+    FILE="$1"
+    PATTERN="$2"
+    [ -f "$FILE" ] && grep -qF "$PATTERN" "$FILE" 2>/dev/null
+}
+
+# Add PATH to shell RC file if not already present
+add_path_to_rc() {
+    DIR_TO_ADD="$1"
+    RC_FILE=$(get_shell_rc_file)
+    CURRENT_SHELL=$(basename "${SHELL:-/bin/sh}")
+
+    # Check if already in PATH
+    case ":$PATH:" in
+        *":$DIR_TO_ADD:"*)
+            return 0
+            ;;
+    esac
+
+    # Check if already in RC file
+    if line_exists_in_file "$RC_FILE" "$DIR_TO_ADD"; then
+        return 0
+    fi
+
+    status "Adding $DIR_TO_ADD to PATH in $RC_FILE..."
+
+    # Create RC file directory if needed
+    mkdir -p "$(dirname "$RC_FILE")" 2>/dev/null
+
+    # Add appropriate export statement
+    if [ "$CURRENT_SHELL" = "fish" ]; then
+        printf '\n# Added by vesctl installer\nfish_add_path %s\n' "$DIR_TO_ADD" >> "$RC_FILE"
+    else
+        printf '\n# Added by vesctl installer\nexport PATH="%s:$PATH"\n' "$DIR_TO_ADD" >> "$RC_FILE"
+    fi
+
+    success "Updated $RC_FILE"
+    return 1  # Return 1 to indicate RC file was modified
+}
+
+# Add zsh completion configuration if needed
+add_zsh_completion_config() {
+    COMPLETION_DIR="$1"
+    RC_FILE="${ZDOTDIR:-$HOME}/.zshrc"
+
+    # Check if fpath already includes our completion directory
+    if line_exists_in_file "$RC_FILE" "$COMPLETION_DIR"; then
+        return 0
+    fi
+
+    # Check for existing fpath and compinit configuration
+    HAS_COMPINIT=false
+    if line_exists_in_file "$RC_FILE" "compinit"; then
+        HAS_COMPINIT=true
+    fi
+
+    status "Adding zsh completion configuration to $RC_FILE..."
+
+    # Create RC file if needed
+    mkdir -p "$(dirname "$RC_FILE")" 2>/dev/null
+
+    # Add the completion configuration
+    {
+        printf '\n# vesctl shell completions\n'
+        printf 'fpath=(%s $fpath)\n' "$COMPLETION_DIR"
+        if [ "$HAS_COMPINIT" = "false" ]; then
+            printf 'autoload -Uz compinit && compinit\n'
+        fi
+    } >> "$RC_FILE"
+
+    success "Updated $RC_FILE with completion configuration"
+    return 1  # Return 1 to indicate RC file was modified
+}
+
+# Add bash completion sourcing if needed
+add_bash_completion_config() {
+    COMPLETION_FILE="$1"
+    RC_FILE=$(get_shell_rc_file)
+
+    # Check if already configured
+    if line_exists_in_file "$RC_FILE" "vesctl"; then
+        # Check if it's specifically our completion file
+        if line_exists_in_file "$RC_FILE" "$COMPLETION_FILE"; then
+            return 0
+        fi
+    fi
+
+    # Check if bash-completion is being sourced (common setup)
+    if line_exists_in_file "$RC_FILE" "bash_completion"; then
+        # bash-completion will auto-load from standard directories
+        return 0
+    fi
+
+    # For user-installed completions, we may need to source manually
+    if [ -f "$COMPLETION_FILE" ]; then
+        status "Adding bash completion configuration to $RC_FILE..."
+
+        {
+            printf '\n# vesctl shell completions\n'
+            printf '[ -f "%s" ] && source "%s"\n' "$COMPLETION_FILE" "$COMPLETION_FILE"
+        } >> "$RC_FILE"
+
+        success "Updated $RC_FILE with completion configuration"
+        return 1
+    fi
+
+    return 0
+}
+
+# Check if install directory is in PATH and automatically add to RC file if not
+configure_path() {
+    CHECK_DIR="$1"
+    RC_MODIFIED=false
+
+    # Check if install dir is already in PATH
     case ":$PATH:" in
         *":$CHECK_DIR:"*)
             return 0  # Already in PATH
             ;;
     esac
 
-    # Not in PATH - provide guidance
-    printf "\n"
-    warning "$CHECK_DIR is not in your PATH"
-    printf "\n"
-
-    # Detect shell and rc file
-    CURRENT_SHELL=$(basename "${SHELL:-/bin/sh}")
-    case "$CURRENT_SHELL" in
-        bash)
-            RC_FILE="$HOME/.bashrc"
-            ;;
-        zsh)
-            RC_FILE="$HOME/.zshrc"
-            ;;
-        fish)
-            RC_FILE="$HOME/.config/fish/config.fish"
-            ;;
-        *)
-            RC_FILE="$HOME/.profile"
-            ;;
-    esac
-
-    printf "%s\n" "To use vesctl immediately, run:"
-    printf "  ${CYAN}export PATH=\"%s:\$PATH\"${NC}\n" "$CHECK_DIR"
-    printf "\n"
-    printf "%s\n" "To make this permanent, add to your shell config:"
-    if [ "$CURRENT_SHELL" = "fish" ]; then
-        printf "  ${CYAN}echo 'set -gx PATH %s \$PATH' >> %s${NC}\n" "$CHECK_DIR" "$RC_FILE"
+    # Automatically add to RC file
+    if add_path_to_rc "$CHECK_DIR"; then
+        : # Already configured
     else
-        printf "  ${CYAN}echo 'export PATH=\"%s:\$PATH\"' >> %s${NC}\n" "$CHECK_DIR" "$RC_FILE"
+        RC_MODIFIED=true
     fi
-    printf "\n"
-    printf "%s\n" "Then reload your shell:"
-    printf "  ${CYAN}source %s${NC}\n" "$RC_FILE"
+
+    # Provide reload instructions if we modified anything
+    if [ "$RC_MODIFIED" = "true" ]; then
+        RC_FILE=$(get_shell_rc_file)
+        printf "\n"
+        info "To use vesctl immediately, run:"
+        printf "  ${CYAN}source %s${NC}\n" "$RC_FILE"
+        printf "\n"
+        info "Or start a new terminal session."
+    fi
 }
 
 # ============================================
@@ -524,21 +647,23 @@ setup_bash_completion() {
     # Try system-wide location first
     if [ -d "/etc/bash_completion.d" ] && [ -w "/etc/bash_completion.d" -o -n "$SUDO_CMD" ]; then
         status "Setting up bash completion (system-wide)..."
-        $SUDO_CMD sh -c "\"$VESCTL_BIN\" completion bash > /etc/bash_completion.d/vesctl" 2>/dev/null && \
-            success "Bash completion installed to /etc/bash_completion.d/vesctl" && return
+        if $SUDO_CMD sh -c "\"$VESCTL_BIN\" completion bash > /etc/bash_completion.d/vesctl" 2>/dev/null; then
+            success "Bash completion installed to /etc/bash_completion.d/vesctl"
+            return
+        fi
     fi
 
     # Fall back to user location
     BASH_COMPLETION_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion/completions"
     if mkdir -p "$BASH_COMPLETION_DIR" 2>/dev/null; then
         status "Setting up bash completion (user)..."
-        "$VESCTL_BIN" completion bash > "${BASH_COMPLETION_DIR}/vesctl" 2>/dev/null && \
-            success "Bash completion installed to ${BASH_COMPLETION_DIR}/vesctl" && return
+        if "$VESCTL_BIN" completion bash > "${BASH_COMPLETION_DIR}/vesctl" 2>/dev/null; then
+            success "Bash completion installed to ${BASH_COMPLETION_DIR}/vesctl"
+            # Automatically configure RC file if needed
+            add_bash_completion_config "${BASH_COMPLETION_DIR}/vesctl"
+            return
+        fi
     fi
-
-    # Provide manual instructions
-    printf "\n%s\n" "To enable bash completion, add this to your ~/.bashrc:"
-    printf "  %s\n" 'eval "$(vesctl completion bash)"'
 }
 
 setup_zsh_completion() {
@@ -549,17 +674,13 @@ setup_zsh_completion() {
     ZSH_COMPLETION_DIR="${ZDOTDIR:-$HOME}/.zsh/completions"
     if mkdir -p "$ZSH_COMPLETION_DIR" 2>/dev/null; then
         status "Setting up zsh completion..."
-        "$VESCTL_BIN" completion zsh > "${ZSH_COMPLETION_DIR}/_vesctl" 2>/dev/null
-        success "Zsh completion installed to ${ZSH_COMPLETION_DIR}/_vesctl"
-        printf "\n%s\n" "Add this to your ~/.zshrc if not already present:"
-        printf "  %s\n" "fpath=(${ZSH_COMPLETION_DIR} \$fpath)"
-        printf "  %s\n" "autoload -Uz compinit && compinit"
-        return
+        if "$VESCTL_BIN" completion zsh > "${ZSH_COMPLETION_DIR}/_vesctl" 2>/dev/null; then
+            success "Zsh completion installed to ${ZSH_COMPLETION_DIR}/_vesctl"
+            # Automatically configure RC file
+            add_zsh_completion_config "$ZSH_COMPLETION_DIR"
+            return
+        fi
     fi
-
-    # Provide manual instructions
-    printf "\n%s\n" "To enable zsh completion, add this to your ~/.zshrc:"
-    printf "  %s\n" 'eval "$(vesctl completion zsh)"'
 }
 
 setup_fish_completion() {
@@ -569,13 +690,12 @@ setup_fish_completion() {
     FISH_COMPLETION_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/fish/completions"
     if mkdir -p "$FISH_COMPLETION_DIR" 2>/dev/null; then
         status "Setting up fish completion..."
-        "$VESCTL_BIN" completion fish > "${FISH_COMPLETION_DIR}/vesctl.fish" 2>/dev/null && \
-            success "Fish completion installed to ${FISH_COMPLETION_DIR}/vesctl.fish" && return
+        if "$VESCTL_BIN" completion fish > "${FISH_COMPLETION_DIR}/vesctl.fish" 2>/dev/null; then
+            success "Fish completion installed to ${FISH_COMPLETION_DIR}/vesctl.fish"
+            # Fish auto-loads from this directory, no RC modification needed
+            return
+        fi
     fi
-
-    # Provide manual instructions
-    printf "\n%s\n" "To enable fish completion, run:"
-    printf "  %s\n" "vesctl completion fish > ~/.config/fish/completions/vesctl.fish"
 }
 
 # ============================================
@@ -760,8 +880,8 @@ On Alpine:        apk add curl"
             INSTALL_DIR="$DEFAULT_INSTALL_DIR"
             ;;
         user)
-            INSTALL_DIR="$HOME/bin"
-            # Create ~/bin if needed
+            INSTALL_DIR="$USER_INSTALL_DIR"
+            # Create ~/.local/bin if needed
             if [ ! -d "$INSTALL_DIR" ]; then
                 mkdir -p "$INSTALL_DIR"
             fi
@@ -795,8 +915,8 @@ On Alpine:        apk add curl"
     # Set up shell completion
     setup_completion "$INSTALL_DIR" "$SUDO_CMD"
 
-    # Check if install directory is in PATH and provide guidance if not
-    check_path_and_guide "$INSTALL_DIR"
+    # Configure PATH in shell RC file if needed
+    configure_path "$INSTALL_DIR"
 
     # Success message
     printf "\n"

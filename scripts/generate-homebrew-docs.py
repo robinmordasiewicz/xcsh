@@ -7,11 +7,13 @@ Usage:
         --version 1.2.0 \
         --commit abc1234 \
         --built 2024-12-09T10:00:00Z \
+        --go-version go1.23.4 \
+        --platform darwin/arm64 \
         --output docs/install/homebrew.md
 """
 
 import argparse
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
@@ -24,6 +26,8 @@ def main():
     parser.add_argument("--version", help="vesctl version")
     parser.add_argument("--commit", help="Git commit hash")
     parser.add_argument("--built", help="Build timestamp")
+    parser.add_argument("--go-version", help="Go version used for build")
+    parser.add_argument("--platform", help="Target platform (os/arch)")
     parser.add_argument(
         "--output",
         default="docs/install/homebrew.md",
@@ -50,7 +54,9 @@ def main():
         version=args.version,
         commit=args.commit,
         built=args.built,
-        generation_date=datetime.utcnow().strftime("%Y-%m-%d"),
+        go_version=args.go_version,
+        platform=args.platform,
+        generation_date=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
     )
 
     output_path = Path(args.output)
@@ -59,9 +65,11 @@ def main():
 
     print(f"Generated: {output_path}")
     if args.version:
-        print(f"  Version: {args.version}")
-        print(f"  Commit:  {args.commit}")
-        print(f"  Built:   {args.built}")
+        print(f"  Version:  {args.version}")
+        print(f"  Commit:   {args.commit}")
+        print(f"  Built:    {args.built}")
+        print(f"  Go:       {args.go_version}")
+        print(f"  Platform: {args.platform}")
     else:
         print("  (No version info provided, using template defaults)")
 

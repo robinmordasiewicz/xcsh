@@ -2,30 +2,35 @@ package cmd
 
 import (
 	"fmt"
+	"runtime"
 
 	"github.com/spf13/cobra"
 )
 
 // Build-time variables (set via ldflags)
 var (
-	Version     = "dev"
-	GitCommit   = "unknown"
-	BuildDate   = "unknown"
-	Branch      = "unknown"
-	BuildAuthor = "unknown"
-	BuildNumber = "0"
+	Version   = "dev"
+	GitCommit = "unknown"
+	BuildDate = "unknown"
 )
 
 var versionCmd = &cobra.Command{
 	Use:     "version",
-	Short:   "Display the vesctl build version and commit information.",
-	Long:    `Display the vesctl build version and commit information.`,
+	Short:   "Display vesctl version and build information",
+	Long:    `Display vesctl version and build information.`,
 	Example: `vesctl version`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Match original vesctl format exactly:
-		// branch: 0-2-35 <br>commit-sha: 997bd8865ab5740ad6a787ac1c4619da3e5761c5 2022-09-27T09:11:13+00:00 mceloud 3089719293 nil <br>
-		fmt.Printf("branch: %s <br>commit-sha: %s %s %s %s nil <br>\n",
-			Branch, GitCommit, BuildDate, BuildAuthor, BuildNumber)
+		// Short commit hash (7 chars like GitHub)
+		commit := GitCommit
+		if len(commit) > 7 {
+			commit = commit[:7]
+		}
+
+		fmt.Printf("vesctl version %s\n", Version)
+		fmt.Printf("  commit:   %s\n", commit)
+		fmt.Printf("  built:    %s\n", BuildDate)
+		fmt.Printf("  go:       %s\n", runtime.Version())
+		fmt.Printf("  platform: %s/%s\n", runtime.GOOS, runtime.GOARCH)
 	},
 }
 

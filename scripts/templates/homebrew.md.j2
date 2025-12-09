@@ -32,11 +32,13 @@ Expected output:
 
 ```text
 vesctl version {{ version }}
-  commit: {{ commit }}
-  built:  {{ built }}
+  commit:   {{ commit }}
+  built:    {{ built }}
+  go:       {{ go_version if go_version else "go1.23.x" }}
+  platform: {{ platform if platform else "darwin/arm64" }}
 ```
 
-*Version information captured from Homebrew installation on {{ generation_date }}*
+*Version {{ version }} - captured {{ generation_date }}*
 {% else %}
-Expected output shows version, commit hash, and build timestamp.
+Expected output shows version, commit hash, build timestamp, Go version, and platform.
 {% endif %}

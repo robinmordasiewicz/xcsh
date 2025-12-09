@@ -16,11 +16,22 @@ Install vesctl with automatic platform detection and shell configuration.
     wget -qO- https://robinmordasiewicz.github.io/vesctl/install.sh | sh
     ```
 
+{% if install_output %}
+**Example output:**
+
+```text
+{{ install_output }}
+```
+
+{% if generation_date %}
+*Output captured on {{ generation_date }}*
+{% endif %}
+{% endif %}
 
 ## Specific Version
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | VES_VERSION=4.6.0 sh
+curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | VES_VERSION={{ version or 'X.Y.Z' }} sh
 ```
 
 ## Custom Install Directory

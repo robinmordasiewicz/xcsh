@@ -27,4 +27,14 @@ After installation, verify vesctl is working:
 vesctl version
 ```
 
-Expected output shows version, commit hash, and build timestamp.
+Expected output:
+
+```text
+vesctl version 4.6.0
+  commit:   abc1234
+  built:    2024-12-09T10:00:00Z
+  go:       go1.23.4
+  platform: linux/amd64
+```
+
+*Version 4.6.0 - captured 2025-12-09*
