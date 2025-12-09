@@ -135,6 +135,85 @@ class VesctlDocsGenerator:
         self.env.filters["underscore_to_space"] = lambda s: s.replace("_", " ")
         self.env.filters["title_case"] = lambda s: s.replace("_", " ").title()
 
+        # API specs mapping
+        self.api_specs_dir = Path("docs/specifications/api")
+        self.resource_api_map: dict[str, dict] = {}
+
+    def load_api_specs(self) -> None:
+        """Load and index OpenAPI spec files for API documentation links."""
+        if not self.api_specs_dir.exists():
+            print(f"Warning: API specs directory not found: {self.api_specs_dir}")
+            return
+
+        print(f"Loading API specs from {self.api_specs_dir}...")
+        spec_count = 0
+
+        for spec_file in self.api_specs_dir.glob("*.json"):
+            # Extract resource name from filename
+            # Pattern: docs-cloud-f5-com.XXXX.public.ves.io.schema.[path].ves-swagger.json
+            parts = spec_file.stem.split(".")
+            if "schema" in parts:
+                schema_idx = parts.index("schema")
+                # Get the last part before "ves-swagger" as resource name
+                resource_name = parts[-2] if len(parts) >= 2 else ""
+
+                if resource_name and resource_name != "ves-swagger":
+                    try:
+                        with open(spec_file) as f:
+                            spec_data = json.load(f)
+
+                        # Store spec with resource name as key
+                        # If resource already exists, keep the first one (they should be the same)
+                        if resource_name not in self.resource_api_map:
+                            self.resource_api_map[resource_name] = {
+                                "spec": spec_data,
+                                "file": spec_file,
+                            }
+                            spec_count += 1
+                    except (json.JSONDecodeError, IOError) as e:
+                        print(f"  Warning: Failed to load {spec_file}: {e}")
+
+        print(f"  Loaded {spec_count} API specs, {len(self.resource_api_map)} unique resources")
+
+    def get_api_docs_url(self, resource: str, action: str) -> Optional[str]:
+        """Get API documentation URL for a resource+action combination."""
+        if resource not in self.resource_api_map:
+            return None
+
+        spec = self.resource_api_map[resource]["spec"]
+
+        # Map vesctl action to API operation name
+        action_to_op = {
+            "create": "Create",
+            "list": "List",
+            "get": "Get",
+            "delete": "Delete",
+            "replace": "Replace",
+            "apply": "Replace",
+            "status": "Get",
+            "patch": "Replace",
+            "add-labels": "Create",
+            "remove-labels": "Delete",
+        }
+
+        op_name = action_to_op.get(action)
+        if not op_name:
+            return None
+
+        # Search paths for matching operation with .API. service type
+        for path, methods in spec.get("paths", {}).items():
+            for method, details in methods.items():
+                if isinstance(details, dict):
+                    proto_rpc = details.get("x-ves-proto-rpc", "")
+                    # Match operations that end with .API.<OpName>
+                    if proto_rpc.endswith(f".API.{op_name}"):
+                        external_docs = details.get("externalDocs", {})
+                        url = external_docs.get("url")
+                        if url:
+                            return url
+
+        return None
+
     def load_spec(self) -> None:
         """Load CLI specification from vesctl --spec."""
         print(f"Loading spec from {self.vesctl_path}...")
@@ -415,14 +494,13 @@ class VesctlDocsGenerator:
         cmd = node.command
         template = self.env.get_template("resource_type.md.j2")
 
-        # Find related commands (same resource, different actions)
-        related = self.find_related_commands(group, resource)
+        # Get API documentation URL for this resource+action
+        api_docs_url = self.get_api_docs_url(resource, action)
 
         fm = self.generate_front_matter(
             title=f"vesctl {group} {action} {resource}",
             description=cmd.short,
             command=cmd,
-            related_commands=[r.full_command for r in related if r != cmd],
         )
 
         content = template.render(
@@ -432,7 +510,7 @@ class VesctlDocsGenerator:
             group=group,
             action=action,
             resource=resource,
-            related_commands=related,
+            api_docs_url=api_docs_url,
         )
 
         resource_path = self.output_dir / group / action / f"{resource}.md"
@@ -539,14 +617,13 @@ class VesctlDocsGenerator:
         action = cmd.path[1] if len(cmd.path) > 1 else ""
         template = self.env.get_template("action_under_resource.md.j2")
 
-        # Find related actions for this resource
-        related = self.find_actions_for_resource(group, resource)
+        # Get API documentation URL for this resource+action
+        api_docs_url = self.get_api_docs_url(resource, action)
 
         fm = self.generate_front_matter(
             title=f"vesctl {group} {action} {resource}",
             description=cmd.short,
             command=cmd,
-            related_commands=[r.full_command for r in related if r != cmd],
         )
 
         content = template.render(
@@ -556,7 +633,7 @@ class VesctlDocsGenerator:
             group=group,
             action=action,
             resource=resource,
-            related_commands=related,
+            api_docs_url=api_docs_url,
         )
 
         # New path: docs/commands/configuration/http_loadbalancer/list.md
@@ -960,6 +1037,9 @@ class VesctlDocsGenerator:
     def generate_all(self, update_mkdocs: bool = False) -> None:
         """Generate all documentation."""
         print("\nGenerating documentation...")
+
+        # Load API specs for documentation links
+        self.load_api_specs()
 
         # Generate main index
         self.generate_commands_index()

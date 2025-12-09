@@ -9,11 +9,8 @@ command: "{{ front_matter.command }}"
 command_group: "{{ front_matter.command_group }}"
 action: "{{ front_matter.action }}"
 resource_type: "{{ front_matter.resource_type }}"
-{% if front_matter.related_commands %}
-related_commands:
-{% for rc in front_matter.related_commands %}
-  - "{{ rc }}"
-{% endfor %}
+{% if api_docs_url %}
+api_docs_url: "{{ api_docs_url }}"
 {% endif %}
 ---
 
@@ -144,18 +141,8 @@ vesctl {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_'
 {% endif %}
 
 {% endif %}
-{% if related_commands and related_commands | length > 1 %}
-## Related Commands
+{% if api_docs_url %}
+## API Reference
 
-{% for rel in related_commands %}
-{% if rel != command %}
-- [vesctl {{ group }} {{ rel.path[1] }} {{ resource }}](../{{ rel.path[1] }}/{{ resource }}.md) - {{ rel.short }}
+- [{{ resource | title_case }} API Documentation]({{ api_docs_url }})
 {% endif %}
-{% endfor %}
-
-{% endif %}
-## See Also
-
-- [vesctl {{ group }} {{ action }}](index.md) - {{ action | title_case }} commands
-- [vesctl {{ group }}](../index.md) - {{ group | title_case }} commands
-- [Command Reference](../../index.md)
