@@ -269,7 +269,7 @@ Try one of:
 # ============================================
 
 get_latest_version() {
-    status "Fetching latest version from GitHub..."
+    status "Fetching latest version from GitHub..." >&2
 
     RESPONSE=$(http_get "$GITHUB_API")
 
@@ -283,10 +283,14 @@ Or download manually from:
   https://github.com/${GITHUB_REPO}/releases/latest"
     fi
 
-    # Try to parse with jq if available, otherwise use sed
+    # Try to parse with jq if available, fall back to sed if jq fails or isn't installed
+    VERSION=""
     if command_exists jq; then
         VERSION=$(echo "$RESPONSE" | jq -r '.tag_name' 2>/dev/null | sed 's/^v//')
-    else
+    fi
+
+    # Fall back to sed if jq failed or wasn't available
+    if [ -z "$VERSION" ] || [ "$VERSION" = "null" ]; then
         VERSION=$(echo "$RESPONSE" | grep '"tag_name":' | sed -E 's/.*"v?([^"]+)".*/\1/')
     fi
 
