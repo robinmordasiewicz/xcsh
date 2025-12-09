@@ -23,6 +23,22 @@ import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
+# Canonical action order for consistent display
+ACTION_ORDER = [
+    'list', 'get', 'create', 'delete', 'replace',
+    'apply', 'patch', 'status', 'add-labels', 'remove-labels'
+]
+
+
+def sort_actions(actions: list) -> list:
+    """Sort actions by canonical order."""
+    action_priority = {action: i for i, action in enumerate(ACTION_ORDER)}
+    return sorted(
+        actions,
+        key=lambda c: action_priority.get(c.path[1] if len(c.path) > 1 else '', 999)
+    )
+
+
 @dataclass
 class Flag:
     """Represents a CLI flag."""
@@ -358,11 +374,15 @@ class VesctlDocsGenerator:
             command=cmd,
         )
 
+        # Use flat links for resource-first groups (configuration, api-endpoint)
+        use_flat_links = name == "configuration"
+
         content = template.render(
             front_matter=fm,
             command=cmd,
             subcommands=subcommands,
             global_flags=self.global_flags,
+            flat_links=use_flat_links,
         )
 
         self.write_file(group_dir / "index.md", content)
@@ -538,6 +558,69 @@ class VesctlDocsGenerator:
         """Find all actions available for a specific resource type."""
         return self.find_related_commands(group, resource)
 
+    def generate_action_examples(self, group: str, action: str, resource: str) -> str:
+        """Generate example bash commands for an action."""
+        resource_display = resource.replace('_', ' ')
+        resource_kebab = resource.replace('_', '-')
+
+        examples = {
+            'list': f'''```bash
+# List all {resource_display} resources
+vesctl {group} {action} {resource}
+
+# List in specific namespace
+vesctl {group} {action} {resource} -n example-namespace
+
+# List with JSON output
+vesctl {group} {action} {resource} --output-format json
+```''',
+            'get': f'''```bash
+# Get {resource_display} details
+vesctl {group} {action} {resource} example-{resource_kebab}
+
+# Get with YAML output
+vesctl {group} {action} {resource} example-{resource_kebab} --output-format yaml
+```''',
+            'create': f'''```bash
+# Create {resource_display} from file
+vesctl {group} {action} {resource} -i {resource}.yaml
+```''',
+            'delete': f'''```bash
+# Delete {resource_display}
+vesctl {group} {action} {resource} example-{resource_kebab}
+
+# Delete with confirmation bypass
+vesctl {group} {action} {resource} example-{resource_kebab} --yes
+```''',
+            'replace': f'''```bash
+# Replace {resource_display} from file
+vesctl {group} {action} {resource} -i {resource}.yaml
+```''',
+            'apply': f'''```bash
+# Apply {resource_display} from file
+vesctl {group} {action} {resource} -i {resource}.yaml
+```''',
+            'patch': f'''```bash
+# Patch {resource_display}
+vesctl {group} {action} {resource} example-{resource_kebab} -i patch.yaml
+```''',
+            'status': f'''```bash
+# Get {resource_display} status
+vesctl {group} {action} {resource} example-{resource_kebab}
+```''',
+            'add-labels': f'''```bash
+# Add labels to {resource_display}
+vesctl {group} {action} {resource} example-{resource_kebab} --label-key app --label-value web
+```''',
+            'remove-labels': f'''```bash
+# Remove labels from {resource_display}
+vesctl {group} {action} {resource} example-{resource_kebab} --label-key app
+```''',
+        }
+        return examples.get(action, f'''```bash
+vesctl {group} {action} {resource}
+```''')
+
     def collect_resources_across_actions(
         self, group_node: CommandTree
     ) -> dict[str, list[Command]]:
@@ -576,16 +659,34 @@ class VesctlDocsGenerator:
     def generate_resource_group(
         self, group: str, resource: str, actions: list[Command]
     ) -> None:
-        """Generate documentation for a resource type with all its actions."""
-        resource_dir = self.output_dir / group / resource
+        """Generate unified documentation for a resource type with all actions."""
+        template = self.env.get_template("resource_unified.md.j2")
 
-        # Generate resource overview/index
-        template = self.env.get_template("resource_overview.md.j2")
+        # Sort actions by canonical order
+        sorted_actions = sort_actions(actions)
+
+        # Build action data with API URLs and generated examples
+        action_data = []
+        api_docs_urls = {}
+
+        for action_cmd in sorted_actions:
+            action_name = action_cmd.path[1] if len(action_cmd.path) > 1 else ""
+            api_url = self.get_api_docs_url(resource, action_name)
+
+            if api_url:
+                api_docs_urls[action_name] = api_url
+
+            action_data.append({
+                'action_name': action_name,
+                'command': action_cmd,
+                'api_docs_url': api_url,
+                'generated_examples': self.generate_action_examples(group, action_name, resource),
+            })
 
         fm = self.generate_front_matter(
             title=f"vesctl {group} {resource}",
             description=f"Manage {resource.replace('_', ' ')} resources",
-            command=actions[0] if actions else None,
+            command=sorted_actions[0] if sorted_actions else None,
             resource_type=resource,
         )
 
@@ -593,52 +694,14 @@ class VesctlDocsGenerator:
             front_matter=fm,
             group=group,
             resource=resource,
-            actions=actions,
+            actions=action_data,
+            api_docs_urls=api_docs_urls,
             global_flags=self.global_flags,
         )
 
-        self.write_file(resource_dir / "index.md", content)
-
-        # Generate .meta.yml
-        self.generate_meta_yml(
-            resource_dir,
-            description=f"Manage {resource.replace('_', ' ')} resources",
-            tags=["vesctl", group, resource],
-        )
-
-        # Generate action pages under resource
-        for action_cmd in actions:
-            self.generate_action_under_resource(group, resource, action_cmd)
-
-    def generate_action_under_resource(
-        self, group: str, resource: str, cmd: Command
-    ) -> None:
-        """Generate action page under resource directory."""
-        action = cmd.path[1] if len(cmd.path) > 1 else ""
-        template = self.env.get_template("action_under_resource.md.j2")
-
-        # Get API documentation URL for this resource+action
-        api_docs_url = self.get_api_docs_url(resource, action)
-
-        fm = self.generate_front_matter(
-            title=f"vesctl {group} {action} {resource}",
-            description=cmd.short,
-            command=cmd,
-        )
-
-        content = template.render(
-            front_matter=fm,
-            command=cmd,
-            global_flags=self.global_flags,
-            group=group,
-            action=action,
-            resource=resource,
-            api_docs_url=api_docs_url,
-        )
-
-        # New path: docs/commands/configuration/http_loadbalancer/list.md
-        action_path = self.output_dir / group / resource / f"{action}.md"
-        self.write_file(action_path, content)
+        # Write single file (not in a directory)
+        resource_path = self.output_dir / group / f"{resource}.md"
+        self.write_file(resource_path, content)
 
     # ===== RPC Service Grouping Methods =====
 
@@ -695,32 +758,24 @@ class VesctlDocsGenerator:
     def generate_rpc_service_grouped(
         self, group: str, action: str, node: CommandTree
     ) -> None:
-        """Generate RPC docs with service-level grouping."""
+        """Generate RPC docs with unified service pages."""
         services = self.collect_rpc_services(node)
 
         print(f"  Found {len(services)} RPC services")
 
-        # Generate documentation for each service
+        # Generate unified page for each service
         for service_name, procedures in sorted(services.items()):
-            self.generate_rpc_service_index(group, action, service_name, procedures)
+            self.generate_rpc_service_unified(group, action, service_name, procedures)
 
-            # Generate procedure pages under service
-            for proc_info in procedures:
-                self.generate_rpc_procedure_page(
-                    group, action, service_name, proc_info, procedures
-                )
-
-    def generate_rpc_service_index(
+    def generate_rpc_service_unified(
         self,
         group: str,
         action: str,
         service: str,
         procedures: list[dict],
     ) -> None:
-        """Generate service index page for RPC procedures."""
-        service_dir = self.output_dir / group / action / service
-
-        template = self.env.get_template("rpc_service.md.j2")
+        """Generate unified service page with all procedures."""
+        template = self.env.get_template("rpc_service_unified.md.j2")
 
         fm = self.generate_front_matter(
             title=f"vesctl request rpc {service}",
@@ -735,78 +790,24 @@ class VesctlDocsGenerator:
             global_flags=self.global_flags,
         )
 
-        self.write_file(service_dir / "index.md", content)
-
-        # Generate .meta.yml
-        self.generate_meta_yml(
-            service_dir,
-            description=f"{service.replace('_', ' ').title()} service RPC procedures",
-            tags=["vesctl", "request", "rpc", service],
-        )
-
-    def generate_rpc_procedure_page(
-        self,
-        group: str,
-        action: str,
-        service: str,
-        proc_info: dict,
-        related_procedures: list[dict],
-    ) -> None:
-        """Generate RPC procedure page under service directory."""
-        template = self.env.get_template("rpc_procedure.md.j2")
-        cmd = proc_info['command']
-
-        fm = self.generate_front_matter(
-            title=f"vesctl request rpc {proc_info['full_name']}",
-            description=cmd.short,
-            command=cmd,
-            rpc_service=service,
-            rpc_procedure=proc_info['procedure_name'],
-            related_procedures=[p['full_name'] for p in related_procedures if p != proc_info],
-        )
-
-        content = template.render(
-            front_matter=fm,
-            command=cmd,
-            global_flags=self.global_flags,
-            service=service,
-            full_procedure_name=proc_info['full_name'],
-            procedure_name=proc_info['procedure_name'],
-            related_procedures=related_procedures,
-        )
-
-        # Path: docs/commands/request/rpc/alert/Alerts.md
-        proc_path = self.output_dir / group / action / service / f"{proc_info['procedure_name']}.md"
-        self.write_file(proc_path, content)
+        # Write single file per service
+        service_path = self.output_dir / group / action / f"{service}.md"
+        self.write_file(service_path, content)
 
     def build_rpc_service_nav(
         self, group: str, action: str, node: CommandTree
     ) -> list[dict]:
-        """Build service-grouped navigation for RPC commands."""
+        """Build flat service navigation for RPC commands."""
         nav_items = []
 
         services = self.collect_rpc_services(node)
 
+        # Build flat navigation - one entry per service
         for service_name in sorted(services.keys()):
-            procedures = services[service_name]
             service_display = service_name.replace("_", " ").replace("-", " ").title()
-
-            # Build service navigation with procedures as children
-            service_children = []
-
-            # Service overview
-            service_children.append({
-                f"{service_display} Overview": f"commands/{group}/{action}/{service_name}/index.md"
+            nav_items.append({
+                service_display: f"commands/{group}/{action}/{service_name}.md"
             })
-
-            # Procedure pages under service
-            for proc_info in procedures:
-                proc_display = proc_info['procedure_name']
-                service_children.append({
-                    proc_display: f"commands/{group}/{action}/{service_name}/{proc_info['procedure_name']}.md"
-                })
-
-            nav_items.append({service_display: service_children})
 
         return nav_items
 
@@ -870,34 +871,18 @@ class VesctlDocsGenerator:
     def build_resource_first_nav(
         self, group: str, node: CommandTree
     ) -> list[dict]:
-        """Build resource-first navigation for configuration command."""
+        """Build flat resource navigation for configuration command."""
         nav_items = []
 
         # Collect all resources across all actions
         resources = self.collect_resources_across_actions(node)
 
-        # Build navigation for each resource
+        # Build flat navigation - one entry per resource
         for resource_name in sorted(resources.keys()):
-            actions = resources[resource_name]
             resource_display = resource_name.replace("_", " ").replace("-", " ").title()
-
-            # Build resource navigation with actions as children
-            resource_children = []
-
-            # Resource overview
-            resource_children.append({
-                f"{resource_display} Overview": f"commands/{group}/{resource_name}/index.md"
+            nav_items.append({
+                resource_display: f"commands/{group}/{resource_name}.md"
             })
-
-            # Action pages under resource
-            for action_cmd in actions:
-                action_name = action_cmd.path[1] if len(action_cmd.path) > 1 else ""
-                action_display = action_name.replace("_", " ").replace("-", " ").title()
-                resource_children.append({
-                    action_display: f"commands/{group}/{resource_name}/{action_name}.md"
-                })
-
-            nav_items.append({resource_display: resource_children})
 
         return nav_items
 

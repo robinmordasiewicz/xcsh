@@ -2,10 +2,10 @@
 title: "vesctl completion"
 description: "Generate shell completion scripts for bash or zsh."
 keywords:
-  - completion
-  - F5 XC
-  - vesctl
   - F5 Distributed Cloud
+  - completion
+  - vesctl
+  - F5 XC
 command: "vesctl completion"
 command_group: "completion"
 ---

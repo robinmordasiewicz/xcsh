@@ -46,7 +46,9 @@ This command can also be invoked as:
 | Command | Description |
 |---------|-------------|
 {% for sub in subcommands %}
-| [{{ sub.name }}]({{ sub.name }}/index.md) | {{ sub.short }} |
+{% if flat_links %}| [{{ sub.name }}]({{ sub.name }}.md) | {{ sub.short }} |
+{% else %}| [{{ sub.name }}]({{ sub.name }}/index.md) | {{ sub.short }} |
+{% endif %}
 {% endfor %}
 
 {% if command.flags %}
@@ -71,5 +73,7 @@ This command can also be invoked as:
 
 - [Command Reference](../index.md)
 {% for sub in subcommands[:5] %}
-- [vesctl {{ command.name }} {{ sub.name }}]({{ sub.name }}/index.md)
+{% if flat_links %}- [vesctl {{ command.name }} {{ sub.name }}]({{ sub.name }}.md)
+{% else %}- [vesctl {{ command.name }} {{ sub.name }}]({{ sub.name }}/index.md)
+{% endif %}
 {% endfor %}
