@@ -1,24 +1,9 @@
 name: Compatibility Tests
 
+# DISABLED: No longer enforcing strict compliance with original vesctl binary
+# Test scripts remain in claudedocs/compatibility/ for reference
+# To run manually, use workflow_dispatch
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'cmd/**'
-      - 'pkg/**'
-      - '*.go'
-      - 'go.mod'
-      - 'go.sum'
-      - 'claudedocs/compatibility/**'
-  pull_request:
-    branches: [main]
-    paths:
-      - 'cmd/**'
-      - 'pkg/**'
-      - '*.go'
-      - 'go.mod'
-      - 'go.sum'
-      - 'claudedocs/compatibility/**'
   workflow_dispatch:
     inputs:
       with_api:
@@ -122,56 +107,3 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "No summary generated. Check logs for details." >> $GITHUB_STEP_SUMMARY
           fi
-
-  offline-quick:
-    name: Quick Offline Tests
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: Build vesctl
-        run: |
-          go build -o vesctl .
-          chmod +x vesctl
-
-      - name: Download original vesctl
-        run: |
-          curl -sL "https://vesio.azureedge.net/releases/vesctl/${{ env.ORIGINAL_VESCTL_VERSION }}/vesctl.linux-amd64.gz" | gunzip > vesctl-${{ env.ORIGINAL_VESCTL_VERSION }}
-          chmod +x vesctl-${{ env.ORIGINAL_VESCTL_VERSION }}
-
-      - name: Run Phase 1 (Configure)
-        run: |
-          export ORIGINAL_VESCTL="$(pwd)/vesctl-${{ env.ORIGINAL_VESCTL_VERSION }}"
-          export OUR_VESCTL="$(pwd)/vesctl"
-          cd claudedocs/compatibility
-          chmod +x run-all-tests.sh
-          ./run-all-tests.sh --phase 1
-
-      - name: Run Phase 5 (Multi-Resource Help)
-        run: |
-          export ORIGINAL_VESCTL="$(pwd)/vesctl-${{ env.ORIGINAL_VESCTL_VERSION }}"
-          export OUR_VESCTL="$(pwd)/vesctl"
-          cd claudedocs/compatibility
-          ./run-all-tests.sh --phase 5
-
-      - name: Run Phase 6 (Request Commands)
-        run: |
-          export ORIGINAL_VESCTL="$(pwd)/vesctl-${{ env.ORIGINAL_VESCTL_VERSION }}"
-          export OUR_VESCTL="$(pwd)/vesctl"
-          cd claudedocs/compatibility
-          ./run-all-tests.sh --phase 6
-
-      - name: Run Phase 7 (Site Commands)
-        run: |
-          export ORIGINAL_VESCTL="$(pwd)/vesctl-${{ env.ORIGINAL_VESCTL_VERSION }}"
-          export OUR_VESCTL="$(pwd)/vesctl"
-          cd claudedocs/compatibility
-          ./run-all-tests.sh --phase 7

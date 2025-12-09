@@ -189,13 +189,15 @@ run_phase() {
         PHASE_TIME[$phase]="${duration}s"
 
         # Extract pass/fail/warn counts from log (strip ANSI codes first)
-        # Use sed with extended regex and tr to ensure clean output
-        local clean_log=$(sed 's/\x1b\[[0-9;]*m//g' "${RESULTS_DIR}/phase${phase}.log" 2>/dev/null | tr -d '\r')
-        local pass_count=$(echo "$clean_log" | grep -c '\[PASS\]' 2>/dev/null || echo 0)
-        local fail_count=$(echo "$clean_log" | grep -c '\[FAIL\]' 2>/dev/null || echo 0)
-        local warn_count=$(echo "$clean_log" | grep -c '\[WARN\]' 2>/dev/null || echo 0)
+        # Use grep directly on the file to avoid issues with large logs and newlines
+        local pass_count=$(grep -c '\[PASS\]' "${RESULTS_DIR}/phase${phase}.log" 2>/dev/null | tr -d '\n\r' || echo 0)
+        local fail_count=$(grep -c '\[FAIL\]' "${RESULTS_DIR}/phase${phase}.log" 2>/dev/null | tr -d '\n\r' || echo 0)
+        local warn_count=$(grep -c '\[WARN\]' "${RESULTS_DIR}/phase${phase}.log" 2>/dev/null | tr -d '\n\r' || echo 0)
 
-        # Ensure counts are valid integers
+        # Ensure counts are valid integers (strip any remaining whitespace)
+        pass_count=$(echo "$pass_count" | tr -d '[:space:]')
+        fail_count=$(echo "$fail_count" | tr -d '[:space:]')
+        warn_count=$(echo "$warn_count" | tr -d '[:space:]')
         pass_count=${pass_count:-0}
         fail_count=${fail_count:-0}
         warn_count=${warn_count:-0}
