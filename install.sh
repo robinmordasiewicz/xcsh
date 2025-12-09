@@ -8,7 +8,7 @@
 #   VES_NO_SUDO      - Skip sudo if set to any value
 #   VES_NO_VERIFY    - Skip checksum verification if set
 
-set -e
+set -eu
 
 # Configuration
 GITHUB_REPO="robinmordasiewicz/vesctl"
@@ -224,24 +224,26 @@ get_arch_display_name() {
 # Privilege Handling
 # ============================================
 
-need_sudo() {
-    INSTALL_DIR="${VESCTL_INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
+# Returns: "system:", "system:sudo", "user:", "custom:", or "custom:sudo"
+# Format: "<strategy_type>:<sudo_command>"
+determine_install_strategy() {
+    REQUESTED_DIR="${VES_INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
 
-    # Check if we can write to the install directory
-    if [ -w "$INSTALL_DIR" ] || [ -w "$(dirname "$INSTALL_DIR")" ]; then
-        echo ""
-        return
-    fi
-
-    # Check if running as root
-    if [ "$(id -u)" -eq 0 ]; then
-        echo ""
-        return
-    fi
-
-    # Check if sudo is available
-    if [ -n "$VES_NO_SUDO" ]; then
-        error "Cannot write to $INSTALL_DIR and VES_NO_SUDO is set.
+    # If user explicitly set install dir, respect it
+    if [ -n "${VES_INSTALL_DIR:-}" ]; then
+        if [ -w "$REQUESTED_DIR" ] || [ -w "$(dirname "$REQUESTED_DIR")" ]; then
+            echo "custom:"
+            return
+        fi
+        if [ "$(id -u)" -eq 0 ]; then
+            echo "custom:"
+            return
+        fi
+        if [ -z "${VES_NO_SUDO:-}" ] && command_exists sudo; then
+            echo "custom:sudo"
+            return
+        fi
+        error "Cannot write to $REQUESTED_DIR and sudo is not available.
 
 Try one of:
   - Set VES_INSTALL_DIR to a writable location:
@@ -251,17 +253,66 @@ Try one of:
     sudo sh install.sh"
     fi
 
-    if ! command_exists sudo; then
-        error "Cannot write to $INSTALL_DIR and sudo is not available.
-
-Try one of:
-  - Set VES_INSTALL_DIR to a writable location:
-    VES_INSTALL_DIR=\$HOME/.local/bin sh install.sh
-
-  - Run as root"
+    # Default behavior: try /usr/local/bin with sudo, fall back to ~/bin
+    if [ -w "$DEFAULT_INSTALL_DIR" ] || [ "$(id -u)" -eq 0 ]; then
+        echo "system:"
+        return
     fi
 
-    echo "sudo"
+    if [ -z "${VES_NO_SUDO:-}" ] && command_exists sudo; then
+        echo "system:sudo"
+        return
+    fi
+
+    # Fall back to user directory (no sudo available)
+    echo "user:"
+}
+
+# Check if install directory is in PATH and provide guidance if not
+check_path_and_guide() {
+    CHECK_DIR="$1"
+
+    # Check if install dir is in PATH
+    case ":$PATH:" in
+        *":$CHECK_DIR:"*)
+            return 0  # Already in PATH
+            ;;
+    esac
+
+    # Not in PATH - provide guidance
+    printf "\n"
+    warning "$CHECK_DIR is not in your PATH"
+    printf "\n"
+
+    # Detect shell and rc file
+    CURRENT_SHELL=$(basename "${SHELL:-/bin/sh}")
+    case "$CURRENT_SHELL" in
+        bash)
+            RC_FILE="$HOME/.bashrc"
+            ;;
+        zsh)
+            RC_FILE="$HOME/.zshrc"
+            ;;
+        fish)
+            RC_FILE="$HOME/.config/fish/config.fish"
+            ;;
+        *)
+            RC_FILE="$HOME/.profile"
+            ;;
+    esac
+
+    printf "%s\n" "To use vesctl immediately, run:"
+    printf "  ${CYAN}export PATH=\"%s:\$PATH\"${NC}\n" "$CHECK_DIR"
+    printf "\n"
+    printf "%s\n" "To make this permanent, add to your shell config:"
+    if [ "$CURRENT_SHELL" = "fish" ]; then
+        printf "  ${CYAN}echo 'set -gx PATH %s \$PATH' >> %s${NC}\n" "$CHECK_DIR" "$RC_FILE"
+    else
+        printf "  ${CYAN}echo 'export PATH=\"%s:\$PATH\"' >> %s${NC}\n" "$CHECK_DIR" "$RC_FILE"
+    fi
+    printf "\n"
+    printf "%s\n" "Then reload your shell:"
+    printf "  ${CYAN}source %s${NC}\n" "$RC_FILE"
 }
 
 # ============================================
@@ -316,7 +367,7 @@ verify_checksum() {
     CHECKSUMS_FILE="$2"
     ARCHIVE_NAME="$3"
 
-    if [ -n "$VES_NO_VERIFY" ]; then
+    if [ -n "${VES_NO_VERIFY:-}" ]; then
         warning "Skipping checksum verification (VES_NO_VERIFY is set)"
         return 0
     fi
@@ -532,9 +583,16 @@ setup_fish_completion() {
 # ============================================
 
 uninstall() {
-    INSTALL_DIR="${VESCTL_INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
+    INSTALL_DIR="${VES_INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
     VESCTL_PATH="${INSTALL_DIR}/${BINARY_NAME}"
-    SUDO_CMD=$(need_sudo)
+
+    # Determine if sudo is needed for uninstall
+    SUDO_CMD=""
+    if [ ! -w "$INSTALL_DIR" ] && [ "$(id -u)" -ne 0 ]; then
+        if [ -z "${VES_NO_SUDO:-}" ] && command_exists sudo; then
+            SUDO_CMD="sudo"
+        fi
+    fi
 
     status "Uninstalling vesctl..."
 
@@ -684,16 +742,38 @@ On Alpine:        apk add curl"
     status "Detected platform: ${OS_DISPLAY} ${ARCH_DISPLAY}"
 
     # Get version
-    if [ -n "$VES_VERSION" ]; then
+    if [ -n "${VES_VERSION:-}" ]; then
         VERSION="$VES_VERSION"
         status "Using specified version: v${VERSION}"
     else
         VERSION=$(get_latest_version)
-        status "Fetching latest version: v${VERSION}"
+        status "Latest version: v${VERSION}"
     fi
 
+    # Determine installation strategy
+    STRATEGY=$(determine_install_strategy)
+    STRATEGY_TYPE="${STRATEGY%%:*}"
+    SUDO_CMD="${STRATEGY#*:}"
+
+    case "$STRATEGY_TYPE" in
+        system)
+            INSTALL_DIR="$DEFAULT_INSTALL_DIR"
+            ;;
+        user)
+            INSTALL_DIR="$HOME/bin"
+            # Create ~/bin if needed
+            if [ ! -d "$INSTALL_DIR" ]; then
+                mkdir -p "$INSTALL_DIR"
+            fi
+            SUDO_CMD=""
+            status "Installing to $INSTALL_DIR (no sudo required)"
+            ;;
+        custom)
+            INSTALL_DIR="$VES_INSTALL_DIR"
+            ;;
+    esac
+
     # Check for existing installation
-    INSTALL_DIR="${VES_INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
     if [ -f "${INSTALL_DIR}/${BINARY_NAME}" ]; then
         EXISTING_VERSION=$("${INSTALL_DIR}/${BINARY_NAME}" version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "unknown")
         if [ "$EXISTING_VERSION" = "$VERSION" ]; then
@@ -703,9 +783,6 @@ On Alpine:        apk add curl"
         fi
         warning "Upgrading from v${EXISTING_VERSION} to v${VERSION}"
     fi
-
-    # Determine if sudo is needed
-    SUDO_CMD=$(need_sudo)
 
     # Download and install
     download_and_install "$VERSION" "$OS" "$ARCH" "$INSTALL_DIR" "$SUDO_CMD"
@@ -717,6 +794,9 @@ On Alpine:        apk add curl"
 
     # Set up shell completion
     setup_completion "$INSTALL_DIR" "$SUDO_CMD"
+
+    # Check if install directory is in PATH and provide guidance if not
+    check_path_and_guide "$INSTALL_DIR"
 
     # Success message
     printf "\n"
