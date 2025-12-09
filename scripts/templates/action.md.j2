@@ -38,9 +38,7 @@ vesctl {{ group }} {{ action }} <resource-type> [name] [flags]
 | Resource Type | Description |
 |---------------|-------------|
 {% for res in resources %}
-{% if action == "rpc" %}| [{{ res.name }}]({{ res.name }}/index.md) | {{ res.short }} |
-{% else %}| [{{ res.name }}]({{ res.name }}.md) | {{ res.short }} |
-{% endif %}
+| [{{ res.name }}]({{ res.name }}.md) | {{ res.short }} |
 {% endfor %}
 
 {% endif %}

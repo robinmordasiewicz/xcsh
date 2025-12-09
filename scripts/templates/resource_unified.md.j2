@@ -1,0 +1,132 @@
+---
+title: "{{ front_matter.title }}"
+description: "{{ front_matter.description }}"
+keywords:
+{% for kw in front_matter.keywords %}
+  - {{ kw }}
+{% endfor %}
+command_group: "{{ front_matter.command_group }}"
+resource_type: "{{ front_matter.resource_type }}"
+available_actions:
+{% for action in actions %}
+  - {{ action.action_name }}
+{% endfor %}
+{% if api_docs_urls %}
+api_docs:
+{% for action_name, url in api_docs_urls.items() %}
+  {{ action_name }}: "{{ url }}"
+{% endfor %}
+{% endif %}
+---
+
+# vesctl {{ group }} {{ resource }}
+
+> Manage {{ resource | underscore_to_space }} resources in F5 Distributed Cloud
+
+## Quick Reference
+
+| Action | Description |
+|--------|-------------|
+{% for action in actions %}
+| [{{ action.action_name }}](#{{ action.action_name }}) | {{ action.command.short }} |
+{% endfor %}
+
+## Actions
+
+{% for action in actions %}
+<details markdown id="{{ action.action_name }}">
+<summary><strong>{{ action.action_name }}</strong> - {{ action.command.short }}</summary>
+
+### Synopsis
+
+```bash
+{{ action.command.full_command }}{% if action.command.use and '<' in action.command.use %} {{ action.command.use.split()[1:] | join(' ') }}{% endif %} [flags]
+```
+
+{% if action.command.long and action.command.long != action.command.short %}
+### Description
+
+{{ action.command.long }}
+
+{% endif %}
+{% if action.command.flags %}
+### Flags
+
+| Flag | Short | Type | Default | Description |
+|------|-------|------|---------|-------------|
+{% for flag in action.command.flags %}
+| `--{{ flag.name }}` | {% if flag.shorthand %}`-{{ flag.shorthand }}`{% endif %} | {{ flag.type }} | {% if flag.default %}{{ flag.default }}{% endif %} | {{ flag.description }} |
+{% endfor %}
+
+{% endif %}
+### Examples
+
+{% if action.command.example %}
+```bash
+{{ action.command.example }}
+```
+{% else %}
+{{ action.generated_examples }}
+{% endif %}
+
+{% if action.api_docs_url %}
+### API Reference
+
+- [{{ resource | title_case }} {{ action.action_name | title_case }} API]({{ action.api_docs_url }})
+{% endif %}
+
+</details>
+
+{% endfor %}
+
+## Common Workflows
+
+### Create and verify a {{ resource | underscore_to_space }}
+
+```bash
+# Create from file
+vesctl {{ group }} create {{ resource }} -i {{ resource }}.yaml
+
+# Verify creation
+vesctl {{ group }} list {{ resource }}
+
+# Get details
+vesctl {{ group }} get {{ resource }} <name>
+```
+
+### Update a {{ resource | underscore_to_space }}
+
+```bash
+# Replace entire resource
+vesctl {{ group }} replace {{ resource }} -i {{ resource }}.yaml
+
+# Or apply changes (create or update)
+vesctl {{ group }} apply {{ resource }} -i {{ resource }}.yaml
+
+# Patch specific fields
+vesctl {{ group }} patch {{ resource }} <name> -i patch.yaml
+```
+
+### Manage labels
+
+```bash
+# Add labels
+vesctl {{ group }} add-labels {{ resource }} <name> --label-key app --label-value web
+
+# Remove labels
+vesctl {{ group }} remove-labels {{ resource }} <name> --label-key app
+```
+
+### Delete a {{ resource | underscore_to_space }}
+
+```bash
+vesctl {{ group }} delete {{ resource }} <name>
+
+# With confirmation bypass
+vesctl {{ group }} delete {{ resource }} <name> --yes
+```
+
+## See Also
+
+- [vesctl {{ group }}](index.md) - {{ group | title_case }} commands
+- [Command Reference](../index.md)

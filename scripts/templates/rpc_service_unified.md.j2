@@ -1,0 +1,99 @@
+---
+title: "{{ front_matter.title }}"
+description: "{{ front_matter.description }}"
+keywords:
+{% for kw in front_matter.get('keywords', []) %}
+  - {{ kw }}
+{% endfor %}
+rpc_service: "{{ service }}"
+procedure_count: {{ procedures | length }}
+---
+
+# vesctl request rpc {{ service }}
+
+> {{ service | underscore_to_space | title }} service RPC procedures
+
+## Quick Reference
+
+| Procedure | Description |
+|-----------|-------------|
+{% for proc in procedures %}
+| [{{ proc.procedure_name }}](#{{ proc.procedure_name | lower }}) | {{ proc.command.short }} |
+{% endfor %}
+
+## Procedures
+
+{% for proc in procedures %}
+<details markdown id="{{ proc.procedure_name | lower }}">
+<summary><strong>{{ proc.procedure_name }}</strong> - {{ proc.command.short }}</summary>
+
+### Synopsis
+
+```bash
+vesctl request rpc {{ proc.full_name }} [flags]
+```
+
+{% if proc.command.long and proc.command.long != proc.command.short %}
+### Description
+
+{{ proc.command.long }}
+
+{% endif %}
+{% if proc.command.flags %}
+### Flags
+
+| Flag | Short | Type | Default | Description |
+|------|-------|------|---------|-------------|
+{% for flag in proc.command.flags %}
+| `--{{ flag.name }}` | {% if flag.shorthand %}`-{{ flag.shorthand }}`{% endif %} | {{ flag.type }} | {% if flag.default %}{{ flag.default }}{% endif %} | {{ flag.description }} |
+{% endfor %}
+
+{% endif %}
+### Examples
+
+{% if proc.command.example %}
+```bash
+{{ proc.command.example }}
+```
+{% else %}
+```bash
+# Call {{ proc.procedure_name }} procedure
+vesctl request rpc {{ proc.full_name }}
+
+# Call with input file
+vesctl request rpc {{ proc.full_name }} -i request.yaml
+
+# Call with JSON output
+vesctl request rpc {{ proc.full_name }} --output-format json
+```
+{% endif %}
+
+</details>
+
+{% endfor %}
+
+## Common Workflows
+
+### Call an RPC procedure
+
+```bash
+# Basic call
+vesctl request rpc {{ service }}.CustomAPI.<ProcedureName>
+
+# With input data
+vesctl request rpc {{ service }}.CustomAPI.<ProcedureName> -i request.yaml
+
+# With namespace
+vesctl request rpc {{ service }}.CustomAPI.<ProcedureName> -n my-namespace
+```
+
+### Get procedure help
+
+```bash
+vesctl request rpc {{ service }}.CustomAPI.<ProcedureName> --help
+```
+
+## See Also
+
+- [vesctl request rpc](index.md) - RPC commands overview
+- [Command Reference](../../index.md)

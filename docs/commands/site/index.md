@@ -2,10 +2,10 @@
 title: "vesctl site"
 description: "Deploy and manage F5 XC sites on public cloud providers."
 keywords:
-  - F5 XC
   - site
-  - vesctl
   - F5 Distributed Cloud
+  - vesctl
+  - F5 XC
 command: "vesctl site"
 command_group: "site"
 aliases:
