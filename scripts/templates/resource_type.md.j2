@@ -149,7 +149,7 @@ vesctl {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_'
 
 {% for rel in related_commands %}
 {% if rel != command %}
-- [vesctl {{ group }} {{ rel.path[1] }} {{ resource }}](../{{ rel.path[1] }}/{{ resource }}/) - {{ rel.short }}
+- [vesctl {{ group }} {{ rel.path[1] }} {{ resource }}](../{{ rel.path[1] }}/{{ resource }}.md) - {{ rel.short }}
 {% endif %}
 {% endfor %}
 
