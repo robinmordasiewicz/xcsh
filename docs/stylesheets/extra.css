@@ -485,13 +485,9 @@ html {
   display: none;
 }
 
-/* Hide section index links in navigation sidebar
-   With navigation.indexes and navigation.tabs enabled, the section is
-   already identified via the tab bar and breadcrumb. The index link
-   inside the container is redundant and creates alignment issues. */
-.md-nav__container > a.md-nav__link {
-  display: none;
-}
+/* Section index links - KEPT VISIBLE for command group hierarchy
+   These links provide the parent labels (Api Endpoint, Configuration, etc.)
+   which are essential for proper navigation hierarchy */
 
 /* Table of contents (right sidebar) - Compact styling */
 .md-nav--secondary {
