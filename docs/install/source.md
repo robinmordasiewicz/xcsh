@@ -48,6 +48,8 @@ $ cd vesctl
 go build -o vesctl .
 ```
 
+Git commit and build date are automatically embedded when building from a git repository.
+
 **Example output:**
 
 ```text
@@ -66,13 +68,11 @@ $ go build -o vesctl .
 ```text
 $ ./vesctl version
 vesctl version dev
-  commit:   unknown
-  built:    unknown
+  commit:   935d038
+  built:    2025-12-10T03:35:08Z
   go:       go1.23.4
   platform: darwin/arm64
 ```
-
-*Built from source on 2025-12-09*
 
 ## Install (Optional)
 
@@ -91,14 +91,12 @@ Move the binary to your PATH:
     sudo mv vesctl /usr/local/bin/
     ```
 
-## Build with Version Info
+## Build with Custom Version
 
-For release-quality builds with embedded version information:
+For release-quality builds with a custom version string and stripped binaries:
 
 ```bash
-go build -ldflags="-X github.com/robinmordasiewicz/vesctl/cmd.Version=dev \
-  -X github.com/robinmordasiewicz/vesctl/cmd.GitCommit=$(git rev-parse --short HEAD) \
-  -X github.com/robinmordasiewicz/vesctl/cmd.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+go build -ldflags="-s -w -X github.com/robinmordasiewicz/vesctl/cmd.Version=1.0.0" \
   -o vesctl .
 ```
 
@@ -106,9 +104,11 @@ go build -ldflags="-X github.com/robinmordasiewicz/vesctl/cmd.Version=dev \
 
 ```text
 $ ./vesctl version
-vesctl version dev
-  commit:   abc1234
-  built:    2024-12-09T15:30:00Z
+vesctl version 1.0.0
+  commit:   935d038
+  built:    2025-12-10T03:35:08Z
   go:       go1.23.4
   platform: darwin/arm64
 ```
+
+The `-s -w` flags strip debug symbols for smaller binaries.
