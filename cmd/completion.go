@@ -7,28 +7,33 @@ import (
 )
 
 var completionCmd = &cobra.Command{
-	Use:   "completion [bash|zsh]",
-	Short: "Generate shell completion scripts for bash or zsh.",
+	Use:   "completion [bash|zsh|fish]",
+	Short: "Generate shell completion scripts for bash, zsh, or fish.",
 	Long: `To load completions:
+
 Bash:
+  $ source <(vesctl completion bash)
 
-$ source <(vesctl completion bash)
-
-# To load completions for each session, execute once:
-Linux:
-  $ vesctl completion bash > /etc/bash_completion.d/yourprogram
-MacOS:
-  $ vesctl completion bash > /usr/local/etc/bash_completion.d/yourprogram
+  # To load completions for each session, execute once:
+  Linux:
+    $ vesctl completion bash > /etc/bash_completion.d/vesctl
+  MacOS:
+    $ vesctl completion bash > /usr/local/etc/bash_completion.d/vesctl
 
 Zsh:
+  $ source <(vesctl completion zsh)
 
- $ source <(vesctl completion zsh)
+  # To load completions for each session, execute once:
+  $ vesctl completion zsh > "${fpath[1]}/_vesctl"
 
- # To load completions for each session, execute once:
- $ vesctl completion zsh > "${fpath[1]}/_vesctl"
+Fish:
+  $ vesctl completion fish | source
+
+  # To load completions for each session, execute once:
+  $ vesctl completion fish > ~/.config/fish/completions/vesctl.fish
 `,
 	DisableFlagsInUseLine: true,
-	ValidArgs:             []string{"bash", "zsh"},
+	ValidArgs:             []string{"bash", "zsh", "fish"},
 	Args:                  cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
 	Run: func(cmd *cobra.Command, args []string) {
 		switch args[0] {
@@ -36,6 +41,8 @@ Zsh:
 			_ = cmd.Root().GenBashCompletion(os.Stdout)
 		case "zsh":
 			_ = cmd.Root().GenZshCompletion(os.Stdout)
+		case "fish":
+			_ = cmd.Root().GenFishCompletion(os.Stdout, true)
 		}
 	},
 }

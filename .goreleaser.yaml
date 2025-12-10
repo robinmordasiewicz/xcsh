@@ -9,6 +9,7 @@ before:
   hooks:
     - go mod tidy
     - go generate ./...
+    - ./scripts/completions.sh
 
 builds:
   - id: vesctl
@@ -46,6 +47,7 @@ archives:
     files:
       - README.md
       - LICENSE*
+      - completions/*
 
 checksum:
   name_template: "checksums.txt"
@@ -132,6 +134,10 @@ homebrew_casks:
   - name: vesctl
     binaries:
       - vesctl
+    completions:
+      bash: completions/vesctl.bash
+      zsh: completions/vesctl.zsh
+      fish: completions/vesctl.fish
     repository:
       owner: robinmordasiewicz
       name: homebrew-tap

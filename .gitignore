@@ -72,3 +72,6 @@ vesctl.windows-*
 *.darwin-*
 *.linux-*
 *.windows-*
+
+# Generated shell completions (created during release)
+completions/
