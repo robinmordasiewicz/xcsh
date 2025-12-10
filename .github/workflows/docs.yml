@@ -400,6 +400,53 @@ jobs:
             --platform "$PLATFORM" \
             --output docs/install/homebrew.md
 
+      - name: Wait for release assets to be available
+        id: wait-assets
+        run: |
+          # Get the latest release version
+          LATEST_TAG=$(gh api repos/${{ github.repository }}/releases/latest --jq '.tag_name' 2>/dev/null || echo "")
+
+          if [ -z "$LATEST_TAG" ]; then
+            echo "::error::No releases found"
+            exit 1
+          fi
+
+          echo "Latest release: $LATEST_TAG"
+
+          # Expected asset name for linux amd64 (what the runner will download)
+          VERSION="${LATEST_TAG#v}"
+          EXPECTED_ASSET="vesctl_${VERSION}_linux_amd64.tar.gz"
+
+          echo "Waiting for asset: $EXPECTED_ASSET"
+
+          MAX_RETRIES=10
+          RETRY_DELAY=30
+
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Check $i of $MAX_RETRIES..."
+
+            # Check if the asset exists
+            ASSET_COUNT=$(gh api repos/${{ github.repository }}/releases/latest \
+              --jq ".assets | map(select(.name == \"$EXPECTED_ASSET\")) | length" 2>/dev/null || echo "0")
+
+            if [ "$ASSET_COUNT" -gt 0 ]; then
+              echo "Asset $EXPECTED_ASSET is available!"
+              echo "assets_ready=true" >> $GITHUB_OUTPUT
+              exit 0
+            fi
+
+            if [ $i -eq $MAX_RETRIES ]; then
+              echo "::error::Asset $EXPECTED_ASSET not available after $MAX_RETRIES attempts ($(($MAX_RETRIES * $RETRY_DELAY))s)"
+              echo "assets_ready=false" >> $GITHUB_OUTPUT
+              exit 1
+            fi
+
+            echo "Asset not ready, waiting ${RETRY_DELAY}s before retry..."
+            sleep $RETRY_DELAY
+          done
+        env:
+          GH_TOKEN: ${{ github.token }}
+
       - name: Test install script and capture output
         id: script-install
         run: |
