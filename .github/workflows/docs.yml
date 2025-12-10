@@ -403,17 +403,26 @@ jobs:
       - name: Test install script and capture output
         id: script-install
         run: |
+          set +e  # Disable errexit to capture exit codes properly
+
           # Uninstall homebrew version first if present
           if command -v vesctl &>/dev/null; then
             brew uninstall vesctl 2>/dev/null || true
           fi
 
-          # Run install script and capture output - fail if install fails
-          INSTALL_OUTPUT=$(curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | VES_NO_SUDO=1 VES_INSTALL_DIR=$HOME/.local/bin sh 2>&1)
-          INSTALL_EXIT_CODE=$?
+          # Run install script and capture output to file
+          # Using script execution to capture both stdout and stderr
+          curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh > /tmp/install.sh
+          CURL_EXIT=$?
 
-          # Save output to file (handle multiline)
-          echo "$INSTALL_OUTPUT" > install-output.txt
+          if [ $CURL_EXIT -ne 0 ]; then
+            echo "::error::Failed to download install script (exit code: $CURL_EXIT)"
+            exit 1
+          fi
+
+          # Run the install script and capture output
+          VES_NO_SUDO=1 VES_INSTALL_DIR=$HOME/.local/bin sh /tmp/install.sh > install-output.txt 2>&1
+          INSTALL_EXIT_CODE=$?
 
           echo "Install output captured:"
           cat install-output.txt
@@ -421,13 +430,18 @@ jobs:
           # Fail if install script failed
           if [ $INSTALL_EXIT_CODE -ne 0 ]; then
             echo "::error::Install script failed with exit code $INSTALL_EXIT_CODE"
+            echo "::error::Install output:"
+            cat install-output.txt
             exit 1
           fi
 
+          set -e  # Re-enable errexit
+
           # Extract version for docs
-          VERSION=$(echo "$INSTALL_OUTPUT" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1 | sed 's/^v//' || echo "")
+          VERSION=$(grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' install-output.txt | head -1 | sed 's/^v//' || echo "")
           if [ -z "$VERSION" ]; then
             echo "::error::Failed to extract version from install output"
+            cat install-output.txt
             exit 1
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
