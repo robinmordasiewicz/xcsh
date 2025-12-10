@@ -206,6 +206,23 @@ docs: build
 		--templates $(DOCS_TEMPLATES) \
 		--clean \
 		--update-mkdocs
+	@echo "Generating install documentation..."
+	@VERSION_OUTPUT=$$(./$(BINARY_NAME) version); \
+	VERSION=$$(echo "$$VERSION_OUTPUT" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo "dev"); \
+	COMMIT=$$(echo "$$VERSION_OUTPUT" | grep 'commit:' | awk '{print $$2}' || echo "local"); \
+	BUILT=$$(echo "$$VERSION_OUTPUT" | grep 'built:' | awk '{print $$2}' || echo "now"); \
+	GO_VER=$$(echo "$$VERSION_OUTPUT" | grep 'go:' | awk '{print $$2}' || echo ""); \
+	PLATFORM=$$(echo "$$VERSION_OUTPUT" | grep 'platform:' | awk '{print $$2}' || echo ""); \
+	$(PYTHON) scripts/generate-homebrew-docs.py \
+		--version "$$VERSION" \
+		--commit "$$COMMIT" \
+		--built "$$BUILT" \
+		--go-version "$$GO_VER" \
+		--platform "$$PLATFORM" \
+		--output docs/install/homebrew.md; \
+	$(PYTHON) scripts/generate-source-docs.py \
+		--go-version "$$(go version | grep -oE 'go[0-9]+\.[0-9]+\.[0-9]+')" \
+		--output docs/install/source.md
 	@echo "Documentation generated successfully!"
 	@echo "  Output: $(DOCS_OUTPUT)"
 	@echo "  Files: $$(find $(DOCS_OUTPUT) -name '*.md' | wc -l) markdown files"
