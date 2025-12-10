@@ -40,8 +40,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  GO_VERSION: '1.23'
-  PYTHON_VERSION: '3.11'
+  GO_VERSION: '1.24'
+  PYTHON_VERSION: '3.13'
 
 jobs:
   check-spec:
@@ -95,13 +95,13 @@ jobs:
 
       - name: Checkout
         if: github.event_name != 'workflow_run' || steps.check-release.outputs.recent_release == 'true'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Set up Go
         if: github.event_name != 'workflow_run' || steps.check-release.outputs.recent_release == 'true'
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: ${{ env.GO_VERSION }}
 
@@ -166,12 +166,12 @@ jobs:
     if: needs.check-spec.outputs.needs_generation == 'true'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: ${{ env.GO_VERSION }}
 
@@ -221,7 +221,7 @@ jobs:
       (github.event_name != 'workflow_run' || needs.check-spec.outputs.recent_release == 'true')
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -397,7 +397,7 @@ jobs:
             --output docs/install/script.md
 
       - name: Set up Go for source build test
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: ${{ env.GO_VERSION }}
 
@@ -522,7 +522,7 @@ jobs:
           key: vesctl-docs-${{ needs.check-spec.outputs.spec_hash }}
 
       - name: Upload pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: site/
 
