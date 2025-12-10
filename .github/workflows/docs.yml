@@ -44,13 +44,50 @@ env:
   PYTHON_VERSION: '3.13'
 
 jobs:
+  wait-for-release:
+    name: Wait for Release
+    runs-on: ubuntu-latest
+    # Only wait when triggered by push (not workflow_run which already means Release completed)
+    if: github.event_name == 'push'
+    outputs:
+      should_skip: ${{ steps.check-release-running.outputs.should_skip }}
+    steps:
+      - name: Check if Release workflow is running
+        id: check-release-running
+        run: |
+          # Check for in-progress Release workflow runs on the same commit
+          RUNNING_RELEASES=$(gh api repos/${{ github.repository }}/actions/workflows/release.yml/runs \
+            --jq '.workflow_runs | map(select(.head_sha == "${{ github.sha }}" and (.status == "in_progress" or .status == "queued"))) | length' \
+            2>/dev/null || echo "0")
+
+          echo "Running/queued Release workflows for this commit: $RUNNING_RELEASES"
+
+          if [ "$RUNNING_RELEASES" -gt 0 ]; then
+            echo "Release workflow is running - Documentation will be triggered by workflow_run event instead"
+            echo "should_skip=true" >> $GITHUB_OUTPUT
+          else
+            echo "No Release workflow running - proceeding with docs build"
+            echo "should_skip=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+
   check-spec:
     name: Check Spec Changes
     runs-on: ubuntu-latest
-    # Skip if workflow_run but Release workflow failed
+    needs: [wait-for-release]
+    # Skip if:
+    # 1. workflow_run but Release workflow failed
+    # 2. push trigger but Release workflow is running (will be triggered via workflow_run instead)
+    # Use always() to run even when wait-for-release is skipped (non-push triggers)
     if: |
-      github.event_name != 'workflow_run' ||
-      github.event.workflow_run.conclusion == 'success'
+      always() &&
+      (
+        (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
+        (github.event_name == 'push' && (needs.wait-for-release.result == 'skipped' || needs.wait-for-release.outputs.should_skip != 'true')) ||
+        github.event_name == 'release' ||
+        github.event_name == 'workflow_dispatch'
+      )
     outputs:
       needs_generation: ${{ steps.compare.outputs.needs_generation }}
       spec_hash: ${{ steps.spec-hash.outputs.hash }}
