@@ -141,6 +141,5 @@ homebrew_casks:
       name: goreleaserbot
       email: bot@goreleaser.com
     commit_msg_template: "chore: Update {{ .ProjectName }} cask to {{ .Tag }}"
-    homepage: https://github.com/robinmordasiewicz/vesctl
+    homepage: https://robinmordasiewicz.github.io/vesctl
     description: Command-line interface for F5 Distributed Cloud
-    caveats: "Run 'vesctl configure' to set up authentication, then 'vesctl --help' for usage."
