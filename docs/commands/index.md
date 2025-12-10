@@ -95,7 +95,3 @@ vesctl supports multiple output formats:
 |----------|-------------|
 | `VES_API_TOKEN` | API token for authentication (use with `--api-token` flag) |
 | `VES_P12_PASSWORD` | Password for P12 bundle file |
-
-## Version
-
-Built from version: `v4.15.3`
