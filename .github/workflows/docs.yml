@@ -294,8 +294,8 @@ jobs:
             brew tap robinmordasiewicz/tap
             brew update
 
-            # Try to install (using cask)
-            if brew install --cask vesctl 2>&1; then
+            # Try to install (using cask) and capture output
+            if brew install --cask vesctl 2>&1 | tee homebrew-output.txt; then
               echo "Successfully installed vesctl"
               echo "homebrew_success=true" >> $GITHUB_OUTPUT
               exit 0
@@ -398,6 +398,7 @@ jobs:
             --built "$BUILT" \
             --go-version "$GO_VERSION" \
             --platform "$PLATFORM" \
+            --install-output "$(cat homebrew-output.txt 2>/dev/null || echo '')" \
             --output docs/install/homebrew.md
 
       - name: Wait for release assets to be available

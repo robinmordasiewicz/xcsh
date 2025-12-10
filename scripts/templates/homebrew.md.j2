@@ -7,9 +7,22 @@ brew tap robinmordasiewicz/tap
 brew install --cask vesctl
 ```
 
+{% if install_output %}
+**Example output:**
+
+```text
+{{ install_output }}
+```
+
+{% if generation_date %}
+*Output captured on {{ generation_date }}*
+{% endif %}
+{% endif %}
+
 **Upgrade to latest version:**
 
 ```bash
+brew update
 brew upgrade --cask vesctl
 ```
 
@@ -35,10 +48,5 @@ vesctl version {{ version }}
   commit:   {{ commit }}
   built:    {{ built }}
   go:       {{ go_version if go_version else "go1.23.x" }}
-  platform: {{ platform if platform else "darwin/arm64" }}
+  platform: {{ platform if platform else "darwin/arm64" }} [Possible values: linux/amd64,linux/arm64,darwin/amd64,darwin/arm64]
 ```
-
-*Version {{ version }} - captured {{ generation_date }}*
-{% else %}
-Expected output shows version, commit hash, build timestamp, Go version, and platform.
-{% endif %}

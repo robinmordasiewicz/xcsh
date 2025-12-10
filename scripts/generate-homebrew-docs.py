@@ -28,6 +28,7 @@ def main():
     parser.add_argument("--built", help="Build timestamp")
     parser.add_argument("--go-version", help="Go version used for build")
     parser.add_argument("--platform", help="Target platform (os/arch)")
+    parser.add_argument("--install-output", help="Captured homebrew installation output")
     parser.add_argument(
         "--output",
         default="docs/install/homebrew.md",
@@ -50,12 +51,20 @@ def main():
 
     template = env.get_template("homebrew.md.j2")
 
+    # Clean up install output (remove ANSI codes if present)
+    install_output = args.install_output
+    if install_output:
+        import re
+        install_output = re.sub(r'\x1b\[[0-9;]*m', '', install_output)
+        install_output = install_output.strip()
+
     content = template.render(
         version=args.version,
         commit=args.commit,
         built=args.built,
         go_version=args.go_version,
         platform=args.platform,
+        install_output=install_output,
         generation_date=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
     )
 
@@ -72,6 +81,8 @@ def main():
         print(f"  Platform: {args.platform}")
     else:
         print("  (No version info provided, using template defaults)")
+    if install_output:
+        print(f"  Install output: {len(install_output)} characters")
 
 
 if __name__ == "__main__":
