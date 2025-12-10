@@ -464,6 +464,14 @@ html {
   display: none;
 }
 
+/* Hide section index links in navigation sidebar
+   With navigation.indexes and navigation.tabs enabled, the section is
+   already identified via the tab bar and breadcrumb. The index link
+   inside the container is redundant and creates alignment issues. */
+.md-nav__container > a.md-nav__link {
+  display: none;
+}
+
 /* Table of contents (right sidebar) - Compact styling */
 .md-nav--secondary {
   border-left: 1px solid #e6e9f3;
