@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Build-time variables: set via ldflags or auto-detected from VCS info
+// Build-time variables - set via ldflags or auto-detected from VCS info
 var (
 	Version   = "dev"
 	GitCommit = "local"
