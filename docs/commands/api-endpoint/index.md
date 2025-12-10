@@ -2,10 +2,10 @@
 title: "vesctl api-endpoint"
 description: "Discover and manage API endpoints within F5 XC service mesh."
 keywords:
-  - vesctl
-  - F5 XC
   - F5 Distributed Cloud
+  - vesctl
   - api-endpoint
+  - F5 XC
 command: "vesctl api-endpoint"
 command_group: "api-endpoint"
 ---
