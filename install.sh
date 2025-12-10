@@ -666,8 +666,8 @@ setup_bash_completion() {
         if "$VESCTL_BIN" completion bash > "${BASH_COMPLETION_DIR}/vesctl" 2>/dev/null; then
             success "Bash completion installed to ${BASH_COMPLETION_DIR}/vesctl"
             # Automatically configure RC file if needed
-            add_bash_completion_config "${BASH_COMPLETION_DIR}/vesctl"
-            return
+            add_bash_completion_config "${BASH_COMPLETION_DIR}/vesctl" || true
+            return 0
         fi
     fi
 }
@@ -683,8 +683,8 @@ setup_zsh_completion() {
         if "$VESCTL_BIN" completion zsh > "${ZSH_COMPLETION_DIR}/_vesctl" 2>/dev/null; then
             success "Zsh completion installed to ${ZSH_COMPLETION_DIR}/_vesctl"
             # Automatically configure RC file
-            add_zsh_completion_config "$ZSH_COMPLETION_DIR"
-            return
+            add_zsh_completion_config "$ZSH_COMPLETION_DIR" || true
+            return 0
         fi
     fi
 }
