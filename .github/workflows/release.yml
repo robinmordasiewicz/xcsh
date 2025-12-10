@@ -264,7 +264,8 @@ jobs:
 
       - name: Update Homebrew cask with signed binary hashes
         env:
-          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
         run: |
           VERSION="${{ needs.goreleaser.outputs.version }}"
 
@@ -274,20 +275,20 @@ jobs:
           mkdir -p $RUNNER_TEMP/hash_check
           cd $RUNNER_TEMP/hash_check
 
-          # Download and compute hash for each platform
+          # Download and compute hash for each platform (using GITHUB_TOKEN for vesctl repo)
           for PLATFORM in darwin_amd64 darwin_arm64 linux_amd64 linux_arm64; do
             ASSET="vesctl_${VERSION}_${PLATFORM}.tar.gz"
             echo "Downloading $ASSET..."
-            gh release download "v${VERSION}" --pattern "$ASSET" --repo "${{ github.repository }}"
+            GH_TOKEN="$GITHUB_TOKEN" gh release download "v${VERSION}" --pattern "$ASSET" --repo "${{ github.repository }}"
             HASH=$(shasum -a 256 "$ASSET" | cut -d' ' -f1)
             # Export hash as environment variable for later use
             export "HASH_${PLATFORM}=${HASH}"
             echo "$PLATFORM: $HASH"
           done
 
-          # Clone homebrew-tap and update cask
+          # Clone homebrew-tap and update cask (using HOMEBREW_TAP_TOKEN for push access)
           cd $RUNNER_TEMP
-          git clone https://github.com/robinmordasiewicz/homebrew-tap.git
+          git clone https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/robinmordasiewicz/homebrew-tap.git
           cd homebrew-tap
 
           # Update the cask file with correct hashes
