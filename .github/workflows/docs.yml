@@ -250,7 +250,7 @@ jobs:
 
   build:
     name: Build Documentation
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     needs: [check-spec, generate]
     # Run unless: failed, cancelled, or workflow_run without recent release
     if: |
@@ -277,9 +277,6 @@ jobs:
           key: vesctl-docs-${{ needs.check-spec.outputs.spec_hash }}
           restore-keys: |
             vesctl-docs-
-
-      - name: Install Homebrew (Linux)
-        uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install vesctl via Homebrew
         id: homebrew-install
@@ -414,9 +411,9 @@ jobs:
 
           echo "Latest release: $LATEST_TAG"
 
-          # Expected asset name for linux amd64 (what the runner will download)
+          # Expected asset name for darwin arm64 (what the macOS runner will download)
           VERSION="${LATEST_TAG#v}"
-          EXPECTED_ASSET="vesctl_${VERSION}_linux_amd64.tar.gz"
+          EXPECTED_ASSET="vesctl_${VERSION}_darwin_arm64.tar.gz"
 
           echo "Waiting for asset: $EXPECTED_ASSET"
 
