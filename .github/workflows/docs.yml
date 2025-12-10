@@ -279,11 +279,9 @@ jobs:
             vesctl-docs-
 
       - name: Install Homebrew (Linux)
-        if: github.event_name == 'release' || github.event_name == 'workflow_run' || github.event.inputs.test_homebrew == 'true'
         uses: Homebrew/actions/setup-homebrew@master
 
       - name: Install vesctl via Homebrew
-        if: github.event_name == 'release' || github.event_name == 'workflow_run' || github.event.inputs.test_homebrew == 'true'
         id: homebrew-install
         run: |
           MAX_RETRIES=5
@@ -403,7 +401,6 @@ jobs:
             --output docs/install/homebrew.md
 
       - name: Test install script and capture output
-        if: github.event_name == 'release' || github.event_name == 'workflow_run' || github.event.inputs.test_homebrew == 'true'
         id: script-install
         run: |
           # Uninstall homebrew version first if present
@@ -411,22 +408,33 @@ jobs:
             brew uninstall vesctl 2>/dev/null || true
           fi
 
-          # Run install script and capture output
-          INSTALL_OUTPUT=$(curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | VES_NO_SUDO=1 VES_INSTALL_DIR=$HOME/.local/bin sh 2>&1) || true
+          # Run install script and capture output - fail if install fails
+          INSTALL_OUTPUT=$(curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh | VES_NO_SUDO=1 VES_INSTALL_DIR=$HOME/.local/bin sh 2>&1)
+          INSTALL_EXIT_CODE=$?
 
           # Save output to file (handle multiline)
           echo "$INSTALL_OUTPUT" > install-output.txt
 
-          # Extract version for docs
-          VERSION=$(echo "$INSTALL_OUTPUT" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1 | sed 's/^v//' || echo "")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "script_success=true" >> $GITHUB_OUTPUT
-
           echo "Install output captured:"
           cat install-output.txt
 
+          # Fail if install script failed
+          if [ $INSTALL_EXIT_CODE -ne 0 ]; then
+            echo "::error::Install script failed with exit code $INSTALL_EXIT_CODE"
+            exit 1
+          fi
+
+          # Extract version for docs
+          VERSION=$(echo "$INSTALL_OUTPUT" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+' | head -1 | sed 's/^v//' || echo "")
+          if [ -z "$VERSION" ]; then
+            echo "::error::Failed to extract version from install output"
+            exit 1
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+          echo "Successfully installed vesctl version: $VERSION"
+
       - name: Generate script docs with real output
-        if: steps.script-install.outputs.script_success == 'true'
         run: |
           python scripts/generate-script-docs.py \
             --version "${{ steps.script-install.outputs.version }}" \
@@ -534,7 +542,6 @@ jobs:
           echo "Source build test completed successfully"
 
       - name: Generate source docs with real output
-        if: steps.source-build.outputs.source_success == 'true'
         run: |
           python scripts/generate-source-docs.py \
             --go-version "${{ steps.source-build.outputs.go_version }}" \
