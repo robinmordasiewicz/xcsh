@@ -143,8 +143,4 @@ homebrew_casks:
     commit_msg_template: "chore: Update {{ .ProjectName }} cask to {{ .Tag }}"
     homepage: https://github.com/robinmordasiewicz/vesctl
     description: Command-line interface for F5 Distributed Cloud
-    caveats: |
-      To get started with vesctl:
-        1. Configure authentication: vesctl configure
-        2. List namespaces: vesctl configuration list namespace
-        3. Get help: vesctl --help
+    caveats: "Run 'vesctl configure' to set up authentication, then 'vesctl --help' for usage."
