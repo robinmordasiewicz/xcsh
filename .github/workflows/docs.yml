@@ -126,7 +126,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: spec-hash-cached.txt
-          key: vesctl-spec-hash-v1
+          key: vesctl-spec-hash-${{ github.run_number }}
+          restore-keys: |
+            vesctl-spec-hash-
 
       - name: Compare spec hashes
         if: github.event_name != 'workflow_run' || steps.check-release.outputs.recent_release == 'true'
@@ -200,7 +202,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: spec-hash-cached.txt
-          key: vesctl-spec-hash-v1
+          key: vesctl-spec-hash-${{ github.run_number }}
 
       - name: Upload generated docs
         uses: actions/upload-artifact@v4
