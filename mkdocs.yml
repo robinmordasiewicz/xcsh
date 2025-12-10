@@ -81,6 +81,9 @@ extra:
 extra_css:
   - stylesheets/extra.css
 
+extra_javascript:
+  - javascripts/sidebar-fix.js
+
 nav:
   - Home: index.md
   - Install:
