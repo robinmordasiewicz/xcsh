@@ -517,9 +517,50 @@ jobs:
           # Ensure Homebrew bin is in PATH (ARM and Intel macOS)
           export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 
-          # Find vesctl location for debugging
-          VESCTL_PATH=$(which vesctl 2>/dev/null || find /opt/homebrew -name vesctl -type f 2>/dev/null | head -1 || echo "")
+          # Debug: Show Caskroom contents
+          echo "=== Caskroom contents ==="
+          ls -la /opt/homebrew/Caskroom/vesctl/ 2>/dev/null || ls -la /usr/local/Caskroom/vesctl/ 2>/dev/null || echo "No Caskroom found"
+
+          # Debug: Show what's in the version directory
+          echo "=== Version directory contents ==="
+          ls -la /opt/homebrew/Caskroom/vesctl/*/ 2>/dev/null || ls -la /usr/local/Caskroom/vesctl/*/ 2>/dev/null || echo "No version directory found"
+
+          # Debug: Show bin directory for symlinks
+          echo "=== Homebrew bin directory (vesctl entries) ==="
+          ls -la /opt/homebrew/bin/vesctl* 2>/dev/null || ls -la /usr/local/bin/vesctl* 2>/dev/null || echo "No vesctl in bin"
+
+          # Find vesctl - check multiple locations including Caskroom
+          VESCTL_PATH=""
+
+          # 1. Try which (if symlink was created)
+          VESCTL_PATH=$(which vesctl 2>/dev/null || true)
+
+          # 2. Try common symlink locations
+          if [ -z "$VESCTL_PATH" ] || [ ! -x "$VESCTL_PATH" ]; then
+            for path in /opt/homebrew/bin/vesctl /usr/local/bin/vesctl; do
+              if [ -x "$path" ]; then
+                VESCTL_PATH="$path"
+                break
+              fi
+            done
+          fi
+
+          # 3. Try Caskroom location directly (ARM Mac)
+          if [ -z "$VESCTL_PATH" ] || [ ! -x "$VESCTL_PATH" ]; then
+            VESCTL_PATH=$(find /opt/homebrew/Caskroom/vesctl -name vesctl -type f 2>/dev/null | head -1 || true)
+          fi
+
+          # 4. Try Caskroom location directly (Intel Mac)
+          if [ -z "$VESCTL_PATH" ] || [ ! -x "$VESCTL_PATH" ]; then
+            VESCTL_PATH=$(find /usr/local/Caskroom/vesctl -name vesctl -type f 2>/dev/null | head -1 || true)
+          fi
+
           echo "vesctl found at: $VESCTL_PATH"
+
+          if [ -z "$VESCTL_PATH" ] || [ ! -x "$VESCTL_PATH" ]; then
+            echo "::error::vesctl binary not found after Homebrew installation"
+            exit 1
+          fi
 
           VERSION_OUTPUT=$("$VESCTL_PATH" version 2>/dev/null || vesctl version)
           echo "Full version output:"
