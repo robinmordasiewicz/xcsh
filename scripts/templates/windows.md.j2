@@ -1,0 +1,170 @@
+# Windows
+
+Install vesctl on Windows using PowerShell.
+
+## Quick Install
+
+Download and extract the latest release:
+
+=== "PowerShell (amd64)"
+
+    ```powershell
+    # Download latest release
+    $version = "{{ version or 'X.Y.Z' }}"
+    $url = "https://github.com/robinmordasiewicz/vesctl/releases/download/v$version/vesctl_${version}_windows_amd64.zip"
+    Invoke-WebRequest -Uri $url -OutFile vesctl.zip
+
+    # Extract to installation directory
+    $installDir = "$env:LOCALAPPDATA\Programs\vesctl"
+    New-Item -ItemType Directory -Force -Path $installDir | Out-Null
+    Expand-Archive -Path vesctl.zip -DestinationPath $installDir -Force
+
+    # Add to PATH for current session
+    $env:PATH = "$installDir;$env:PATH"
+
+    # Verify installation
+    vesctl version
+    ```
+
+=== "PowerShell (arm64)"
+
+    ```powershell
+    # Download latest release
+    $version = "{{ version or 'X.Y.Z' }}"
+    $url = "https://github.com/robinmordasiewicz/vesctl/releases/download/v$version/vesctl_${version}_windows_arm64.zip"
+    Invoke-WebRequest -Uri $url -OutFile vesctl.zip
+
+    # Extract to installation directory
+    $installDir = "$env:LOCALAPPDATA\Programs\vesctl"
+    New-Item -ItemType Directory -Force -Path $installDir | Out-Null
+    Expand-Archive -Path vesctl.zip -DestinationPath $installDir -Force
+
+    # Add to PATH for current session
+    $env:PATH = "$installDir;$env:PATH"
+
+    # Verify installation
+    vesctl version
+    ```
+
+{% if install_output %}
+**Example output:**
+
+```text
+{{ install_output }}
+```
+
+{% if generation_date %}
+*Output captured on {{ generation_date }}*
+{% endif %}
+{% endif %}
+
+## Permanent PATH Configuration
+
+To make vesctl available in all PowerShell sessions, add it to your user PATH:
+
+```powershell
+# Add to user PATH permanently
+$installDir = "$env:LOCALAPPDATA\Programs\vesctl"
+$currentPath = [Environment]::GetEnvironmentVariable("PATH", "User")
+if ($currentPath -notlike "*$installDir*") {
+    [Environment]::SetEnvironmentVariable("PATH", "$installDir;$currentPath", "User")
+    Write-Host "Added $installDir to user PATH. Restart your terminal to apply."
+}
+```
+
+## Manual Download
+
+Alternatively, download directly from GitHub:
+
+1. Visit [GitHub Releases](https://github.com/robinmordasiewicz/vesctl/releases/latest)
+2. Download `vesctl_{{ version or 'X.Y.Z' }}_windows_amd64.zip` (or `arm64` for ARM processors)
+3. Extract to a directory of your choice
+4. Add the directory to your PATH
+
+## Verify Installation
+
+After installation, verify vesctl is working:
+
+```powershell
+vesctl version
+```
+
+{% if version and commit and built %}
+Expected output:
+
+```text
+vesctl version {{ version }}
+  commit:   {{ commit }}
+  built:    {{ built }}
+  go:       {{ go_version if go_version else "go1.23.x" }}
+  platform: {{ platform if platform else "windows/amd64" }}
+```
+{% endif %}
+
+## Shell Completion
+
+Enable PowerShell tab completion:
+
+```powershell
+# Load completions for current session
+vesctl completion powershell | Out-String | Invoke-Expression
+
+# Add to PowerShell profile for all sessions
+vesctl completion powershell >> $PROFILE
+```
+
+!!! note "PowerShell Profile"
+    If `$PROFILE` doesn't exist, create it first:
+    ```powershell
+    New-Item -ItemType File -Force -Path $PROFILE
+    ```
+
+## Upgrade
+
+To upgrade to a newer version:
+
+```powershell
+# Download and extract new version (same as install)
+$version = "NEW_VERSION"
+$url = "https://github.com/robinmordasiewicz/vesctl/releases/download/v$version/vesctl_${version}_windows_amd64.zip"
+Invoke-WebRequest -Uri $url -OutFile vesctl.zip
+Expand-Archive -Path vesctl.zip -DestinationPath "$env:LOCALAPPDATA\Programs\vesctl" -Force
+```
+
+## Uninstall
+
+Remove vesctl from your system:
+
+```powershell
+# Remove installation directory
+Remove-Item -Recurse -Force "$env:LOCALAPPDATA\Programs\vesctl"
+
+# Remove from user PATH
+$installDir = "$env:LOCALAPPDATA\Programs\vesctl"
+$currentPath = [Environment]::GetEnvironmentVariable("PATH", "User")
+$newPath = ($currentPath -split ';' | Where-Object { $_ -ne $installDir }) -join ';'
+[Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
+
+# Remove completion from profile (if added)
+# Edit $PROFILE and remove the vesctl completion line
+```
+
+## Troubleshooting
+
+### "vesctl is not recognized"
+
+Ensure the installation directory is in your PATH:
+
+```powershell
+$env:PATH -split ';' | Select-String "vesctl"
+```
+
+If not found, add it manually or restart your terminal after permanent PATH configuration.
+
+### Execution Policy Error
+
+If you get an execution policy error when loading completions:
+
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```

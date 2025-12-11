@@ -248,10 +248,144 @@ jobs:
           path: docs/
           retention-days: 7
 
+  build-windows-docs:
+    name: Build Windows Docs
+    runs-on: windows-latest
+    needs: check-spec
+    # Run when there's a recent release (workflow_run) or on other triggers
+    if: |
+      always() && !failure() && !cancelled() &&
+      (github.event_name != 'workflow_run' || needs.check-spec.outputs.recent_release == 'true')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Python dependencies
+        run: pip install jinja2
+
+      - name: Wait for Windows release asset
+        id: wait-assets
+        shell: pwsh
+        run: |
+          $maxRetries = 10
+          $retryDelay = 30
+
+          # Get the latest release version
+          $latestTag = gh api repos/${{ github.repository }}/releases/latest --jq '.tag_name' 2>$null
+          if (-not $latestTag) {
+            Write-Host "::error::No releases found"
+            exit 1
+          }
+
+          Write-Host "Latest release: $latestTag"
+          $version = $latestTag.TrimStart('v')
+          $expectedAsset = "vesctl_${version}_windows_amd64.zip"
+
+          Write-Host "Waiting for asset: $expectedAsset"
+
+          for ($i = 1; $i -le $maxRetries; $i++) {
+            Write-Host "Check $i of $maxRetries..."
+
+            $assetCount = gh api repos/${{ github.repository }}/releases/latest --jq ".assets | map(select(.name == `"$expectedAsset`")) | length" 2>$null
+            if ($assetCount -gt 0) {
+              Write-Host "Asset $expectedAsset is available!"
+              echo "assets_ready=true" >> $env:GITHUB_OUTPUT
+              echo "version=$version" >> $env:GITHUB_OUTPUT
+              exit 0
+            }
+
+            if ($i -eq $maxRetries) {
+              Write-Host "::error::Asset $expectedAsset not available after $maxRetries attempts"
+              echo "assets_ready=false" >> $env:GITHUB_OUTPUT
+              exit 1
+            }
+
+            Write-Host "Asset not ready, waiting ${retryDelay}s before retry..."
+            Start-Sleep -Seconds $retryDelay
+          }
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Download and install vesctl
+        id: install
+        shell: pwsh
+        run: |
+          $version = "${{ steps.wait-assets.outputs.version }}"
+          $url = "https://github.com/${{ github.repository }}/releases/download/v$version/vesctl_${version}_windows_amd64.zip"
+
+          Write-Host "Downloading vesctl $version from $url"
+
+          # Capture installation output
+          $output = @()
+
+          # Download
+          $output += "Downloading vesctl_${version}_windows_amd64.zip..."
+          Invoke-WebRequest -Uri $url -OutFile vesctl.zip
+          $output += "Download complete."
+
+          # Extract
+          $installDir = "$env:LOCALAPPDATA\Programs\vesctl"
+          $output += "Extracting to $installDir..."
+          New-Item -ItemType Directory -Force -Path $installDir | Out-Null
+          Expand-Archive -Path vesctl.zip -DestinationPath $installDir -Force
+          $output += "Extraction complete."
+
+          # Add to PATH
+          $env:PATH = "$installDir;$env:PATH"
+
+          # Verify installation
+          $output += ""
+          $output += "Verifying installation:"
+          $versionOutput = & "$installDir\vesctl.exe" version 2>&1
+          $output += $versionOutput
+
+          # Write output to file
+          $output | Out-File -FilePath install-output.txt -Encoding utf8
+
+          # Parse version info
+          $versionLine = $versionOutput | Select-String -Pattern "vesctl version"
+          $commitLine = $versionOutput | Select-String -Pattern "commit:"
+          $builtLine = $versionOutput | Select-String -Pattern "built:"
+          $goLine = $versionOutput | Select-String -Pattern "go:"
+          $platformLine = $versionOutput | Select-String -Pattern "platform:"
+
+          echo "version=$version" >> $env:GITHUB_OUTPUT
+          if ($commitLine) { echo "commit=$($commitLine -replace '.*commit:\s*', '')" >> $env:GITHUB_OUTPUT }
+          if ($builtLine) { echo "built=$($builtLine -replace '.*built:\s*', '')" >> $env:GITHUB_OUTPUT }
+          if ($goLine) { echo "go_version=$($goLine -replace '.*go:\s*', '')" >> $env:GITHUB_OUTPUT }
+          if ($platformLine) { echo "platform=$($platformLine -replace '.*platform:\s*', '')" >> $env:GITHUB_OUTPUT }
+
+          Write-Host "Installation output captured:"
+          Get-Content install-output.txt
+
+      - name: Generate Windows docs
+        shell: pwsh
+        run: |
+          python scripts/generate-windows-docs.py `
+            --version "${{ steps.install.outputs.version }}" `
+            --commit "${{ steps.install.outputs.commit }}" `
+            --built "${{ steps.install.outputs.built }}" `
+            --go-version "${{ steps.install.outputs.go_version }}" `
+            --platform "${{ steps.install.outputs.platform }}" `
+            --install-output (Get-Content install-output.txt -Raw) `
+            --output docs/install/windows.md
+
+      - name: Upload Windows docs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-docs
+          path: docs/install/windows.md
+          retention-days: 7
+
   build:
     name: Build Documentation
     runs-on: macos-latest
-    needs: [check-spec, generate]
+    needs: [check-spec, generate, build-windows-docs]
     # Run unless: failed, cancelled, or workflow_run without recent release
     if: |
       always() && !failure() && !cancelled() &&
@@ -268,6 +402,13 @@ jobs:
         with:
           name: generated-docs
           path: docs/
+
+      - name: Download Windows docs
+        if: needs.build-windows-docs.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-docs
+          path: docs/install/
 
       - name: Restore cached docs
         if: needs.generate.result == 'skipped'

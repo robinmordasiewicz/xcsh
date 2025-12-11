@@ -55,6 +55,7 @@ docs/commands/
 docs/install/homebrew.md
 docs/install/script.md
 docs/install/source.md
+docs/install/windows.md
 
 # MkDocs build output
 site/

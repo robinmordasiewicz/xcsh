@@ -90,6 +90,7 @@ nav:
     - install/index.md
     - Homebrew: install/homebrew.md
     - Scripted: install/script.md
+    - Windows: install/windows.md
     - Source: install/source.md
     - Shell Completions: install/completions.md
     - Environment Variables: install/environment-variables.md
