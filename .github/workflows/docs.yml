@@ -596,13 +596,36 @@ jobs:
             brew uninstall --cask vesctl 2>/dev/null || brew uninstall vesctl 2>/dev/null || true
           fi
 
-          # Run install script and capture output to file
-          # Using script execution to capture both stdout and stderr
-          curl -fsSL https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh > /tmp/install.sh
-          CURL_EXIT=$?
+          # Download install script with retry and exponential backoff
+          MAX_RETRIES=5
+          RETRY_COUNT=0
+          BASE_DELAY=5
+          CURL_EXIT=1
+
+          echo "Downloading install script from raw.githubusercontent.com..."
+
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            RETRY_COUNT=$((RETRY_COUNT + 1))
+            echo "Attempt $RETRY_COUNT of $MAX_RETRIES..."
+
+            curl -fsSL --connect-timeout 30 --max-time 60 \
+              https://raw.githubusercontent.com/${{ github.repository }}/main/install.sh > /tmp/install.sh
+            CURL_EXIT=$?
+
+            if [ $CURL_EXIT -eq 0 ]; then
+              echo "Successfully downloaded install script"
+              break
+            fi
+
+            if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+              DELAY=$((BASE_DELAY * (2 ** (RETRY_COUNT - 1))))
+              echo "::warning::Download failed (exit code: $CURL_EXIT), retrying in ${DELAY}s..."
+              sleep $DELAY
+            fi
+          done
 
           if [ $CURL_EXIT -ne 0 ]; then
-            echo "::error::Failed to download install script (exit code: $CURL_EXIT)"
+            echo "::error::Failed to download install script after $MAX_RETRIES attempts (exit code: $CURL_EXIT)"
             exit 1
           fi
 
