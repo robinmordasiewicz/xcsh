@@ -29,6 +29,56 @@ brew upgrade --cask vesctl
 brew uninstall --cask vesctl
 ```
 
+## Shell Completions
+
+The Homebrew cask includes shell completions for bash, zsh, and fish. These are installed automatically to Homebrew's managed directories.
+
+=== "Zsh"
+
+    Completions should work automatically if you have Homebrew's shell environment configured. Ensure your `~/.zshrc` contains:
+
+    ```bash
+    eval "$(brew shellenv)"
+    ```
+
+    If you're using Oh My Zsh, completions are enabled by default. Otherwise, add to your `~/.zshrc`:
+
+    ```bash
+    autoload -Uz compinit && compinit
+    ```
+
+    Restart your terminal and test with `vesctl <TAB>`.
+
+=== "Bash"
+
+    Install bash-completion if you haven't already:
+
+    ```bash
+    brew install bash-completion@2
+    ```
+
+    Add to your `~/.bash_profile` or `~/.bashrc`:
+
+    ```bash
+    [[ -r "$(brew --prefix)/etc/profile.d/bash_completion.sh" ]] && \
+      . "$(brew --prefix)/etc/profile.d/bash_completion.sh"
+    ```
+
+    Restart your terminal and test with `vesctl <TAB>`.
+
+=== "Fish"
+
+    Completions work automatically if fish was installed via Homebrew.
+
+    Test with `vesctl <TAB>`.
+
+!!! tip "Troubleshooting Completions"
+    If completions don't work after setup:
+
+    1. Ensure you've restarted your terminal
+    2. For zsh, try running `rm -f ~/.zcompdump*` then restart
+    3. Verify completions are installed: `ls $(brew --prefix)/share/zsh/site-functions/_vesctl`
+
 ## Verify Installation
 
 After installation, verify vesctl is working:
