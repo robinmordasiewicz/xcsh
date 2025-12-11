@@ -514,7 +514,14 @@ jobs:
         if: steps.homebrew-install.outputs.homebrew_success == 'true'
         id: vesctl-version
         run: |
-          VERSION_OUTPUT=$(vesctl version)
+          # Ensure Homebrew bin is in PATH (ARM and Intel macOS)
+          export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+
+          # Find vesctl location for debugging
+          VESCTL_PATH=$(which vesctl 2>/dev/null || find /opt/homebrew -name vesctl -type f 2>/dev/null | head -1 || echo "")
+          echo "vesctl found at: $VESCTL_PATH"
+
+          VERSION_OUTPUT=$("$VESCTL_PATH" version 2>/dev/null || vesctl version)
           echo "Full version output:"
           echo "$VERSION_OUTPUT"
 
