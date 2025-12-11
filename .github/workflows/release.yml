@@ -129,23 +129,29 @@ jobs:
       - name: Install GoReleaser with retry
         shell: bash
         run: |
+          GORELEASER_VERSION="2.13.1"
           max_retries=5
           base_delay=15
 
           for attempt in $(seq 1 $max_retries); do
-            echo "Attempt $attempt of $max_retries to install GoReleaser..."
+            echo "Attempt $attempt of $max_retries to install GoReleaser v${GORELEASER_VERSION}..."
 
-            # Try to download and install goreleaser
-            if curl -sSL --connect-timeout 30 --max-time 120 \
-                 https://goreleaser.com/static/run 2>/dev/null | bash -s -- --install-only 2>&1; then
+            # Download goreleaser tarball from GitHub releases
+            url="https://github.com/goreleaser/goreleaser/releases/download/v${GORELEASER_VERSION}/goreleaser_Linux_x86_64.tar.gz"
+            if curl -sSL --connect-timeout 30 --max-time 180 -o /tmp/goreleaser.tar.gz "$url" && \
+               tar -xzf /tmp/goreleaser.tar.gz -C /tmp goreleaser && \
+               sudo mv /tmp/goreleaser /usr/local/bin/goreleaser && \
+               chmod +x /usr/local/bin/goreleaser; then
               echo "GoReleaser installed successfully"
               goreleaser --version
+              rm -f /tmp/goreleaser.tar.gz
               exit 0
             fi
 
             if [ $attempt -lt $max_retries ]; then
               delay=$((base_delay * attempt))
               echo "::warning::Failed to install GoReleaser on attempt $attempt, retrying in ${delay}s..."
+              rm -f /tmp/goreleaser.tar.gz /tmp/goreleaser
               sleep $delay
             fi
           done
