@@ -29,23 +29,25 @@ api_docs:
 ## Actions
 
 {% for action in actions %}
-<details markdown id="{{ action.action_name }}">
+### {{ action.action_name }}
+
+<details markdown>
 <summary><strong>{{ action.action_name }}</strong> - {{ action.command.short }}</summary>
 
-### Synopsis
+#### Synopsis
 
 ```bash
 {{ action.command.full_command }}{% if action.command.use and '<' in action.command.use %} {{ action.command.use.split()[1:] | join(' ') }}{% endif %} [flags]
 ```
 
 {% if action.command.long and action.command.long != action.command.short %}
-### Description
+#### Description
 
 {{ action.command.long }}
 
 {% endif %}
 {% if action.command.flags %}
-### Flags
+#### Flags
 
 | Flag | Short | Type | Default | Description |
 |------|-------|------|---------|-------------|
@@ -54,7 +56,7 @@ api_docs:
 {% endfor %}
 
 {% endif %}
-### Examples
+#### Examples
 
 {% if action.command.example %}
 ```bash
@@ -65,7 +67,7 @@ api_docs:
 {% endif %}
 
 {% if action.api_docs_url %}
-### API Reference
+#### API Reference
 
 - [{{ resource | title_case }} {{ action.action_name | title_case }} API]({{ action.api_docs_url }})
 {% endif %}
