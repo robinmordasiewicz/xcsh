@@ -43,7 +43,7 @@ func init() {
 
 var versionCmd = &cobra.Command{
 	Use:     "version",
-	Short:   "Display vesctl version and build information",
+	Short:   "Display vesctl version and build information.",
 	Long:    `Display vesctl version and build information.`,
 	Example: `vesctl version`,
 	Run: func(cmd *cobra.Command, args []string) {

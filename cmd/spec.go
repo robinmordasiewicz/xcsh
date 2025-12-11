@@ -19,7 +19,7 @@ var specFlag bool
 // RegisterSpecFlag registers the --spec flag on the root command
 // This should be called from root.go init after rootCmd is defined
 func RegisterSpecFlag(rootCmd *cobra.Command) {
-	rootCmd.PersistentFlags().BoolVar(&specFlag, "spec", false, "Output machine-readable CLI specification (JSON/YAML)")
+	rootCmd.PersistentFlags().BoolVar(&specFlag, "spec", false, "Output machine-readable CLI specification in JSON or YAML.")
 }
 
 // CLISpec represents the complete CLI specification
