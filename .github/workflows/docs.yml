@@ -630,7 +630,8 @@ jobs:
           fi
 
           # Run the install script and capture output
-          VES_NO_SUDO=1 VES_INSTALL_DIR=$HOME/.local/bin sh /tmp/install.sh > install-output.txt 2>&1
+          # Pass GITHUB_TOKEN to avoid API rate limits in CI
+          GITHUB_TOKEN=${{ github.token }} VES_NO_SUDO=1 VES_INSTALL_DIR=$HOME/.local/bin sh /tmp/install.sh > install-output.txt 2>&1
           INSTALL_EXIT_CODE=$?
 
           echo "Install output captured:"

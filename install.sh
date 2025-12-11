@@ -7,6 +7,7 @@
 #   VES_INSTALL_DIR  - Installation directory (default: /usr/local/bin)
 #   VES_NO_SUDO      - Skip sudo if set to any value
 #   VES_NO_VERIFY    - Skip checksum verification if set
+#   GITHUB_TOKEN     - Optional: GitHub token for authenticated API requests (CI/CD use)
 
 set -eu
 
@@ -147,16 +148,36 @@ http_get() {
 
         case "$HTTP_CLIENT" in
             curl)
-                RESULT=$(curl -fsSL --connect-timeout 30 --max-time 60 "$URL" 2>/dev/null) && {
-                    echo "$RESULT"
-                    return 0
-                }
+                if [ -n "${GITHUB_TOKEN:-}" ]; then
+                    RESULT=$(curl -fsSL --connect-timeout 30 --max-time 60 \
+                        -H "Authorization: token $GITHUB_TOKEN" \
+                        -H "Accept: application/vnd.github.v3+json" \
+                        "$URL" 2>/dev/null) && {
+                        echo "$RESULT"
+                        return 0
+                    }
+                else
+                    RESULT=$(curl -fsSL --connect-timeout 30 --max-time 60 "$URL" 2>/dev/null) && {
+                        echo "$RESULT"
+                        return 0
+                    }
+                fi
                 ;;
             wget)
-                RESULT=$(wget -q --timeout=30 -O - "$URL" 2>/dev/null) && {
-                    echo "$RESULT"
-                    return 0
-                }
+                if [ -n "${GITHUB_TOKEN:-}" ]; then
+                    RESULT=$(wget -q --timeout=30 \
+                        --header="Authorization: token $GITHUB_TOKEN" \
+                        --header="Accept: application/vnd.github.v3+json" \
+                        -O - "$URL" 2>/dev/null) && {
+                        echo "$RESULT"
+                        return 0
+                    }
+                else
+                    RESULT=$(wget -q --timeout=30 -O - "$URL" 2>/dev/null) && {
+                        echo "$RESULT"
+                        return 0
+                    }
+                fi
                 ;;
             *)
                 error "Neither curl nor wget found. Please install one of them and try again."
