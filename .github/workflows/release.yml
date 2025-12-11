@@ -353,7 +353,19 @@ jobs:
               end
             end
 
-            # No zap stanza required
+            caveats <<~EOS
+              Shell completions have been installed for bash, zsh, and fish.
+
+              For setup instructions, see:
+                https://robinmordasiewicz.github.io/vesctl/install/homebrew/#shell-completions
+
+              Quick start:
+                Zsh: Usually works automatically. Restart your terminal.
+                Bash: Run 'brew install bash-completion@2' first.
+                Fish: Works automatically.
+
+              Test with: vesctl [TAB]
+            EOS
           end
           CASKEOF
 
