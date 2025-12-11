@@ -1214,3 +1214,9 @@ article.md-content__inner.md-typeset {
     grid-template-columns: 1fr;
   }
 }
+
+/* Hide GitHub stars and forks from header, keep version only */
+.md-source__fact--stars,
+.md-source__fact--forks {
+  display: none !important;
+}
