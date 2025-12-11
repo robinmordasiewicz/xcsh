@@ -77,4 +77,43 @@ if (!window.__navigationFixInitialized) {
 
   // Also handle browser back/forward
   window.addEventListener('popstate', applyFixes);
+
+  /**
+   * Accordion behavior for navigation
+   * Ensures only one section is expanded at a time within each navigation level
+   */
+  function setupAccordion() {
+    var sidebar = document.querySelector('.md-sidebar--primary');
+    if (!sidebar) return;
+
+    // Listen for toggle changes using event delegation
+    sidebar.addEventListener('change', function(e) {
+      if (!e.target.matches('.md-nav__toggle')) return;
+      if (!e.target.checked) return; // Only act on expansion
+
+      // Find sibling toggles at the same level
+      var parentItem = e.target.closest('.md-nav__item');
+      if (!parentItem) return;
+
+      var parentList = parentItem.parentElement;
+      if (!parentList) return;
+
+      var siblingToggles = parentList.querySelectorAll(':scope > .md-nav__item > .md-nav__toggle');
+
+      // Collapse all siblings except the one being expanded
+      siblingToggles.forEach(function(toggle) {
+        if (toggle !== e.target && toggle.checked) {
+          toggle.checked = false;
+        }
+      });
+    });
+  }
+
+  // Set up accordion behavior
+  setupAccordion();
+
+  // Re-setup accordion after instant navigation
+  if (typeof document$ !== 'undefined') {
+    document$.subscribe(setupAccordion);
+  }
 }
