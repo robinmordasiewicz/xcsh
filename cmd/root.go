@@ -114,12 +114,7 @@ func init() {
 	// Connection settings (vesctl compatible)
 	pf.StringVarP(&cacert, "cacert", "a", "", "Path to the server CA certificate file for TLS verification.")
 	pf.StringVarP(&cert, "cert", "c", "", "Path to the client certificate file for mTLS authentication.")
-	// Get default config path for help text (matches original vesctl behavior)
-	defaultConfigPath := "$HOME/.vesconfig"
-	if home, err := os.UserHomeDir(); err == nil {
-		defaultConfigPath = filepath.Join(home, ".vesconfig")
-	}
-	pf.StringVar(&cfgFile, "config", "", fmt.Sprintf("Path to the configuration file containing API URL and credentials (default %q).", defaultConfigPath))
+	pf.StringVar(&cfgFile, "config", "", "Path to configuration file.")
 	pf.BoolVar(&hardwareKey, "hardwareKey", false, "Use a YubiKey hardware security module for TLS authentication.")
 	pf.StringVarP(&key, "key", "k", "", "Path to the client private key file for mTLS authentication.")
 
@@ -129,11 +124,11 @@ func init() {
 	_ = pf.MarkHidden("outfmt") // Hide deprecated alias
 
 	pf.StringVarP(&outputDir, "output", "o", "./", "Directory path for command output files.")
-	pf.StringVar(&p12Bundle, "p12-bundle", "", "Path to PKCS#12 bundle file containing client certificate and key. Set password in VES_P12_PASSWORD.")
+	pf.StringVar(&p12Bundle, "p12-bundle", "", "Path to PKCS#12 bundle file containing client certificate and key.")
 	pf.StringVarP(&serverURL, "server-url", "u", "", "F5 Distributed Cloud API endpoint URL.")
 	pf.BoolVar(&showCurl, "show-curl", false, "Output equivalent curl commands for each API request.")
 	pf.IntVar(&timeout, "timeout", 5, "Maximum time in seconds to wait for command completion.")
-	pf.BoolVar(&useAPIToken, "api-token", false, "Authenticate using the API token from VES_API_TOKEN environment variable.")
+	pf.BoolVar(&useAPIToken, "api-token", false, "Use API token authentication.")
 	pf.BoolVar(&nonInteractive, "non-interactive", false, "Disable interactive prompts and fail if required arguments are missing.")
 
 	// Bind flags to viper (errors are ignored as flags are guaranteed to exist)
@@ -346,19 +341,59 @@ func ShowCurl() bool {
 
 // helpTemplateWithEnvVars returns a custom help template that includes environment variables
 func helpTemplateWithEnvVars() string {
-	// Build environment variables section
+	// Build environment variables section with consistent column alignment
 	envVarsSection := "\nEnvironment Variables:\n"
+
+	// Find max name length for alignment
+	maxLen := 0
 	for _, env := range EnvVarRegistry {
-		envVarsSection += fmt.Sprintf("  %s\n", env.Name)
-		if env.RelatedFlag != "" {
-			envVarsSection += fmt.Sprintf("        %s (%s)\n", env.Description, env.RelatedFlag)
-		} else {
-			envVarsSection += fmt.Sprintf("        %s\n", env.Description)
+		if len(env.Name) > maxLen {
+			maxLen = len(env.Name)
 		}
 	}
 
-	// Custom template based on Cobra's default, with Environment Variables section added
+	// Format each env var on single line, matching flag style
+	for _, env := range EnvVarRegistry {
+		padding := maxLen - len(env.Name) + 3
+		if env.RelatedFlag != "" {
+			envVarsSection += fmt.Sprintf("  %s%s%s [%s]\n", env.Name, spaces(padding), env.Description, env.RelatedFlag)
+		} else {
+			envVarsSection += fmt.Sprintf("  %s%s%s\n", env.Name, spaces(padding), env.Description)
+		}
+	}
+
+	// Add examples section
+	examplesSection := `
+Examples:
+  vesctl configuration list namespace                    List all namespaces
+  vesctl configuration get http_loadbalancer -n shared   Get a specific resource
+  vesctl request /api/web/namespaces                     Execute custom API request
+  vesctl --spec --output-format json                     Output CLI spec for automation
+`
+
+	// Add configuration precedence section
+	configSection := `
+Configuration:
+  Config file:  ~/.vesconfig
+  Priority:     CLI flags > environment variables > config file > defaults
+
+Learn more:    https://robinmordasiewicz.github.io/vesctl/
+`
+
+	// Custom template based on Cobra's default, with additional sections
 	return `{{with (or .Long .Short)}}{{. | trimTrailingWhitespaces}}
 
-{{end}}{{if or .Runnable .HasSubCommands}}{{.UsageString}}{{end}}` + envVarsSection
+{{end}}{{if or .Runnable .HasSubCommands}}{{.UsageString}}{{end}}` + envVarsSection + examplesSection + configSection
+}
+
+// spaces returns a string of n spaces for alignment
+func spaces(n int) string {
+	if n <= 0 {
+		return " "
+	}
+	s := ""
+	for i := 0; i < n; i++ {
+		s += " "
+	}
+	return s
 }
