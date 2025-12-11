@@ -1,7 +1,7 @@
 site_name: vesctl Documentation
 site_description: Open-source CLI for F5 Distributed Cloud
 site_url: https://robinmordasiewicz.github.io/vesctl/
-repo_name: robinmordasiewicz/vesctl
+repo_name: vesctl
 repo_url: https://github.com/robinmordasiewicz/vesctl
 
 theme:
