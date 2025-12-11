@@ -389,7 +389,7 @@ html {
 
 .md-sidebar--primary {
   border-right: 1px solid #e6e9f3;
-  width: 11rem; /* Compact sidebar width */
+  width: 14rem; /* Expanded sidebar for navigation hierarchy */
 }
 
 .md-sidebar--secondary {
@@ -467,6 +467,25 @@ html {
 
 .md-nav__link--passed {
   color: var(--md-default-fg-color--light);
+}
+
+/* Navigation Hierarchy - Clear Indentation by Level */
+/* Level 1 items - base indentation */
+.md-sidebar--primary .md-nav[data-md-level="1"] > .md-nav__list > .md-nav__item > .md-nav__link,
+.md-sidebar--primary .md-nav[data-md-level="1"] > .md-nav__list > .md-nav__item > label.md-nav__link {
+  padding-left: 0.5rem !important;
+}
+
+/* Level 2 items - increased indentation */
+.md-sidebar--primary .md-nav[data-md-level="2"] > .md-nav__list > .md-nav__item > .md-nav__link,
+.md-sidebar--primary .md-nav[data-md-level="2"] > .md-nav__list > .md-nav__item > label.md-nav__link {
+  padding-left: 1.25rem !important;
+}
+
+/* Level 3 items - maximum indentation */
+.md-sidebar--primary .md-nav[data-md-level="3"] > .md-nav__list > .md-nav__item > .md-nav__link,
+.md-sidebar--primary .md-nav[data-md-level="3"] > .md-nav__list > .md-nav__item > label.md-nav__link {
+  padding-left: 2rem !important;
 }
 
 /* Nested navigation - even more compact */
