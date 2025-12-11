@@ -389,7 +389,7 @@ html {
 
 .md-sidebar--primary {
   border-right: 1px solid #e6e9f3;
-  width: 14rem; /* Expanded sidebar for navigation hierarchy */
+  width: 16rem; /* Wider sidebar to prevent text truncation */
 }
 
 .md-sidebar--secondary {
@@ -470,11 +470,20 @@ html {
 }
 
 /* Navigation Hierarchy - Clear Indentation by Level */
-/* Level 1 items - all left-justified at same position (parents) */
-.md-sidebar--primary .md-nav[data-md-level="1"] > .md-nav__list > .md-nav__item > .md-nav__link,
-.md-sidebar--primary .md-nav[data-md-level="1"] > .md-nav__list > .md-nav__item > label.md-nav__link {
-  padding-left: 0.5rem !important;
+/* Level 1 non-nested items - reduced padding for tighter left margin */
+.md-sidebar--primary .md-nav[data-md-level="1"] > .md-nav__list > .md-nav__item:not(.md-nav__item--nested) > .md-nav__link {
+  padding-left: 0.75rem !important;
   margin-left: 0 !important;
+}
+
+/* Level 1 nested items - the container holds both link and toggle */
+.md-sidebar--primary .md-nav[data-md-level="1"] > .md-nav__list > .md-nav__item--nested > .md-nav__container {
+  padding-left: 0 !important;
+}
+
+/* Links inside nested containers need consistent padding */
+.md-sidebar--primary .md-nav[data-md-level="1"] > .md-nav__list > .md-nav__item--nested > .md-nav__container > .md-nav__link {
+  padding-left: 0.75rem !important;
 }
 
 /* Level 2 items - indented under parents (children) */
@@ -486,7 +495,7 @@ html {
 /* Level 3 items - further indented (grandchildren) */
 .md-sidebar--primary .md-nav[data-md-level="3"] > .md-nav__list > .md-nav__item > .md-nav__link,
 .md-sidebar--primary .md-nav[data-md-level="3"] > .md-nav__list > .md-nav__item > label.md-nav__link {
-  padding-left: 2.5rem !important;
+  padding-left: 2.25rem !important;
 }
 
 /* Nested navigation - even more compact */
