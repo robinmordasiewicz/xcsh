@@ -27,7 +27,6 @@ theme:
     code: JetBrains Mono
   features:
     - navigation.tabs
-    - navigation.sections
     - navigation.indexes
     - navigation.path
     - navigation.top
