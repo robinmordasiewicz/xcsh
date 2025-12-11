@@ -888,7 +888,25 @@ jobs:
             --output docs/install/source.md
 
       - name: Build site
-        run: mkdocs build --strict
+        run: |
+          # Use --strict only when all generated docs are available
+          # This prevents failures when triggered without a recent release
+          if [ -f "docs/install/script.md" ] && [ -f "docs/install/windows.md" ]; then
+            echo "All generated docs present - building with --strict"
+            mkdocs build --strict
+          else
+            echo "::warning::Some generated docs missing - building without --strict"
+            echo "Missing files:"
+            [ ! -f "docs/install/script.md" ] && echo "  - docs/install/script.md"
+            [ ! -f "docs/install/windows.md" ] && echo "  - docs/install/windows.md"
+
+            # Create placeholder files to allow build to proceed
+            mkdir -p docs/install
+            [ ! -f "docs/install/script.md" ] && echo "# Script Installation\n\nDocumentation will be generated on next release." > docs/install/script.md
+            [ ! -f "docs/install/windows.md" ] && echo "# Windows Installation\n\nDocumentation will be generated on next release." > docs/install/windows.md
+
+            mkdocs build
+          fi
 
       - name: Copy install script to site
         run: cp install.sh site/install.sh
