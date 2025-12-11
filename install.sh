@@ -91,43 +91,87 @@ detect_http_client() {
     fi
 }
 
-# Download a file using available HTTP client
+# Download a file using available HTTP client with retry for network errors
 # Usage: http_download <url> <output_file>
 http_download() {
     URL="$1"
     OUTPUT="$2"
     HTTP_CLIENT=$(detect_http_client)
+    MAX_RETRIES=5
+    RETRY_COUNT=0
+    BASE_DELAY=3
 
-    case "$HTTP_CLIENT" in
-        curl)
-            curl -fsSL --retry 3 --retry-delay 2 -o "$OUTPUT" "$URL"
-            ;;
-        wget)
-            wget -q --tries=3 --waitretry=2 -O "$OUTPUT" "$URL"
-            ;;
-        *)
-            error "Neither curl nor wget found. Please install one of them and try again."
-            ;;
-    esac
+    while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+        RETRY_COUNT=$((RETRY_COUNT + 1))
+
+        case "$HTTP_CLIENT" in
+            curl)
+                if curl -fsSL --connect-timeout 30 --max-time 120 -o "$OUTPUT" "$URL" 2>/dev/null; then
+                    return 0
+                fi
+                EXIT_CODE=$?
+                ;;
+            wget)
+                if wget -q --timeout=30 -O "$OUTPUT" "$URL" 2>/dev/null; then
+                    return 0
+                fi
+                EXIT_CODE=$?
+                ;;
+            *)
+                error "Neither curl nor wget found. Please install one of them and try again."
+                ;;
+        esac
+
+        if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+            DELAY=$((BASE_DELAY * RETRY_COUNT))
+            warning "Download failed (attempt $RETRY_COUNT/$MAX_RETRIES), retrying in ${DELAY}s..."
+            sleep $DELAY
+        fi
+    done
+
+    return 1
 }
 
-# Fetch content from URL
+# Fetch content from URL with retry for network errors
 # Usage: http_get <url>
 http_get() {
     URL="$1"
     HTTP_CLIENT=$(detect_http_client)
+    MAX_RETRIES=5
+    RETRY_COUNT=0
+    BASE_DELAY=3
+    RESULT=""
 
-    case "$HTTP_CLIENT" in
-        curl)
-            curl -fsSL --retry 3 --retry-delay 2 "$URL" 2>/dev/null
-            ;;
-        wget)
-            wget -q --tries=3 --waitretry=2 -O - "$URL" 2>/dev/null
-            ;;
-        *)
-            error "Neither curl nor wget found. Please install one of them and try again."
-            ;;
-    esac
+    while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+        RETRY_COUNT=$((RETRY_COUNT + 1))
+
+        case "$HTTP_CLIENT" in
+            curl)
+                RESULT=$(curl -fsSL --connect-timeout 30 --max-time 60 "$URL" 2>/dev/null) && {
+                    echo "$RESULT"
+                    return 0
+                }
+                ;;
+            wget)
+                RESULT=$(wget -q --timeout=30 -O - "$URL" 2>/dev/null) && {
+                    echo "$RESULT"
+                    return 0
+                }
+                ;;
+            *)
+                error "Neither curl nor wget found. Please install one of them and try again."
+                ;;
+        esac
+
+        if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+            DELAY=$((BASE_DELAY * RETRY_COUNT))
+            warning "Request failed (attempt $RETRY_COUNT/$MAX_RETRIES), retrying in ${DELAY}s..." >&2
+            sleep $DELAY
+        fi
+    done
+
+    echo ""
+    return 1
 }
 
 # ============================================
