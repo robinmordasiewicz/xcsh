@@ -126,11 +126,36 @@ jobs:
           go-version: "1.24"
           cache: false
 
+      - name: Install GoReleaser with retry
+        shell: bash
+        run: |
+          max_retries=5
+          base_delay=15
+
+          for attempt in $(seq 1 $max_retries); do
+            echo "Attempt $attempt of $max_retries to install GoReleaser..."
+
+            # Try to download and install goreleaser
+            if curl -sSL --connect-timeout 30 --max-time 120 \
+                 https://goreleaser.com/static/run 2>/dev/null | bash -s -- --install-only 2>&1; then
+              echo "GoReleaser installed successfully"
+              goreleaser --version
+              exit 0
+            fi
+
+            if [ $attempt -lt $max_retries ]; then
+              delay=$((base_delay * attempt))
+              echo "::warning::Failed to install GoReleaser on attempt $attempt, retrying in ${delay}s..."
+              sleep $delay
+            fi
+          done
+
+          echo "::error::Failed to install GoReleaser after $max_retries attempts"
+          exit 1
+
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v6
-        with:
-          version: "~> v2"
-          args: release --clean
+        shell: bash
+        run: goreleaser release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
