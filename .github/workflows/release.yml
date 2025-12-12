@@ -223,7 +223,7 @@ jobs:
             ZIP_PATH="$RUNNER_TEMP/vesctl_${ARCH}.zip"
             ditto -c -k --keepParent "$BINARY_PATH" "$ZIP_PATH"
 
-            # Submit for notarization
+            # Submit for notarization and wait for completion
             echo "Submitting for notarization..."
             xcrun notarytool submit "$ZIP_PATH" \
               --apple-id "$APPLE_ID" \
@@ -231,56 +231,14 @@ jobs:
               --team-id "$APPLE_TEAM_ID" \
               --wait
 
-            # Staple the notarization ticket to the ZIP archive
-            # Apple's stapler recursively staples items inside ZIP archives (per Apple docs)
-            # We staple the ZIP, then extract to get the binary with embedded ticket
-            # Apple's CDN can take time to propagate tickets, so we retry with increasing delays
-            echo "Waiting 30s for notarization ticket to propagate to Apple CDN..."
-            sleep 30
+            # Note: Stapling is NOT possible for standalone binaries or ZIP files
+            # Apple's stapler only works with .app bundles, .dmg, and .pkg files
+            # For bare binaries, Gatekeeper verifies the notarization ticket online
+            # when the user first runs the binary - no stapling needed
+            echo "Notarization complete for $ARCH (stapling skipped - not supported for bare binaries)"
 
-            echo "Stapling notarization ticket to ZIP archive..."
-            staple_retries=8
-            staple_delay=30
-            for attempt in $(seq 1 $staple_retries); do
-              if xcrun stapler staple "$ZIP_PATH"; then
-                echo "Stapling succeeded on attempt $attempt"
-                break
-              fi
-              if [ $attempt -lt $staple_retries ]; then
-                echo "Stapling attempt $attempt failed, waiting ${staple_delay}s for ticket propagation..."
-                sleep $staple_delay
-                # Increase delay: 30, 45, 60, 90, 120, 150, 180
-                staple_delay=$((staple_delay + 15))
-                if [ $staple_delay -gt 180 ]; then
-                  staple_delay=180
-                fi
-              else
-                echo "ERROR: Stapling failed after $staple_retries attempts"
-                exit 1
-              fi
-            done
-
-            # Verify stapling succeeded on ZIP
-            xcrun stapler validate "$ZIP_PATH"
-            echo "ZIP stapling complete for $ARCH"
-
-            # Extract the stapled binary from the ZIP
-            # The binary inside the stapled ZIP has the notarization ticket embedded
-            echo "Extracting stapled binary from ZIP..."
-            EXTRACT_DIR="$RUNNER_TEMP/stapled_${ARCH}"
-            mkdir -p "$EXTRACT_DIR"
-            ditto -x -k "$ZIP_PATH" "$EXTRACT_DIR"
-
-            # Find and copy the stapled binary back to the signing directory
-            STAPLED_BINARY=$(find "$EXTRACT_DIR" -name "vesctl" -type f)
-            if [ -z "$STAPLED_BINARY" ]; then
-              echo "ERROR: Could not find vesctl binary in extracted ZIP"
-              exit 1
-            fi
-            cp "$STAPLED_BINARY" "$BINARY_PATH"
-
-            # Verify the binary passes Gatekeeper
-            echo "Verifying stapled binary with spctl..."
+            # Verify the signed binary with spctl
+            echo "Verifying signed binary with spctl..."
             spctl -a -vvv -t execute "$BINARY_PATH" || {
               echo "WARNING: spctl verification may fail in CI (no GUI), continuing..."
             }
