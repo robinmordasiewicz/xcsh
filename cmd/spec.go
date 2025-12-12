@@ -11,6 +11,7 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/robinmordasiewicz/vesctl/pkg/errors"
+	"github.com/robinmordasiewicz/vesctl/pkg/types"
 )
 
 // specFlag controls whether to output machine-readable spec
@@ -24,20 +25,21 @@ func RegisterSpecFlag(rootCmd *cobra.Command) {
 
 // CLISpec represents the complete CLI specification
 type CLISpec struct {
-	Name                  string                 `json:"name" yaml:"name"`
-	Version               string                 `json:"version" yaml:"version"`
-	Description           string                 `json:"description" yaml:"description"`
-	Usage                 string                 `json:"usage" yaml:"usage"`
-	AIHints               AIHintsSpec            `json:"ai_hints" yaml:"ai_hints"`
-	AuthenticationMethods []AuthMethodSpec       `json:"authentication_methods" yaml:"authentication_methods"`
-	SemanticCategories    SemanticCategoriesSpec `json:"semantic_categories" yaml:"semantic_categories"`
-	FlagRelationships     FlagRelationshipsSpec  `json:"flag_relationships" yaml:"flag_relationships"`
-	Examples              []ExampleSpec          `json:"examples" yaml:"examples"`
-	Workflows             []WorkflowSpec         `json:"workflows" yaml:"workflows"`
-	EnvironmentVariables  []EnvVarSpec           `json:"environment_variables" yaml:"environment_variables"`
-	GlobalFlags           []FlagSpec             `json:"global_flags" yaml:"global_flags"`
-	Commands              []CommandSpec          `json:"commands" yaml:"commands"`
-	ExitCodes             []ExitCodeSpec         `json:"exit_codes" yaml:"exit_codes"`
+	Name                  string                              `json:"name" yaml:"name"`
+	Version               string                              `json:"version" yaml:"version"`
+	Description           string                              `json:"description" yaml:"description"`
+	Usage                 string                              `json:"usage" yaml:"usage"`
+	AIHints               AIHintsSpec                         `json:"ai_hints" yaml:"ai_hints"`
+	AuthenticationMethods []AuthMethodSpec                    `json:"authentication_methods" yaml:"authentication_methods"`
+	SemanticCategories    SemanticCategoriesSpec              `json:"semantic_categories" yaml:"semantic_categories"`
+	FlagRelationships     FlagRelationshipsSpec               `json:"flag_relationships" yaml:"flag_relationships"`
+	Examples              []ExampleSpec                       `json:"examples" yaml:"examples"`
+	Workflows             []WorkflowSpec                      `json:"workflows" yaml:"workflows"`
+	EnvironmentVariables  []EnvVarSpec                        `json:"environment_variables" yaml:"environment_variables"`
+	GlobalFlags           []FlagSpec                          `json:"global_flags" yaml:"global_flags"`
+	Commands              []CommandSpec                       `json:"commands" yaml:"commands"`
+	ExitCodes             []ExitCodeSpec                      `json:"exit_codes" yaml:"exit_codes"`
+	ResourceSchemas       map[string]types.ResourceSchemaInfo `json:"resource_schemas" yaml:"resource_schemas"`
 }
 
 // AIHintsSpec provides guidance for AI agents on how to use the CLI
@@ -152,6 +154,7 @@ func GenerateSpec(cmd *cobra.Command) *CLISpec {
 		GlobalFlags:           extractFlags(cmd.PersistentFlags()),
 		Commands:              extractCommands(cmd, []string{}),
 		ExitCodes:             getExitCodes(),
+		ResourceSchemas:       types.GetAllResourceSchemas(),
 	}
 	return spec
 }
@@ -172,6 +175,9 @@ func getAIHints() AIHintsSpec {
 			"Always specify --namespace or -n for namespace-scoped resources",
 			"Use --spec to get complete CLI structure before constructing commands",
 			"Check exit codes for programmatic error handling (0=success, 1=generic, 2=validation, 3=auth, 4=connection, 5=not-found, 6=conflict, 7=rate-limit)",
+			"Use resource_schemas in --spec output to understand field constraints, validation rules, and mutual exclusivity",
+			"Follow oneof_groups in resource schemas to ensure only one choice per mutually exclusive group is configured",
+			"Use decision_tree in resource schemas to determine required fields based on configuration choices",
 		},
 	}
 }
