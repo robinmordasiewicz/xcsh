@@ -233,8 +233,24 @@ jobs:
 
             # Staple the notarization ticket to the binary
             # This embeds the ticket so Gatekeeper can verify locally without contacting Apple
+            # Retry up to 5 times as the ticket may take time to propagate to Apple's CDN
             echo "Stapling notarization ticket to binary..."
-            xcrun stapler staple "$BINARY_PATH"
+            staple_retries=5
+            staple_delay=30
+            for attempt in $(seq 1 $staple_retries); do
+              if xcrun stapler staple "$BINARY_PATH"; then
+                echo "Stapling succeeded on attempt $attempt"
+                break
+              fi
+              if [ $attempt -lt $staple_retries ]; then
+                echo "Stapling attempt $attempt failed, waiting ${staple_delay}s for ticket propagation..."
+                sleep $staple_delay
+                staple_delay=$((staple_delay * 2))
+              else
+                echo "ERROR: Stapling failed after $staple_retries attempts"
+                exit 1
+              fi
+            done
 
             # Verify stapling succeeded
             xcrun stapler validate "$BINARY_PATH"
