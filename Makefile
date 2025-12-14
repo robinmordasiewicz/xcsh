@@ -1,7 +1,7 @@
-# vesctl CLI Makefile
+# f5xcctl CLI Makefile
 #
 # Usage:
-#   make build        - Build the vesctl binary for current platform
+#   make build        - Build the f5xcctl binary for current platform
 #   make build-all    - Build binaries for all platforms (linux/darwin/windows)
 #   make test         - Run all tests
 #   make test-unit    - Run unit tests only
@@ -12,8 +12,8 @@
 #   make install      - Install binary to GOPATH/bin
 #   make release-dry  - Test GoReleaser without publishing
 
-BINARY_NAME=vesctl
-MODULE=github.com/robinmordasiewicz/vesctl
+BINARY_NAME=f5xcctl
+MODULE=github.com/robinmordasiewicz/f5xcctl
 VERSION?=$(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 GIT_COMMIT?=$(shell git rev-parse HEAD 2>/dev/null || echo "unknown")
 BUILD_TIME=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
@@ -95,16 +95,16 @@ test-unit:
 # Run integration tests only (requires environment variables)
 test-int: build
 	@echo "Running integration tests..."
-	@if [ -z "$(VES_API_URL)" ]; then \
-		echo "Error: VES_API_URL not set"; \
+	@if [ -z "$(F5XC_API_URL)" ]; then \
+		echo "Error: F5XC_API_URL not set"; \
 		echo ""; \
 		echo "Set these environment variables:"; \
-		echo "  export VES_API_URL=\"https://tenant.staging.volterra.us\""; \
-		echo "  export VES_API_P12_FILE=\"/path/to/cert.p12\""; \
-		echo "  export VES_P12_PASSWORD=\"password\""; \
+		echo "  export F5XC_API_URL=\"https://tenant.staging.volterra.us\""; \
+		echo "  export F5XC_API_P12_FILE=\"/path/to/cert.p12\""; \
+		echo "  export F5XC_P12_PASSWORD=\"password\""; \
 		exit 1; \
 	fi
-	VES_P12_PASSWORD="$(VES_P12_PASSWORD)" go test -v ./tests/integration/...
+	F5XC_P12_PASSWORD="$(F5XC_P12_PASSWORD)" go test -v ./tests/integration/...
 
 # Run tests with coverage
 test-coverage: build
@@ -198,11 +198,11 @@ PYTHON ?= python3
 DOCS_OUTPUT = docs/commands
 DOCS_TEMPLATES = scripts/templates
 
-# Generate documentation from vesctl --spec
+# Generate documentation from f5xcctl --spec
 docs: build
 	@echo "Generating documentation from CLI spec..."
 	@$(PYTHON) scripts/generate-docs.py \
-		--vesctl ./$(BINARY_NAME) \
+		--f5xcctl ./$(BINARY_NAME) \
 		--output $(DOCS_OUTPUT) \
 		--templates $(DOCS_TEMPLATES) \
 		--clean \
@@ -232,7 +232,7 @@ docs: build
 docs-nav: build
 	@echo "Generating navigation structure..."
 	@$(PYTHON) scripts/generate-docs.py \
-		--vesctl ./$(BINARY_NAME) \
+		--f5xcctl ./$(BINARY_NAME) \
 		--nav-only \
 		--update-mkdocs
 	@echo "Navigation updated in mkdocs.yml"
@@ -272,23 +272,23 @@ generate-examples:
 # This creates pkg/types/schemas_generated.go with AI-friendly schema intelligence
 generate-schemas:
 	@echo "Generating resource schemas from OpenAPI specifications..."
-	@go run scripts/generate-schemas.go -v
+	@go run ./cmd/generate-schemas -v
 	@echo "Schema generation complete!"
 
 # Validate schemas without regenerating (useful for CI)
 validate-schemas:
 	@echo "Validating schema generation..."
-	@go run scripts/generate-schemas.go -validate -v
+	@go run ./cmd/generate-schemas -validate -v
 
 # Report missing specs (useful for debugging)
 report-schemas:
 	@echo "Generating schema coverage report..."
-	@go run scripts/generate-schemas.go -report -v
+	@go run ./cmd/generate-schemas -report -v
 
 # Strict schema generation (fails on missing critical resources)
 generate-schemas-strict:
 	@echo "Generating schemas (strict mode)..."
-	@go run scripts/generate-schemas.go -v -strict
+	@go run ./cmd/generate-schemas -v -strict
 
 # Show version info
 version:
@@ -301,7 +301,7 @@ version:
 
 # Show help
 help:
-	@echo "vesctl CLI Makefile"
+	@echo "f5xcctl CLI Makefile"
 	@echo ""
 	@echo "Build Commands:"
 	@echo "  make build          - Build binary for current platform"
@@ -344,9 +344,9 @@ help:
 	@echo "  make watch          - Rebuild on file changes"
 	@echo ""
 	@echo "Environment Variables (for integration tests):"
-	@echo "  VES_API_URL        - API URL"
-	@echo "  VES_API_P12_FILE   - Path to P12 certificate bundle"
-	@echo "  VES_P12_PASSWORD   - Password for P12 bundle"
+	@echo "  F5XC_API_URL        - API URL"
+	@echo "  F5XC_API_P12_FILE   - Path to P12 certificate bundle"
+	@echo "  F5XC_P12_PASSWORD   - Password for P12 bundle"
 	@echo ""
 	@echo "Creating a Release:"
 	@echo "  1. Update version: git tag v1.0.0"

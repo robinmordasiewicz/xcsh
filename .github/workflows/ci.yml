@@ -102,7 +102,7 @@ jobs:
         run: |
           echo "Running schema generation twice to verify idempotency..."
           cp pkg/types/schemas_generated.go /tmp/schemas_first.go
-          go run scripts/generate-schemas.go 2>/dev/null
+          go run ./cmd/generate-schemas 2>/dev/null
           if ! diff -q pkg/types/schemas_generated.go /tmp/schemas_first.go > /dev/null; then
             echo "::error::Schema generation is not idempotent!"
             diff pkg/types/schemas_generated.go /tmp/schemas_first.go
