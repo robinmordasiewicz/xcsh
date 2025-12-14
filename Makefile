@@ -272,7 +272,7 @@ generate-examples:
 # This creates pkg/types/schemas_generated.go with AI-friendly schema intelligence
 generate-schemas:
 	@echo "Generating resource schemas from OpenAPI specifications..."
-	@go run scripts/generate-schemas.go -v
+	@go run scripts/generate-schemas.go -v -update-resources
 	@echo "Schema generation complete!"
 
 # Validate schemas without regenerating (useful for CI)

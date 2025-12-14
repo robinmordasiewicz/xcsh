@@ -19,12 +19,14 @@ import (
 )
 
 var (
-	outputFile    = flag.String("output", "pkg/types/schemas_generated.go", "Output file path")
-	specsDir      = flag.String("specs", "docs/specifications/api", "Directory containing OpenAPI specs")
-	verbose       = flag.Bool("v", false, "Verbose output")
-	strict        = flag.Bool("strict", false, "Fail on critical resource missing specs")
-	validateOnly  = flag.Bool("validate", false, "Validate only, don't write output")
-	reportMissing = flag.Bool("report", false, "Report all missing specs and exit")
+	outputFile      = flag.String("output", "pkg/types/schemas_generated.go", "Output file path")
+	resourcesFile   = flag.String("resources-output", "pkg/types/resources_generated.go", "Resources output file path")
+	specsDir        = flag.String("specs", "docs/specifications/api", "Directory containing OpenAPI specs")
+	verbose         = flag.Bool("v", false, "Verbose output")
+	strict          = flag.Bool("strict", false, "Fail on critical resource missing specs")
+	validateOnly    = flag.Bool("validate", false, "Validate only, don't write output")
+	reportMissing   = flag.Bool("report", false, "Report all missing specs and exit")
+	updateResources = flag.Bool("update-resources", false, "Also regenerate resources_generated.go with full descriptions")
 )
 
 // criticalResources are resources that MUST have schemas generated
@@ -233,6 +235,16 @@ func main() {
 
 	// Final validation
 	validateGeneratedSchemas(schemas)
+
+	// Optionally update resources_generated.go with full descriptions
+	if *updateResources {
+		descriptionMap := buildDescriptionMap(mapper, allResources)
+		if err := writeResourcesFile(*resourcesFile, allResources, descriptionMap); err != nil {
+			fmt.Fprintf(os.Stderr, "Error writing resources file: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Printf("Updated %s with full descriptions\n", *resourcesFile)
+	}
 }
 
 // isCriticalResource checks if a resource is in the critical list
@@ -307,6 +319,20 @@ func validateGeneratedSchemas(schemas map[string]types.ResourceSchemaInfo) {
 	}
 }
 
+// getResourceDescription returns the best available description for a resource.
+// Prefers the OpenAPI info.description (file-level) over schema.description.
+func getResourceDescription(spec *openapi.Spec, schema *openapi.Schema) string {
+	// Prefer info-level description (richer content)
+	if spec.Info.Description != "" {
+		return spec.Info.Description
+	}
+	// Fall back to schema-level description
+	if schema != nil && schema.Description != "" {
+		return schema.Description
+	}
+	return ""
+}
+
 // extractSchemaInfo extracts schema intelligence from an OpenAPI spec
 func extractSchemaInfo(resourceName string, spec *openapi.Spec) *types.ResourceSchemaInfo {
 	// Find the CreateSpecType schema (most complete definition)
@@ -321,7 +347,7 @@ func extractSchemaInfo(resourceName string, spec *openapi.Spec) *types.ResourceS
 
 	info := &types.ResourceSchemaInfo{
 		ResourceName:   resourceName,
-		Description:    schema.Description,
+		Description:    getResourceDescription(spec, schema),
 		Fields:         make(map[string]types.FieldInfo),
 		OneOfGroups:    []types.OneOfGroup{},
 		RequiredFields: schema.Required,
@@ -684,4 +710,137 @@ func escapeString(s string) string {
 // init ensures the package can be built
 func init() {
 	_ = types.All
+}
+
+// buildDescriptionMap creates a map of resource names to their full descriptions from OpenAPI specs
+func buildDescriptionMap(mapper *openapi.SpecMapper, resources []*types.ResourceType) map[string]string {
+	descriptions := make(map[string]string)
+	for _, rt := range resources {
+		spec := mapper.FindSpec(rt.Name)
+		if spec != nil && spec.Info.Description != "" {
+			descriptions[rt.Name] = spec.Info.Description
+		}
+	}
+	return descriptions
+}
+
+// writeResourcesFile generates resources_generated.go with full descriptions
+func writeResourcesFile(outputPath string, resources []*types.ResourceType, descriptions map[string]string) error {
+	// Ensure output directory exists
+	dir := filepath.Dir(outputPath)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return fmt.Errorf("failed to create directory: %w", err)
+	}
+
+	// Sort resources by name for deterministic output
+	sorted := make([]*types.ResourceType, len(resources))
+	copy(sorted, resources)
+	sort.Slice(sorted, func(i, j int) bool {
+		return sorted[i].Name < sorted[j].Name
+	})
+
+	// Create output file
+	f, err := os.Create(outputPath)
+	if err != nil {
+		return fmt.Errorf("failed to create output file: %w", err)
+	}
+	defer f.Close()
+
+	// Write header
+	header := fmt.Sprintf(`package types
+
+// Code generated from OpenAPI specifications. DO NOT EDIT.
+// This file contains %d resource types parsed from F5 XC API specs
+
+func init() {
+	registerGeneratedResources()
+}
+
+func registerGeneratedResources() {
+`, len(resources))
+	if _, err := f.WriteString(header); err != nil {
+		return err
+	}
+
+	// Write each resource
+	for _, rt := range sorted {
+		desc := rt.Description
+		// Use full description from OpenAPI if available
+		if fullDesc, ok := descriptions[rt.Name]; ok && fullDesc != "" {
+			desc = fullDesc
+		}
+
+		if err := writeResourceEntry(f, rt, desc); err != nil {
+			return err
+		}
+	}
+
+	// Write footer
+	footer := `}
+`
+	if _, err := f.WriteString(footer); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// writeResourceEntry writes a single resource registration to the file
+func writeResourceEntry(f *os.File, rt *types.ResourceType, description string) error {
+	// Start the registration
+	entry := fmt.Sprintf(`	Register(&ResourceType{
+		Name:              %q,
+		CLIName:           %q,
+		Description:       %q,
+		APIPath:           %q,
+		SupportsNamespace: %t,
+		Operations:        %s,`,
+		rt.Name,
+		rt.CLIName,
+		escapeString(description),
+		rt.APIPath,
+		rt.SupportsNamespace,
+		formatOperations(rt.Operations),
+	)
+
+	if _, err := f.WriteString(entry); err != nil {
+		return err
+	}
+
+	// Add DeleteConfig if present
+	if rt.DeleteConfig != nil {
+		deleteEntry := fmt.Sprintf(`
+		DeleteConfig: &DeleteConfig{
+			PathSuffix:  %q,
+			Method:      %q,
+			IncludeBody: %t,
+		},`,
+			rt.DeleteConfig.PathSuffix,
+			rt.DeleteConfig.Method,
+			rt.DeleteConfig.IncludeBody,
+		)
+		if _, err := f.WriteString(deleteEntry); err != nil {
+			return err
+		}
+	}
+
+	// Close the registration
+	if _, err := f.WriteString("\n\t})\n\n"); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// formatOperations formats ResourceOperations as Go code
+func formatOperations(ops types.ResourceOperations) string {
+	if ops.Create && ops.Get && ops.List && ops.Update && ops.Delete && ops.Status {
+		return "AllOperations()"
+	}
+	if !ops.Create && ops.Get && ops.List && !ops.Update && !ops.Delete && ops.Status {
+		return "ReadOnlyOperations()"
+	}
+	// Custom operations
+	return fmt.Sprintf("ResourceOperations{Create: %t, Get: %t, List: %t, Update: %t, Delete: %t, Status: %t}",
+		ops.Create, ops.Get, ops.List, ops.Update, ops.Delete, ops.Status)
 }

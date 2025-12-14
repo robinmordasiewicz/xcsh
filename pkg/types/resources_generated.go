@@ -1,7 +1,7 @@
 package types
 
 // Code generated from OpenAPI specifications. DO NOT EDIT.
-// This file contains 269 resource types parsed from F5 XC API specs
+// This file contains 268 resource types parsed from F5 XC API specs
 
 func init() {
 	registerGeneratedResources()
@@ -11,7 +11,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "address_allocator",
 		CLIName:           "address-allocator",
-		Description:       "Address Allocator object is used to allocate an address or a subnet from a given",
+		Description:       "Address Allocator object is used to allocate an address or a subnet from a given address pool.\\nMode of the allocator object determines if the allocation is limited to VERs within the local\\nsite / cluster (local) or if the allocation is across different sites (global). Currently,\\nonly local mode of allocation is supported. The allocator carves out a subnet based on the\\ndefined allocation scheme. For example, allocation scheme might define prefix length of the\\nsubnet to be allocated.",
 		APIPath:           "/api/config/namespaces/{namespace}/address_allocators",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -20,8 +20,44 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "advertise_policy",
 		CLIName:           "advertise-policy",
-		Description:       "advertise_policy object controls how and where a service represented by a given ",
+		Description:       "advertise_policy object controls how and where a service represented by a given virtual_host object is advertised to consumers.\\nBasic concept is a service is made available to consumers in a given virtual_network/site/region(RE).\\n\\nA Service is available to consumers in a given network if there is VIP allocated in the given network and some host is listening on given service port.\\nSo the problem of configuring VIP and Service port is made possible by advertise policy.\\nThere three things to be decided\\n\\n* Network\\n* VIP\\n* Protocol and Port\\n\\nNetwork is decided by a concrete network reference\\nNetwork can be inferred automatically based on site and network type\\nNetwork can be inferred automatically based on all site selected by virtual site and network type\\n\\nVIP can be automatically allocated by the system  or configured.\\nMost of the time VIP is the interface IP of the Application gateway in the given network.\\n\\nEach advertise policy may have its own VIP, TLS parameters, and (Protocol, port) configured or assigned by system.\\nA Advertise Policy can be shared by many Virtual Hosts. A Virtual Host can refer to many Advertise policies.",
 		APIPath:           "/api/config/namespaces/{namespace}/advertise_policys",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "ai_assistant",
+		CLIName:           "ai-assistant",
+		Description:       "Custom handler for ai assistant related microservice",
+		APIPath:           "/api/gen-ai/namespaces/{namespace}/query",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "ai_data_bfdp",
+		CLIName:           "ai-data-bfdp",
+		Description:       "AI Data BFDP operations",
+		APIPath:           "/api/ai_data/bfdp",
+		SupportsNamespace: false,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "ai_data_bfdp_subscription",
+		CLIName:           "ai-data-bfdp-subscription",
+		Description:       "AI Data BFDP subscription management",
+		APIPath:           "/api/ai_data/bfdp/subscription",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "alert",
+		CLIName:           "alert",
+		Description:       "Alert may be generated based on the metrics or based on severity level in the logs. All alerts are scoped by \\ntenant and namespace and tagged with the following default labels that can be used to fetch\\nthe desired alerts.\\n\\n\\\"alertname\\\" - Name of the alert. This uniquely identifies the alert rule/configuration that generated the alert.\\n\\\"type\\\" - Type of the alert. Type is used to associate alert to a configuration object or any user visible entity.\\n         For example, virtual host, virtual network, app_type, etc.\\n\\\"identifier\\\" - Identifier of the alert. For virtual-network, this would be the name of the virtual-network.\\n\\\"severity\\\" - Indicates the severity of the alert. Valid values are minor, major, critical.\\n\\nAlert may have additional labels associated depending on the labels associated with the metric used to configure the alert rule.\\nAlerts can be queried by specifying one or more of the above labels in the match filter.\\nIf the match filter is not specified, then all the alerts for the tenant and corresponding namespace in the request will be returned in the response.",
+		APIPath:           "/api/data/namespaces/{namespace}/alerts",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
 	})
@@ -29,7 +65,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "alert_policy",
 		CLIName:           "alert-policy",
-		Description:       "Alert Policy is used to specify a set of routes to match the incoming alert and ",
+		Description:       "Alert Policy is used to specify a set of routes to match the incoming alert and the set of receivers to\\nsend the alert notification if there is a match.\\nAn Alert policy object defines a node in the Alert policy routing tree. An incoming alert matches the\\nroutes defined in the alert policy in order till a match is found. If the action defined in the matching route is send,\\nthen the alert is sent to all the receivers associated with the alert policy, else the alert is not sent\\nto any receiver.",
 		APIPath:           "/api/config/namespaces/{namespace}/alert_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -38,7 +74,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "alert_receiver",
 		CLIName:           "alert-receiver",
-		Description:       "Alert Receiver is used to specify a receiver (slack, pagerDuty, etc.,) to send t",
+		Description:       "Alert Receiver is used to specify a receiver (slack, pagerDuty, etc.,) to send the alert notifications.\\nAn Alert Receiver may be associated with one or more Alert Policy objects, which defines one or more routes to match\\nthe incoming alert.",
 		APIPath:           "/api/config/namespaces/{namespace}/alert_receivers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -47,7 +83,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "api_credential",
 		CLIName:           "api-credential",
-		Description:       "F5XC supports 2 variation of credentials - ",
+		Description:       "F5XC supports 2 variation of credentials - \\n1. My Credentials or API credentials\\n2. Service Credentials\\n\\nCredentials created via My credential or API credential inherits same user that of the creator\\nand it gets same RBAC applied to the user. So when this credential is used in APIs, it will \\nhave same response/audit as creator of the credential is. Generate this credential if you want to\\nautomate or access APIs via CLI as yourself.\\n\\nservice credential on the other hand will have a separte service user associated and RBAC can be\\nmanaged differently per namespace than that of the original user creating it.\\n\\nFor each these credentials, user can request credential in 3 different formats as required by\\ntheir usecase:\\n\\n* API certificate - a password protected P12 certificate bundle\\n* virtual K8s kubeconfig - a kubeconfig to access a cluster with embedded user access with client certificate.\\n* API token - an easy to use secret that can be send part of HTTP request header Authorization: APIToken <value>",
 		APIPath:           "/api/web/namespaces/{namespace}/api_credentials",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -56,7 +92,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "api_definition",
 		CLIName:           "api-definition",
-		Description:       "The api_definition construct provides a mechanism to create api_groups based on ",
+		Description:       "The api_definition construct provides a mechanism to create api_groups based on referred OpenAPI specs.\\nDefault api_groups, which are built automatically, include a group containing all the operations specified in swaggers; a group defining all possible requests for the given base urls.\\nIn addition, we create default api-groups by a predefined OpenAPI extension, for example  x-volterra-apigroup. http_loadbalancer can refer api_definition object and create access policy rules based on its api-groups.",
 		APIPath:           "/api/config/namespaces/{namespace}/api_definitions",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -65,7 +101,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "api_group",
 		CLIName:           "api-group",
-		Description:       "The api_group construct provides a mechanism to classify the universal set of re",
+		Description:       "The api_group construct provides a mechanism to classify the universal set of request APIs into a much smaller number of logical groups in order to make it\\neasier to author and maintain API level access control policies.\\n\\nA api_group object consists of an unordered list of api group elements. The method and path from the input request API are matched against all elements in\\nan api_group to determine if the request API belongs to the api group in question. The request API belongs to an api group if it matches at least one element\\nin the api group.\\n\\nAn api group object can only be created in the 'shared' namespace of a tenant or in the 'shared' namespace of the ves-io tenant. Input request APIs from a\\ntenant are matched against all api groups in that tenant and in the ves-io tenant to determine the set of api groups for that request. The names of the api\\ngroups to which a given request API belongs are subsequently used as input to to check the api group predicate in a service policy or service policy rule.",
 		APIPath:           "/api/web/namespaces/{namespace}/api_groups",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -74,7 +110,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "api_group_element",
 		CLIName:           "api-group-element",
-		Description:       "A api_group_element object consists of an unordered list of HTTP methods and a p",
+		Description:       "A api_group_element object consists of an unordered list of HTTP methods and a path regular expression. The method and path from the input request API are\\nmatched against all elements in an api_group to determine if the request API belongs to the api group in question. The match of an input request API against\\nan element is considered to be successful if the input method belongs to the list of HTTP methods in the element and the input path matches the path regex in\\nthe element. The request API belongs to an api group if it matches at least one element in the api group.\\n\\nAn api group element object can only be created in the 'shared' namespace of a tenant or in the 'shared' namespace of the ves-io tenant. Note that any given\\nelement can belong to one or more api groups. Input request APIs from a tenant are matched against all api groups in that tenant and in the ves-io tenant to\\ndetermine the set of api groups for that request. The names of the api groups to which a given request API belongs are subsequently used as input to to check\\nthe api group predicate in a service policy or service policy rule.",
 		APIPath:           "/api/web/namespaces/{namespace}/api_group_elements",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -117,9 +153,18 @@ func registerGeneratedResources() {
 	})
 
 	Register(&ResourceType{
+		Name:              "api_sec_rule_suggestion",
+		CLIName:           "api-sec-rule-suggestion",
+		Description:       "API Security rule suggestions",
+		APIPath:           "/api/config/namespaces/{namespace}/rule_suggestions",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
 		Name:              "app_api_group",
 		CLIName:           "app-api-group",
-		Description:       "The app_api_group construct provides a mechanism to classify the universal set o",
+		Description:       "The app_api_group construct provides a mechanism to classify the universal set of request APIs into a much smaller number of logical groups in order\\nto make it easier to author and maintain API level access control policies. The app_api_group holds api_group child object with the same content for\\ninternal use by data path and other services.\\n\\nAn app_api_group object consists of an unordered list of api group elements. The method and path from the input request API are matched against all\\nelements in an app_api_group to determine if the request API belongs to the api group in question. The request API belongs to an api group if it\\nmatches at least one element in the api group.\\n\\nThe App API Group may be created using API Group Builder which defines path filter and label selectors to match\\nAPI Endpoints from a referenced object, like HTTP Loadbalancer. For example, if there is a HTTP LB with API Discovery enabled\\nthen all discovered API Endpoints serve as a base set and filters define which API Endpoints would be the group members.\\n\\n The view creates the following child objects:\\n * api_group",
 		APIPath:           "/api/config/namespaces/{namespace}/app_api_groups",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -135,9 +180,18 @@ func registerGeneratedResources() {
 	})
 
 	Register(&ResourceType{
+		Name:              "app_security",
+		CLIName:           "app-security",
+		Description:       "API to create API endpoint protection rule suggestion from App Security Monitoring pages",
+		APIPath:           "/api/config/namespaces/{namespace}/app_securitys",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
 		Name:              "app_setting",
 		CLIName:           "app-setting",
-		Description:       "\"App Setting\" controls advanced monitoring of applications defined by \"App type\"",
+		Description:       "\\\"App Setting\\\" controls advanced monitoring of applications defined by \\\"App type\\\". This configuration is per namespace.\\nThere is only one App Setting per namespace. It has list of references to \\\"App type\\\" objects for which various\\nanomaly detection algorithms can be enabled.",
 		APIPath:           "/api/config/namespaces/{namespace}/app_settings",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -146,7 +200,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "app_type",
 		CLIName:           "app-type",
-		Description:       "App Type object defines a application profile type from an advanced monitoring/s",
+		Description:       "App Type object defines a application profile type from an advanced monitoring/security point of view.\\nAn App type is a set of (micro) services that interact with one another and function as an application.\\nServices can be made members of a particular AppType set by adding label ves.io/app_type=app_type.metadata.name to services.\\nApp type object is the profile for one such application label. One can define various AI/ML features that can\\nbe enabled for a given application in this object. All services in a given namespace that are labeled with\\nsame ves.io/app_type label are assumed to be a single application. In a different namespace as two different\\ninstances of same application.\\napp_type object is recommended per tenant and present only in shared namespace.\\nThis way AI/ML modeled developed for a given application can be shared across namespaces or deployments.\\napp_setting object can be used to enable a app_type monitoring profile in a given namespace.",
 		APIPath:           "/api/config/namespaces/{namespace}/app_types",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -155,7 +209,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "authentication",
 		CLIName:           "authentication",
-		Description:       "Authentication Object contains authentication specific config . This includes",
+		Description:       "Authentication Object contains authentication specific config . This includes\\nauthentication type config, config specific to each authentication type and cookie specific paramters",
 		APIPath:           "/api/config/namespaces/{namespace}/authentications",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -164,7 +218,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "aws_tgw_site",
 		CLIName:           "aws-tgw-site",
-		Description:       "AWS TGW site view defines a required parameters that can be used in CRUD, to cre",
+		Description:       "AWS TGW site view defines a required parameters that can be used in CRUD, to create and manage a volterra site in AWS VPC.\\nIt can be used to automatically site creation in the AWS TGW.\\n\\nView will create following child objects.\\n\\n* Site",
 		APIPath:           "/api/config/namespaces/{namespace}/aws_tgw_sites",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -173,7 +227,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "aws_vpc_site",
 		CLIName:           "aws-vpc-site",
-		Description:       "AWS VPC site view defines a required parameters that can be used in CRUD, to cre",
+		Description:       "AWS VPC site view defines a required parameters that can be used in CRUD, to create and manage a volterra site in AWS VPC.\\nIt can be used to automatically site creation in the AWS VPC.\\n\\nView will create following child objects.\\n\\n* Site",
 		APIPath:           "/api/config/namespaces/{namespace}/aws_vpc_sites",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -182,7 +236,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "azure_vnet_site",
 		CLIName:           "azure-vnet-site",
-		Description:       "Azure VNet site view defines a required parameters that can be used in CRUD, to ",
+		Description:       "Azure VNet site view defines a required parameters that can be used in CRUD, to create and manage a volterra site in Azure VNet.\\nIt can be used to automatically site creation in the Azure VNet.\\n\\nView will create following child objects.\\n\\n* Site",
 		APIPath:           "/api/config/namespaces/{namespace}/azure_vnet_sites",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -191,7 +245,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "bgp",
 		CLIName:           "bgp",
-		Description:       "BGP object represents configuration of bgp protocol on given network interface o",
+		Description:       "BGP object represents configuration of bgp protocol on given network interface on customer edge site.\\nIt is template configuration that can be applied on a set of sites represented by list of sites or virtual sites.\\nBGP can be primarily used to advertise a common Virtual IP (VIP) for all nodes in a cluster for given site.\\nIt can be used on outside interface or inside interface.\\nBGP peer address for this object can be a template and values are provided per site object.",
 		APIPath:           "/api/config/namespaces/{namespace}/bgps",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -200,7 +254,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "bgp_asn_set",
 		CLIName:           "bgp-asn-set",
-		Description:       "An unordered set of RFC 6793 defined 4-byte AS numbers that can be used to creat",
+		Description:       "An unordered set of RFC 6793 defined 4-byte AS numbers that can be used to create whitelists or blacklists for use in network policy or service policy. The\\nsource or destination public IP address from the input packet/message is used as the key to lookup a GeoIP database in order to determine the origin ASN for\\nthe IP address.",
 		APIPath:           "/api/config/namespaces/{namespace}/bgp_asn_sets",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -209,7 +263,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "bgp_routing_policy",
 		CLIName:           "bgp-routing-policy",
-		Description:       "BGP Routing Policy is a list of rules, which contains match criteria and",
+		Description:       "BGP Routing Policy is a list of rules, which contains match criteria and\\naction to be taken upon match. This helps in filtering routes which are\\nexported or imported by BGP peers",
 		APIPath:           "/api/config/namespaces/{namespace}/bgp_routing_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -243,18 +297,45 @@ func registerGeneratedResources() {
 	})
 
 	Register(&ResourceType{
+		Name:              "bigip_irule",
+		CLIName:           "bigip-irule",
+		Description:       "BIG-IP iRule Service manages iRule Library for customers",
+		APIPath:           "/api/bigipconnector/namespaces/{namespace}/bigip_irules",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
 		Name:              "bigip_virtual_server",
 		CLIName:           "bigip-virtual-server",
-		Description:       "BIG-IP virtual server view repesents the internal virtual host corresponding to ",
+		Description:       "BIG-IP virtual server view repesents the internal virtual host corresponding to the virtual-servers discovered from BIG-IPs\\nIt exposes parameters to enable API discovery and other WAAP security features on the virtual server.\\n\\nView will create following child objects.\\n\\n* Virtual-host\\n* API-inventory\\n* App-type\\n* App-setting",
 		APIPath:           "/api/config/namespaces/{namespace}/bigip_virtual_servers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
 	})
 
 	Register(&ResourceType{
+		Name:              "billing_payment_method",
+		CLIName:           "billing-payment-method",
+		Description:       "Billing payment method management",
+		APIPath:           "/api/web/namespaces/{namespace}/payment_methods",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: true, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "billing_plan_transition",
+		CLIName:           "billing-plan-transition",
+		Description:       "Billing plan transition management",
+		APIPath:           "/api/web/namespaces/{namespace}/plan_transitions",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
 		Name:              "bot_defense_app_infrastructure",
 		CLIName:           "bot-defense-app-infrastructure",
-		Description:       "Bot Defense App Infrastructure is the main configuration for a Bot Defense Advan",
+		Description:       "Bot Defense App Infrastructure is the main configuration for a Bot Defense Advanced Integration.\\nIt is intended to be created per tenant.\\nIt defines various configuration parameters needed to use Bot Defense Advanced SSEs.",
 		APIPath:           "/api/config/namespaces/{namespace}/bot_defense_app_infrastructures",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -263,7 +344,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "cdn_cache_rule",
 		CLIName:           "cdn-cache-rule",
-		Description:       "CDN cache rule view defines a required parameters that can be used in CRUD, to c",
+		Description:       "CDN cache rule view defines a required parameters that can be used in CRUD, to create and manage CDN cache rule.\\nIt can be used to create CDN cache rule.",
 		APIPath:           "/api/config/namespaces/{namespace}/cdn_cache_rules",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -272,7 +353,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "cdn_loadbalancer",
 		CLIName:           "cdn-loadbalancer",
-		Description:       "CDN Loadbalancer view defines a required parameters that can be used in CRUD, to",
+		Description:       "CDN Loadbalancer view defines a required parameters that can be used in CRUD, to create and manage CDN loadbalancer.\\nIt can be used to create CDN loadbalancer and HTTPS loadbalancer.\\n\\nView will create following child objects.\\n\\n* Virtual-host\\n* routes\\n* endpoints\\n* advertise policy",
 		APIPath:           "/api/config/namespaces/{namespace}/cdn_loadbalancers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -290,7 +371,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "certificate_chain",
 		CLIName:           "certificate-chain",
-		Description:       "Certificate chain is list of certificates used to establish chain of trust from ",
+		Description:       "Certificate chain is list of certificates used to establish chain of trust from server or client certificate to trusted CA root certificates.",
 		APIPath:           "/api/config/namespaces/{namespace}/certificate_chains",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -299,7 +380,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "certified_hardware",
 		CLIName:           "certified-hardware",
-		Description:       "Certified Hardware object represents physical hardware or cloud instance type th",
+		Description:       "Certified Hardware object represents physical hardware or cloud instance type that will be used to instantiate\\na volterra software appliance instance for the F5XC sites (Customer edge site). It has following information\\n  *  Type\\n  *  Vendor\\n  *  Model\\n  *  List of devices supported\\n  *  Image name\\n  *  Latest image release as status\\nCertified Hardware objects are only available in volterra shared namespace (ves-io/shared).\\nThese are created by volterra. It serves following purpose.\\n\\n  *  Let user know supported hardware and devices on given hardware.\\n\\n  *  How they are used and configured at boot strap\\n\\n  *  Image in which boot strap config  and any custom scripts are bundled\\n\\nThis is required so that zero touch provisioning would work. If a generic image is used then, user will have to login into the hardware and\\nprovide bootstrap config.",
 		APIPath:           "/api/config/namespaces/{namespace}/certified_hardwares",
 		SupportsNamespace: true,
 		Operations:        ReadOnlyOperations(),
@@ -317,7 +398,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "cloud_credentials",
 		CLIName:           "cloud-credentials",
-		Description:       "",
+		Description:       "\\nCloud Credentials object is used to give user cloud credentials to public cloud like\\nAWS, Azure and GCP. These credentials can then be used by different features in volterra\\nto perform cloud API(s) on users behalf.",
 		APIPath:           "/api/config/namespaces/{namespace}/cloud_credentialss",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -326,7 +407,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "cloud_elastic_ip",
 		CLIName:           "cloud-elastic-ip",
-		Description:       "Cloud Elastic IP object represents a cloud elastic IP address that are created f",
+		Description:       "Cloud Elastic IP object represents a cloud elastic IP address that are created for a cloud site",
 		APIPath:           "/api/config/namespaces/{namespace}/cloud_elastic_ips",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -335,7 +416,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "cloud_link",
 		CLIName:           "cloud-link",
-		Description:       "CloudLink is used to establish private connectivity from customer network to Clo",
+		Description:       "CloudLink is used to establish private connectivity from customer network to Cloud Sites or private connectivity from\\nF5 XC Regional Edge(RE) to customer Cloud Sites",
 		APIPath:           "/api/config/namespaces/{namespace}/cloud_links",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -344,7 +425,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "cloud_region",
 		CLIName:           "cloud-region",
-		Description:       "Cloud Region contains tenant specific configuration",
+		Description:       "Cloud Region contains tenant specific configuration\\nobject. Users cannot create/delete these objects. They will be internally created\\nor deleted whenever the corresponding cloud_region_region object is created/deleted \\nand possibly based on tenant configuration (e.g. Cloud Region feature may be disabled\\nfor some tenants)",
 		APIPath:           "/api/config/namespaces/{namespace}/cloud_regions",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -353,7 +434,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "cluster",
 		CLIName:           "cluster",
-		Description:       "cluster object represent common set of endpoints (providers of service) that can",
+		Description:       "cluster object represent common set of endpoints (providers of service) that can serve given route for virtual_host\\nCluster has list of references to Endpoint which forms the set\\nCluster has common properties for this collection\\n * Reference to healthcheck object\\n * load balancer algorithm\\n * Circuit breaker based on\\n    * Number of concurrent connections\\n    * Outstanding requests\\n    * Number of retries\\n * Subset of endpoints\\n * TLS parameter for the endpoints\\n * Protocol Timeouts",
 		APIPath:           "/api/config/namespaces/{namespace}/clusters",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -362,7 +443,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "cminstance",
 		CLIName:           "cminstance",
-		Description:       "cminsatnce object can be used to enable connectivity between ce site and bigip c",
+		Description:       "cminsatnce object can be used to enable connectivity between ce site and bigip central manager.",
 		APIPath:           "/api/config/namespaces/{namespace}/cminstances",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -371,7 +452,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "contact",
 		CLIName:           "contact",
-		Description:       "Customer or tenant contact details.",
+		Description:       "Customer or tenant contact details.\\nThese details allows sending emails or regular mails to a customer.\\nCustomer can have many contacts and they come in two flavors:\\n* billing - used for invoicing\\n* mailing - used for general communication\\ninitially this information comes from the signup object, customers can later amend it in the admin UI.",
 		APIPath:           "/api/web/namespaces/{namespace}/contacts",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -389,7 +470,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "crl",
 		CLIName:           "crl",
-		Description:       "",
+		Description:       "\\nCertificate Revocation List(CRL)\\n\\nIt contains information about CRL server and how to download the CRL file\\nCRL file is used to validate the certificate presented to check whether it is revoked or not.\\nClients offerring revoked certificate will not be allowed to access the HTTP Loadbalancer.\\nCRL file is downloaded/refreshed based on the refresh interval.",
 		APIPath:           "/api/config/namespaces/{namespace}/crls",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -398,10 +479,19 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "customer_support",
 		CLIName:           "customer-support",
-		Description:       "Handles creation and listing of support issues (by tenant and user).",
+		Description:       "Handles creation and listing of support issues (by tenant and user).\\nCurrently supported operations are:\\n* create - to create a support request\\n* list - to query for all issues created by a customer\\nall other operations are taken care of off-the-system (via email or phone calls)",
 		APIPath:           "/api/web/namespaces/{namespace}/customer_supports",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "data_privacy_geo_config",
+		CLIName:           "data-privacy-geo-config",
+		Description:       "Data privacy geo configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/geo_configs",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
 	})
 
 	Register(&ResourceType{
@@ -416,7 +506,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "data_type",
 		CLIName:           "data-type",
-		Description:       "A data_type is defined by a set of rules. these rules include the patterns for w",
+		Description:       "A data_type is defined by a set of rules. these rules include the patterns for which that data type will be detected.\\nA data type also includes information like it's related compliances weather is sensitive data and is it also pii.\\nA data type is either predefined - defined in system. or custom - defined by the user.",
 		APIPath:           "/api/config/namespaces/{namespace}/data_types",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -425,16 +515,25 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "dc_cluster_group",
 		CLIName:           "dc-cluster-group",
-		Description:       "A DC Cluster Group represents a collection of sites that",
+		Description:       "A DC Cluster Group represents a collection of sites that\\ncan directly communicate with each other using the underlay network.",
 		APIPath:           "/api/config/namespaces/{namespace}/dc_cluster_groups",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
 	})
 
 	Register(&ResourceType{
+		Name:              "discovered_service",
+		CLIName:           "discovered-service",
+		Description:       "Discovered Services represents the services (virtual-servers, k8s services, etc) which are discovered via the different discovery workflows.\\n\\npackage for Discovered Services",
+		APIPath:           "/api/config/namespaces/{namespace}/discovered_services",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
 		Name:              "discovery",
 		CLIName:           "discovery",
-		Description:       "Service discovery in F5XC performs following",
+		Description:       "Service discovery in F5XC performs following\\n\\nDynamic service discovery: Resolving the load balancer endpoints for a ADC cluster\\nDynamic VIP discovery: Publishing virtual IP to attract traffic from clients",
 		APIPath:           "/api/config/namespaces/{namespace}/discoverys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -443,7 +542,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "dns_compliance_checks",
 		CLIName:           "dns-compliance-checks",
-		Description:       "DNS Compliance Checks view defines the required parameters that can be used in C",
+		Description:       "DNS Compliance Checks view defines the required parameters that can be used in CRUD, to create and manage DNS Compliance Checks.\\nIt can be used to create DNS Compliance Checks.",
 		APIPath:           "/api/config/namespaces/{namespace}/dns_compliance_checkss",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -452,16 +551,70 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "dns_domain",
 		CLIName:           "dns-domain",
-		Description:       "DNS Domain object is used for delegating DNS sub domain to volterra. It can also",
+		Description:       "DNS Domain object is used for delegating DNS sub domain to volterra. It can also be\\nused to just let volterra know about a verified sub domain that can be used for different types of\\nload balancers\\n\\nUser configures domain \\\"example.com\\\"\\n\\nStatus for this object will show following\\n\\n* TXT RECORD value string\\n* Verification Pending\\n\\nThis TXT record value string is then programed into users DNS provider. F5XC then will verify the DNS sub domain\\nAnd status will change to\\n\\n* List of nameservers\\n* Verification successful\\n\\nUsers can then Program the DNS provided with NS record for the sub domain",
 		APIPath:           "/api/config/namespaces/{namespace}/dns_domains",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
 	})
 
 	Register(&ResourceType{
+		Name:              "dns_lb_health_check",
+		CLIName:           "dns-lb-health-check",
+		Description:       "DNS Load Balancer Health Check object is used for configuring DNS Load Balancer Health Checks",
+		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_lb_health_checks",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "dns_lb_pool",
+		CLIName:           "dns-lb-pool",
+		Description:       "DNS Load Balancer Pool  object is used for configuring DNS Load Balancer Pool",
+		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_lb_pools",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "dns_load_balancer",
+		CLIName:           "dns-load-balancer",
+		Description:       "DNS Load Balancer Record is used for configuring DNS Load Balancer for a record.",
+		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_load_balancers",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "dns_zone",
+		CLIName:           "dns-zone",
+		Description:       "DNS Zone object is used for configuring Primary and Secondary DNS zones.\\n\\nUser configures zone \\\"example.com\\\"\\n\\nStatus for this object will show following\\n\\n* List of nameservers\\n\\nUser can configure DNS records for a Primary zone and a Secondary zone will\\ntransfer the DNS records from the primary DNS servers.",
+		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_zones",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "dns_zone_rrset",
+		CLIName:           "dns-zone-rrset",
+		Description:       "DNS zone resource record set management",
+		APIPath:           "/api/config/dns/dns_zones/{dns_zone_name}/rrsets",
+		SupportsNamespace: false,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "dns_zone_subscription",
+		CLIName:           "dns-zone-subscription",
+		Description:       "DNS zone subscription management",
+		APIPath:           "/api/config/dns/subscription",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
 		Name:              "endpoint",
 		CLIName:           "endpoint",
-		Description:       "Endpoint object represent the actual endpoint that provides the service (Origin ",
+		Description:       "Endpoint object represent the actual endpoint that provides the service (Origin Server).\\nSometimes due to dynamic discovery of the endpoints, single endpoint object may result in\\nmultiple actual discovered endpoints",
 		APIPath:           "/api/config/namespaces/{namespace}/endpoints",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -470,7 +623,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "enhanced_firewall_policy",
 		CLIName:           "enhanced-firewall-policy",
-		Description:       "Enhanced Firewall Policy defined firewall rules applied in the site",
+		Description:       "Enhanced Firewall Policy defined firewall rules applied in the site\\nEnhanced Firewall Policy defines rules in the form or 5 tuple,\\n<source, source-port, destination, destination-port, protocol>\\n\\nWhere,\\nsource : source can be specified in the form of\\n  - ip-address or ip-subnet to be matched with source-ip in packet\\n  - labels associated with the source of packet\\n  - tags associated with the source vpc, from where the packet originates\\n  - vpc-id for the source address\\nsource attributes are matched before any NAT processing of the packet\\n\\nsource-port: matches the source-port in the packet\\n\\ndestination: destination can be specified in the form of\\n  - ip-address or ip-subnet to be matched with destination-ip in packet\\n  - labels associated with the destination of packet\\n  - tags associated with the destination vpc, to where the packet is sent\\n  - vpc for the source address\\n\\ndestination-port: matches the destination-port in the packet\\n\\nprotocol: protocol of the IP packet\\n\\nThe Enhanced Firewall Policies are applied as part of route processing\\nThe policies are always applied before any NAT processing so that source\\nmatching always happens on the original packet",
 		APIPath:           "/api/config/namespaces/{namespace}/enhanced_firewall_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -479,7 +632,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "external_connector",
 		CLIName:           "external-connector",
-		Description:       "External Connector configuration mainly includes the following:",
+		Description:       "External Connector configuration mainly includes the following:\\n1. Tunnel connfiguration between F5 CE and external (3rd party) device\\n2. Tunnel specific parameters (IPSec, GRE)",
 		APIPath:           "/api/config/namespaces/{namespace}/external_connectors",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -488,7 +641,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "fast_acl",
 		CLIName:           "fast-acl",
-		Description:       "Fast ACL provides destination and specifies rules to protect the site from denia",
+		Description:       "Fast ACL provides destination and specifies rules to protect the site from denial of service attacks.\\n  - It is specified in terms of five tuple of the packet {destination ip, destination port, source ip, source port, protocol}.\\n  - Fast ACL provides destination IP and port with protocol while Fast ACL rules in ACL provide source IP, port and action\\n  - Destination is always provided as a combination of destination IP and port\\n\\nTypical Usecase(s) are:\\n  - Rate-limiting traffic to destination\\n  - Accepting traffic from certain source IPs to destination\\n  - Ratelimiting or dropping traffic from source IPs to destination\\n\\nThese ACL rules are applied at very early stage in datapath ingress processing and form\\nfirst line of defence against attack. These rules are evaluated for each packet coming in to the system (ingress),\\nunlike session based ACL where action is calculated only on first packet in session.\\n\\nFast ACL picks source based on Longest prefix match for faster processing, which differs\\nfrom traditional ACL where rules are evaluated in order. If none of the rule matches\\nthen default action is to forward the packet\\n\\nFast ACL on a customer edge(CE) Site\\n\\nFast ACL is selected from Fast ACL set on CE Site based on Fleet Configuration. Fast ACL set matching following condition are applied on a CE site\\n- Fast ACL set to which this Fast ACL belong is referred to by a Network Firewall\\n- Network Firewall is referred to by a Fleet\\n- CE site is member of the Fleet\\n- Only tenant can configure the set\\n- Network type supported are Site Local and Site Local Inside. Any other network type is not valid on CE\\n\\nSelection of Destination\\n- Tenant can choose VIP(s) or interface IP(configured as VIP) via Fast ACL\\n\\n Fast ACL on RE\\n\\n- Fast ACL is picked from RE Fast ACL sets and can be defined by tenants for the public VIP(s)\\n- Network type supported for RE is Public. Sets with Fast ACL with any other network type will be rejected\\n\\nSelection of public VIP destination\\n- tenant ACL can pick VIP corresponding to tenant only\\nSelection of shared VIP destination\\n- tenant CANNOT use this option on RE.\\nCustom prefixes destination\\n- tenant CANNOT use this option on RE.\\nShared VIP services\\n- tenant CANNOT use this option, is only meant for volterra administrators\\n\\n Default Protocol Policer\\n\\n- Is valid on CE and RE and configurable by any tenant\\n- Used for rate limiting\\n- Applied when none of the source rules match\\n- Protocols supported are ICMP, TCP, UDP, DNS",
 		APIPath:           "/api/config/namespaces/{namespace}/fast_acls",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -497,7 +650,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "fast_acl_rule",
 		CLIName:           "fast-acl-rule",
-		Description:       " Fast ACL rule",
+		Description:       " Fast ACL rule\\nRule consists of following:\\n  1. Protocol to match from packet\\n  2. List of source IP prefixes or a reference to IP prefix set, to which\\n     source IP in packet should belong to.\\n  3. Action to be applied if above fields match\\n    `fast_acl` object would refer to `fast_acl_rule`, both objects together provides a\\n    five tuple {destination ip, destination port, source ip, source port, protocol} to match\\n    and an action to be applied. In five tuple rule provides source IP, source port and action\\n\\nSupported actions are:\\n- Allow\\n- Deny\\n- Policer - Rate limit using policer defined\\n- Protocol Policer - Rate limit for various protocol type. Supported protocols are tcp, udp, icmp, dns",
 		APIPath:           "/api/config/namespaces/{namespace}/fast_acl_rules",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -506,7 +659,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "filter_set",
 		CLIName:           "filter-set",
-		Description:       "Filter Set is a set of saved filtering criteria used in the Console. This allows",
+		Description:       "Filter Set is a set of saved filtering criteria used in the Console. This allows users to declare\\nnamed sets of filters so that they can be consistently used and shared to quickly reactivate a\\nparticular view of the data in the Console.\\n\\nAny Filter Set created by a tenant should not have a value starting with \\\"ves-io-\\\"",
 		APIPath:           "/api/config/namespaces/{namespace}/filter_sets",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -515,10 +668,19 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "fleet",
 		CLIName:           "fleet",
-		Description:       "",
+		Description:       "\\nFleet is used to configure infrastructure components (like nodes) in one or\\nmore F5XC customer edge sites homogeneously. Fleet configuration has\\nfollowing information,\\n  * Software image release to be deployed on the fleet\\n  * List of devices to be configured on every node\\n  * Connections between the virtual networks in the site\\n  * Security policies applied in the site\\n\\nFleet object must be created in the \\\"system\\\" namespace for the tenant\\n\\nAssociating Fleet with Site\\n\\nFleet has a field called \\\"fleet_label\\\". When a fleet object is created, system automatically creates a known_label\\n\\\"ves.io/fleet=<fleet_label>\\\". The known_label is created in the \\\"shared\\\" namespace for the tenant.\\nA site is made \\\"member of fleet\\\" when this known_label is added to the site. A site can have at most one known_label\\nof type \\\"ves.io/fleet\\\" and hence belongs to exactly one fleet at any given time.\\n\\nWhen a site becomes member of fleet, all nodes in site also become \\\"member of fleet\\\". The fleet configuration\\nis applied on all nodes that are member of the fleet.\\n\\nFleet and Virtual Site\\n\\nBoth Fleet and Virtual Sites select a list of sites based on the labels. But, there is a major difference between\\nvirtual_site and Fleet. Virtual_sites are intersecting sub sets of available sites. Fleet is non intersecting subset\\nof available sites compared to other Fleets. As a result, at most one Fleet configuration if applied on a Site.\\n\\nHowever to enable other features like monitoring, deploying application or jobs on sites represented by fleet,\\nsystem will automatically create a virtual_site in shared namespace representing all sites in a fleet.",
 		APIPath:           "/api/config/namespaces/{namespace}/fleets",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "flow",
+		CLIName:           "flow",
+		Description:       "APIs to get Flow records and data",
+		APIPath:           "/api/data/namespaces/{namespace}/flows",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
 	})
 
 	Register(&ResourceType{
@@ -533,7 +695,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "forward_proxy_policy",
 		CLIName:           "forward-proxy-policy",
-		Description:       "Forward Proxy policy defines access control rules for connections going via forw",
+		Description:       "Forward Proxy policy defines access control rules for connections going via forward\\nProxy. It is view type of config object that uses service policy mechanism to achieve\\nRequired functionality.\\n\\nView will create following child objects.\\n\\n* Service Policy\\n* Service Policy Rule",
 		APIPath:           "/api/config/namespaces/{namespace}/forward_proxy_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -542,7 +704,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "forwarding_class",
 		CLIName:           "forwarding-class",
-		Description:       "In Policy Based Routing(forwarding) (PBR) PBR policy can select Forwarding Class",
+		Description:       "In Policy Based Routing(forwarding) (PBR) PBR policy can select Forwarding Class object as action\\nWhen match condition is satisfied(true).\\nForwarding class determines three things:\\n\\n  Ordered list of interface priorities. All matching interfaces of given priority are treated as ECMP.\\n\\n  Outgoing Queue on selected interface and value of TOS bits on the packet\\n\\n  Optional policer for all traffic matching this class",
 		APIPath:           "/api/config/namespaces/{namespace}/forwarding_classs",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -551,19 +713,73 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "gcp_vpc_site",
 		CLIName:           "gcp-vpc-site",
-		Description:       "GCP VPC site view defines a required parameters that can be used in CRUD, to cre",
+		Description:       "GCP VPC site view defines a required parameters that can be used in CRUD, to create and manage a volterra site in GCP VPC.\\nIt can be used to automatically site creation in the GCP VPC.",
 		APIPath:           "/api/config/namespaces/{namespace}/gcp_vpc_sites",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
 	})
 
 	Register(&ResourceType{
+		Name:              "geo_location_set",
+		CLIName:           "geo-location-set",
+		Description:       "Defines the geo_location_set created by user",
+		APIPath:           "/api/config/namespaces/{namespace}/geo_location_sets",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "gia",
+		CLIName:           "gia",
+		Description:       "GIA operations",
+		APIPath:           "/api/config/namespaces/system/gias",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: true, Status: false},
+	})
+
+	Register(&ResourceType{
 		Name:              "global_log_receiver",
 		CLIName:           "global-log-receiver",
-		Description:       "Global Log Receiver is used to specify a receiver (s3 bucket, etc.) for periodic",
+		Description:       "Global Log Receiver is used to specify a receiver (s3 bucket, etc.) for periodic streaming of access logs",
 		APIPath:           "/api/config/namespaces/{namespace}/global_log_receivers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "graph_connectivity",
+		CLIName:           "graph-connectivity",
+		Description:       "Connectivity graph analysis",
+		APIPath:           "/api/graph/namespaces/{namespace}/connectivity",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "graph_l3l4",
+		CLIName:           "graph-l3l4",
+		Description:       "L3/L4 topology graph",
+		APIPath:           "/api/graph/namespaces/{namespace}/l3l4",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "graph_service",
+		CLIName:           "graph-service",
+		Description:       "Service graph queries",
+		APIPath:           "/api/graph/namespaces/{namespace}/services",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "graph_site",
+		CLIName:           "graph-site",
+		Description:       "Site topology graph",
+		APIPath:           "/api/graph/namespaces/{namespace}/sites",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -578,26 +794,8 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "http_loadbalancer",
 		CLIName:           "http-loadbalancer",
-		Description:       "HTTP Load Balancer view defines a required parameters that can be used in CRUD, ",
+		Description:       "HTTP Load Balancer view defines a required parameters that can be used in CRUD, to create and manage HTTP Load Balancer.\\nIt can be used to create HTTP Load Balancer and HTTPS Load Balancer.\\n\\nView will create following child objects.\\n\\n* virtual_host\\n* routes\\n* clusters\\n* endpoints\\n* advertise_policy",
 		APIPath:           "/api/config/namespaces/{namespace}/http_loadbalancers",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "ike_phase1_profile",
-		CLIName:           "ike-phase1-profile",
-		Description:       "IKE Phase1 profile mainly includes the following",
-		APIPath:           "/api/config/namespaces/{namespace}/ike_phase1_profiles",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "ike_phase2_profile",
-		CLIName:           "ike-phase2-profile",
-		Description:       "IKE Phase2 profile mainly includes the following",
-		APIPath:           "/api/config/namespaces/{namespace}/ike_phase2_profiles",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
 	})
@@ -605,7 +803,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "ike1",
 		CLIName:           "ike1",
-		Description:       "IKE Phase1 profile mainly includes the following",
+		Description:       "IKE Phase1 profile mainly includes the following\\n1. Encryption protocols to be used for IKE SA\\n2. Authentication Protocols to be used for IKE SA\\n3. DH group\\n4. PRF\\n5. Key lifetime etc",
 		APIPath:           "/api/config/namespaces/{namespace}/ike1s",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -614,8 +812,26 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "ike2",
 		CLIName:           "ike2",
-		Description:       "IKE Phase2 profile mainly includes the following",
+		Description:       "IKE Phase2 profile mainly includes the following\\n1. Encryption protocols to be used for IKE SA\\n2. Authentication Protocols to be used for IKE SA\\n3. DH group (if PFS is enabled)\\n4. Key lifetime etc",
 		APIPath:           "/api/config/namespaces/{namespace}/ike2s",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "ike_phase1_profile",
+		CLIName:           "ike-phase1-profile",
+		Description:       "IKE Phase1 profile mainly includes the following\\n1. Encryption protocols to be used for IKE SA\\n2. Authentication Protocols to be used for IKE SA\\n3. DH group\\n4. PRF\\n5. Key lifetime etc",
+		APIPath:           "/api/config/namespaces/{namespace}/ike_phase1_profiles",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "ike_phase2_profile",
+		CLIName:           "ike-phase2-profile",
+		Description:       "IKE Phase2 profile mainly includes the following\\n1. Encryption protocols to be used for IKE SA\\n2. Authentication Protocols to be used for IKE SA\\n3. DH group (if PFS is enabled)\\n4. Key lifetime etc",
+		APIPath:           "/api/config/namespaces/{namespace}/ike_phase2_profiles",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
 	})
@@ -623,16 +839,106 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "implicit_label",
 		CLIName:           "implicit-label",
-		Description:       "Implicit labels are attached to objects implicitly by the system. Users are not ",
+		Description:       "Implicit labels are attached to objects implicitly by the system. Users are not allowed to create/update/delete these labels\\nThey are also not allowed to attach/detach these labels to objects. This API is provided to get the implicit labels available\\nto be used in service-policies",
 		APIPath:           "/api/config/namespaces/system/implicit_labels",
 		SupportsNamespace: false,
 		Operations:        ReadOnlyOperations(),
 	})
 
 	Register(&ResourceType{
+		Name:              "infraprotect",
+		CLIName:           "infraprotect",
+		Description:       "APIs to get monitoring data for infraprotect.",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotects",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_asn",
+		CLIName:           "infraprotect-asn",
+		Description:       "DDoS transit ASN information",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_asns",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_asn_prefix",
+		CLIName:           "infraprotect-asn-prefix",
+		Description:       "DDoS transit Prefix Information",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_asn_prefixs",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_deny_list_rule",
+		CLIName:           "infraprotect-deny-list-rule",
+		Description:       "DDoS transit Deny List Rule information",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_deny_list_rules",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_firewall_rule",
+		CLIName:           "infraprotect-firewall-rule",
+		Description:       "DDoS transit Firewall Rule",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_firewall_rules",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_firewall_rule_group",
+		CLIName:           "infraprotect-firewall-rule-group",
+		Description:       "DDoS transit Firewall Rule Group",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_firewall_rule_groups",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_firewall_ruleset",
+		CLIName:           "infraprotect-firewall-ruleset",
+		Description:       "DDoS transit Firewall Ruleset",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_firewall_rulesets",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: false, Get: true, List: true, Update: true, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_information",
+		CLIName:           "infraprotect-information",
+		Description:       "Infraprotect information about the current organisation",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_informations",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_internet_prefix_advertisement",
+		CLIName:           "infraprotect-internet-prefix-advertisement",
+		Description:       "DDoS transit Internet Prefix information",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_internet_prefix_advertisements",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "infraprotect_tunnel",
+		CLIName:           "infraprotect-tunnel",
+		Description:       "DDoS transit tunnel information",
+		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_tunnels",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
 		Name:              "ip_prefix_set",
 		CLIName:           "ip-prefix-set",
-		Description:       "An ip prefix set contains an unordered list of IP prefixes. It can can be used t",
+		Description:       "An ip prefix set contains an unordered list of IP prefixes. It can can be used to whitelist or blacklist specific IP prefixes via network policy or service policy.",
 		APIPath:           "/api/config/namespaces/{namespace}/ip_prefix_sets",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -641,7 +947,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "k8s_cluster",
 		CLIName:           "k8s-cluster",
-		Description:       "K8s cluster represents the real physical K8s cluster on the site. It can be used",
+		Description:       "K8s cluster represents the real physical K8s cluster on the site. It can be used to configure various aspect of of the K8s cluster\\ne.g. Pod security, k8s_cluster roles, k8s_cluster role binding, User access to the K8s cluster etc.",
 		APIPath:           "/api/config/namespaces/{namespace}/k8s_clusters",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -650,7 +956,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "k8s_cluster_role",
 		CLIName:           "k8s-cluster-role",
-		Description:       "K8s Cluster Role is K8s ClusterRole object, which represents set of permissions ",
+		Description:       "K8s Cluster Role is K8s ClusterRole object, which represents set of permissions for\\nuser, group or service account to which this role is assigned.",
 		APIPath:           "/api/config/namespaces/{namespace}/k8s_cluster_roles",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -659,7 +965,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "k8s_cluster_role_binding",
 		CLIName:           "k8s-cluster-role-binding",
-		Description:       "Cluster role binding allows administrator to assign cluster wide cluster role to",
+		Description:       "Cluster role binding allows administrator to assign cluster wide cluster role to a users, groups or service accounts",
 		APIPath:           "/api/config/namespaces/{namespace}/k8s_cluster_role_bindings",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -677,7 +983,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "k8s_pod_security_policy",
 		CLIName:           "k8s-pod-security-policy",
-		Description:       "Pod Security Policies enable fine-grained authorization of pod creation and upda",
+		Description:       "Pod Security Policies enable fine-grained authorization of pod creation and updates.",
 		APIPath:           "/api/config/namespaces/{namespace}/k8s_pod_security_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -686,7 +992,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "known_label",
 		CLIName:           "known-label",
-		Description:       "Known labels serves two purposes",
+		Description:       "Known labels serves two purposes\\n\\nIts let users declare labels so that they can be consistently used across their namespaces. Declared labels can be used by the Web UI in drop down. Description field in the label lets everyone know what this label means.\\n\\nSystem allocates unique integer (ID) values for known labels. These ID(s) are used in Network Policy or Service Policy enforcement. Hence only Known labels can be used in Network Policy or L7 Policy.",
 		APIPath:           "/api/config/namespaces/{namespace}/known_labels",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -695,8 +1001,17 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "known_label_key",
 		CLIName:           "known-label-key",
-		Description:       "Known label key serves two purposes",
+		Description:       "Known label key serves two purposes\\n\\n   It lets users declare label keys so that they can be consistently used across their namespaces. Declared label keys can be used by the Web UI in drop down. Description field in the label lets everyone know what this label key means.\\n   System allocates unique integer (ID) values for known label keys. These ID(s) along with the IDs allocated for known labels are used in Network Policy or Service Policy enforcement. Hence only Known labels and known label keys can be used in Network Policy or L7 Policy.",
 		APIPath:           "/api/config/namespaces/{namespace}/known_label_keys",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "log",
+		CLIName:           "log",
+		Description:       "Two types of logs are supported, viz, access logs and audit logs.\\n  * Access logs are sampled records of API calls made to a virtual host. It contains\\n    both the request and the response data with more context like application type,\\n    user, request path, method, request body, response code, source,\\n    destination, etc.,\\n  * Audit logs provides audit of all configuration changes made in the system using\\n    public APIs provided by Volterra. It contains both the request and response body\\n    with additional context necessary for post-mortem analysis such as user, request path,\\n    method, request body, response code, source, destination service, etc.,\\nBoth the access logs and audit logs are used to find \\\"who did what and when and what was the result?\\\"\\nwho - answered by user/user-agent in the log.\\nwhat - answered by request url/method/body in the log.\\nwhen - answered by timestamp in the log.\\nresult - answered by response code in the log.",
+		APIPath:           "/api/data/namespaces/{namespace}/logs",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
 	})
@@ -704,25 +1019,70 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "log_receiver",
 		CLIName:           "log-receiver",
-		Description:       "Log Receiver is used to specify a receiver (syslog, splunk, datadog etc.,) to se",
+		Description:       "Log Receiver is used to specify a receiver (syslog, splunk, datadog etc.,) to send the log. Log receiver need to be reachable on site local network.",
 		APIPath:           "/api/config/namespaces/{namespace}/log_receivers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
 	})
 
 	Register(&ResourceType{
+		Name:              "maintenance_status",
+		CLIName:           "maintenance-status",
+		Description:       "Maintenance status information",
+		APIPath:           "/api/config/namespaces/system/maintenance_status",
+		SupportsNamespace: false,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
 		Name:              "malicious_user_mitigation",
 		CLIName:           "malicious-user-mitigation",
-		Description:       "A malicious_user_mitigation object consists of settings that specify the actions",
+		Description:       "A malicious_user_mitigation object consists of settings that specify the actions to be taken when\\nmalicious users are determined to be at different threat levels. User's activity is monitored and\\ncontinuously analyzed for malicious behavior. From this analysis, a threat level is assigned to each user.\\nThe settings defined in malicious user mitigation specify what mitigation actions to take for users\\ndetermined to be at different threat levels.",
 		APIPath:           "/api/config/namespaces/{namespace}/malicious_user_mitigations",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
 	})
 
 	Register(&ResourceType{
+		Name:              "malware_protection_subscription",
+		CLIName:           "malware-protection-subscription",
+		Description:       "Malware protection subscription",
+		APIPath:           "/api/config/namespaces/system/malware_protection_subscriptions",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "marketplace_aws_account",
+		CLIName:           "marketplace-aws-account",
+		Description:       "AWS Marketplace account management",
+		APIPath:           "/api/marketplace/aws/accounts",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "marketplace_xc_saas",
+		CLIName:           "marketplace-xc-saas",
+		Description:       "XC SaaS marketplace management",
+		APIPath:           "/api/marketplace/xc_saas",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "module_management",
+		CLIName:           "module-management",
+		Description:       "Package for managing a module.",
+		APIPath:           "/api/config/namespaces/{namespace}/module_managements",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
 		Name:              "namespace",
 		CLIName:           "namespace",
-		Description:       "namespace creates logical independent workspace within a tenant. Within a namesp",
+		Description:       "namespace creates logical independent workspace within a tenant. Within a namespace contained objects should have unique names.\\n\\n    Object within a namespace can only refer to objects within the same namespace or shared namespace or ves-io/shared namespace\\n\\n    All monitoring is scoped by namespace\\n\\n    List within namespace lists objects within same namespace or shared namespace or ves-io/shared namespace\\n\\n    User roles can be scoped by namespace\\n\\n    The 'namespace' value of a namespace object itself is empty string",
 		APIPath:           "/api/web/namespaces",
 		SupportsNamespace: false,
 		Operations:        AllOperations(),
@@ -736,7 +1096,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "namespace_role",
 		CLIName:           "namespace-role",
-		Description:       "Namespace role defines a user's role in a namespace.",
+		Description:       "Namespace role defines a user's role in a namespace.\\nNamespace role links a user with a role namespace. Using this object one can assign/remove a role to a user in a namespace.\\nNamespace roles are assigned either explicitly by calling this API, or implicitly by creating users or by signing up.\\n see role object for information on roles\\n see namespace object for information on namespaces\\n see user object for information on users",
 		APIPath:           "/api/web/namespaces/{namespace}/namespace_roles",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -745,7 +1105,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "nat_policy",
 		CLIName:           "nat-policy",
-		Description:       "NAT Policy object represents the configuration of Network Address Translation pa",
+		Description:       "NAT Policy object represents the configuration of Network Address Translation parameters on\\nF5XC Customer Edge sites. The following properties can be configured in this object:\\n     Site where the NAT objects are applicable\\n     Ingress points where the NAT policies need to be applied\\n     Match criteria of the packet to apply NAT Policy\\n     Action to take if the Match criteria passes",
 		APIPath:           "/api/config/namespaces/{namespace}/nat_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -754,7 +1114,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "network_connector",
 		CLIName:           "network-connector",
-		Description:       "Network Connector is used to create connection between two virtual networks on a",
+		Description:       "Network Connector is used to create connection between two virtual networks on a given site.\\n\\n   Outside Network is the unsecured network\\n\\n   Inside Network is secured network\\n\\nInside network can have connectivity to outside network in the following ways\\n\\n    Snat: There are 2 Snat modes\\n\\n         Default Gateway Snat:\\n          A default route is added in inside network with CE as gateway. As outside network does not have any visibility\\n          of inside network, packets are SNATed to outside virtual network IP address moving from inside to outside. SNAT IP can be either\\n          interface IP of out side virtual network interface Snat pool\\n\\n         Dynamic Gateway Snat:\\n          Non default routes from out side network are pushed to inside network with CE as gateway. As outside network\\n          does not have any visibility of inside network, packets are SNATed to outside virtual network IP address moving from inside to outside.\\n          SNAT IP can be either interface IP of out side virtual network interface Snat pool\\n          This mode is currently not supported\\n\\n    Dynamic Gateway:\\n\\n       Using a dynamic routing protocol, routes from outside and inside are exchanged for connectivity. As outside network also has\\n       reachability information of inside network, no SNAT is required\\n       This mode is currently not supported\\n\\n Proxy Configuration:\\n     In addition to Snat configuration there can be L7 proxy configuration that influences the network connectivity.\\n     There are 2 proxy modes. These proxy modes are for TCP traffic. For non-tcp traffic, above described SNAT behavior would\\n     take effect\\n\\n         Dynamic Reverse Proxy:\\n          There would by one or more Virtual hosts configured in the inside network. Traffic from inside network devices is\\n          attracted to Node IP(s). When the traffic is destined to Node IP(s), dynamic resolution is done in the outside network\\n          to select the destination. This dynamic resolution is done using a pre defined field in the received packet.\\n          This pre defined field depends on proxy type configured in Virtual Host. If the proxy in Virtual host is Http or Https,\\n          DNS resolution will be done on the HOST http header from the packet. If the proxy in Virtual host is TcpWithSNI, DNS\\n          resolution would be on the SNI of packet. This DNS resolved IP would be used as destination to forward the packet in the\\n          outside network\\n\\n         Forward Proxy:\\n          Devices in the inside network resolve DNS to actual IPs. All sessions are terminated by Node and new sessions are initiated\\n          to actual IPs towards outside network\\n\\nConstraint: There are no overlapping ip(s) between outside and inside network.",
 		APIPath:           "/api/config/namespaces/{namespace}/network_connectors",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -763,7 +1123,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "network_firewall",
 		CLIName:           "network-firewall",
-		Description:       "Network Firewall is applicable when referred to by a Fleet. The Network Firewall",
+		Description:       "Network Firewall is applicable when referred to by a Fleet. The Network Firewall will be applied to all\\nsites that are member of the referring Fleet.\\n\\nIt is applied on all virtual networks that are valid on this site that get instantiated due to fleet object.\\nNetwork Firewall defines following,\\n- network_policy_set - L3/L4 policies to be applied in all sites that are member of the fleet\\n- forward_proxy_policy_set - L7 firewall to be applied in all sites that are member of the fleet\\n- fast_acl_set - List of Fast ACL set to be applied in all sites that are member of the fleet.",
 		APIPath:           "/api/config/namespaces/{namespace}/network_firewalls",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -772,7 +1132,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "network_interface",
 		CLIName:           "network-interface",
-		Description:       "Network Interface object represents the configuration of a network device in a f",
+		Description:       "Network Interface object represents the configuration of a network device in a fleet of\\nF5XC Customer Edge sites. The following properties can be configured in this object:\\n\\n   IP address allocation scheme of the network interface (dhcp or static). Virtual Network of this network interface, Whether to run a DHCP server on this interface\\n\\n      Subnet to use for allocation\\n\\n      Default gateway\\n\\n      DNS server\\n\\n Interfaces belonging to site local inside and site local outside networks have to be configured as part of\\n bootstrap configuration. This configuration can be done in two ways:\\n\\n     during site registration and is bundled as part of certified hardware image.\\n\\n     configured locally on the CE via Sia application\\n\\n Interfaces corresponding to these local interfaces can be configured in the global configuration. Label\\n assignments for the local interfaces can be done in the global network interface configuration. Also, DHCP\\n can be still be configured on site local inside network interface configuration, so that dynamic address is\\n obtained and used.\\n\\n When DHCP address assignment (server) is enabled in the Network interface, external clients can get their addresses\\n assigned from the configured subnet. The local interface can also get a dynamic address from the same pool if DHCP\\n client is enabled in the network interface. Gateway and DNS servers for such clients can be external addresses or\\n addresses internally allocated from the same subnet or may be disabled.\\n\\n Note that DHCP client and server configuration are independent. A Network interface may have DHCP client configured\\n and DHCP server disabled, if an external DHCP server is used.\\n\\n Currently, DHCP client should always be enabled, setting static address on a network interface is not supported.\\n\\n If this Network interface is for primary network device (site local), then it has to be configured only as\\n DHCP assigned address. This interface will be used to reach volterra cloud for registration. Virtual network\\n of this interface has to be site local network. If there are multiple interfaces and multiple virtual\\n networks, then site local interface has to be in the outside network.\\n\\n If network has Network interface with DHCP address assignment configured, then default gateway and DNS server\\n for this network will be taken from DHCP response. Having multiple interfaces in a network giving default route\\n can cause bad routing decisions. In case of site local network, DNS and default gateway response from primary\\n interface will be used.",
 		APIPath:           "/api/config/namespaces/{namespace}/network_interfaces",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -781,7 +1141,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "network_policy",
 		CLIName:           "network-policy",
-		Description:       "Network Policy is applied to all IP packets to and from a given endpoint (called",
+		Description:       "Network Policy is applied to all IP packets to and from a given endpoint (called \\\"local_endpoint\\\").\\n\\nLocal endpoint can be,\\n\\n prefix : list of ip prefixes representing local endpoint\\n\\n prefix_selector: Prefix selector is more convenient way of representing a set of IP Address. Prefix label selector selects all ip prefixes that have labels that match configured label expression.\\n\\nLabel preference\\n  An IP Address or IP Prefix is assigned with labels based on following rules in decreasing order of preference,\\n\\n   Labels from the interface for the address\\n   Labels from POD or Service for the address\\n   Labels from Virtual Network for the address\\n   Labels from Namespace for the address\\n\\nNetwork Policy Rules are applied from local_endpoint point of view. Egress rules are applied for packets transmitted from local_endpoint to endpoint specified in network policy rule. Ingress rules are applied for packets received on local_endpoint from endpoint specified in network policy rule\\n\\nExamples of local_endpoint are, containers, hosts on site-local or site-local-inside network\\n\\nPrefix selector labels (BNF grammar):\\n\\n <selector-syntax>         ::= <requirement> | <requirement> \\\",\\\" <selector-syntax>\\n\\n <requirement>             ::= [!] KEY [ <set-based-restriction> | <exact-match-restriction> ]\\n\\n <set-based-restriction>   ::= \\\"\\\" | <inclusion-exclusion> <value-set>\\n\\n <inclusion-exclusion>     ::= <inclusion> | <exclusion>\\n\\n <exclusion>               ::= \\\"notin\\\"\\n\\n <inclusion>               ::= \\\"in\\\"\\n\\n <value-set>               ::= \\\"(\\\" <values> \\\")\\\"\\n\\n <values>                  ::= VALUE | VALUE \\\",\\\" <values>\\n\\n <exact-match-restriction> ::= [\\\"=\\\"|\\\"==\\\"|\\\"!=\\\"] VALUE\\n\\nKEY is a sequence of one or more characters. Max length is 63 characters. VALUE is a sequence of zero or more characters \\\"([A-Za-z0-9_-\\\\.])\\\". Max length is 63 characters. Delimiter is white space: (' ', '\\\\t')\\n\\nx-example: \\\"app == web, site in (abc, xyz)\\\"\\n\\nNote:\\n\\n (1) Inclusion - \\\" in \\\" - denotes that the KEY exists and is equal to any of the VALUE's in its requirement\\n\\n (2) Exclusion - \\\" notin \\\" - denotes that the KEY is not equal to any of the VALUE's in its requirement or does not exist\\n\\n (3) The empty string is a valid VALUE\\n\\n (4) A requirement with just a KEY - as in \\\"y\\\" above - denotes that the KEY exists and can be any VALUE.\\n\\n (5) A requirement with just !KEY requires that the KEY not exist.",
 		APIPath:           "/api/config/namespaces/{namespace}/network_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -790,7 +1150,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "network_policy_rule",
 		CLIName:           "network-policy-rule",
-		Description:       "Network Policy Rule is applied to given remote endpoints to and from a given loc",
+		Description:       "Network Policy Rule is applied to given remote endpoints to and from a given local endpoint and is a terminal rule.\\nLocal Endpoint is picked from the network policy to which this rule has been attached\\n\\nAction on a match can be\\n * Allow\\n * Deny\\n\\nMatch Criteria\\n* Ports specify the port range to be matched, if not set it matches to any\\n* Protocol specify the protocol to be matched\\n  Supported values are\\n    * tcp\\n    * udp\\n    * icmp\\n* Remote Endpoint\\n    * prefix : Prefix specifies a list of IP Prefixes. A prefix is specified as IP Subnet and Prefix length and array of prefixes can represent prefix in local endpoint.\\n    * prefix_selector: Prefix selector is more convenient way of representing a set of IP Address. Prefix label selector selects all ip prefixes that have labels that match configured label expression.\\n    * ip_prefix_set: Reference to list of IP configured prefixes. However its different from 'prefix' because it is a reference to ip-prefix-set object, which can be re-used across objects\\n* Label Matcher specifies the label list which will be matched for identifying remote endpoint of type prefix_selector\\n\\nLabel Preference\\nAn IP Address or IP Prefix is assigned with labels based on following rules in decreasing order of preference,\\n  * Labels from the interface for the address\\n  * Labels from POD or Service for the address\\n  * Labels from Virtual Network for the address\\n  * Labels from Namespace for the address\\n\\nRole of rule as egress or ingress (i.e. to or from) is also determined from the policy to which this rule has been attached\\n\\nPrefix selector labels (BNF grammar):\\n <selector-syntax>         ::= <requirement> | <requirement> \\\",\\\" <selector-syntax>\\n <requirement>             ::= [!] KEY [ <set-based-restriction> | <exact-match-restriction> ]\\n <set-based-restriction>   ::= \\\"\\\" | <inclusion-exclusion> <value-set>\\n <inclusion-exclusion>     ::= <inclusion> | <exclusion>\\n <exclusion>               ::= \\\"notin\\\"\\n <inclusion>               ::= \\\"in\\\"\\n <value-set>               ::= \\\"(\\\" <values> \\\")\\\"\\n <values>                  ::= VALUE | VALUE \\\",\\\" <values>\\n <exact-match-restriction> ::= [\\\"=\\\"|\\\"==\\\"|\\\"!=\\\"] VALUE\\n\\nKEY is a sequence of one or more characters. Max length is 63 characters.\\nVALUE is a sequence of zero or more characters \\\"([A-Za-z0-9_-\\\\.])\\\". Max length is 63 characters.\\nDelimiter is white space: (' ', '\\\\t')\\nx-example: app == web, site in (abc, xyz)\\n\\nNote:\\n (1) Inclusion - \\\" in \\\" - denotes that the KEY exists and is equal to any of the\\n     VALUEs in its requirement\\n (2) Exclusion - \\\" notin \\\" - denotes that the KEY is not equal to any\\n     of the VALUEs in its requirement or does not exist\\n (3) The empty string is a valid VALUE\\n (4) A requirement with just a KEY - as in \\\"y\\\" above - denotes that\\n     the KEY exists and can be any VALUE.\\n (5) A requirement with just !KEY requires that the KEY not exist.",
 		APIPath:           "/api/config/namespaces/{namespace}/network_policy_rules",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -799,7 +1159,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "network_policy_set",
 		CLIName:           "network-policy-set",
-		Description:       "Network policy set implements L3/L4 stateful firewall.",
+		Description:       "Network policy set implements L3/L4 stateful firewall.\\nIt is a list of one or more Network policy references and are applied sequentially in order specified in the list.\\n\\nNetwork policy set can be configured via network firewall object or vK8s\\n* Network Firewall is a fleet object which can take a reference to network policy set.\\n  Firewall is applied to VIRTUAL_NETWORK_SITE_LOCAL and VIRTUAL_NETWORK_SITE in corresponding fleet\\n* vK8s will inherit network policy set configured in its own namespace and tenant\\n\\nNetwork policy references to be attached to network policy set can be picked from\\n* Same namespace and tenant as of network policy set\\n* Shared namespace of the Tenant\\n* Shared namespace of 'ves.io' tenant",
 		APIPath:           "/api/config/namespaces/{namespace}/network_policy_sets",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -808,7 +1168,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "network_policy_view",
 		CLIName:           "network-policy-view",
-		Description:       "Network policy site view defines a required parameters that can be used in CRUD,",
+		Description:       "Network policy site view defines a required parameters that can be used in CRUD, to create and manage a volterra site in Network policy.\\nIt can be used to either automatically create or Manually assisted site creation in Network policy.\\n\\nView will create following child objects.\\n\\n* Site",
 		APIPath:           "/api/config/namespaces/{namespace}/network_policy_views",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -817,7 +1177,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "nfv_service",
 		CLIName:           "nfv-service",
-		Description:       "NFV Service manages the lifecycle  of the NFV appliance, which includes the func",
+		Description:       "NFV Service manages the lifecycle  of the NFV appliance, which includes the functionalities like health checks, restarts, dynamic\\naddition and deletion of NFV instances for auto scaling, defining the policies that steers the packets to NFV etc. The service is\\ndefined as two different types Forwarding Service and Endpoint Service.\\nForwarding Service receives the original packet as is using the help of Policies or Traffic Selectors and forwards the packets to\\noriginal destination wihtout modifying its L3/L4 headers\\nEndpoint Service packets are destined to NFV and the destination of the packets is modified to a new destination",
 		APIPath:           "/api/config/namespaces/{namespace}/nfv_services",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -860,9 +1220,144 @@ func registerGeneratedResources() {
 	})
 
 	Register(&ResourceType{
+		Name:              "nginx_one_subscription",
+		CLIName:           "nginx-one-subscription",
+		Description:       "NGINX One subscription",
+		APIPath:           "/api/config/namespaces/system/nginx_one_subscriptions",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "observability_subscription",
+		CLIName:           "observability-subscription",
+		Description:       "Observability subscription management",
+		APIPath:           "/api/config/namespaces/system/observability_subscriptions",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "oidc_provider",
+		CLIName:           "oidc-provider",
+		Description:       "F5XC Identity supports identity brokering and third-party identity can be added to\\nprovide Single Sign-On (SSO) login for user to access tenant via VoltConsole. \\nUsing Volterra's OIDC Provider config object API(s), tenant admin can configure and manage\\nSSO providers such as Google, Microsoft, Okta or any provider that supports\\nOpenIDConnect(OIDC) V1.0 protocol. It is required that the OIDC provider application that will \\nbe integrated must have the support enabled for Authorization Code flow as defined by the specification.\\n\\nBefore proceeding, admin needs to have access to organization's authentication application\\nor has permission to create a new one. Create API require entering details of well-known\\nOpenID configuration of authentication application and once successful creation, admin should\\nenable the redirect URL provided by volterra identity in application's allowed list of URLs. \\nMore details of this can be found under create request/response.\\n\\nWith OIDC provider configured, admin of a tenant can make use of Single Sign On (SSO)\\nfunctionality for users to access F5XC service using same email address and admin has the\\nflexibility to re-use the authentication/identity provider that may be already using \\nwithin their organization. Once SSO is enabled, except tenant admin (owner) all users in the tenant \\nwill be converted to SSO user and will lose existing email/password login created with Volterra\\nand can only use SSO to login.",
+		APIPath:           "/api/config/namespaces/{namespace}/oidc_providers",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: true, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_bgp",
+		CLIName:           "operate-bgp",
+		Description:       "BGP operational data",
+		APIPath:           "/api/operate/namespaces/{namespace}/bgp",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_crl",
+		CLIName:           "operate-crl",
+		Description:       "CRL operations",
+		APIPath:           "/api/operate/namespaces/{namespace}/crl",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_debug",
+		CLIName:           "operate-debug",
+		Description:       "Debug operations",
+		APIPath:           "/api/operate/namespaces/{namespace}/debug",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_dhcp",
+		CLIName:           "operate-dhcp",
+		Description:       "DHCP operational status",
+		APIPath:           "/api/operate/namespaces/{namespace}/dhcp",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_flow",
+		CLIName:           "operate-flow",
+		Description:       "Flow operations",
+		APIPath:           "/api/operate/namespaces/{namespace}/flow",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_lte",
+		CLIName:           "operate-lte",
+		Description:       "LTE operations",
+		APIPath:           "/api/operate/namespaces/{namespace}/lte",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_ping",
+		CLIName:           "operate-ping",
+		Description:       "Ping operation",
+		APIPath:           "/api/operate/namespaces/{namespace}/ping",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_route",
+		CLIName:           "operate-route",
+		Description:       "Route operations",
+		APIPath:           "/api/operate/namespaces/{namespace}/route",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_tcpdump",
+		CLIName:           "operate-tcpdump",
+		Description:       "TCP dump operation",
+		APIPath:           "/api/operate/namespaces/{namespace}/tcpdump",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_traceroute",
+		CLIName:           "operate-traceroute",
+		Description:       "Traceroute operation",
+		APIPath:           "/api/operate/namespaces/{namespace}/traceroute",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_usb",
+		CLIName:           "operate-usb",
+		Description:       "USB operations",
+		APIPath:           "/api/operate/namespaces/{namespace}/usb",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "operate_wifi",
+		CLIName:           "operate-wifi",
+		Description:       "WiFi operations",
+		APIPath:           "/api/operate/namespaces/{namespace}/wifi",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
 		Name:              "origin_pool",
 		CLIName:           "origin-pool",
-		Description:       "Origin pool is a view to create cluster and endpoints that can be used in HTTP l",
+		Description:       "Origin pool is a view to create cluster and endpoints that can be used in HTTP loadbalancer or TCP loadbalancer\\n\\nIt will create following child objects\\n\\n* cluster\\n* endpoints\\n* healthcheck",
 		APIPath:           "/api/config/namespaces/{namespace}/origin_pools",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -887,6 +1382,15 @@ func registerGeneratedResources() {
 	})
 
 	Register(&ResourceType{
+		Name:              "pbac_catalog",
+		CLIName:           "pbac-catalog",
+		Description:       "PBAC catalog",
+		APIPath:           "/api/web/namespaces/system/catalogs",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: false, Get: false, List: false, Update: true, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
 		Name:              "pbac_navigation_tile",
 		CLIName:           "pbac-navigation-tile",
 		Description:       "",
@@ -907,7 +1411,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "policer",
 		CLIName:           "policer",
-		Description:       "* Policer objects enforces traffic rate limits",
+		Description:       "* Policer objects enforces traffic rate limits\\n* network_policy_rule and fast_acl_rule can refer to a policer. Packets\\n  matching those rules will be subjected to the traffic contract specified in\\n  the policer",
 		APIPath:           "/api/config/namespaces/{namespace}/policers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -916,7 +1420,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "policy_based_routing",
 		CLIName:           "policy-based-routing",
-		Description:       "Policy based routing is used to control how different classes of traffic is forw",
+		Description:       "Policy based routing is used to control how different classes of traffic is forwarded and QOS is\\napplied over WAN interfaces in SDWAN scenarios.",
 		APIPath:           "/api/config/namespaces/{namespace}/policy_based_routings",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -925,7 +1429,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "protocol_inspection",
 		CLIName:           "protocol-inspection",
-		Description:       "Protocol Inspection view defines the required parameters that can be used in CRU",
+		Description:       "Protocol Inspection view defines the required parameters that can be used in CRUD, to create and manage Protocol Inspection.\\nIt can be used to create Protocol Inspection.\\n\\nView will create the following child objects.\\n\\n* DNS Compliance Checks",
 		APIPath:           "/api/config/namespaces/{namespace}/protocol_inspections",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -934,7 +1438,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "protocol_policer",
 		CLIName:           "protocol-policer",
-		Description:       "Protocol policer has set or network protocol fields and flags to be match on",
+		Description:       "Protocol policer has set or network protocol fields and flags to be match on\\na layer 4 packet and corresponding rate limit to be applied, this would be\\nuseful in specifying\\n* Ratelimiting TCP sessions accepted from in a given duration\\n* Ratelimiting various ICMP message type packets\\n* Ratelimiting all UDP traffic\\n* Ratelimting DNS traffic",
 		APIPath:           "/api/config/namespaces/{namespace}/protocol_policers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -943,7 +1447,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "proxy",
 		CLIName:           "proxy",
-		Description:       "Proxy view defines a required parameters that can be used in CRUD, to create and",
+		Description:       "Proxy view defines a required parameters that can be used in CRUD, to create and manage a Proxy.\\n\\nView will create following child objects.\\n\\n* virtual_host\\n* advertise_policy\\n* service_policy_set",
 		APIPath:           "/api/config/namespaces/{namespace}/proxys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -952,7 +1456,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "public_ip",
 		CLIName:           "public-ip",
-		Description:       "public_ip object represents a public IP address that is available on a set of vi",
+		Description:       "public_ip object represents a public IP address that is available on a set of virtual sites",
 		APIPath:           "/api/config/namespaces/{namespace}/public_ips",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -961,7 +1465,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "quota",
 		CLIName:           "quota",
-		Description:       "Quota object is used to configure the limits on how many of a resource type can ",
+		Description:       "Quota object is used to configure the limits on how many of a resource type can be in use by a tenant",
 		APIPath:           "/api/web/namespaces/{namespace}/quotas",
 		SupportsNamespace: true,
 		Operations:        ReadOnlyOperations(),
@@ -970,7 +1474,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "rate_limiter",
 		CLIName:           "rate-limiter",
-		Description:       "A rate_limiter specifies a list of rate limit unit periods and the corresponding",
+		Description:       "A rate_limiter specifies a list of rate limit unit periods and the corresponding value of the total number of requests to be allowed in that period. It\\nalso contains an optional reference to a user_identification object which determines how the user identifier for rate limiting is obtained from the input\\nfields extracted from the request.",
 		APIPath:           "/api/config/namespaces/{namespace}/rate_limiters",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -979,7 +1483,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "rate_limiter_policy",
 		CLIName:           "rate-limiter-policy",
-		Description:       "Rate limiter policy defines parameters that can be used for fine-grained control",
+		Description:       "Rate limiter policy defines parameters that can be used for fine-grained control over requests for a http load balancer that are subjected to rate limiting.\\n\\nIt will create the following child objects.\\n\\n* service_policy\\n* service_policy_rule",
 		APIPath:           "/api/config/namespaces/{namespace}/rate_limiter_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -988,8 +1492,35 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "rbac_policy",
 		CLIName:           "rbac-policy",
-		Description:       "A rbac_policy object consists of list of rbac policy rules that when assigned to",
+		Description:       "A rbac_policy object consists of list of rbac policy rules that when assigned to a user via Role object,\\nit controls access of an user to list of APIs defined under the API Group name.\\nEach rule under rbac_policy consist of a name of the API Group.\\nBy default, the access is set to allow for the API Group.",
 		APIPath:           "/api/web/namespaces/{namespace}/rbac_policys",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "registration",
+		CLIName:           "registration",
+		Description:       "registration API(s) are used by Customer edge site to register itself with volterra edge cloud.\\nEvery node in given site is represented by it's registration.\\nregistration must have unique hostname for given cluster_name. Registration state is changed to RETIRED in order to decommission node.\\nRegistration can't be changed by user after creation.\\n\\nRegistration contains HA information about node in infra section\\nand site which belongs to in passport.",
+		APIPath:           "/api/config/namespaces/{namespace}/registrations",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "report",
+		CLIName:           "report",
+		Description:       "Report configuration contains the information like\\n\\n    Time at which the report was last sent to object store.\\n    Report ID.",
+		APIPath:           "/api/config/namespaces/{namespace}/reports",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "report_config",
+		CLIName:           "report-config",
+		Description:       "Report configuration contains the information like\\n\\n    List of namespaces for which the report should be generated.\\n    Frequency of report generation.\\n    Time at which the report should be generated",
+		APIPath:           "/api/config/namespaces/{namespace}/report_configs",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
 	})
@@ -997,7 +1528,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "role",
 		CLIName:           "role",
-		Description:       "Defines the role the user has in a namespace. There are two kinds of roles:",
+		Description:       "Defines the role the user has in a namespace. There are two kinds of roles:\\n* user defines roles - each tenant can define a set of their roles suiting their needs.\\n* built-in roles - volterra defined roles. Admins are free to use them but can't amend them nor can they remove them.",
 		APIPath:           "/api/web/namespaces/{namespace}/roles",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -1006,17 +1537,53 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "route",
 		CLIName:           "route",
-		Description:       "route object is used to configuring L7 routing decision. route is made of three ",
+		Description:       "route object is used to configuring L7 routing decision. route is made of three things\\n1. Match condition for incoming request\\n2. Actions to take if match is true\\n3. Whether custom java script processing is enabled for this route match.",
 		APIPath:           "/api/config/namespaces/{namespace}/routes",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
 	})
 
 	Register(&ResourceType{
+		Name:              "scim",
+		CLIName:           "scim",
+		Description:       "This schema specification details Volterra's support for SCIM protocol.\\nAdmin can use SCIM feature on top of SSO to enable automated provisioning of\\nuser and user groups from external identity provider into the F5 saas platform.\\nWith this feature, complete life cycle management of user and groups can be\\nachieved from single source of truth which is managed by tenant's admin.\\n\\ncurrent protocol support is using schema version v2.0 https://datatracker.ietf.org/doc/html/rfc7643 \\n\\nSCIM feature can be enabled part of SSO configuration (using RPC `UpdateScimIntegration` under oidc_provider resource)\\nBy default, F5XC will not sync groups and users. Admin is required to set object identifier of group \\nin external identity provider to corresponding user_group resource in volterra. Users with corresponding\\ngroup membership if exist in external identity provider will be synced.",
+		APIPath:           "/api/scim/v2",
+		SupportsNamespace: false,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "secret_management",
+		CLIName:           "secret-management",
+		Description:       "F5XC Secret Management service serves APIs for information required for offline secret encryption such as getting the public key and getting the secret policy document.",
+		APIPath:           "/api/config/namespaces/{namespace}/secret_managements",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
 		Name:              "secret_management_access",
 		CLIName:           "secret-management-access",
-		Description:       "secret_management_access object is used to define configuration on how to connec",
+		Description:       "secret_management_access object is used to define configuration on how to connect to a secret management backend.\\nIf secret backend is not F5XC Secret Management System, this objects needs to be configured to tell volterra security sidecar how to\\nconnect to the secret management service.\\n\\nsecret_management_access contains the remote endpoint to connect to, tls_configuration\\nand additional authorization information if required. Sensitive information within this\\nobject (e.g. private_key, vault-token, etc.) needs to be of SecretType and must be either -\\na) encrypted using blindfold method with appropriate policy such that relevant volterra services are able to\\ndecrypt it, or\\nb) Secret of type ClearSecretInfo.",
 		APIPath:           "/api/config/namespaces/{namespace}/secret_management_accesss",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "secret_policy",
+		CLIName:           "secret-policy",
+		Description:       "A Secret Policy defines who gets access to a secret.\\nA secret_policy object consists of an unordered list of predicates and a list of secret policy rules.\\nThe predicates are evaluated against a set of input fields that are extracted from or derived from client TLS certificate.\\nAny predicates that are not specified in a policy are implicitly considered to be true.\\nThe rules in the policy are also evaluated against the input fields.\\nThey are treated as an ordered or unordered list depending on the value of the rule combining algorithm.\\nA policy is considered a match if all predicates in the policy evaluate to true and the one of the rules in the policy is also matched.\\n\\nIf the configured rule combining algorithm is FIRST_MATCH, the rules in the policy are evaluated sequentially till a matching rule is identified.\\nIf the rule combining algorithm is ALLOW_OVERRIDES all rules with an ALLOW action are evaluated prior to rules with a DENY action.\\nIf it is DENY_OVERRIDES, all rules with a DENY action are evaluated prior to rules with a ALLOW action.",
+		APIPath:           "/api/config/namespaces/{namespace}/secret_policys",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "secret_policy_rule",
+		CLIName:           "secret-policy-rule",
+		Description:       "Secret Policy Rule defines a rule controlling access to a secret.\\nA secret_policy_rule object consists of an unordered list of predicates and an action.\\nThe predicates are evaluated against a set of input fields that are extracted from client certificate.\\nA rule is considered to match if all predicates in the rule evaluate to true for that request.\\nAny predicates that are not specified in a rule are implicitly considered to be true.\\nIf a rule is matched, the action specified for the rule is enforced for that request.\\n\\nA secret_policy_rule can be part of exactly one secret_policy and must belong to the same namespace as the secret policy.",
+		APIPath:           "/api/config/namespaces/{namespace}/secret_policy_rules",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
 	})
@@ -1024,7 +1591,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "securemesh_site",
 		CLIName:           "securemesh-site",
-		Description:       "Secure Mesh site defines a required parameters that can be used in CRUD, to crea",
+		Description:       "Secure Mesh site defines a required parameters that can be used in CRUD, to create and manage an Secure Mesh site.",
 		APIPath:           "/api/config/namespaces/{namespace}/securemesh_sites",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -1033,7 +1600,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "securemesh_site_v2",
 		CLIName:           "securemesh-site-v2",
-		Description:       "Secure Mesh site defines a required parameters that can be used in CRUD, to crea",
+		Description:       "Secure Mesh site defines a required parameters that can be used in CRUD, to create and manage an Secure Mesh site.",
 		APIPath:           "/api/config/namespaces/{namespace}/securemesh_site_v2s",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -1060,7 +1627,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "sensitive_data_policy",
 		CLIName:           "sensitive-data-policy",
-		Description:       "The sensitive_data_policy is a policy defined by the user to discover the releva",
+		Description:       "The sensitive_data_policy is a policy defined by the user to discover the relevant compliances\\nand data types to the user.\\nthe user can disabled predefined data types, and add custom data types.\\nthe user defines the compliance list that he'd like to monitor.",
 		APIPath:           "/api/config/namespaces/{namespace}/sensitive_data_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -1069,7 +1636,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "service_policy",
 		CLIName:           "service-policy",
-		Description:       "A service_policy object consists of an unordered list of predicates and a list o",
+		Description:       "A service_policy object consists of an unordered list of predicates and a list of service policy rules. The predicates are evaluated against a set of input\\nfields that are extracted from or derived from an L7 request API. Any predicates that are not specified in a policy are implicitly considered to be true. The\\nrules in the policy are also evaluated against the input fields. They are treated as an ordered or unordered list depending on the value of the rule combining\\nalgorithm. A request API is considered to match a policy if all predicates in the policy evaluate to true and the request API matches one of the rules in the\\npolicy.\\n\\nIf the configured rule combining algorithm is FIRST_MATCH, the rules in the policy are evaluated sequentially till a matching rule is identified. If the rule\\ncombining algorithm is ALLOW_OVERRIDES all rules with an ALLOW action are evaluated prior to rules with a DENY action. If it is DENY_OVERRIDES, all rules with\\na DENY action are evaluated prior to rules with a ALLOW action.\\n\\nA service policy is part of an ordered list of policies in one or more service policy sets. If a request API matches a policy, the resulting action for the\\npolicy is the action configured in the matching rule. If a request API does not match a given policy, the next policy in the service policy set is evaluated.",
 		APIPath:           "/api/config/namespaces/{namespace}/service_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -1078,7 +1645,7 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "service_policy_rule",
 		CLIName:           "service-policy-rule",
-		Description:       "A service_policy_rule object consists of an unordered list of predicates and an ",
+		Description:       "A service_policy_rule object consists of an unordered list of predicates and an action. The predicates are evaluated against a set of input fields that are\\nextracted from or derived from an L7 request API. A request API is considered to match a rule if all predicates in the rule evaluate to true for that request.\\nAny predicates that are not specified in a rule are implicitly considered to be true. If a request API matches a rule, the action specified for the rule is\\nenforced for that request.\\n\\nA service_policy_rule can be part of exactly one service_policy and must belong to the same namespace as the service policy.",
 		APIPath:           "/api/config/namespaces/{namespace}/service_policy_rules",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
@@ -1087,1145 +1654,19 @@ func registerGeneratedResources() {
 	Register(&ResourceType{
 		Name:              "service_policy_set",
 		CLIName:           "service-policy-set",
-		Description:       "A service_policy_set object consists of an ordered list of references to service",
+		Description:       "A service_policy_set object consists of an ordered list of references to service_policy objects. The policies are evaluated in the specified order against\\na set of input fields that are extracted from or derived from an L7 request API. The evaluation of the policy set terminates when the request API matches a\\npolicy which results in an \\\"allow\\\" or \\\"deny\\\" action. If the request API does not match a policy, the next policy in the list is evaluated. If the request API\\ndoes not match any of the policies in the set, the result is a \\\"default_deny\\\" action.\\n\\nThere can be no more than one service policy set configured under a namespace. That policy set is applied to requests destined to all virtual_hosts in that\\nnamespace.",
 		APIPath:           "/api/config/namespaces/{namespace}/service_policy_sets",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
 	})
 
 	Register(&ResourceType{
-		Name:              "shape_bot_defense_instance",
-		CLIName:           "shape-bot-defense-instance",
-		Description:       "Shape Bot Defense Instance is the main configuration for a Shape Integration.",
-		APIPath:           "/api/config/namespaces/{namespace}/shape_bot_defense_instances",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "site",
-		CLIName:           "site",
-		Description:       "Site represent physical/cloud cluster of volterra processing elements. There are",
-		APIPath:           "/api/config/namespaces/{namespace}/sites",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "site_mesh_group",
-		CLIName:           "site-mesh-group",
-		Description:       "Site mesh group is a configuration tool to provide Site to Site",
-		APIPath:           "/api/config/namespaces/{namespace}/site_mesh_groups",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "srv6_network_slice",
-		CLIName:           "srv6-network-slice",
-		Description:       "An srv6_network_slice represents a network slice in an operator network that use",
-		APIPath:           "/api/config/namespaces/{namespace}/srv6_network_slices",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "subnet",
-		CLIName:           "subnet",
-		Description:       "Subnet object is used to support VMs/pods with multiple interfaces,",
-		APIPath:           "/api/config/namespaces/{namespace}/subnets",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "tcp_loadbalancer",
-		CLIName:           "tcp-loadbalancer",
-		Description:       "TCP load balancer view defines a required parameters that can be used in CRUD, t",
-		APIPath:           "/api/config/namespaces/{namespace}/tcp_loadbalancers",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "tenant_configuration",
-		CLIName:           "tenant-configuration",
-		Description:       "Tenant configuration consists of three main parts:",
-		APIPath:           "/api/config/namespaces/{namespace}/tenant_configurations",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "tenant_management_allowed_tenant",
-		CLIName:           "tenant-management-allowed-tenant",
-		Description:       "",
-		APIPath:           "/api/web/namespaces/{namespace}/allowed_tenants",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "tenant_management_child_tenant",
-		CLIName:           "tenant-management-child-tenant",
-		Description:       "",
-		APIPath:           "/api/web/namespaces/{namespace}/child_tenants",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "tenant_management_child_tenant_manager",
-		CLIName:           "tenant-management-child-tenant-manager",
-		Description:       "",
-		APIPath:           "/api/web/namespaces/{namespace}/child_tenant_managers",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "tenant_management_managed_tenant",
-		CLIName:           "tenant-management-managed-tenant",
-		Description:       "",
-		APIPath:           "/api/web/namespaces/{namespace}/managed_tenants",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "tenant_management_tenant_profile",
-		CLIName:           "tenant-management-tenant-profile",
-		Description:       "",
-		APIPath:           "/api/web/namespaces/{namespace}/tenant_profiles",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "third_party_application",
-		CLIName:           "third-party-application",
-		Description:       "View will create following child objects.",
-		APIPath:           "/api/config/namespaces/{namespace}/third_party_applications",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "ticket_management_ticket_tracking_system",
-		CLIName:           "ticket-management-ticket-tracking-system",
-		Description:       "Public Custom APIs for Ticket Tracking System related operations",
-		APIPath:           "/api/web/namespaces/{namespace}/ticket_tracking_systems",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "trusted_ca_list",
-		CLIName:           "trusted-ca-list",
-		Description:       "A Root CA Certificate represents list of trusted root CAs",
-		APIPath:           "/api/config/namespaces/{namespace}/trusted_ca_lists",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "tunnel",
-		CLIName:           "tunnel",
-		Description:       "Tunnel configuration allows user to specify parameters for configuring static tu",
-		APIPath:           "/api/config/namespaces/{namespace}/tunnels",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "udp_loadbalancer",
-		CLIName:           "udp-loadbalancer",
-		Description:       "UDP load balancer view defines a required parameters that can be used in CRUD, t",
-		APIPath:           "/api/config/namespaces/{namespace}/udp_loadbalancers",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "ui_static_component",
-		CLIName:           "ui-static-component",
-		Description:       "stores information about the UI Components in key-value pair",
-		APIPath:           "/api/web/namespaces/{namespace}/static_components",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "usage",
-		CLIName:           "usage",
-		Description:       "Resource usage and pricing custom APIs",
-		APIPath:           "/api/web/namespaces/{namespace}/hourly_usage_details",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "usb_policy",
-		CLIName:           "usb-policy",
-		Description:       "USB policy is used to specify list of USB devices allowed to be attached to node",
-		APIPath:           "/api/config/namespaces/{namespace}/usb_policys",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "user_group",
-		CLIName:           "user-group",
-		Description:       "Represents group for a given tenant",
-		APIPath:           "/api/web/namespaces/{namespace}/user_groups",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "user_identification",
-		CLIName:           "user-identification",
-		Description:       "A user_identification object consists of an ordered list of rules. The rules are",
-		APIPath:           "/api/config/namespaces/{namespace}/user_identifications",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "virtual_host",
-		CLIName:           "virtual-host",
-		Description:       "Virtual host is main anchor configuration for a proxy. Primary application for v",
-		APIPath:           "/api/config/namespaces/{namespace}/virtual_hosts",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "virtual_k8s",
-		CLIName:           "virtual-k8s",
-		Description:       "Virtual K8s object exposes a Kubernetes API endpoint in the namespace that opera",
-		APIPath:           "/api/config/namespaces/{namespace}/virtual_k8ss",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "virtual_network",
-		CLIName:           "virtual-network",
-		Description:       "Virtual network is an isolated L3 network. A virtual network can contain",
-		APIPath:           "/api/config/namespaces/{namespace}/virtual_networks",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "virtual_site",
-		CLIName:           "virtual-site",
-		Description:       "Virtual site object is mechanism to create arbitrary set of sites",
-		APIPath:           "/api/config/namespaces/{namespace}/virtual_sites",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "voltstack_site",
-		CLIName:           "voltstack-site",
-		Description:       "App Stack site defines a required parameters that can be used in CRUD, to create",
-		APIPath:           "/api/config/namespaces/{namespace}/voltstack_sites",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "waf_exclusion_policy",
-		CLIName:           "waf-exclusion-policy",
-		Description:       "WAF Exclusion Policy record",
-		APIPath:           "/api/config/namespaces/{namespace}/waf_exclusion_policys",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "workload",
-		CLIName:           "workload",
-		Description:       "Workload is used to configure and deploy a workload in Virtual Kubernetes. A wor",
-		APIPath:           "/api/config/namespaces/{namespace}/workloads",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "workload_flavor",
-		CLIName:           "workload-flavor",
-		Description:       "Workload flavor is used to assign CPU, memory, and storage resources to workload",
-		APIPath:           "/api/config/namespaces/{namespace}/workload_flavors",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	// ============================================================
-	// Additional API Resources (119 missing specs)
-	// ============================================================
-
-	// AI & Machine Learning
-	Register(&ResourceType{
-		Name:              "ai_assistant",
-		CLIName:           "ai-assistant",
-		Description:       "AI Assistant for query and feedback operations",
-		APIPath:           "/api/gen-ai/namespaces/{namespace}/query",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "ai_data_bfdp",
-		CLIName:           "ai-data-bfdp",
-		Description:       "AI Data BFDP operations",
-		APIPath:           "/api/ai_data/bfdp",
-		SupportsNamespace: false,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "ai_data_bfdp_subscription",
-		CLIName:           "ai-data-bfdp-subscription",
-		Description:       "AI Data BFDP subscription management",
-		APIPath:           "/api/ai_data/bfdp/subscription",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	// Alerts & Monitoring
-	Register(&ResourceType{
-		Name:              "alert",
-		CLIName:           "alert",
-		Description:       "Alert management and history",
-		APIPath:           "/api/data/namespaces/{namespace}/alerts",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "api_sec_rule_suggestion",
-		CLIName:           "api-sec-rule-suggestion",
-		Description:       "API Security rule suggestions",
-		APIPath:           "/api/config/namespaces/{namespace}/rule_suggestions",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "maintenance_status",
-		CLIName:           "maintenance-status",
-		Description:       "Maintenance status information",
-		APIPath:           "/api/config/namespaces/system/maintenance_status",
-		SupportsNamespace: false,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "upgrade_status",
-		CLIName:           "upgrade-status",
-		Description:       "Upgrade status information",
-		APIPath:           "/api/config/namespaces/{namespace}/upgrade_statuss",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	// Application Security
-	Register(&ResourceType{
-		Name:              "app_security",
-		CLIName:           "app-security",
-		Description:       "Application security suggestions and configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/app_securitys",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "bigip_irule",
-		CLIName:           "bigip-irule",
-		Description:       "BIG-IP iRule management",
-		APIPath:           "/api/bigipconnector/namespaces/{namespace}/bigip_irules",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	// Billing & Commerce
-	Register(&ResourceType{
-		Name:              "billing_payment_method",
-		CLIName:           "billing-payment-method",
-		Description:       "Billing payment method management",
-		APIPath:           "/api/web/namespaces/{namespace}/payment_methods",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Create: true,
-			Delete: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "billing_plan_transition",
-		CLIName:           "billing-plan-transition",
-		Description:       "Billing plan transition management",
-		APIPath:           "/api/web/namespaces/{namespace}/plan_transitions",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "marketplace_aws_account",
-		CLIName:           "marketplace-aws-account",
-		Description:       "AWS Marketplace account management",
-		APIPath:           "/api/marketplace/aws/accounts",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "marketplace_xc_saas",
-		CLIName:           "marketplace-xc-saas",
-		Description:       "XC SaaS marketplace management",
-		APIPath:           "/api/marketplace/xc_saas",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
-	})
-
-	// Data Management & Privacy
-	Register(&ResourceType{
-		Name:              "data_privacy_geo_config",
-		CLIName:           "data-privacy-geo-config",
-		Description:       "Data privacy geo configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/geo_configs",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "secret_management",
-		CLIName:           "secret-management",
-		Description:       "Secret management operations",
-		APIPath:           "/api/config/namespaces/{namespace}/secret_managements",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "secret_policy",
-		CLIName:           "secret-policy",
-		Description:       "Secret policy configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/secret_policys",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "secret_policy_rule",
-		CLIName:           "secret-policy-rule",
-		Description:       "Secret policy rule configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/secret_policy_rules",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	// DNS Services
-	Register(&ResourceType{
-		Name:              "dns_load_balancer",
-		CLIName:           "dns-load-balancer",
-		Description:       "DNS load balancer configuration",
-		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_load_balancers",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "dns_lb_health_check",
-		CLIName:           "dns-lb-health-check",
-		Description:       "DNS load balancer health check configuration",
-		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_lb_health_checks",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "dns_lb_pool",
-		CLIName:           "dns-lb-pool",
-		Description:       "DNS load balancer pool configuration",
-		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_lb_pools",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "dns_zone",
-		CLIName:           "dns-zone",
-		Description:       "DNS zone configuration",
-		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_zones",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "dns_zone_rrset",
-		CLIName:           "dns-zone-rrset",
-		Description:       "DNS zone resource record set management",
-		APIPath:           "/api/config/dns/dns_zones/{dns_zone_name}/rrsets",
-		SupportsNamespace: false,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "dns_zone_subscription",
-		CLIName:           "dns-zone-subscription",
-		Description:       "DNS zone subscription management",
-		APIPath:           "/api/config/dns/subscription",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	// Flow & Network Analytics
-	Register(&ResourceType{
-		Name:              "flow",
-		CLIName:           "flow",
-		Description:       "Network flow data queries",
-		APIPath:           "/api/data/namespaces/{namespace}/flows",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "discovered_service",
-		CLIName:           "discovered-service",
-		Description:       "Discovered service information",
-		APIPath:           "/api/config/namespaces/{namespace}/discovered_services",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
-	})
-
-	// Graph & Visualization
-	Register(&ResourceType{
-		Name:              "graph_connectivity",
-		CLIName:           "graph-connectivity",
-		Description:       "Connectivity graph analysis",
-		APIPath:           "/api/graph/namespaces/{namespace}/connectivity",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "graph_l3l4",
-		CLIName:           "graph-l3l4",
-		Description:       "L3/L4 topology graph",
-		APIPath:           "/api/graph/namespaces/{namespace}/l3l4",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "graph_service",
-		CLIName:           "graph-service",
-		Description:       "Service graph queries",
-		APIPath:           "/api/graph/namespaces/{namespace}/services",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "graph_site",
-		CLIName:           "graph-site",
-		Description:       "Site topology graph",
-		APIPath:           "/api/graph/namespaces/{namespace}/sites",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	// Geo-Location
-	Register(&ResourceType{
-		Name:              "geo_location_set",
-		CLIName:           "geo-location-set",
-		Description:       "Geo location set configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/geo_location_sets",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "gia",
-		CLIName:           "gia",
-		Description:       "GIA operations",
-		APIPath:           "/api/config/namespaces/system/gias",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-			Delete: true,
-		},
-	})
-
-	// Infrastructure Protection
-	Register(&ResourceType{
-		Name:              "infraprotect",
-		CLIName:           "infraprotect",
-		Description:       "Infrastructure protection configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/infraprotects",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "infraprotect_asn",
-		CLIName:           "infraprotect-asn",
-		Description:       "Infrastructure protection ASN configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_asns",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "infraprotect_asn_prefix",
-		CLIName:           "infraprotect-asn-prefix",
-		Description:       "Infrastructure protection ASN prefix configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_asn_prefixs",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "infraprotect_deny_list_rule",
-		CLIName:           "infraprotect-deny-list-rule",
-		Description:       "Infrastructure protection deny list rule",
-		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_deny_list_rules",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "infraprotect_firewall_rule",
-		CLIName:           "infraprotect-firewall-rule",
-		Description:       "Infrastructure protection firewall rule",
-		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_firewall_rules",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "infraprotect_firewall_rule_group",
-		CLIName:           "infraprotect-firewall-rule-group",
-		Description:       "Infrastructure protection firewall rule group",
-		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_firewall_rule_groups",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "infraprotect_firewall_ruleset",
-		CLIName:           "infraprotect-firewall-ruleset",
-		Description:       "Infrastructure protection firewall ruleset",
-		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_firewall_rulesets",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Update: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "infraprotect_information",
-		CLIName:           "infraprotect-information",
-		Description:       "Infrastructure protection information",
-		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_informations",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "infraprotect_internet_prefix_advertisement",
-		CLIName:           "infraprotect-internet-prefix-advertisement",
-		Description:       "Infrastructure protection internet prefix advertisement",
-		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_internet_prefix_advertisements",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "infraprotect_tunnel",
-		CLIName:           "infraprotect-tunnel",
-		Description:       "Infrastructure protection tunnel configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_tunnels",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	// Logging & Events
-	Register(&ResourceType{
-		Name:              "log",
-		CLIName:           "log",
-		Description:       "Log data queries",
-		APIPath:           "/api/data/namespaces/{namespace}/logs",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	// Management & Administration
-	Register(&ResourceType{
-		Name:              "module_management",
-		CLIName:           "module-management",
-		Description:       "Module management information",
-		APIPath:           "/api/config/namespaces/{namespace}/module_managements",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "oidc_provider",
-		CLIName:           "oidc-provider",
-		Description:       "OIDC provider configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/oidc_providers",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-			Update: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "registration",
-		CLIName:           "registration",
-		Description:       "Registration management",
-		APIPath:           "/api/config/namespaces/{namespace}/registrations",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "scim",
-		CLIName:           "scim",
-		Description:       "SCIM user and group management",
-		APIPath:           "/api/scim/v2",
-		SupportsNamespace: false,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "tenant",
-		CLIName:           "tenant",
-		Description:       "Tenant management",
-		APIPath:           "/api/config/namespaces/{namespace}/tenants",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "tenant_management",
-		CLIName:           "tenant-management",
-		Description:       "Tenant management operations",
-		APIPath:           "/api/config/namespaces/{namespace}/tenant_managements",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "token",
-		CLIName:           "token",
-		Description:       "Token management",
-		APIPath:           "/api/config/namespaces/{namespace}/tokens",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "tpm_api_key",
-		CLIName:           "tpm-api-key",
-		Description:       "TPM API key management",
-		APIPath:           "/api/config/namespaces/{namespace}/tpm_api_keys",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-			Update: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "tpm_category",
-		CLIName:           "tpm-category",
-		Description:       "TPM category management",
-		APIPath:           "/api/config/namespaces/{namespace}/tpm_categorys",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-			Update: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "tpm_manager",
-		CLIName:           "tpm-manager",
-		Description:       "TPM manager operations",
-		APIPath:           "/api/config/namespaces/{namespace}/tpm_managers",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "tpm_provision",
-		CLIName:           "tpm-provision",
-		Description:       "TPM provisioning operations",
-		APIPath:           "/api/config/namespaces/system/tpm_provisions",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "user",
-		CLIName:           "user",
-		Description:       "User management",
-		APIPath:           "/api/web/namespaces/system/users",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Update: true,
-			Delete: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "user_setting",
-		CLIName:           "user-setting",
-		Description:       "User settings management",
-		APIPath:           "/api/web/namespaces/system/user_settings",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Update: true,
-			Delete: true,
-		},
-	})
-
-	// Monitoring & Observability
-	Register(&ResourceType{
-		Name:              "observability_subscription",
-		CLIName:           "observability-subscription",
-		Description:       "Observability subscription management",
-		APIPath:           "/api/config/namespaces/system/observability_subscriptions",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "synthetic_monitor",
-		CLIName:           "synthetic-monitor",
-		Description:       "Synthetic monitoring configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/synthetic_monitors",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "synthetic_monitor_dns",
-		CLIName:           "synthetic-monitor-dns",
-		Description:       "DNS synthetic monitor configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/v1_dns_monitors",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "synthetic_monitor_http",
-		CLIName:           "synthetic-monitor-http",
-		Description:       "HTTP synthetic monitor configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/v1_http_monitors",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "report",
-		CLIName:           "report",
-		Description:       "Report management",
-		APIPath:           "/api/config/namespaces/{namespace}/reports",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "report_config",
-		CLIName:           "report-config",
-		Description:       "Report configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/report_configs",
-		SupportsNamespace: true,
-		Operations:        AllOperations(),
-	})
-
-	// Network Operations
-	Register(&ResourceType{
-		Name:              "operate_bgp",
-		CLIName:           "operate-bgp",
-		Description:       "BGP operational data",
-		APIPath:           "/api/operate/namespaces/{namespace}/bgp",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "operate_crl",
-		CLIName:           "operate-crl",
-		Description:       "CRL operations",
-		APIPath:           "/api/operate/namespaces/{namespace}/crl",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "operate_debug",
-		CLIName:           "operate-debug",
-		Description:       "Debug operations",
-		APIPath:           "/api/operate/namespaces/{namespace}/debug",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "operate_dhcp",
-		CLIName:           "operate-dhcp",
-		Description:       "DHCP operational status",
-		APIPath:           "/api/operate/namespaces/{namespace}/dhcp",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "operate_flow",
-		CLIName:           "operate-flow",
-		Description:       "Flow operations",
-		APIPath:           "/api/operate/namespaces/{namespace}/flow",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "operate_lte",
-		CLIName:           "operate-lte",
-		Description:       "LTE operations",
-		APIPath:           "/api/operate/namespaces/{namespace}/lte",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "operate_ping",
-		CLIName:           "operate-ping",
-		Description:       "Ping operation",
-		APIPath:           "/api/operate/namespaces/{namespace}/ping",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "operate_route",
-		CLIName:           "operate-route",
-		Description:       "Route operations",
-		APIPath:           "/api/operate/namespaces/{namespace}/route",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "operate_tcpdump",
-		CLIName:           "operate-tcpdump",
-		Description:       "TCP dump operation",
-		APIPath:           "/api/operate/namespaces/{namespace}/tcpdump",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "operate_traceroute",
-		CLIName:           "operate-traceroute",
-		Description:       "Traceroute operation",
-		APIPath:           "/api/operate/namespaces/{namespace}/traceroute",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "operate_usb",
-		CLIName:           "operate-usb",
-		Description:       "USB operations",
-		APIPath:           "/api/operate/namespaces/{namespace}/usb",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "operate_wifi",
-		CLIName:           "operate-wifi",
-		Description:       "WiFi operations",
-		APIPath:           "/api/operate/namespaces/{namespace}/wifi",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
-	})
-
-	// Platform Services
-	Register(&ResourceType{
-		Name:              "signup",
-		CLIName:           "signup",
-		Description:       "User signup operations",
-		APIPath:           "/api/signup",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Get:    true,
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "status_at_site",
-		CLIName:           "status-at-site",
-		Description:       "Status at site information",
-		APIPath:           "/api/config/namespaces/{namespace}/status_at_sites",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "topology",
-		CLIName:           "topology",
-		Description:       "Topology queries and generation",
-		APIPath:           "/api/topology",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Get:    true,
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "stored_object",
-		CLIName:           "stored-object",
-		Description:       "Stored object management",
-		APIPath:           "/api/config/namespaces/{namespace}/stored_objects",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Update: true,
-			Delete: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "subscription",
-		CLIName:           "subscription",
-		Description:       "Subscription management",
-		APIPath:           "/api/usage/namespaces/{namespace}/subscriptions",
-		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "usage_plan",
-		CLIName:           "usage-plan",
-		Description:       "Usage plan information",
-		APIPath:           "/api/usage/namespaces/{namespace}/plans",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	Register(&ResourceType{
-		Name:              "usage_invoice",
-		CLIName:           "usage-invoice",
-		Description:       "Usage invoice information",
-		APIPath:           "/api/usage/namespaces/{namespace}/invoices",
-		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
-	})
-
-	// Shape Bot Defense
-	Register(&ResourceType{
 		Name:              "shape_bot_defense_bot_allowlist_policy",
 		CLIName:           "shape-bot-defense-bot-allowlist-policy",
 		Description:       "Shape bot defense allowlist policy",
 		APIPath:           "/api/config/namespaces/{namespace}/bot_allowlist_policys",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Update: true,
-		},
+		Operations:        ResourceOperations{Create: false, Get: true, List: true, Update: true, Delete: false, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2234,11 +1675,7 @@ func registerGeneratedResources() {
 		Description:       "Shape bot defense endpoint policy",
 		APIPath:           "/api/config/namespaces/{namespace}/bot_endpoint_policys",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Update: true,
-		},
+		Operations:        ResourceOperations{Create: false, Get: true, List: true, Update: true, Delete: false, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2247,12 +1684,7 @@ func registerGeneratedResources() {
 		Description:       "Shape bot defense infrastructure",
 		APIPath:           "/api/config/namespaces/{namespace}/bot_infrastructures",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-			Update: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: true, Delete: false, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2261,11 +1693,16 @@ func registerGeneratedResources() {
 		Description:       "Shape bot defense network policy",
 		APIPath:           "/api/config/namespaces/{namespace}/bot_network_policys",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Update: true,
-		},
+		Operations:        ResourceOperations{Create: false, Get: true, List: true, Update: true, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_bot_defense_instance",
+		CLIName:           "shape-bot-defense-instance",
+		Description:       "Shape Bot Defense Instance is the main configuration for a Shape Integration.\\nIt defines various configuration parameters needed to use Shape SSEs.",
+		APIPath:           "/api/config/namespaces/{namespace}/shape_bot_defense_instances",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
 	})
 
 	Register(&ResourceType{
@@ -2301,11 +1738,7 @@ func registerGeneratedResources() {
 		Description:       "Shape bot defense reporting",
 		APIPath:           "/api/config/namespaces/{namespace}/bot_defense_reporting",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2314,9 +1747,7 @@ func registerGeneratedResources() {
 		Description:       "Shape bot defense subscription",
 		APIPath:           "/api/config/namespaces/system/bot_defense_subscriptions",
 		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2325,12 +1756,7 @@ func registerGeneratedResources() {
 		Description:       "Shape bot detection rule",
 		APIPath:           "/api/config/namespaces/{namespace}/bot_detection_rules",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-			Delete: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: true, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2342,7 +1768,6 @@ func registerGeneratedResources() {
 		Operations:        ReadOnlyOperations(),
 	})
 
-	// Shape BRM Alerts
 	Register(&ResourceType{
 		Name:              "shape_brmalerts_alert_gen_policy",
 		CLIName:           "shape-brmalerts-alert-gen-policy",
@@ -2358,24 +1783,16 @@ func registerGeneratedResources() {
 		Description:       "Shape BRM alerts template",
 		APIPath:           "/api/config/namespaces/{namespace}/alert_templates",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-			Delete: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: true, Status: false},
 	})
 
-	// Shape Client Side Defense
 	Register(&ResourceType{
 		Name:              "shape_client_side_defense",
 		CLIName:           "shape-client-side-defense",
 		Description:       "Shape client side defense",
 		APIPath:           "/api/config/namespaces/system/client_side_defenses",
 		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2384,12 +1801,7 @@ func registerGeneratedResources() {
 		Description:       "Shape client side defense allowed domain",
 		APIPath:           "/api/config/namespaces/{namespace}/allowed_domains",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-			Delete: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: true, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2398,12 +1810,7 @@ func registerGeneratedResources() {
 		Description:       "Shape client side defense mitigated domain",
 		APIPath:           "/api/config/namespaces/{namespace}/mitigated_domains",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-			Delete: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: true, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2412,12 +1819,7 @@ func registerGeneratedResources() {
 		Description:       "Shape client side defense protected domain",
 		APIPath:           "/api/config/namespaces/{namespace}/protected_domains",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-			Delete: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: true, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2426,59 +1828,16 @@ func registerGeneratedResources() {
 		Description:       "Shape client side defense subscription",
 		APIPath:           "/api/config/namespaces/system/client_side_defense_subscriptions",
 		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
 	})
 
-	Register(&ResourceType{
-		Name:              "shape_device_id",
-		CLIName:           "shape-device-id",
-		Description:       "Shape device ID",
-		APIPath:           "/api/config/namespaces/system/device_ids",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-			Delete: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "shape_mobile_app_shield_subscription",
-		CLIName:           "shape-mobile-app-shield-subscription",
-		Description:       "Shape mobile app shield subscription",
-		APIPath:           "/api/config/namespaces/system/mobile_app_shield_subscriptions",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	Register(&ResourceType{
-		Name:              "shape_mobile_integrator_subscription",
-		CLIName:           "shape-mobile-integrator-subscription",
-		Description:       "Shape mobile integrator subscription",
-		APIPath:           "/api/config/namespaces/system/mobile_integrator_subscriptions",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-		},
-	})
-
-	// Shape Data Delivery
 	Register(&ResourceType{
 		Name:              "shape_data_delivery",
 		CLIName:           "shape-data-delivery",
 		Description:       "Shape data delivery",
 		APIPath:           "/api/config/namespaces/{namespace}/data_deliverys",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2496,9 +1855,34 @@ func registerGeneratedResources() {
 		Description:       "Shape data delivery subscription",
 		APIPath:           "/api/config/namespaces/system/data_delivery_subscriptions",
 		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_device_id",
+		CLIName:           "shape-device-id",
+		Description:       "Shape device ID",
+		APIPath:           "/api/config/namespaces/system/device_ids",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: true, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_mobile_app_shield_subscription",
+		CLIName:           "shape-mobile-app-shield-subscription",
+		Description:       "Shape mobile app shield subscription",
+		APIPath:           "/api/config/namespaces/system/mobile_app_shield_subscriptions",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "shape_mobile_integrator_subscription",
+		CLIName:           "shape-mobile-integrator-subscription",
+		Description:       "Shape mobile integrator subscription",
+		APIPath:           "/api/config/namespaces/system/mobile_integrator_subscriptions",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2507,10 +1891,7 @@ func registerGeneratedResources() {
 		Description:       "Shape recognize",
 		APIPath:           "/api/shape/recognize",
 		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Get:    true,
-			Create: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: true, List: false, Update: false, Delete: false, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2519,10 +1900,7 @@ func registerGeneratedResources() {
 		Description:       "Shape safe",
 		APIPath:           "/api/shape/safe",
 		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Get:    true,
-			Create: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: true, List: false, Update: false, Delete: false, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2531,104 +1909,493 @@ func registerGeneratedResources() {
 		Description:       "Shape safe AP",
 		APIPath:           "/api/shape/safeap",
 		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Get:    true,
-			Create: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: true, List: false, Update: false, Delete: false, Status: false},
 	})
 
-	// WAF & Application Protection
 	Register(&ResourceType{
-		Name:              "waf",
-		CLIName:           "waf",
-		Description:       "WAF configuration",
-		APIPath:           "/api/config/namespaces/{namespace}/wafs",
+		Name:              "signup",
+		CLIName:           "signup",
+		Description:       "Use this API to signup for F5XC service.\\none can signup to use volterra service as an individual/free account or\\nas a team account more suited for enterprise customers. \\nfor more details on what each type of account features, visit - https://console.ves.volterra.io/signup/usage_plan\\nsince signup flow includes more complex selections and passing in secure payment processing,\\nwe recommend using web UI for this process https://console.ves.volterra.io/signup/start",
+		APIPath:           "/api/signup",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: true, Get: true, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "site",
+		CLIName:           "site",
+		Description:       "Site represent physical/cloud cluster of volterra processing elements. There are two types of sites currently.\\n\\n   Regional Edge (RE)\\n\\n    Regional Edge sites are network edge sites owned and operated by volterra edge cloud. RE can be used to\\n    host VIPs, run API gateway or any application at network edge.\\n\\n   Customer Edge (CE)\\n\\n    Customer Edge sites are edge sites owned by customer and operated by volterra cloud. CE can be as application gateway\\n    to connect applications in multiple clusters or clouds. CE can also run applications at customer premise.\\n   \\n   Nginx One\\n     Nginx One sites are sites owned and operated by Nginx One SaaS Console. Nginx One site can be used to configure service\\n     discovery which allows customer to bring their NGINX inventory visibility into the core XC workspaces.\\n\\nSite configuration contains the information like\\n\\n    Site locations\\n    parameters to override fleet config\\n    IP Addresses to be used by automatic vip assignments for default networks\\n    etc\\n\\n Sites are automatically created by registration mechanism. They can be modified to add location or description and they can be deleted.",
+		APIPath:           "/api/config/namespaces/{namespace}/sites",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
+		Operations:        AllOperations(),
 	})
 
 	Register(&ResourceType{
-		Name:              "waf_signatures_changelog",
-		CLIName:           "waf-signatures-changelog",
-		Description:       "WAF signatures changelog",
-		APIPath:           "/api/config/namespaces/{namespace}/waf_signatures_changelogs",
+		Name:              "site_mesh_group",
+		CLIName:           "site-mesh-group",
+		Description:       "Site mesh group is a configuration tool to provide Site to Site\\nconnectivity\\n\\nSet of sites in a site mesh group are defined by a virtual site.\\n\\nThe site mesh groups can be of type HUB or SPOKE. Where,\\n- SITE_MESH_GROUP_TYPE_HUB_FULL_MESH\\n  'virtual_site' in the Site Mesh Group defines list of HUB Sites for the Site Mesh Group\\n  A HUB Site will route traffic between all its Spoke Sites.\\n\\n  Current release can support only a single site in Site Mesh Group of this type\\n\\n- SITE_MESH_GROUP_TYPE_SPOKE\\n  'virtual_site' selects list of Spoke sites. Traffic between two Spoke sites is\\n   routed thru Hub Sites.\\n\\n  'hub' field refers to another Site Mesh Group. The 'virtual_site' in this Site Mesh Group\\n  gives list of Hub Sites for the Spokes. Every Spoke site will create tunnels with all the\\n  Hub Sites\\n\\n- SITE_MESH_GROUP_TYPE_FULL_MESH\\n  'virtual_site' selects list of Sites. Full mesh of tunnels is created between all sites that\\n  are member of virtual_site\\n\\nNOTE :\\n- The tunnels created by Site Mesh Group are in addition to the tunnels created from CE to its 'Connected REs'\\n- The tunnels can be setup over either public network or a private network and tunnels can be of type IPSec only\\n- A site can be member of either SITE_MESH_GROUP_TYPE_HUB_FULL_MESH or SITE_MESH_GROUP_TYPE_SPOKE. Not both",
+		APIPath:           "/api/config/namespaces/{namespace}/site_mesh_groups",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
-	})
-
-	// Miscellaneous
-	Register(&ResourceType{
-		Name:              "malware_protection_subscription",
-		CLIName:           "malware-protection-subscription",
-		Description:       "Malware protection subscription",
-		APIPath:           "/api/config/namespaces/system/malware_protection_subscriptions",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-		},
+		Operations:        AllOperations(),
 	})
 
 	Register(&ResourceType{
-		Name:              "nginx_one_subscription",
-		CLIName:           "nginx-one-subscription",
-		Description:       "NGINX One subscription",
-		APIPath:           "/api/config/namespaces/system/nginx_one_subscriptions",
-		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-		},
+		Name:              "srv6_network_slice",
+		CLIName:           "srv6-network-slice",
+		Description:       "An srv6_network_slice represents a network slice in an operator network that uses SRv6.",
+		APIPath:           "/api/config/namespaces/{namespace}/srv6_network_slices",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
 	})
 
 	Register(&ResourceType{
-		Name:              "pbac_catalog",
-		CLIName:           "pbac-catalog",
-		Description:       "PBAC catalog",
-		APIPath:           "/api/web/namespaces/system/catalogs",
+		Name:              "status_at_site",
+		CLIName:           "status-at-site",
+		Description:       "Any user configured object in F5XC Edge Cloud has a status object associated with that it.\\nAn object may be created in multiple sites and therefore it is desirable to have the ability\\nto get the current status of the configured object in a given site.",
+		APIPath:           "/api/config/namespaces/{namespace}/status_at_sites",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "stored_object",
+		CLIName:           "stored-object",
+		Description:       "Stored object management",
+		APIPath:           "/api/config/namespaces/{namespace}/stored_objects",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: false, Get: true, List: true, Update: true, Delete: true, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "subnet",
+		CLIName:           "subnet",
+		Description:       "Subnet object is used to support VMs/pods with multiple interfaces,\\nwith each one in a different subnet.",
+		APIPath:           "/api/config/namespaces/{namespace}/subnets",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "subscription",
+		CLIName:           "subscription",
+		Description:       "\\nRepresents addon subscription \\nEywa will create the schema.pbac.addon_subscription object (SUBSCRIPTION_PENDING)\\nSRE/Support team member via f5xc-support tenant changes the status of the addon_subscription object (SUBSCRIPTION_ENABLE)",
+		APIPath:           "/api/usage/namespaces/{namespace}/subscriptions",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "synthetic_monitor",
+		CLIName:           "synthetic-monitor",
+		Description:       "Custom handler for DNS Monitor and HTTP Monitor",
+		APIPath:           "/api/config/namespaces/{namespace}/synthetic_monitors",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "synthetic_monitor_dns",
+		CLIName:           "synthetic-monitor-dns",
+		Description:       "DNS synthetic monitor configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/v1_dns_monitors",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "synthetic_monitor_http",
+		CLIName:           "synthetic-monitor-http",
+		Description:       "HTTP synthetic monitor configuration",
+		APIPath:           "/api/config/namespaces/{namespace}/v1_http_monitors",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "tcp_loadbalancer",
+		CLIName:           "tcp-loadbalancer",
+		Description:       "TCP load balancer view defines a required parameters that can be used in CRUD, to create and manage TCP load balancer.\\nIt can be used to create TCP load balancer and TCP load balancer with SNI.\\n\\nView will create following child objects.\\n\\n* Virtual-host\\n* default route\\n* clusters\\n* endpoints\\n* advertise policy",
+		APIPath:           "/api/config/namespaces/{namespace}/tcp_loadbalancers",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "tenant",
+		CLIName:           "tenant",
+		Description:       "Package for working with Tenant representation.",
+		APIPath:           "/api/config/namespaces/{namespace}/tenants",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "tenant_configuration",
+		CLIName:           "tenant-configuration",
+		Description:       "Tenant configuration consists of three main parts:\\n- Basic Configuration\\n- Brute Force Detection Settings\\n- Password Policy\\nBasic configuration contains general parameters which can be adjusted within tenant.\\nBrute force detection settings can be used to adjust some parameters of the brute force detection system.\\nPassword policy allows you to configure your own password policy within tenant.\\nEach user within tenant will have to comply with the configured policy when set or update the password.",
+		APIPath:           "/api/config/namespaces/{namespace}/tenant_configurations",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "tenant_management",
+		CLIName:           "tenant-management",
+		Description:       "\\nManaged tenant objects are required for declaring intent to manage a tenant.\\nThe tenant which is being managed is called a `Managed Tenant` or `MT`` and\\nthe tenant which is initiating the management is called `Original Tenant` or `OT`.\\n\\nA tenant can manage one or more tenants and tenant itself could be managed by other allowed tenant.\\nExplicit configuration is required to establish or allow management - ie, request to manage via\\nmanaged_tenant object configuration in OT and allowed to manage declaration via allowed_tenant\\nconfiguration in MT. This means reflexive and transitive relation are *NOT* supported or\\nsuch assumptions cannot be made.\\n  Reflexive - tenant A (OT) -> tenant B (MT) ==> Tenant B manage Tenant A\\n  Transitive - tenant A (OT) -> tenant B (MT) , tenant B (OT) -> tenant C (MT) ==> Tenant A manage Tenant C\\n\\nWhile creating a managed_tenant configuration object, admin can choose existing\\nuser group instance from the tenant and map it to groups in the managed tenant by specifying\\nmanaged tenant's group names. User in original tenant needs to be member of group specified in managed_tenant\\nconfiguration. Access into managed tenant will be granted once admin of managed tenant creates an allowed tenant\\nconfiguration including one or more groups specified in managed_tenant configuration.\\nUntil admin of an MT creates corresponding allowed_tenant configuration, RBAC will deny access.\\n\\nWhen User from OT tries to access managed tenant, group memberships will be taken from OT and\\ncorresponding groups will be identified via the map configuration; and underlying roles for each\\nmapped group will be looked up from managed_tenant (MT) and evaluated for the API access.\\n\\nThis gives admin of managed tenant ability to have granular RBAC(Role Based Access Control) for all\\nuser access from original tenant and admin of original tenant to control which user has access into\\nwhich managed tenant based on group assignment/membership.\\n\\nThis feature may not be enabled by default and will require subscribing to additional addon service\\n`Tenant Manangement` depending upon the tenant's plan",
+		APIPath:           "/api/config/namespaces/{namespace}/tenant_managements",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "tenant_management_allowed_tenant",
+		CLIName:           "tenant-management-allowed-tenant",
+		Description:       "\\nAllowed tenant object will allow tenant in the name field to manage tenant in which its created.\\nAdmin can create allowed_tenant configuration if the tenant needs to be managed by tenant in allowed_tenant\\nconfiguration - by \\\"allow\\\"ing access to manage.\\nAdmin can precisely limit access of allowed tenant via selecting required groups (`user_groups`) which underlying\\nhas the namespace and roles configured.\\n\\nTenant which is creating allowed_tenant configuration is called `Managed Tenant` or `MT` and tenant ID specified\\nin the spec configuration is called as `Original Tenant` or `OT`.\\n\\nAdmin of OT can create a corresponding managed_tenant configuration in their tenant which can be treated as an\\nintent to manage and creation of this allowed_tenant configuration in MT grants access for OT into MT.\\nBoth configuration - allowed_tenant in MT and managed_tenant in OT, need to exist for managed tenant access to work.\\n\\nDepending on a tenant's current plan, certain tenant may already have default allowed tenant configurations to provide\\naccess for Support Team which can be precisely managed via additional APIs.",
+		APIPath:           "/api/web/namespaces/{namespace}/allowed_tenants",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "tenant_management_child_tenant",
+		CLIName:           "tenant-management-child-tenant",
+		Description:       "\\nChild Tenant",
+		APIPath:           "/api/web/namespaces/{namespace}/child_tenants",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "tenant_management_child_tenant_manager",
+		CLIName:           "tenant-management-child-tenant-manager",
+		Description:       "\\nChild Tenant Manager uses Tenant Profile template to create child tenant and store its object reference. \\nAny look up for child tenant should be done from child tenant manager since it stores object reference for all child tenants.",
+		APIPath:           "/api/web/namespaces/{namespace}/child_tenant_managers",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "tenant_management_managed_tenant",
+		CLIName:           "tenant-management-managed-tenant",
+		Description:       "\\nManaged tenant objects are required for declaring intent to manage a tenant.\\nThe tenant which is being managed is called a `Managed Tenant` or `MT`` and\\nthe tenant which is initiating the management is called `Original Tenant` or `OT`.\\n\\nA tenant can manage one or more tenants and tenant itself could be managed by other allowed tenant.\\nExplicit configuration is required to establish or allow management - ie, request to manage via\\nmanaged_tenant object configuration in OT and allowed to manage declaration via allowed_tenant\\nconfiguration in MT. This means reflexive and transitive relation are *NOT* supported or\\nsuch assumptions cannot be made.\\n  Reflexive - tenant A (OT) -> tenant B (MT) ==> Tenant B manage Tenant A\\n  Transitive - tenant A (OT) -> tenant B (MT) , tenant B (OT) -> tenant C (MT) ==> Tenant A manage Tenant C\\n\\nWhile creating a managed_tenant configuration object, admin can choose existing\\nuser group instance from the tenant and map it to groups in the managed tenant by specifying\\nmanaged tenant's group names. User in original tenant needs to be member of group specified in managed_tenant\\nconfiguration. Access into managed tenant will be granted once admin of managed tenant creates an allowed tenant\\nconfiguration including one or more groups specified in managed_tenant configuration.\\nUntil admin of an MT creates corresponding allowed_tenant configuration, RBAC will deny access.\\n\\nWhen User from OT tries to access managed tenant, group memberships will be taken from OT and\\ncorresponding groups will be identified via the map configuration; and underlying roles for each\\nmapped group will be looked up from managed_tenant (MT) and evaluated for the API access.\\n\\nThis gives admin of managed tenant ability to have granular RBAC(Role Based Access Control) for all\\nuser access from original tenant and admin of original tenant to control which user has access into\\nwhich managed tenant based on group assignment/membership.\\n\\nThis feature may not be enabled by default and will require subscribing to additional addon service\\n`Tenant Manangement` depending upon the tenant's plan",
+		APIPath:           "/api/web/namespaces/{namespace}/managed_tenants",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "tenant_management_tenant_profile",
+		CLIName:           "tenant-management-tenant-profile",
+		Description:       "",
+		APIPath:           "/api/web/namespaces/{namespace}/tenant_profiles",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "third_party_application",
+		CLIName:           "third-party-application",
+		Description:       "View will create following child objects.\\n\\n* Virtual-host\\n* API-inventory\\n* App-type\\n* App-setting",
+		APIPath:           "/api/config/namespaces/{namespace}/third_party_applications",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "ticket_management_ticket_tracking_system",
+		CLIName:           "ticket-management-ticket-tracking-system",
+		Description:       "Public Custom APIs for Ticket Tracking System related operations",
+		APIPath:           "/api/web/namespaces/{namespace}/ticket_tracking_systems",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "token",
+		CLIName:           "token",
+		Description:       "token object is used to manage site admission. User must generate token before provisioning and pass this\\ntoken to site during it's registration. Invalid tokens are refused and site with invalid token won't be able\\nto join F5XC network.\\nSingle token can be used to register multiple sites.",
+		APIPath:           "/api/config/namespaces/{namespace}/tokens",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "topology",
+		CLIName:           "topology",
+		Description:       "APIs to get topology of all the resources associated/connected to a site such as other CEs (Customer Edge),\\nREs (Regional Edge), VPCs (Virtual Private Cloud) networks, etc., and the associated metrics. Relationship between\\nthe resources associated with a site is represented as a graph, where each resource/entity is represented as a node\\n(example: CE, RE, VPC, Subnet, etc.,) and their association is represented as edge (example: CE - RE connection,\\nNetwork - Subnets association, etc.,)",
+		APIPath:           "/api/topology",
 		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Update: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: true, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "tpm_api_key",
+		CLIName:           "tpm-api-key",
+		Description:       "TPM API Keys are used by TPM provisioning tool during manufacturing to call in to F5XC TPM provisioning service to generate\\nEK certificates and provision them in the Volterra's Customer Edge(CE) devices' TPM chip.",
+		APIPath:           "/api/config/namespaces/{namespace}/tpm_api_keys",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: true, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "tpm_category",
+		CLIName:           "tpm-category",
+		Description:       "Category is a grouping of APIKeys, each category comes with its own SubCA for signing\\nTPM EK, SRK and AK certificates",
+		APIPath:           "/api/config/namespaces/{namespace}/tpm_categorys",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: true, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "tpm_manager",
+		CLIName:           "tpm-manager",
+		Description:       "TPM Manager stores the required TPM management related data for the customer.\\nThe data includes APIKeys, Category, Root and SubCA's, and Client Certificates\\nThere are three types of Root CAs that are generated when a TPM Manager instance is created.\\nThese types are: EK(Endorsement Key), AK(Attestation Key), and SRK(Storage Root Key) as defined by TPM spec",
+		APIPath:           "/api/config/namespaces/{namespace}/tpm_managers",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "tpm_provision",
+		CLIName:           "tpm-provision",
+		Description:       "TPM Provisioning APIs used to generate F5XC certificates\\nto program device TPM.",
+		APIPath:           "/api/config/namespaces/system/tpm_provisions",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "trusted_ca_list",
+		CLIName:           "trusted-ca-list",
+		Description:       "A Root CA Certificate represents list of trusted root CAs",
+		APIPath:           "/api/config/namespaces/{namespace}/trusted_ca_lists",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "tunnel",
+		CLIName:           "tunnel",
+		Description:       "Tunnel configuration allows user to specify parameters for configuring static tunnels.\\nConfiguration involves specification of encapsulation and related parameters to be used\\nfor this tunnel\\nPayload traffic which will be encapsulated to go on tunnel belongs to a network which is derived\\nby looking at tunnel network interface to which this tunnel is attached. IOW VN of referring network\\ninterface is the network from which payload is sent inside the tunnel\\nNote: For tunnel configuration to come into effect it has to be attached to a tunnel network interface\\n\\nConfiguration Parameters\\n- Tunnel Type - Supported encapsulations are IPSEC\\n- Local IP Address - Provides local source IP for tunnel and virtual network type selection for transporting encapsulated packets\\n- Remote IP Address - IP used for remote in destination of encapsulated packet\\n- Tunnel Params - Involves configuration for supported tunnel type i.e. IPSEC\\n\\nIPSec configuration params\\n- Ipsec PSK - pre shared key to be used by IKE to establish SA",
+		APIPath:           "/api/config/namespaces/{namespace}/tunnels",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "udp_loadbalancer",
+		CLIName:           "udp-loadbalancer",
+		Description:       "UDP load balancer view defines a required parameters that can be used in CRUD, to create and manage UDP load balancer.\\nIt can be used to create UDP load balancer.\\n\\nView will create following child objects.\\n\\n* Virtual-host\\n* default route\\n* clusters\\n* endpoints\\n* advertise policy",
+		APIPath:           "/api/config/namespaces/{namespace}/udp_loadbalancers",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "ui_static_component",
+		CLIName:           "ui-static-component",
+		Description:       "stores information about the UI Components in key-value pair",
+		APIPath:           "/api/web/namespaces/{namespace}/static_components",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "upgrade_status",
+		CLIName:           "upgrade-status",
+		Description:       "Upgrade status custom APIs",
+		APIPath:           "/api/config/namespaces/{namespace}/upgrade_statuss",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "usage",
+		CLIName:           "usage",
+		Description:       "Usage plan related RPCs. Used for billing and onboarding.",
+		APIPath:           "/api/web/namespaces/{namespace}/hourly_usage_details",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "usage_invoice",
+		CLIName:           "usage-invoice",
+		Description:       "Usage invoice information",
+		APIPath:           "/api/usage/namespaces/{namespace}/invoices",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "usage_plan",
+		CLIName:           "usage-plan",
+		Description:       "Usage plan information",
+		APIPath:           "/api/usage/namespaces/{namespace}/plans",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "usb_policy",
+		CLIName:           "usb-policy",
+		Description:       "USB policy is used to specify list of USB devices allowed to be attached to node.",
+		APIPath:           "/api/config/namespaces/{namespace}/usb_policys",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "user",
+		CLIName:           "user",
+		Description:       "Custom API of user settings.",
+		APIPath:           "/api/web/namespaces/system/users",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: false, Get: true, List: true, Update: true, Delete: true, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "user_group",
+		CLIName:           "user-group",
+		Description:       "Represents group for a given tenant",
+		APIPath:           "/api/web/namespaces/{namespace}/user_groups",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "user_identification",
+		CLIName:           "user-identification",
+		Description:       "A user_identification object consists of an ordered list of rules. The rules are evaluated against the input fields that are extracted from an request API\\nto determine a user identifier. The identifier is subsequently used to apply a rate_limiter to the request. A user_identification object can be referred to\\nfrom virtual_host and rate_limiter objects. The rules in the most specific user_identification object are used to obtain the identifier prior to applying a\\nrate_limiter. For example, the user_identification rules from a rate_limiter are preferred over those from a virtual_host. If there no user_identification\\nobjects associated with the virtual_host or the rate_limiter being applied, the client IP address is treated as the identifier.",
+		APIPath:           "/api/config/namespaces/{namespace}/user_identifications",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "user_setting",
+		CLIName:           "user-setting",
+		Description:       "User settings management",
+		APIPath:           "/api/web/namespaces/system/user_settings",
+		SupportsNamespace: false,
+		Operations:        ResourceOperations{Create: false, Get: true, List: true, Update: true, Delete: true, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "views_terraform_parameters",
+		CLIName:           "views-terraform-parameters",
+		Description:       "Terraform parameters view",
+		APIPath:           "/api/config/namespaces/{namespace}/terraform_parameters",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "views_view_internal",
+		CLIName:           "views-view-internal",
+		Description:       "Internal view",
+		APIPath:           "/api/config/namespaces/{namespace}/view_internals",
+		SupportsNamespace: true,
+		Operations:        ReadOnlyOperations(),
 	})
 
 	Register(&ResourceType{
 		Name:              "virtual_appliance",
 		CLIName:           "virtual-appliance",
-		Description:       "Virtual appliance",
+		Description:       "Upgrade status custom APIs",
 		APIPath:           "/api/config/namespaces/system/virtual_appliances",
 		SupportsNamespace: false,
-		Operations: ResourceOperations{
-			Create: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: false, List: false, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "virtual_host",
+		CLIName:           "virtual-host",
+		Description:       "Virtual host is main anchor configuration for a proxy. Primary application for virtual host configuration is\\nreverse proxy.  Virtual host object is used to create a Loadbalancer, virtual service Or API gateway.\\nIt can also be viewed as base object to define application routing.\\n\\nTypes of proxies supported\\n\\n* HTTP Proxy\\n* TCP Proxy\\n* TCP Proxy with SNI\\n* HTTPS Proxy\\n* UDP Proxy\\n* Secret Management Access Proxy\\n\\nTerminology\\n\\nDownstream: A downstream host connects to virtual host, sends requests, and receives responses.\\nUpstream: An upstream host receives connections and requests from virtual host and returns responses.",
+		APIPath:           "/api/config/namespaces/{namespace}/virtual_hosts",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "virtual_k8s",
+		CLIName:           "virtual-k8s",
+		Description:       "Virtual K8s object exposes a Kubernetes API endpoint in the namespace that operates on all the physical Kubernetes clusters in each of\\nthe sites that are selected by the virtual-site referred to in the object.\\n\\nVirtual K8s supports only a subset of Kubernetes APIs related to application management.\\n\\nRead and write operations are currently supported on the following Kubernetes API resources:\\n1. Deployment v1 apps\\n2. StatefulSet v1 apps\\n3. DaemonSet v1 apps\\n4. Job v1 batch\\n5. CronJob v1beta1 batch\\n6. Service v1 core with type ClusterIP\\n7. Secret v1 core\\n8. ConfigMap v1 core\\n9. ServiceAccount v1 core\\n10. PersistentVolumeClaim v1 core\\n\\nOnly delete is supported on Pod v1 core.\\n\\nRead only operations are currently supported on the following Kubernetes API resources:\\n1. Pod v1 core\\n2. ReplicaSet v1 apps\\n3. Endpoints v1 core\\n4. Node v1 core\\n5. Namespace v1 core\\n6. PersistentVolume v1 core\\n7. Event v1 core\\n\\nThe semantics of using Kubernetes APIs on a Virtual K8s object are different compared to those on a single Kubernetes cluster since the\\nKubernetes resource objects created using the Virtual K8s API will be instantiated in all the physical Kubernetes clusters in each\\nof the sites selected by the virtual-site referred to in the object. In a single Kubernetes cluster, when a Deployment resource is created\\nwith Replicas set to 3, the expectation is that 3 Pods will be created on the Kubernetes cluster. On the Virtual K8S API, when a Deployment\\nresource is created with Replicas set to 3, the total number of Pods created is equal to the number of Replicas times the number of physical\\nclusters in each of the sites selected by the referred to virtual-site. For example, if the virtual-site associated with Virtual K8s object\\nselects 3 sites each having 1 physical Kubernetes cluster, then the total number of Pods created will be 9.\\n\\nKubernetes API resource objects can also be created with the annotation ves.io/virtual-sites=<virtual-site-namespace>/<virtual-site-name>\\nand those objects will be instantiated in all physical Kubernetes clusters in each of the sites selected by the virtual-site specified in the\\nannotation only and not using the virtual-site specified in the Virtual K8s object. This provides an override mechanism to select different\\nvirtual-sites for the Kubernetes API resource to be instantiated on. The virtual-site referred to in the Virtual K8s can hence be thought\\nof as the default virtual-site for all the Kubernetes API resource objects created on the Virtual K8s API without the above annotation.",
+		APIPath:           "/api/config/namespaces/{namespace}/virtual_k8ss",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "virtual_network",
+		CLIName:           "virtual-network",
+		Description:       "Virtual network is an isolated L3 network. A virtual network can contain\\none or more IP Subnets. Network elements in a virtual network (interface,\\nhost, listener etc...) can talk to each other directly.\\n\\nTwo virtual networks can have overlapping ip address space. If two networks\\nare connected directly then they will have to guarantee unique ip addressing.\\n\\nList of sites where virtual network configuration needs to be present can\\nbe configured.",
+		APIPath:           "/api/config/namespaces/{namespace}/virtual_networks",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "virtual_site",
+		CLIName:           "virtual-site",
+		Description:       "Virtual site object is mechanism to create arbitrary set of sites\\nIt selects all the sites for which label selector expression return true.\\nSelector is goes thru all customer edge sites for a given tenant and all regional sites from volterra",
+		APIPath:           "/api/config/namespaces/{namespace}/virtual_sites",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
 	})
 
 	Register(&ResourceType{
 		Name:              "voltshare",
 		CLIName:           "voltshare",
-		Description:       "Voltshare",
+		Description:       "F5XC VoltShare service serves APIs for users to securing the secrets to share it with each other.",
 		APIPath:           "/api/config/namespaces/{namespace}/voltshares",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
 	})
 
 	Register(&ResourceType{
 		Name:              "voltshare_admin_policy",
 		CLIName:           "voltshare-admin-policy",
-		Description:       "Voltshare admin policy",
+		Description:       "VoltShare Admin Policy object is an admin level policy object that restricts all secrets encrypted by author's team/tenant shared via F5XC VoltShare.\\nThere can be a maximum of *ONE* VoltShare Admin Policy per team/tenant.\\nVoltShare Admin Policy contains rules for maximum validity duration for any secret, allowed users who can/cannot author secrets, and per team/tenant list of users who can/cannot decrypt secrets.\\nWhen a client calls for decryption, following steps are taken -\\n1   Look for the restrictions for the caller's team/tenant within the VoltShare Admin Policy of the author's team/tenant\\n2   If caller's team/tenant exist in user_restrictions\\n2.1 If caller is NOT IN allow_list, decryption is rejected\\n2.2 If caller is IN deny_list, decryption is rejected\\n3   If caller's team/tenant does not exist in user_restrictions and there is record for * team/tenant in user_restrictions, steps 2.1 and 2.2 are followed\\n4   If author's VoltShare Admin Policy allows, then secret's VoltShare Policy will be evaluated to check if caller is allowed to decrypt the secret.",
 		APIPath:           "/api/config/namespaces/{namespace}/voltshare_admin_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "voltstack_site",
+		CLIName:           "voltstack-site",
+		Description:       "App Stack site defines a required parameters that can be used in CRUD, to create and manage an App Stack site.",
+		APIPath:           "/api/config/namespaces/{namespace}/voltstack_sites",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "waf",
+		CLIName:           "waf",
+		Description:       "APIs to get monitoring information about WAF instances on virtual-host basis. \\nIt gets data for a given virtual host based on any WAF instance attached to virtual host or route used by virtual host.",
+		APIPath:           "/api/config/namespaces/{namespace}/wafs",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
+	})
+
+	Register(&ResourceType{
+		Name:              "waf_exclusion_policy",
+		CLIName:           "waf-exclusion-policy",
+		Description:       "WAF Exclusion Policy record",
+		APIPath:           "/api/config/namespaces/{namespace}/waf_exclusion_policys",
+		SupportsNamespace: true,
+		Operations:        AllOperations(),
+	})
+
+	Register(&ResourceType{
+		Name:              "waf_signatures_changelog",
+		CLIName:           "waf-signatures-changelog",
+		Description:       "WAF Signatures Changelog custom APIs",
+		APIPath:           "/api/config/namespaces/{namespace}/waf_signatures_changelogs",
+		SupportsNamespace: true,
+		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
 	})
 
 	Register(&ResourceType{
@@ -2640,27 +2407,22 @@ func registerGeneratedResources() {
 		Operations:        ReadOnlyOperations(),
 	})
 
-	// Views/Read-Only Resources
 	Register(&ResourceType{
-		Name:              "views_terraform_parameters",
-		CLIName:           "views-terraform-parameters",
-		Description:       "Terraform parameters view",
-		APIPath:           "/api/config/namespaces/{namespace}/terraform_parameters",
+		Name:              "workload",
+		CLIName:           "workload",
+		Description:       "Workload is used to configure and deploy a workload in Virtual Kubernetes. A workload can be\\neither a service or stateful service or a batch job. Services and jobs can be deployed on\\nregional edges or customer sites. Services can be exposed in-cluster or by L7 or L4\\nload balancer on Internet or on sites using an advertise policy.",
+		APIPath:           "/api/config/namespaces/{namespace}/workloads",
 		SupportsNamespace: true,
-		Operations: ResourceOperations{
-			Get:    true,
-			List:   true,
-			Create: true,
-		},
+		Operations:        AllOperations(),
 	})
 
 	Register(&ResourceType{
-		Name:              "views_view_internal",
-		CLIName:           "views-view-internal",
-		Description:       "Internal view",
-		APIPath:           "/api/config/namespaces/{namespace}/view_internals",
+		Name:              "workload_flavor",
+		CLIName:           "workload-flavor",
+		Description:       "Workload flavor is used to assign CPU, memory, and storage resources to workloads.",
+		APIPath:           "/api/config/namespaces/{namespace}/workload_flavors",
 		SupportsNamespace: true,
-		Operations:        ReadOnlyOperations(),
+		Operations:        AllOperations(),
 	})
 
 }
