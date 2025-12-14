@@ -41,7 +41,7 @@ generate_json_report() {
   },
   "failed_tests": [$(IFS=,; echo "${failed_tests[*]}")],
   "original_binary": "${ORIGINAL_VESCTL}",
-  "our_binary": "${OUR_VESCTL}"
+  "our_binary": "${OUR_F5XCCTL}"
 }
 EOF
 
@@ -81,7 +81,7 @@ generate_markdown_report() {
 | Binary | Path |
 |--------|------|
 | Original | \`${ORIGINAL_VESCTL}\` |
-| Ours | \`${OUR_VESCTL}\` |
+| Ours | \`${OUR_F5XCCTL}\` |
 
 EOF
 

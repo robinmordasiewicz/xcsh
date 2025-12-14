@@ -29,7 +29,7 @@ PHASE_DIR="${RESULTS_DIR}/phase6-request"
 mkdir -p "$PHASE_DIR"
 
 log_info "Original vesctl: ${ORIGINAL_VESCTL}"
-log_info "Our vesctl: ${OUR_VESCTL}"
+log_info "Our f5xcctl: ${OUR_F5XCCTL}"
 log_info "Results directory: ${RESULTS_DIR}"
 echo ""
 
@@ -47,7 +47,7 @@ test_help_identical() {
 
     $ORIGINAL_VESCTL "${cmd[@]}" --help > "${test_dir}/original.txt" 2>&1
     local orig_exit=$?
-    $OUR_VESCTL "${cmd[@]}" --help > "${test_dir}/ours.txt" 2>&1
+    $OUR_F5XCCTL "${cmd[@]}" --help > "${test_dir}/ours.txt" 2>&1
     local our_exit=$?
 
     echo "orig_exit=$orig_exit" > "${test_dir}/exits.txt"
@@ -90,7 +90,7 @@ test_flags_identical() {
     # Extract just the flags (lines starting with whitespace and -)
     $ORIGINAL_VESCTL "${cmd[@]}" --help 2>&1 | grep -E '^\s+(-|--)[a-z]' > "${test_dir}/original_flags.txt"
     local orig_exit=$?
-    $OUR_VESCTL "${cmd[@]}" --help 2>&1 | grep -E '^\s+(-|--)[a-z]' > "${test_dir}/ours_flags.txt"
+    $OUR_F5XCCTL "${cmd[@]}" --help 2>&1 | grep -E '^\s+(-|--)[a-z]' > "${test_dir}/ours_flags.txt"
     local our_exit=$?
 
     if [[ ! -s "${test_dir}/original_flags.txt" ]]; then
@@ -125,7 +125,7 @@ test_rpc_commands() {
         grep -E '^\s+[a-z]' | \
         awk '{print $1}' | sort > "${test_dir}/original_rpcs.txt"
 
-    $OUR_VESCTL request rpc --help 2>&1 | \
+    $OUR_F5XCCTL request rpc --help 2>&1 | \
         sed -n '/^Available Commands:/,/^$/p' | \
         grep -E '^\s+[a-z]' | \
         awk '{print $1}' | sort > "${test_dir}/ours_rpcs.txt"

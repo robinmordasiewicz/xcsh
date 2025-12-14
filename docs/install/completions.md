@@ -6,13 +6,13 @@ Enable tab completion for your shell:
 
 ```bash
 # Current session
-source <(vesctl completion bash)
+source <(f5xcctl completion bash)
 
 # Permanent (Linux)
-vesctl completion bash > /etc/bash_completion.d/vesctl
+f5xcctl completion bash > /etc/bash_completion.d/f5xcctl
 
 # Permanent (macOS with Homebrew)
-vesctl completion bash > $(brew --prefix)/etc/bash_completion.d/vesctl
+f5xcctl completion bash > $(brew --prefix)/etc/bash_completion.d/f5xcctl
 ```
 
 ## Zsh
@@ -22,17 +22,17 @@ vesctl completion bash > $(brew --prefix)/etc/bash_completion.d/vesctl
 echo "autoload -U compinit; compinit" >> ~/.zshrc
 
 # Install completion
-vesctl completion zsh > "${fpath[1]}/_vesctl"
+f5xcctl completion zsh > "${fpath[1]}/_vesctl"
 ```
 
 ## Fish
 
 ```bash
-vesctl completion fish > ~/.config/fish/completions/vesctl.fish
+f5xcctl completion fish > ~/.config/fish/completions/f5xcctl.fish
 ```
 
 ## PowerShell
 
 ```powershell
-vesctl completion powershell | Out-String | Invoke-Expression
+f5xcctl completion powershell | Out-String | Invoke-Expression
 ```

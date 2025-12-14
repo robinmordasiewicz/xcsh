@@ -12,19 +12,19 @@ import (
 
 // getTestClient creates a client for integration tests
 func getTestClient(t *testing.T) *client.Client {
-	apiURL := os.Getenv("VES_API_URL")
-	p12File := os.Getenv("VES_P12_FILE")
-	p12Password := os.Getenv("VES_P12_PASSWORD")
+	apiURL := os.Getenv("F5XC_API_URL")
+	p12File := os.Getenv("F5XC_P12_FILE")
+	p12Password := os.Getenv("F5XC_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
-		t.Skip("Integration test environment not configured (VES_API_URL, VES_P12_FILE, VES_P12_PASSWORD)")
+		t.Skip("Integration test environment not configured (F5XC_API_URL, F5XC_P12_FILE, F5XC_P12_PASSWORD)")
 	}
 
 	if _, err := os.Stat(p12File); os.IsNotExist(err) {
 		t.Skipf("P12 file not found at %s", p12File)
 	}
 
-	_ = os.Setenv("VES_P12_PASSWORD", p12Password)
+	_ = os.Setenv("F5XC_P12_PASSWORD", p12Password)
 
 	cfg := &client.Config{
 		ServerURL:          apiURL,

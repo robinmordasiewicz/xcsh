@@ -6,7 +6,7 @@
 # On Linux amd64: use vesctl-0.2.35 (last working version)
 # On macOS: use vesctl-0.2.47-original (only for offline tests - has TLS bug)
 ORIGINAL_VESCTL="${ORIGINAL_VESCTL:-./vesctl-0.2.35}"
-OUR_VESCTL="${OUR_VESCTL:-./vesctl}"
+OUR_F5XCCTL="${OUR_F5XCCTL:-./vesctl}"
 
 # Timeout for original vesctl commands (in seconds)
 # NOTE: vesctl-0.2.35 help commands can take 20-25 seconds to complete
@@ -101,10 +101,10 @@ run_original_vesctl_safe() {
     return $?
 }
 
-# Check if our vesctl exists
+# Check if our f5xcctl exists
 check_our_vesctl() {
-    if [[ ! -x "$OUR_VESCTL" ]]; then
-        echo -e "${RED}ERROR: Our vesctl not found at $OUR_VESCTL${NC}"
+    if [[ ! -x "$OUR_F5XCCTL" ]]; then
+        echo -e "${RED}ERROR: Our f5xcctl not found at $OUR_F5XCCTL${NC}"
         return 1
     fi
     return 0
@@ -114,7 +114,7 @@ check_our_vesctl() {
 # Supports both P12 and key/cert authentication methods
 has_api_credentials() {
     # Check for P12 credentials
-    if [[ -n "${VES_P12_PASSWORD:-}" && -n "${VES_P12_FILE:-}" && -f "${VES_P12_FILE:-/nonexistent}" ]]; then
+    if [[ -n "${F5XC_P12_PASSWORD:-}" && -n "${F5XC_P12_FILE:-}" && -f "${F5XC_P12_FILE:-/nonexistent}" ]]; then
         return 0
     fi
 
@@ -198,8 +198,8 @@ test_help() {
     # Run original vesctl
     local orig_exit=$(run_and_capture "$ORIGINAL_VESCTL" "${test_dir}/original" "${args[@]}")
 
-    # Run our vesctl
-    local our_exit=$(run_and_capture "$OUR_VESCTL" "${test_dir}/ours" "${args[@]}")
+    # Run our f5xcctl
+    local our_exit=$(run_and_capture "$OUR_F5XCCTL" "${test_dir}/ours" "${args[@]}")
 
     # Normalize outputs
     normalize_output "${test_dir}/original.stdout" "${test_dir}/original.stdout.normalized"
@@ -405,12 +405,12 @@ run_api_test() {
     local orig_exit our_exit
     if [[ "$ours_first" == "true" ]]; then
         # Run ours first (for create tests to avoid race condition)
-        our_exit=$(run_and_capture "$OUR_VESCTL" "${test_dir}/ours" "${args[@]}")
+        our_exit=$(run_and_capture "$OUR_F5XCCTL" "${test_dir}/ours" "${args[@]}")
         orig_exit=$(run_and_capture "$ORIGINAL_VESCTL" "${test_dir}/original" "${args[@]}")
     else
         # Run original first (default)
         orig_exit=$(run_and_capture "$ORIGINAL_VESCTL" "${test_dir}/original" "${args[@]}")
-        our_exit=$(run_and_capture "$OUR_VESCTL" "${test_dir}/ours" "${args[@]}")
+        our_exit=$(run_and_capture "$OUR_F5XCCTL" "${test_dir}/ours" "${args[@]}")
     fi
 
     # Store exit codes
@@ -467,7 +467,7 @@ test_flags_section() {
 
     # Capture help output
     local orig_exit=$(run_and_capture "$ORIGINAL_VESCTL" "${test_dir}/original" "${args[@]}" --help)
-    local our_exit=$(run_and_capture "$OUR_VESCTL" "${test_dir}/ours" "${args[@]}" --help)
+    local our_exit=$(run_and_capture "$OUR_F5XCCTL" "${test_dir}/ours" "${args[@]}" --help)
 
     # Extract just the flags section
     sed -n '/^Flags:/,/^[A-Z]/p' "${test_dir}/original.stdout" | head -n -1 > "${test_dir}/original.flags"

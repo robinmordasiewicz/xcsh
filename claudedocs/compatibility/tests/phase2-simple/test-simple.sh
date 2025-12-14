@@ -19,7 +19,7 @@ PHASE_DIR="${RESULTS_DIR}/phase2-simple"
 mkdir -p "$PHASE_DIR"
 
 log_info "Original vesctl: ${ORIGINAL_VESCTL}"
-log_info "Our vesctl: ${OUR_VESCTL}"
+log_info "Our f5xcctl: ${OUR_F5XCCTL}"
 log_info "Results directory: ${RESULTS_DIR}"
 echo ""
 
@@ -46,7 +46,7 @@ test_version_output() {
 
     # Capture version output
     $ORIGINAL_VESCTL version > "${test_dir}/original.txt" 2>&1 || true
-    $OUR_VESCTL version > "${test_dir}/ours.txt" 2>&1 || true
+    $OUR_F5XCCTL version > "${test_dir}/ours.txt" 2>&1 || true
 
     # Check if both produce output
     local orig_has_output=$(wc -l < "${test_dir}/original.txt")
@@ -100,7 +100,7 @@ test_completion_bash() {
 
     # Capture completion output
     $ORIGINAL_VESCTL completion bash > "${test_dir}/original.txt" 2>&1 || true
-    $OUR_VESCTL completion bash > "${test_dir}/ours.txt" 2>&1 || true
+    $OUR_F5XCCTL completion bash > "${test_dir}/ours.txt" 2>&1 || true
 
     # Compare structure (first 50 lines to check format)
     head -50 "${test_dir}/original.txt" | grep -v "^#" | grep -v "^$" > "${test_dir}/original_structure.txt"
@@ -147,7 +147,7 @@ test_completion_zsh() {
 
     # Capture completion output
     $ORIGINAL_VESCTL completion zsh > "${test_dir}/original.txt" 2>&1 || true
-    $OUR_VESCTL completion zsh > "${test_dir}/ours.txt" 2>&1 || true
+    $OUR_F5XCCTL completion zsh > "${test_dir}/ours.txt" 2>&1 || true
 
     # Check if both have zsh completion patterns
     local orig_has_zsh=$(grep -c "compdef" "${test_dir}/original.txt" 2>/dev/null || echo "0")
@@ -193,7 +193,7 @@ test_configure_exists() {
     $ORIGINAL_VESCTL configure --help > "${test_dir}/original.txt" 2>&1
     local orig_exit=$?
 
-    $OUR_VESCTL configure --help > "${test_dir}/ours.txt" 2>&1
+    $OUR_F5XCCTL configure --help > "${test_dir}/ours.txt" 2>&1
     local our_exit=$?
 
     if [[ $our_exit -eq 0 ]]; then
@@ -233,7 +233,7 @@ test_login_exists() {
     $ORIGINAL_VESCTL login --help > "${test_dir}/original.txt" 2>&1
     local orig_exit=$?
 
-    $OUR_VESCTL login --help > "${test_dir}/ours.txt" 2>&1
+    $OUR_F5XCCTL login --help > "${test_dir}/ours.txt" 2>&1
     local our_exit=$?
 
     if [[ $our_exit -eq 0 ]]; then
@@ -271,7 +271,7 @@ test_global_flags_root() {
 
     # Extract Global Flags section from root help
     $ORIGINAL_VESCTL --help 2>&1 | sed -n '/^Flags:/,/^$/p' > "${test_dir}/original.txt"
-    $OUR_VESCTL --help 2>&1 | sed -n '/^Flags:/,/^$/p' > "${test_dir}/ours.txt"
+    $OUR_F5XCCTL --help 2>&1 | sed -n '/^Flags:/,/^$/p' > "${test_dir}/ours.txt"
 
     if diff -q "${test_dir}/original.txt" "${test_dir}/ours.txt" > /dev/null 2>&1; then
         log_pass "${test_name}"
@@ -303,7 +303,7 @@ test_outfmt_flag() {
     for fmt in "${formats[@]}"; do
         # Test with version command (doesn't need API)
         $ORIGINAL_VESCTL version --outfmt "$fmt" > "${test_dir}/original_${fmt}.txt" 2>&1 || true
-        $OUR_VESCTL version --outfmt "$fmt" > "${test_dir}/ours_${fmt}.txt" 2>&1 || true
+        $OUR_F5XCCTL version --outfmt "$fmt" > "${test_dir}/ours_${fmt}.txt" 2>&1 || true
 
         # Both should either succeed or fail similarly
         local orig_lines=$(wc -l < "${test_dir}/original_${fmt}.txt")

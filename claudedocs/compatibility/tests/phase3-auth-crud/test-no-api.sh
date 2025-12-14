@@ -21,7 +21,7 @@ PHASE_DIR="${RESULTS_DIR}/phase3-no-api"
 mkdir -p "$PHASE_DIR"
 
 log_info "Original vesctl: ${ORIGINAL_VESCTL}"
-log_info "Our vesctl: ${OUR_VESCTL}"
+log_info "Our f5xcctl: ${OUR_F5XCCTL}"
 log_info "Results directory: ${RESULTS_DIR}"
 echo ""
 
@@ -39,7 +39,7 @@ test_help_structure() {
 
     # Capture full help
     $ORIGINAL_VESCTL "${cmd[@]}" --help > "${test_dir}/original_full.txt" 2>&1
-    $OUR_VESCTL "${cmd[@]}" --help > "${test_dir}/ours_full.txt" 2>&1
+    $OUR_F5XCCTL "${cmd[@]}" --help > "${test_dir}/ours_full.txt" 2>&1
 
     # Extract structure (Usage, Aliases, Examples, Flags, Global Flags sections)
     # Exclude lines that are resource names (2 spaces + lowercase/underscore)
@@ -69,7 +69,7 @@ test_help_exact() {
     mkdir -p "$test_dir"
 
     $ORIGINAL_VESCTL "${cmd[@]}" --help > "${test_dir}/original.txt" 2>&1
-    $OUR_VESCTL "${cmd[@]}" --help > "${test_dir}/ours.txt" 2>&1
+    $OUR_F5XCCTL "${cmd[@]}" --help > "${test_dir}/ours.txt" 2>&1
 
     if diff -q "${test_dir}/original.txt" "${test_dir}/ours.txt" > /dev/null 2>&1; then
         log_pass "${test_name} (identical)"
@@ -95,10 +95,10 @@ test_flags_section() {
 
     # Extract Flags and Global Flags sections
     $ORIGINAL_VESCTL "${cmd[@]}" --help 2>&1 | sed -n '/^Flags:/,/^$/p' > "${test_dir}/original_flags.txt"
-    $OUR_VESCTL "${cmd[@]}" --help 2>&1 | sed -n '/^Flags:/,/^$/p' > "${test_dir}/ours_flags.txt"
+    $OUR_F5XCCTL "${cmd[@]}" --help 2>&1 | sed -n '/^Flags:/,/^$/p' > "${test_dir}/ours_flags.txt"
 
     $ORIGINAL_VESCTL "${cmd[@]}" --help 2>&1 | sed -n '/^Global Flags:/,/^$/p' > "${test_dir}/original_global.txt"
-    $OUR_VESCTL "${cmd[@]}" --help 2>&1 | sed -n '/^Global Flags:/,/^$/p' > "${test_dir}/ours_global.txt"
+    $OUR_F5XCCTL "${cmd[@]}" --help 2>&1 | sed -n '/^Global Flags:/,/^$/p' > "${test_dir}/ours_global.txt"
 
     local flags_match=true
     if ! diff -q "${test_dir}/original_flags.txt" "${test_dir}/ours_flags.txt" > /dev/null 2>&1; then
@@ -178,7 +178,7 @@ done
 # ============================================
 echo ""
 echo "--- Request Command ---"
-if $ORIGINAL_VESCTL request --help > /dev/null 2>&1 && $OUR_VESCTL request --help > /dev/null 2>&1; then
+if $ORIGINAL_VESCTL request --help > /dev/null 2>&1 && $OUR_F5XCCTL request --help > /dev/null 2>&1; then
     test_help_structure "request" request || true
     test_flags_section "request-flags" request || true
 
@@ -192,7 +192,7 @@ if $ORIGINAL_VESCTL request --help > /dev/null 2>&1 && $OUR_VESCTL request --hel
 else
     log_info "Request command - checking availability..."
     $ORIGINAL_VESCTL request --help > /dev/null 2>&1 && log_info "  Original: has request" || log_info "  Original: no request"
-    $OUR_VESCTL request --help > /dev/null 2>&1 && log_info "  Ours: has request" || log_info "  Ours: no request"
+    $OUR_F5XCCTL request --help > /dev/null 2>&1 && log_info "  Ours: has request" || log_info "  Ours: no request"
 fi
 
 # ============================================
@@ -200,13 +200,13 @@ fi
 # ============================================
 echo ""
 echo "--- Site Command ---"
-if $ORIGINAL_VESCTL site --help > /dev/null 2>&1 && $OUR_VESCTL site --help > /dev/null 2>&1; then
+if $ORIGINAL_VESCTL site --help > /dev/null 2>&1 && $OUR_F5XCCTL site --help > /dev/null 2>&1; then
     test_help_structure "site" site || true
     test_flags_section "site-flags" site || true
 else
     log_info "Site command - checking availability..."
     $ORIGINAL_VESCTL site --help > /dev/null 2>&1 && log_info "  Original: has site" || log_info "  Original: no site"
-    $OUR_VESCTL site --help > /dev/null 2>&1 && log_info "  Ours: has site" || log_info "  Ours: no site"
+    $OUR_F5XCCTL site --help > /dev/null 2>&1 && log_info "  Ours: has site" || log_info "  Ours: no site"
 fi
 
 # ============================================
@@ -214,13 +214,13 @@ fi
 # ============================================
 echo ""
 echo "--- API-Endpoint Command ---"
-if $ORIGINAL_VESCTL api-endpoint --help > /dev/null 2>&1 && $OUR_VESCTL api-endpoint --help > /dev/null 2>&1; then
+if $ORIGINAL_VESCTL api-endpoint --help > /dev/null 2>&1 && $OUR_F5XCCTL api-endpoint --help > /dev/null 2>&1; then
     test_help_structure "api-endpoint" api-endpoint || true
     test_flags_section "api-endpoint-flags" api-endpoint || true
 else
     log_info "API-endpoint command - checking availability..."
     $ORIGINAL_VESCTL api-endpoint --help > /dev/null 2>&1 && log_info "  Original: has api-endpoint" || log_info "  Original: no api-endpoint"
-    $OUR_VESCTL api-endpoint --help > /dev/null 2>&1 && log_info "  Ours: has api-endpoint" || log_info "  Ours: no api-endpoint"
+    $OUR_F5XCCTL api-endpoint --help > /dev/null 2>&1 && log_info "  Ours: has api-endpoint" || log_info "  Ours: no api-endpoint"
 fi
 
 # ============================================
@@ -239,7 +239,7 @@ test_error() {
     $ORIGINAL_VESCTL "${cmd[@]}" > "${test_dir}/original.stdout" 2> "${test_dir}/original.stderr"
     local orig_exit=$?
 
-    $OUR_VESCTL "${cmd[@]}" > "${test_dir}/ours.stdout" 2> "${test_dir}/ours.stderr"
+    $OUR_F5XCCTL "${cmd[@]}" > "${test_dir}/ours.stdout" 2> "${test_dir}/ours.stderr"
     local our_exit=$?
 
     echo "orig_exit=$orig_exit our_exit=$our_exit" > "${test_dir}/exits.txt"

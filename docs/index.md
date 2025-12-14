@@ -1,13 +1,13 @@
 ---
 template: home.html
-title: vesctl Documentation
+title: f5xcctl Documentation
 hide:
   - navigation
   - toc
 ---
 
 <div class="hero">
-  <h1>vesctl Documentation</h1>
+  <h1>f5xcctl Documentation</h1>
   <p class="hero-subtitle">command-line interface for managing F5 Distributed Cloud</p>
 </div>
 
@@ -19,7 +19,7 @@ hide:
       </div>
       <h3>Install</h3>
     </div>
-    <p>Install vesctl and configure authentication</p>
+    <p>Install f5xcctl and configure authentication</p>
   </a>
 
   <a href="commands/" class="feature-card">

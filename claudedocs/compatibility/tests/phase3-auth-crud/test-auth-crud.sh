@@ -19,7 +19,7 @@ PHASE_DIR="${RESULTS_DIR}/phase3-auth-crud"
 mkdir -p "$PHASE_DIR"
 
 log_info "Original vesctl: ${ORIGINAL_VESCTL}"
-log_info "Our vesctl: ${OUR_VESCTL}"
+log_info "Our f5xcctl: ${OUR_F5XCCTL}"
 log_info "Results directory: ${RESULTS_DIR}"
 echo ""
 
@@ -50,7 +50,7 @@ check_command_exists() {
     local orig_exit=$?
 
     # Check ours
-    $OUR_VESCTL $cmd --help > "${test_dir}/ours.txt" 2>&1
+    $OUR_F5XCCTL $cmd --help > "${test_dir}/ours.txt" 2>&1
     local our_exit=$?
 
     echo "orig_exit=$orig_exit" > "${test_dir}/exits.txt"
@@ -130,14 +130,14 @@ test_no_creds_error() {
     # Run without credentials (should fail gracefully)
     # Temporarily unset credential env vars
     (
-        unset VES_P12_PASSWORD VES_P12_FILE
+        unset F5XC_P12_PASSWORD F5XC_P12_FILE
         $ORIGINAL_VESCTL $cmd > "${test_dir}/original.stdout" 2> "${test_dir}/original.stderr"
         echo $? > "${test_dir}/original.exit"
     ) || true
 
     (
-        unset VES_P12_PASSWORD VES_P12_FILE
-        $OUR_VESCTL $cmd > "${test_dir}/ours.stdout" 2> "${test_dir}/ours.stderr"
+        unset F5XC_P12_PASSWORD F5XC_P12_FILE
+        $OUR_F5XCCTL $cmd > "${test_dir}/ours.stdout" 2> "${test_dir}/ours.stderr"
         echo $? > "${test_dir}/ours.exit"
     ) || true
 
@@ -189,7 +189,7 @@ if has_api_credentials; then
         $ORIGINAL_VESCTL configuration list "$resource" -n "$namespace" --outfmt json > "${test_dir}/original.json" 2> "${test_dir}/original.stderr"
         local orig_exit=$?
 
-        $OUR_VESCTL configuration list "$resource" -n "$namespace" --outfmt json > "${test_dir}/ours.json" 2> "${test_dir}/ours.stderr"
+        $OUR_F5XCCTL configuration list "$resource" -n "$namespace" --outfmt json > "${test_dir}/ours.json" 2> "${test_dir}/ours.stderr"
         local our_exit=$?
 
         echo "orig_exit=$orig_exit" > "${test_dir}/exits.txt"
@@ -247,7 +247,7 @@ if has_api_credentials; then
         $ORIGINAL_VESCTL configuration get "$resource" "$name" -n "$namespace" --outfmt json > "${test_dir}/original.json" 2> "${test_dir}/original.stderr"
         local orig_exit=$?
 
-        $OUR_VESCTL configuration get "$resource" "$name" -n "$namespace" --outfmt json > "${test_dir}/ours.json" 2> "${test_dir}/ours.stderr"
+        $OUR_F5XCCTL configuration get "$resource" "$name" -n "$namespace" --outfmt json > "${test_dir}/ours.json" 2> "${test_dir}/ours.stderr"
         local our_exit=$?
 
         echo "orig_exit=$orig_exit" > "${test_dir}/exits.txt"
@@ -298,7 +298,7 @@ if has_api_credentials; then
         $ORIGINAL_VESCTL configuration list namespace -n system --outfmt "$format" > "${test_dir}/original.txt" 2>&1
         local orig_exit=$?
 
-        $OUR_VESCTL configuration list namespace -n system --outfmt "$format" > "${test_dir}/ours.txt" 2>&1
+        $OUR_F5XCCTL configuration list namespace -n system --outfmt "$format" > "${test_dir}/ours.txt" 2>&1
         local our_exit=$?
 
         if [[ $orig_exit -eq $our_exit ]]; then
@@ -329,8 +329,8 @@ else
     log_warn "No API credentials - skipping CRUD tests"
     echo ""
     echo "To run CRUD tests, set:"
-    echo "  export VES_P12_PASSWORD='your-password'"
-    echo "  export VES_P12_FILE='/path/to/credentials.p12'"
+    echo "  export F5XC_P12_PASSWORD='your-password'"
+    echo "  export F5XC_P12_FILE='/path/to/credentials.p12'"
     echo ""
 
     # Mark as skipped

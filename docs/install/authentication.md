@@ -1,6 +1,6 @@
 # Authentication
 
-vesctl supports multiple authentication methods to connect to the F5 Distributed Cloud API.
+f5xcctl supports multiple authentication methods to connect to the F5 Distributed Cloud API.
 
 ## P12 Bundle (Recommended)
 
@@ -27,7 +27,7 @@ p12-bundle: /path/to/api-creds.p12
 **Set the password as environment variable:**
 
 ```bash
-export VES_P12_PASSWORD="your-p12-password"
+export F5XC_P12_PASSWORD="your-p12-password"
 ```
 
 ## Certificate and Key
@@ -59,7 +59,7 @@ key: /path/to/key.pem
 **Using command-line flags:**
 
 ```bash
-vesctl --cert /path/to/cert.pem --key /path/to/key.pem configuration list namespace
+f5xcctl --cert /path/to/cert.pem --key /path/to/key.pem configuration list namespace
 ```
 
 ## API Token
@@ -79,37 +79,37 @@ Use an API token for authentication without managing certificate files. Ideal fo
 **Using environment variables (recommended):**
 
 ```bash
-export VES_API_TOKEN="your-api-token"
-export VES_API_URL="https://your-tenant.console.ves.volterra.io"  # Optional, overrides config
+export F5XC_API_TOKEN="your-api-token"
+export F5XC_API_URL="https://your-tenant.console.ves.volterra.io"  # Optional, overrides config
 
-vesctl configuration list namespace
+f5xcctl configuration list namespace
 ```
 
 **Using configuration file (~/.vesconfig):**
 
 ```yaml
 server-url: https://your-tenant.console.ves.volterra.io/api
-api-token: true  # Token value from VES_API_TOKEN environment variable
+api-token: true  # Token value from F5XC_API_TOKEN environment variable
 ```
 
 **Using interactive configuration:**
 
 ```bash
-vesctl configure
+f5xcctl configure
 # Select option 3: API Token
 ```
 
 **Using command-line flag:**
 
 ```bash
-vesctl --api-token configuration list namespace
+f5xcctl --api-token configuration list namespace
 ```
 
 **Using login command:**
 
 ```bash
-export VES_API_TOKEN='your-api-token'
-vesctl login --tenant my-tenant --api-token
+export F5XC_API_TOKEN='your-api-token'
+f5xcctl login --tenant my-tenant --api-token
 ```
 
 ## Configuration File
@@ -129,7 +129,7 @@ p12-bundle: /path/to/api-creds.p12
 # cert: /path/to/cert.pem
 # key: /path/to/key.pem
 
-# OR API token authentication (token from VES_API_TOKEN env var)
+# OR API token authentication (token from F5XC_API_TOKEN env var)
 # api-token: true
 
 # Optional CA certificate for custom trust
@@ -141,7 +141,7 @@ p12-bundle: /path/to/api-creds.p12
 Specify a custom configuration file:
 
 ```bash
-vesctl --config /path/to/custom-config.yaml configuration list namespace
+f5xcctl --config /path/to/custom-config.yaml configuration list namespace
 ```
 
 ## Environment Variables
@@ -150,30 +150,30 @@ Override configuration with environment variables:
 
 | Variable | Description |
 |----------|-------------|
-| `VES_API_TOKEN` | API token for authentication |
-| `VES_API_URL` | API server URL (overrides server-url in config) |
-| `VES_P12_PASSWORD` | Password for P12 bundle |
-| `VES_API_URL` | API server URL(s) |
-| `VES_P12_FILE` | Path to P12 bundle |
-| `VES_CERT` | Path to client certificate |
-| `VES_KEY` | Path to client key |
+| `F5XC_API_TOKEN` | API token for authentication |
+| `F5XC_API_URL` | API server URL (overrides server-url in config) |
+| `F5XC_P12_PASSWORD` | Password for P12 bundle |
+| `F5XC_API_URL` | API server URL(s) |
+| `F5XC_P12_FILE` | Path to P12 bundle |
+| `F5XC_CERT` | Path to client certificate |
+| `F5XC_KEY` | Path to client key |
 
 ### Example
 
 ```bash
-export VES_API_URL="https://your-tenant.console.ves.volterra.io/api"
-export VES_P12_FILE="/path/to/api-creds.p12"
-export VES_P12_PASSWORD="your-password"
+export F5XC_API_URL="https://your-tenant.console.ves.volterra.io/api"
+export F5XC_P12_FILE="/path/to/api-creds.p12"
+export F5XC_P12_PASSWORD="your-password"
 
-vesctl configuration list namespace
+f5xcctl configuration list namespace
 ```
 
 ## Interactive Configuration
 
-Use `vesctl configure` for interactive setup:
+Use `f5xcctl configure` for interactive setup:
 
 ```bash
-vesctl configure
+f5xcctl configure
 ```
 
 This will prompt for:
@@ -189,8 +189,8 @@ Test your configuration:
 
 ```bash
 # List namespaces to verify connection
-vesctl configuration list namespace
+f5xcctl configuration list namespace
 
 # Check with verbose output for troubleshooting
-vesctl --verbose configuration list namespace
+f5xcctl --verbose configuration list namespace
 ```

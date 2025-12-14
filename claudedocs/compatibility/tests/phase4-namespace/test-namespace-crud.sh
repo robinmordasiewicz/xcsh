@@ -11,8 +11,8 @@
 #   ./test-namespace-crud.sh --skip-cleanup   # Skip cleanup (debugging)
 #
 # Required environment variables:
-#   VES_P12_PASSWORD - Password for the P12 certificate
-#   VES_P12_FILE     - Path to the P12 certificate file
+#   F5XC_P12_PASSWORD - Password for the P12 certificate
+#   F5XC_P12_FILE     - Path to the P12 certificate file
 
 set -euo pipefail
 
@@ -67,7 +67,7 @@ preflight_checks() {
     fi
 
     if ! check_our_vesctl; then
-        echo "Please build our vesctl binary first:"
+        echo "Please build our f5xcctl binary first:"
         echo "  go build -o vesctl.darwin-arm64 ."
         exit 1
     fi
@@ -77,8 +77,8 @@ preflight_checks() {
         echo -e "${RED}ERROR: API credentials not configured${NC}"
         echo "Configure either:"
         echo "  1. P12 credentials via environment variables:"
-        echo "     VES_P12_PASSWORD - Password for the P12 certificate"
-        echo "     VES_P12_FILE     - Path to the P12 certificate file"
+        echo "     F5XC_P12_PASSWORD - Password for the P12 certificate"
+        echo "     F5XC_P12_FILE     - Path to the P12 certificate file"
         echo "  2. Key/cert credentials in ~/.vesconfig:"
         echo "     key: /path/to/key.key"
         echo "     cert: /path/to/cert.cert"
@@ -341,10 +341,10 @@ run_cleanup_phase() {
     log_info "=========================================="
 
     # Run full cleanup sweep using our binary (it should work like original)
-    run_cleanup_sweep "$OUR_VESCTL" "$RESULTS_DIR"
+    run_cleanup_sweep "$OUR_F5XCCTL" "$RESULTS_DIR"
 
     # Verify cleanup
-    verify_cleanup "$OUR_VESCTL"
+    verify_cleanup "$OUR_F5XCCTL"
 
     # Print cleanup summary
     get_cleanup_summary
@@ -382,7 +382,7 @@ generate_report() {
 | Binary | Path |
 |--------|------|
 | Original | ${ORIGINAL_VESCTL} |
-| Ours | ${OUR_VESCTL} |
+| Ours | ${OUR_F5XCCTL} |
 
 ## Test Namespaces
 

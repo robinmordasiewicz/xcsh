@@ -13,7 +13,7 @@ go build -o f5xcctl .    # Direct Go build
 ```bash
 make test               # Run all tests
 make test-unit          # Run unit tests only (go test -v -race ./pkg/...)
-make test-int           # Run integration tests (requires VES_API_URL, VES_API_P12_FILE, VES_P12_PASSWORD)
+make test-int           # Run integration tests (requires F5XC_API_URL, F5XC_API_P12_FILE, F5XC_P12_PASSWORD)
 make test-coverage      # Run tests with coverage report
 ```
 

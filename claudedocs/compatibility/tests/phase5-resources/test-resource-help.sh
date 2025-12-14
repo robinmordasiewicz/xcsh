@@ -26,7 +26,7 @@ PHASE_DIR="${RESULTS_DIR}/phase5-resources"
 mkdir -p "$PHASE_DIR"
 
 log_info "Original vesctl: ${ORIGINAL_VESCTL}"
-log_info "Our vesctl: ${OUR_VESCTL}"
+log_info "Our f5xcctl: ${OUR_F5XCCTL}"
 log_info "Results directory: ${RESULTS_DIR}"
 echo ""
 
@@ -75,7 +75,7 @@ test_help_structure() {
     # Capture full help
     $ORIGINAL_VESCTL "${cmd[@]}" --help > "${test_dir}/original_full.txt" 2>&1
     local orig_exit=$?
-    $OUR_VESCTL "${cmd[@]}" --help > "${test_dir}/ours_full.txt" 2>&1
+    $OUR_F5XCCTL "${cmd[@]}" --help > "${test_dir}/ours_full.txt" 2>&1
     local our_exit=$?
 
     # Store exit codes
@@ -138,7 +138,7 @@ test_flags_section() {
 
     # Get full help output to check for parent command pattern
     local orig_full=$($ORIGINAL_VESCTL "${cmd[@]}" --help 2>&1)
-    local our_full=$($OUR_VESCTL "${cmd[@]}" --help 2>&1)
+    local our_full=$($OUR_F5XCCTL "${cmd[@]}" --help 2>&1)
     local orig_exit=$?
     local our_exit=$?
 

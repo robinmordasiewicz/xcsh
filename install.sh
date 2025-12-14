@@ -3,10 +3,10 @@
 # Usage: curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
 #
 # Environment variables:
-#   VES_VERSION      - Specific version to install (default: latest)
-#   VES_INSTALL_DIR  - Installation directory (default: /usr/local/bin)
-#   VES_NO_SUDO      - Skip sudo if set to any value
-#   VES_NO_VERIFY    - Skip checksum verification if set
+#   F5XC_VERSION      - Specific version to install (default: latest)
+#   F5XC_INSTALL_DIR  - Installation directory (default: /usr/local/bin)
+#   F5XC_NO_SUDO      - Skip sudo if set to any value
+#   F5XC_NO_VERIFY    - Skip checksum verification if set
 #   GITHUB_TOKEN     - Optional: GitHub token for authenticated API requests (CI/CD use)
 
 set -eu
@@ -293,10 +293,10 @@ get_arch_display_name() {
 # Returns: "system:", "system:sudo", "user:", "custom:", or "custom:sudo"
 # Format: "<strategy_type>:<sudo_command>"
 determine_install_strategy() {
-    REQUESTED_DIR="${VES_INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
+    REQUESTED_DIR="${F5XC_INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
 
     # If user explicitly set install dir, respect it
-    if [ -n "${VES_INSTALL_DIR:-}" ]; then
+    if [ -n "${F5XC_INSTALL_DIR:-}" ]; then
         # Create directory if it doesn't exist and parent is writable
         if [ ! -d "$REQUESTED_DIR" ]; then
             if mkdir -p "$REQUESTED_DIR" 2>/dev/null; then
@@ -311,15 +311,15 @@ determine_install_strategy() {
             echo "custom:"
             return
         fi
-        if [ -z "${VES_NO_SUDO:-}" ] && command_exists sudo; then
+        if [ -z "${F5XC_NO_SUDO:-}" ] && command_exists sudo; then
             echo "custom:sudo"
             return
         fi
         error "Cannot write to $REQUESTED_DIR and sudo is not available.
 
 Try one of:
-  - Set VES_INSTALL_DIR to a writable location:
-    VES_INSTALL_DIR=\$HOME/.local/bin sh install.sh
+  - Set F5XC_INSTALL_DIR to a writable location:
+    F5XC_INSTALL_DIR=\$HOME/.local/bin sh install.sh
 
   - Run as root:
     sudo sh install.sh"
@@ -331,7 +331,7 @@ Try one of:
         return
     fi
 
-    if [ -z "${VES_NO_SUDO:-}" ] && command_exists sudo; then
+    if [ -z "${F5XC_NO_SUDO:-}" ] && command_exists sudo; then
         echo "system:sudo"
         return
     fi
@@ -522,7 +522,7 @@ get_latest_version() {
         error "Failed to fetch latest version from GitHub.
 
 Please check your internet connection or specify a version:
-  VES_VERSION=1.1.0 sh install.sh
+  F5XC_VERSION=1.1.0 sh install.sh
 
 Or download manually from:
   https://github.com/${GITHUB_REPO}/releases/latest"
@@ -543,7 +543,7 @@ Or download manually from:
         error "Failed to parse version from GitHub API response.
 
 Please specify a version manually:
-  VES_VERSION=1.1.0 sh install.sh
+  F5XC_VERSION=1.1.0 sh install.sh
 
 Or download manually from:
   https://github.com/${GITHUB_REPO}/releases/latest"
@@ -561,8 +561,8 @@ verify_checksum() {
     CHECKSUMS_FILE="$2"
     ARCHIVE_NAME="$3"
 
-    if [ -n "${VES_NO_VERIFY:-}" ]; then
-        warning "Skipping checksum verification (VES_NO_VERIFY is set)"
+    if [ -n "${F5XC_NO_VERIFY:-}" ]; then
+        warning "Skipping checksum verification (F5XC_NO_VERIFY is set)"
         return 0
     fi
 
@@ -774,13 +774,13 @@ setup_fish_completion() {
 # ============================================
 
 uninstall() {
-    INSTALL_DIR="${VES_INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
+    INSTALL_DIR="${F5XC_INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
     VESCTL_PATH="${INSTALL_DIR}/${BINARY_NAME}"
 
     # Determine if sudo is needed for uninstall
     SUDO_CMD=""
     if [ ! -w "$INSTALL_DIR" ] && [ "$(id -u)" -ne 0 ]; then
-        if [ -z "${VES_NO_SUDO:-}" ] && command_exists sudo; then
+        if [ -z "${F5XC_NO_SUDO:-}" ] && command_exists sudo; then
             SUDO_CMD="sudo"
         fi
     fi
@@ -841,10 +841,10 @@ OPTIONS
     --help, -h      Show this help message
 
 ENVIRONMENT VARIABLES
-    VES_VERSION      Specific version to install (default: latest)
-    VES_INSTALL_DIR  Installation directory (default: /usr/local/bin)
-    VES_NO_SUDO      Skip sudo even if needed (for custom install dirs)
-    VES_NO_VERIFY    Skip checksum verification
+    F5XC_VERSION      Specific version to install (default: latest)
+    F5XC_INSTALL_DIR  Installation directory (default: /usr/local/bin)
+    F5XC_NO_SUDO      Skip sudo even if needed (for custom install dirs)
+    F5XC_NO_VERIFY    Skip checksum verification
 
 SUPPORTED PLATFORMS
     Linux       amd64 (x86_64), arm64 (aarch64)
@@ -856,10 +856,10 @@ EXAMPLES
     curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
 
     # Install specific version
-    curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | VES_VERSION=1.1.0 sh
+    curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | F5XC_VERSION=1.1.0 sh
 
     # Install to custom directory (no sudo required)
-    curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | VES_INSTALL_DIR=$HOME/.local/bin sh
+    curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | F5XC_INSTALL_DIR=$HOME/.local/bin sh
 
     # Install using wget instead of curl
     wget -qO- https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
@@ -933,8 +933,8 @@ On Alpine:        apk add curl"
     status "Detected platform: ${OS_DISPLAY} ${ARCH_DISPLAY}"
 
     # Get version
-    if [ -n "${VES_VERSION:-}" ]; then
-        VERSION="$VES_VERSION"
+    if [ -n "${F5XC_VERSION:-}" ]; then
+        VERSION="$F5XC_VERSION"
         status "Using specified version: v${VERSION}"
     else
         VERSION=$(get_latest_version)
@@ -960,7 +960,7 @@ On Alpine:        apk add curl"
             status "Installing to $INSTALL_DIR (no sudo required)"
             ;;
         custom)
-            INSTALL_DIR="$VES_INSTALL_DIR"
+            INSTALL_DIR="$F5XC_INSTALL_DIR"
             ;;
     esac
 

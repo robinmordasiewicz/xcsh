@@ -89,7 +89,7 @@ func init() {
 	configureCmd.Flags().StringVar(&configureFlags.cert, "cert", "", "Path to client certificate")
 	configureCmd.Flags().StringVar(&configureFlags.key, "key", "", "Path to client key")
 	configureCmd.Flags().StringVar(&configureFlags.outputFmt, "output-format", "", "Default output format")
-	configureCmd.Flags().BoolVar(&configureFlags.apiToken, "api-token", false, "Use API token authentication (token from VES_API_TOKEN env var)")
+	configureCmd.Flags().BoolVar(&configureFlags.apiToken, "api-token", false, "Use API token authentication (token from F5XC_API_TOKEN env var)")
 	configureCmd.Flags().BoolVar(&configureFlags.nonInteractive, "non-interactive", false, "Run in non-interactive mode")
 
 	configureCmd.AddCommand(configureShowCmd)
@@ -170,7 +170,7 @@ func runConfigure(cmd *cobra.Command, args []string) error {
 	fmt.Println("Authentication Method:")
 	fmt.Println("  1. P12 Certificate Bundle (recommended)")
 	fmt.Println("  2. Certificate and Key files")
-	fmt.Println("  3. API Token (via VES_API_TOKEN environment variable)")
+	fmt.Println("  3. API Token (via F5XC_API_TOKEN environment variable)")
 	fmt.Print("Choose [1/2/3] (default: 1): ")
 	authChoice, _ := reader.ReadString('\n')
 	authChoice = strings.TrimSpace(authChoice)
@@ -183,8 +183,8 @@ func runConfigure(cmd *cobra.Command, args []string) error {
 		config.Cert = ""
 		config.Key = ""
 		fmt.Println()
-		fmt.Println("Note: Set the VES_API_TOKEN environment variable:")
-		fmt.Println("  export VES_API_TOKEN='your-api-token'")
+		fmt.Println("Note: Set the F5XC_API_TOKEN environment variable:")
+		fmt.Println("  export F5XC_API_TOKEN='your-api-token'")
 	case "2":
 		// Cert and Key
 		config.APIToken = false // Clear API token
@@ -210,8 +210,8 @@ func runConfigure(cmd *cobra.Command, args []string) error {
 
 		if config.P12Bundle != "" {
 			fmt.Println()
-			fmt.Println("Note: Set the VES_P12_PASSWORD environment variable with your P12 password:")
-			fmt.Println("  export VES_P12_PASSWORD='your-password'")
+			fmt.Println("Note: Set the F5XC_P12_PASSWORD environment variable with your P12 password:")
+			fmt.Println("  export F5XC_P12_PASSWORD='your-password'")
 		}
 	}
 
@@ -279,7 +279,7 @@ func runConfigureShow(cmd *cobra.Command, args []string) error {
 		displayConfig["output"] = config.Output
 	}
 	if config.APIToken {
-		displayConfig["api_token"] = "enabled (token from VES_API_TOKEN)"
+		displayConfig["api_token"] = "enabled (token from F5XC_API_TOKEN)"
 	}
 
 	return output.Print(displayConfig, GetOutputFormat())

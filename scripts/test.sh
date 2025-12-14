@@ -10,9 +10,9 @@
 #   ./scripts/test.sh -v           # Run with verbose output
 #
 # Environment Variables (required for integration tests):
-#   VES_API_URL      - API URL (e.g., https://tenant.staging.volterra.us)
-#   VES_API_P12_FILE - Path to P12 certificate bundle
-#   VES_P12_PASSWORD - Password for P12 bundle
+#   F5XC_API_URL      - API URL (e.g., https://tenant.staging.volterra.us)
+#   F5XC_API_P12_FILE - Path to P12 certificate bundle
+#   F5XC_P12_PASSWORD - Password for P12 bundle
 
 set -e
 
@@ -61,9 +61,9 @@ while [[ $# -gt 0 ]]; do
             echo "  --coverage    Generate coverage report"
             echo ""
             echo "Environment Variables (for integration tests):"
-            echo "  VES_API_URL      API URL"
-            echo "  VES_API_P12_FILE Path to P12 certificate bundle"
-            echo "  VES_P12_PASSWORD Password for P12 bundle"
+            echo "  F5XC_API_URL      API URL"
+            echo "  F5XC_API_P12_FILE Path to P12 certificate bundle"
+            echo "  F5XC_P12_PASSWORD Password for P12 bundle"
             exit 0
             ;;
         *)
@@ -83,20 +83,20 @@ echo -e "${GREEN}✓ Build successful${NC}"
 
 # Check if integration test environment is configured
 check_integration_env() {
-    if [[ -z "$VES_API_URL" ]]; then
-        echo -e "${YELLOW}Warning: VES_API_URL not set${NC}"
+    if [[ -z "$F5XC_API_URL" ]]; then
+        echo -e "${YELLOW}Warning: F5XC_API_URL not set${NC}"
         return 1
     fi
-    if [[ -z "$VES_API_P12_FILE" ]]; then
-        echo -e "${YELLOW}Warning: VES_API_P12_FILE not set${NC}"
+    if [[ -z "$F5XC_API_P12_FILE" ]]; then
+        echo -e "${YELLOW}Warning: F5XC_API_P12_FILE not set${NC}"
         return 1
     fi
-    if [[ -z "$VES_P12_PASSWORD" ]]; then
-        echo -e "${YELLOW}Warning: VES_P12_PASSWORD not set${NC}"
+    if [[ -z "$F5XC_P12_PASSWORD" ]]; then
+        echo -e "${YELLOW}Warning: F5XC_P12_PASSWORD not set${NC}"
         return 1
     fi
-    if [[ ! -f "$VES_API_P12_FILE" ]]; then
-        echo -e "${YELLOW}Warning: P12 file not found at $VES_API_P12_FILE${NC}"
+    if [[ ! -f "$F5XC_API_P12_FILE" ]]; then
+        echo -e "${YELLOW}Warning: P12 file not found at $F5XC_API_P12_FILE${NC}"
         return 1
     fi
     return 0
@@ -107,7 +107,7 @@ run_unit_tests() {
     echo -e "\n${YELLOW}Running unit tests...${NC}"
     echo "--------------------------------"
 
-    # VES_P12_PASSWORD should already be set in environment
+    # F5XC_P12_PASSWORD should already be set in environment
 
     go test $VERBOSE $COVERAGE ./pkg/... 2>&1 | while IFS= read -r line; do
         if [[ $line == *"PASS"* ]]; then
@@ -139,14 +139,14 @@ run_integration_tests() {
         echo -e "${YELLOW}Skipping integration tests - environment not configured${NC}"
         echo ""
         echo "To run integration tests, set these environment variables:"
-        echo "  export VES_API_URL=\"https://your-tenant.staging.volterra.us\""
-        echo "  export VES_API_P12_FILE=\"/path/to/cert.p12\""
-        echo "  export VES_P12_PASSWORD=\"your-password\""
+        echo "  export F5XC_API_URL=\"https://your-tenant.staging.volterra.us\""
+        echo "  export F5XC_API_P12_FILE=\"/path/to/cert.p12\""
+        echo "  export F5XC_P12_PASSWORD=\"your-password\""
         return 0
     fi
 
-    echo -e "Using API URL: ${GREEN}$VES_API_URL${NC}"
-    echo -e "Using P12 file: ${GREEN}$VES_API_P12_FILE${NC}"
+    echo -e "Using API URL: ${GREEN}$F5XC_API_URL${NC}"
+    echo -e "Using P12 file: ${GREEN}$F5XC_API_P12_FILE${NC}"
 
     go test $VERBOSE ./tests/integration/... 2>&1 | while IFS= read -r line; do
         if [[ $line == *"PASS"* ]]; then

@@ -169,7 +169,7 @@ func getAIHints() AIHintsSpec {
 		DefaultOutputFormat:   "table",
 		BestPractices: []string{
 			"Use --output-format json for programmatic parsing",
-			"Set VES_API_URL and VES_P12_FILE environment variables for persistent configuration",
+			"Set F5XC_API_URL and F5XC_P12_FILE environment variables for persistent configuration",
 			"Use f5xcctl configuration list <resource-type> to discover available resources",
 			"Use f5xcctl configuration get <resource-type> -n <namespace> <name> to retrieve specific resources",
 			"Always specify --namespace or -n for namespace-scoped resources",
@@ -189,21 +189,21 @@ func getAuthenticationMethods() []AuthMethodSpec {
 			Method:      "p12-bundle",
 			Description: "PKCS#12 certificate bundle (recommended for automation)",
 			Flags:       []string{"--p12-bundle"},
-			EnvVars:     []string{"VES_P12_FILE", "VES_P12_PASSWORD"},
+			EnvVars:     []string{"F5XC_P12_FILE", "F5XC_P12_PASSWORD"},
 			Priority:    1,
 		},
 		{
 			Method:      "certificate",
 			Description: "Separate certificate and key files for mTLS",
 			Flags:       []string{"--cert", "--key"},
-			EnvVars:     []string{"VES_CERT", "VES_KEY"},
+			EnvVars:     []string{"F5XC_CERT", "F5XC_KEY"},
 			Priority:    2,
 		},
 		{
 			Method:      "api-token",
 			Description: "API token authentication",
 			Flags:       []string{"--api-token"},
-			EnvVars:     []string{"VES_API_TOKEN"},
+			EnvVars:     []string{"F5XC_API_TOKEN"},
 			Priority:    3,
 		},
 		{
@@ -221,15 +221,15 @@ func getSemanticCategories() SemanticCategoriesSpec {
 	return SemanticCategoriesSpec{
 		Authentication: []string{
 			"--p12-bundle", "--cert", "--key", "--api-token", "--hardwareKey",
-			"VES_P12_FILE", "VES_P12_PASSWORD", "VES_CERT", "VES_KEY", "VES_API_TOKEN",
+			"F5XC_P12_FILE", "F5XC_P12_PASSWORD", "F5XC_CERT", "F5XC_KEY", "F5XC_API_TOKEN",
 		},
 		Connection: []string{
 			"--server-url", "--cacert", "--timeout", "--config",
-			"VES_API_URL", "VES_CACERT", "VES_CONFIG",
+			"F5XC_API_URL", "F5XC_CACERT", "F5XC_CONFIG",
 		},
 		Output: []string{
 			"--output-format", "--output", "--show-curl", "--spec",
-			"VES_OUTPUT",
+			"F5XC_OUTPUT",
 		},
 		Behavior: []string{
 			"--non-interactive", "--help",
@@ -253,11 +253,11 @@ func getFlagRelationships() FlagRelationshipsSpec {
 		Dependencies: []FlagDependencySpec{
 			{
 				Flag:     "--p12-bundle",
-				Requires: []string{"VES_P12_PASSWORD (env var)"},
+				Requires: []string{"F5XC_P12_PASSWORD (env var)"},
 			},
 			{
 				Flag:     "--api-token",
-				Requires: []string{"VES_API_TOKEN (env var)"},
+				Requires: []string{"F5XC_API_TOKEN (env var)"},
 			},
 		},
 	}
@@ -336,8 +336,8 @@ func getWorkflows() []WorkflowSpec {
 			Name:        "authenticate-and-discover",
 			Description: "Set up authentication and discover available resources",
 			Steps: []WorkflowStep{
-				{Step: 1, Description: "Set API URL", Command: "export VES_API_URL=https://<tenant>.console.ves.volterra.io/api"},
-				{Step: 2, Description: "Set P12 credentials", Command: "export VES_P12_FILE=/path/to/api-creds.p12 && export VES_P12_PASSWORD=<password>"},
+				{Step: 1, Description: "Set API URL", Command: "export F5XC_API_URL=https://<tenant>.console.ves.volterra.io/api"},
+				{Step: 2, Description: "Set P12 credentials", Command: "export F5XC_P12_FILE=/path/to/api-creds.p12 && export F5XC_P12_PASSWORD=<password>"},
 				{Step: 3, Description: "Verify authentication", Command: "f5xcctl configuration list namespace"},
 				{Step: 4, Description: "Discover resource types", Command: "f5xcctl --help"},
 			},

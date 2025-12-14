@@ -1,6 +1,6 @@
 # Examples
 
-Real-world examples for common vesctl use cases.
+Real-world examples for common f5xcctl use cases.
 
 ## Contents
 
@@ -14,7 +14,7 @@ Real-world examples for common vesctl use cases.
 ### List All Namespaces
 
 ```bash
-vesctl configuration list namespace
+f5xcctl configuration list namespace
 ```
 
 **Output:**
@@ -29,13 +29,13 @@ system         System namespace
 ### Create Resource from File
 
 ```bash
-vesctl configuration create http_loadbalancer -i lb.yaml
+f5xcctl configuration create http_loadbalancer -i lb.yaml
 ```
 
 ### Get Resource as YAML
 
 ```bash
-vesctl configuration get namespace example-namespace --outfmt yaml
+f5xcctl configuration get namespace example-namespace --outfmt yaml
 ```
 
 **Output:**
@@ -51,7 +51,7 @@ spec:
 ### Delete Resource
 
 ```bash
-vesctl configuration delete http_loadbalancer example-lb -n example-namespace --yes
+f5xcctl configuration delete http_loadbalancer example-lb -n example-namespace --yes
 ```
 
 ## Common Workflows
@@ -61,25 +61,25 @@ vesctl configuration delete http_loadbalancer example-lb -n example-namespace --
 1. Create an origin pool:
 
 ```bash
-vesctl configuration create origin_pool -i origin-pool.yaml
+f5xcctl configuration create origin_pool -i origin-pool.yaml
 ```
 
 2. Create a health check:
 
 ```bash
-vesctl configuration create healthcheck -i healthcheck.yaml
+f5xcctl configuration create healthcheck -i healthcheck.yaml
 ```
 
 3. Create the load balancer:
 
 ```bash
-vesctl configuration create http_loadbalancer -i lb.yaml
+f5xcctl configuration create http_loadbalancer -i lb.yaml
 ```
 
 4. Verify deployment:
 
 ```bash
-vesctl configuration get http_loadbalancer example-lb -n example-namespace
+f5xcctl configuration get http_loadbalancer example-lb -n example-namespace
 ```
 
 ### Update Configuration
@@ -87,7 +87,7 @@ vesctl configuration get http_loadbalancer example-lb -n example-namespace
 1. Export current configuration:
 
 ```bash
-vesctl configuration get http_loadbalancer example-lb -n example-namespace --outfmt yaml > lb.yaml
+f5xcctl configuration get http_loadbalancer example-lb -n example-namespace --outfmt yaml > lb.yaml
 ```
 
 2. Edit the file as needed
@@ -95,18 +95,18 @@ vesctl configuration get http_loadbalancer example-lb -n example-namespace --out
 3. Apply changes:
 
 ```bash
-vesctl configuration replace http_loadbalancer -i lb.yaml
+f5xcctl configuration replace http_loadbalancer -i lb.yaml
 ```
 
 ### Cleanup Resources
 
 ```bash
 # Delete load balancer
-vesctl configuration delete http_loadbalancer example-lb -n example-namespace --yes
+f5xcctl configuration delete http_loadbalancer example-lb -n example-namespace --yes
 
 # Delete origin pool
-vesctl configuration delete origin_pool example-pool -n example-namespace --yes
+f5xcctl configuration delete origin_pool example-pool -n example-namespace --yes
 
 # Delete health check
-vesctl configuration delete healthcheck example-hc -n example-namespace --yes
+f5xcctl configuration delete healthcheck example-hc -n example-namespace --yes
 ```

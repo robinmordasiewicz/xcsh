@@ -165,14 +165,14 @@ go build -o vesctl.darwin-arm64 .
 
 # Set environment variables
 export ORIGINAL_VESCTL=./vesctl-0.2.47-original
-export OUR_VESCTL=./vesctl.darwin-arm64
+export OUR_F5XCCTL=./f5xcctl.darwin-arm64
 
 # Run Phase 3 no-API tests
 ./claudedocs/compatibility/tests/phase3-auth-crud/test-no-api.sh
 
 # Run Phase 3 auth/CRUD tests (requires credentials)
-export VES_P12_PASSWORD='your-password'
-export VES_P12_FILE='/path/to/credentials.p12'
+export F5XC_P12_PASSWORD='your-password'
+export F5XC_P12_FILE='/path/to/credentials.p12'
 ./claudedocs/compatibility/tests/phase3-auth-crud/test-auth-crud.sh
 ```
 

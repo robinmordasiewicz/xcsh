@@ -1,5 +1,5 @@
 # Binaries
-vesctl
+f5xcctl
 *.exe
 *.exe~
 *.dll
@@ -64,12 +64,12 @@ site/
 .venv/
 __pycache__/
 *.pyc
-vesctl.darwin-arm64
+f5xcctl.darwin-arm64
 
 # Platform-specific binaries
-vesctl.darwin-*
-vesctl.linux-*
-vesctl.windows-*
+f5xcctl.darwin-*
+f5xcctl.linux-*
+f5xcctl.windows-*
 *.darwin-*
 *.linux-*
 *.windows-*

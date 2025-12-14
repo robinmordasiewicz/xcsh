@@ -47,11 +47,11 @@ Pre-release validation checklist for vesctl compatibility and quality.
 
 - [ ] Run all phases with API:
   ```bash
-  export VES_API_URL="https://your-tenant.console.ves.volterra.io"
-  export VES_P12_FILE="/path/to/credentials.p12"
-  export VES_P12_PASSWORD="your-password"
+  export F5XC_API_URL="https://your-tenant.console.ves.volterra.io"
+  export F5XC_P12_FILE="/path/to/credentials.p12"
+  export F5XC_P12_PASSWORD="your-password"
   export ORIGINAL_VESCTL="./vesctl-0.2.35"
-  export OUR_VESCTL="./vesctl"
+  export OUR_F5XCCTL="./vesctl"
   ./run-all-tests.sh --with-api
   ```
 - [ ] Review `summary.md` report
@@ -128,13 +128,13 @@ Pre-release validation checklist for vesctl compatibility and quality.
 
 ```bash
 # Required for API tests
-export VES_API_URL="https://your-tenant.console.ves.volterra.io"
-export VES_P12_FILE="/path/to/credentials.p12"
-export VES_P12_PASSWORD="your-password"
+export F5XC_API_URL="https://your-tenant.console.ves.volterra.io"
+export F5XC_P12_FILE="/path/to/credentials.p12"
+export F5XC_P12_PASSWORD="your-password"
 
 # Required for comparison tests
 export ORIGINAL_VESCTL="./vesctl-0.2.35"
-export OUR_VESCTL="./vesctl"
+export OUR_F5XCCTL="./vesctl"
 ```
 
 ### Common Commands

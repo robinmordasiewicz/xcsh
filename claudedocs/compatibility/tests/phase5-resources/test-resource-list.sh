@@ -25,7 +25,7 @@ echo ""
 # Check for API credentials
 if ! has_api_credentials; then
     echo "ERROR: API credentials not available"
-    echo "Set VES_P12_PASSWORD and VES_P12_FILE environment variables"
+    echo "Set F5XC_P12_PASSWORD and F5XC_P12_FILE environment variables"
     exit 1
 fi
 
@@ -35,7 +35,7 @@ PHASE_DIR="${RESULTS_DIR}/phase5-list-api"
 mkdir -p "$PHASE_DIR"
 
 log_info "Original vesctl: ${ORIGINAL_VESCTL}"
-log_info "Our vesctl: ${OUR_VESCTL}"
+log_info "Our f5xcctl: ${OUR_F5XCCTL}"
 log_info "Results directory: ${RESULTS_DIR}"
 echo ""
 
@@ -88,9 +88,9 @@ test_list_api() {
         > "${test_dir}/original.stdout" 2> "${test_dir}/original.stderr"
     local orig_exit=$?
 
-    # Run our vesctl
+    # Run our f5xcctl
     log_info "Running ours: configuration list $resource ${ns_args[*]}"
-    $OUR_VESCTL configuration list "$resource" "${ns_args[@]}" --outfmt json \
+    $OUR_F5XCCTL configuration list "$resource" "${ns_args[@]}" --outfmt json \
         > "${test_dir}/ours.stdout" 2> "${test_dir}/ours.stderr"
     local our_exit=$?
 
@@ -189,7 +189,7 @@ test_table_format() {
         > "${test_dir}/original.stdout" 2> "${test_dir}/original.stderr"
     local orig_exit=$?
 
-    $OUR_VESCTL configuration list "$resource" \
+    $OUR_F5XCCTL configuration list "$resource" \
         > "${test_dir}/ours.stdout" 2> "${test_dir}/ours.stderr"
     local our_exit=$?
 

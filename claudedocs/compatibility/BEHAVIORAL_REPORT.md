@@ -99,7 +99,7 @@ The only differences are in the list of available resources, which is expected d
 ```bash
 # Full behavioral test suite
 export ORIGINAL_VESCTL=./vesctl-0.2.47-original
-export OUR_VESCTL=./vesctl.darwin-arm64
+export OUR_F5XCCTL=./f5xcctl.darwin-arm64
 ./claudedocs/compatibility/tests/phase1-configure/test-behavior.sh
 
 # View results

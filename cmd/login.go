@@ -31,9 +31,9 @@ var loginCmd = &cobra.Command{
 
 This command validates your credentials and saves them to the configuration file.
 You can authenticate using:
-  - A P12 certificate bundle (set VES_P12_PASSWORD environment variable)
+  - A P12 certificate bundle (set F5XC_P12_PASSWORD environment variable)
   - Certificate and key files
-  - API token (set VES_API_TOKEN environment variable)
+  - API token (set F5XC_API_TOKEN environment variable)
 
 After successful login, you can use all f5xcctl commands to manage your resources.`,
 	Example: `  # Login with P12 bundle
@@ -43,7 +43,7 @@ After successful login, you can use all f5xcctl commands to manage your resource
   f5xcctl login --tenant example-tenant --cert ~/.f5xcctl/cert.pem --key ~/.f5xcctl/key.pem
 
   # Login with API token
-  export VES_API_TOKEN='your-api-token'
+  export F5XC_API_TOKEN='your-api-token'
   f5xcctl login --tenant example-tenant --api-token
 
   # Login (using existing configuration)
@@ -80,7 +80,7 @@ func init() {
 	loginCmd.Flags().StringVar(&loginFlags.p12Bundle, "p12-bundle", "", "Path to P12 certificate bundle")
 	loginCmd.Flags().StringVar(&loginFlags.cert, "cert", "", "Path to client certificate")
 	loginCmd.Flags().StringVar(&loginFlags.key, "key", "", "Path to client key")
-	loginCmd.Flags().BoolVar(&loginFlags.apiToken, "api-token", false, "Use API token from VES_API_TOKEN environment variable")
+	loginCmd.Flags().BoolVar(&loginFlags.apiToken, "api-token", false, "Use API token from F5XC_API_TOKEN environment variable")
 }
 
 func runLogin(cmd *cobra.Command, args []string) error {
@@ -99,9 +99,9 @@ func runLogin(cmd *cobra.Command, args []string) error {
 
 	// Handle API token authentication
 	if loginFlags.apiToken {
-		token := os.Getenv("VES_API_TOKEN")
+		token := os.Getenv("F5XC_API_TOKEN")
 		if token == "" {
-			return fmt.Errorf("VES_API_TOKEN environment variable not set")
+			return fmt.Errorf("F5XC_API_TOKEN environment variable not set")
 		}
 		config.APIToken = true
 		config.P12Bundle = "" // Clear other auth methods
@@ -137,9 +137,9 @@ func runLogin(cmd *cobra.Command, args []string) error {
 
 	if hasP12 {
 		// Check for P12 password
-		if os.Getenv("VES_P12_PASSWORD") == "" {
-			fmt.Println("Warning: VES_P12_PASSWORD environment variable not set")
-			fmt.Println("Set it with: export VES_P12_PASSWORD='your-password'")
+		if os.Getenv("F5XC_P12_PASSWORD") == "" {
+			fmt.Println("Warning: F5XC_P12_PASSWORD environment variable not set")
+			fmt.Println("Set it with: export F5XC_P12_PASSWORD='your-password'")
 		}
 
 		// Verify P12 file exists

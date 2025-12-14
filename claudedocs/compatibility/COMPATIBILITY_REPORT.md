@@ -7,7 +7,7 @@
 | Metric | Count |
 |--------|-------|
 | Original vesctl resources | 140 |
-| Our vesctl resources | 269 |
+| Our f5xcctl resources | 269 |
 | Missing from ours | 22 |
 | Additional in ours | 151 |
 

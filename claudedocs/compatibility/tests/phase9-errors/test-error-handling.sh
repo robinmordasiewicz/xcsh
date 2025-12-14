@@ -29,7 +29,7 @@ PHASE_DIR="${RESULTS_DIR}/phase9-errors"
 mkdir -p "$PHASE_DIR"
 
 log_info "Original vesctl: ${ORIGINAL_VESCTL}"
-log_info "Our vesctl: ${OUR_VESCTL}"
+log_info "Our f5xcctl: ${OUR_F5XCCTL}"
 log_info "Results directory: ${RESULTS_DIR}"
 echo ""
 
@@ -48,7 +48,7 @@ test_error_behavior() {
     # Run both
     $ORIGINAL_VESCTL "${cmd[@]}" > "${test_dir}/original_stdout.txt" 2> "${test_dir}/original_stderr.txt"
     local orig_exit=$?
-    $OUR_VESCTL "${cmd[@]}" > "${test_dir}/ours_stdout.txt" 2> "${test_dir}/ours_stderr.txt"
+    $OUR_F5XCCTL "${cmd[@]}" > "${test_dir}/ours_stdout.txt" 2> "${test_dir}/ours_stderr.txt"
     local our_exit=$?
 
     echo "orig_exit=$orig_exit" > "${test_dir}/exits.txt"
@@ -89,7 +89,7 @@ test_error_message() {
     # Run both
     $ORIGINAL_VESCTL "${cmd[@]}" > "${test_dir}/original.txt" 2>&1
     local orig_exit=$?
-    $OUR_VESCTL "${cmd[@]}" > "${test_dir}/ours.txt" 2>&1
+    $OUR_F5XCCTL "${cmd[@]}" > "${test_dir}/ours.txt" 2>&1
     local our_exit=$?
 
     echo "orig_exit=$orig_exit" > "${test_dir}/exits.txt"

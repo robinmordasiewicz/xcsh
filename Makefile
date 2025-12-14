@@ -95,16 +95,16 @@ test-unit:
 # Run integration tests only (requires environment variables)
 test-int: build
 	@echo "Running integration tests..."
-	@if [ -z "$(VES_API_URL)" ]; then \
-		echo "Error: VES_API_URL not set"; \
+	@if [ -z "$(F5XC_API_URL)" ]; then \
+		echo "Error: F5XC_API_URL not set"; \
 		echo ""; \
 		echo "Set these environment variables:"; \
-		echo "  export VES_API_URL=\"https://tenant.staging.volterra.us\""; \
-		echo "  export VES_API_P12_FILE=\"/path/to/cert.p12\""; \
-		echo "  export VES_P12_PASSWORD=\"password\""; \
+		echo "  export F5XC_API_URL=\"https://tenant.staging.volterra.us\""; \
+		echo "  export F5XC_API_P12_FILE=\"/path/to/cert.p12\""; \
+		echo "  export F5XC_P12_PASSWORD=\"password\""; \
 		exit 1; \
 	fi
-	VES_P12_PASSWORD="$(VES_P12_PASSWORD)" go test -v ./tests/integration/...
+	F5XC_P12_PASSWORD="$(F5XC_P12_PASSWORD)" go test -v ./tests/integration/...
 
 # Run tests with coverage
 test-coverage: build
@@ -344,9 +344,9 @@ help:
 	@echo "  make watch          - Rebuild on file changes"
 	@echo ""
 	@echo "Environment Variables (for integration tests):"
-	@echo "  VES_API_URL        - API URL"
-	@echo "  VES_API_P12_FILE   - Path to P12 certificate bundle"
-	@echo "  VES_P12_PASSWORD   - Password for P12 bundle"
+	@echo "  F5XC_API_URL        - API URL"
+	@echo "  F5XC_API_P12_FILE   - Path to P12 certificate bundle"
+	@echo "  F5XC_P12_PASSWORD   - Password for P12 bundle"
 	@echo ""
 	@echo "Creating a Release:"
 	@echo "  1. Update version: git tag v1.0.0"

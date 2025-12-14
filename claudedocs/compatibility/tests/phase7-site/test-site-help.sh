@@ -28,7 +28,7 @@ PHASE_DIR="${RESULTS_DIR}/phase7-site"
 mkdir -p "$PHASE_DIR"
 
 log_info "Original vesctl: ${ORIGINAL_VESCTL}"
-log_info "Our vesctl: ${OUR_VESCTL}"
+log_info "Our f5xcctl: ${OUR_F5XCCTL}"
 log_info "Results directory: ${RESULTS_DIR}"
 echo ""
 
@@ -46,7 +46,7 @@ test_help_identical() {
 
     $ORIGINAL_VESCTL "${cmd[@]}" --help > "${test_dir}/original.txt" 2>&1
     local orig_exit=$?
-    $OUR_VESCTL "${cmd[@]}" --help > "${test_dir}/ours.txt" 2>&1
+    $OUR_F5XCCTL "${cmd[@]}" --help > "${test_dir}/ours.txt" 2>&1
     local our_exit=$?
 
     echo "orig_exit=$orig_exit" > "${test_dir}/exits.txt"
@@ -88,14 +88,14 @@ test_flags_count() {
 
     # Count flags in each version
     local orig_flags=$($ORIGINAL_VESCTL "${cmd[@]}" --help 2>&1 | grep -E '^\s+(-|--)[a-z]' | wc -l)
-    local our_flags=$($OUR_VESCTL "${cmd[@]}" --help 2>&1 | grep -E '^\s+(-|--)[a-z]' | wc -l)
+    local our_flags=$($OUR_F5XCCTL "${cmd[@]}" --help 2>&1 | grep -E '^\s+(-|--)[a-z]' | wc -l)
 
     echo "original_flags=$orig_flags" > "${test_dir}/flag_count.txt"
     echo "our_flags=$our_flags" >> "${test_dir}/flag_count.txt"
 
     # Extract flag names only
     $ORIGINAL_VESCTL "${cmd[@]}" --help 2>&1 | grep -E '^\s+(-|--)[a-z]' | sed 's/^\s*//' | awk '{print $1}' | sort > "${test_dir}/original_flag_names.txt"
-    $OUR_VESCTL "${cmd[@]}" --help 2>&1 | grep -E '^\s+(-|--)[a-z]' | sed 's/^\s*//' | awk '{print $1}' | sort > "${test_dir}/our_flag_names.txt"
+    $OUR_F5XCCTL "${cmd[@]}" --help 2>&1 | grep -E '^\s+(-|--)[a-z]' | sed 's/^\s*//' | awk '{print $1}' | sort > "${test_dir}/our_flag_names.txt"
 
     # Compare
     local common=$(comm -12 "${test_dir}/original_flag_names.txt" "${test_dir}/our_flag_names.txt" | wc -l)

@@ -18,9 +18,9 @@ func loadP12Bundle(path string) (tls.Certificate, *x509.CertPool, error) {
 	}
 
 	// Get password from environment variable
-	password := os.Getenv("VES_P12_PASSWORD")
+	password := os.Getenv("F5XC_P12_PASSWORD")
 	if password == "" {
-		return tls.Certificate{}, nil, fmt.Errorf("VES_P12_PASSWORD environment variable is not set")
+		return tls.Certificate{}, nil, fmt.Errorf("F5XC_P12_PASSWORD environment variable is not set")
 	}
 
 	// Decode the P12 bundle

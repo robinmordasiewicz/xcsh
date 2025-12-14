@@ -19,7 +19,7 @@ PHASE_DIR="${RESULTS_DIR}/behavior"
 mkdir -p "$PHASE_DIR"
 
 log_info "Original vesctl: ${ORIGINAL_VESCTL}"
-log_info "Our vesctl: ${OUR_VESCTL}"
+log_info "Our f5xcctl: ${OUR_F5XCCTL}"
 log_info "Results directory: ${RESULTS_DIR}"
 echo ""
 
@@ -39,7 +39,7 @@ test_global_flags() {
 
     # Extract Global Flags section only (use eval for multi-word commands)
     eval "$ORIGINAL_VESCTL $cmd --help" 2>&1 | sed -n '/^Global Flags:/,/^$/p' > "${test_dir}/original.txt"
-    eval "$OUR_VESCTL $cmd --help" 2>&1 | sed -n '/^Global Flags:/,/^$/p' > "${test_dir}/ours.txt"
+    eval "$OUR_F5XCCTL $cmd --help" 2>&1 | sed -n '/^Global Flags:/,/^$/p' > "${test_dir}/ours.txt"
 
     if diff -q "${test_dir}/original.txt" "${test_dir}/ours.txt" > /dev/null 2>&1; then
         log_pass "${test_name}"
@@ -96,7 +96,7 @@ test_help_structure() {
 
     # Extract structural elements only (section headers)
     eval "$ORIGINAL_VESCTL $cmd --help" 2>&1 | grep -E "^(Usage:|Aliases:|Examples:|Available Commands:|Flags:|Global Flags:|Use )" > "${test_dir}/original.txt" 2>/dev/null || true
-    eval "$OUR_VESCTL $cmd --help" 2>&1 | grep -E "^(Usage:|Aliases:|Examples:|Available Commands:|Flags:|Global Flags:|Use )" > "${test_dir}/ours.txt" 2>/dev/null || true
+    eval "$OUR_F5XCCTL $cmd --help" 2>&1 | grep -E "^(Usage:|Aliases:|Examples:|Available Commands:|Flags:|Global Flags:|Use )" > "${test_dir}/ours.txt" 2>/dev/null || true
 
     if diff -q "${test_dir}/original.txt" "${test_dir}/ours.txt" > /dev/null 2>&1; then
         log_pass "${test_name}"
@@ -129,7 +129,7 @@ test_error_style() {
 
     # Capture error output
     $ORIGINAL_VESCTL "${args[@]}" > "${test_dir}/original.stdout" 2> "${test_dir}/original.stderr" || true
-    $OUR_VESCTL "${args[@]}" > "${test_dir}/ours.stdout" 2> "${test_dir}/ours.stderr" || true
+    $OUR_F5XCCTL "${args[@]}" > "${test_dir}/ours.stdout" 2> "${test_dir}/ours.stderr" || true
 
     # Extract error pattern (first line of stderr or stdout containing "Error" or "error")
     local orig_error=$(grep -i "error" "${test_dir}/original.stderr" "${test_dir}/original.stdout" 2>/dev/null | head -1 | sed 's/vesctl\.[a-z0-9-]*/vesctl/g')
@@ -176,8 +176,8 @@ test_alias() {
     mkdir -p "$test_dir"
 
     # Compare alias output with full command (for our binary)
-    $OUR_VESCTL $alias_cmd --help 2>&1 > "${test_dir}/alias.txt"
-    $OUR_VESCTL $full_cmd --help 2>&1 > "${test_dir}/full.txt"
+    $OUR_F5XCCTL $alias_cmd --help 2>&1 > "${test_dir}/alias.txt"
+    $OUR_F5XCCTL $full_cmd --help 2>&1 > "${test_dir}/full.txt"
 
     # Normalize (replace command names in Usage line)
     sed -i.bak "s/$alias_cmd/$full_cmd/g" "${test_dir}/alias.txt" 2>/dev/null || \

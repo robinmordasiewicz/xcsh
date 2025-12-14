@@ -147,9 +147,9 @@ func TestCLI_ConfigureShow(t *testing.T) {
 func TestCLI_ListNamespaces(t *testing.T) {
 	binary := getBinaryPath(t)
 
-	apiURL := os.Getenv("VES_API_URL")
-	p12File := os.Getenv("VES_P12_FILE")
-	p12Password := os.Getenv("VES_P12_PASSWORD")
+	apiURL := os.Getenv("F5XC_API_URL")
+	p12File := os.Getenv("F5XC_P12_FILE")
+	p12Password := os.Getenv("F5XC_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
 		t.Skip("Integration test environment not configured")
@@ -157,7 +157,7 @@ func TestCLI_ListNamespaces(t *testing.T) {
 
 	// Set environment for the command (include --insecure for staging environments)
 	cmd := exec.Command(binary, "namespace", "list", "--server-url", apiURL, "--p12-bundle", p12File, "--insecure")
-	cmd.Env = append(os.Environ(), "VES_P12_PASSWORD="+p12Password)
+	cmd.Env = append(os.Environ(), "F5XC_P12_PASSWORD="+p12Password)
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
@@ -176,16 +176,16 @@ func TestCLI_ListNamespaces(t *testing.T) {
 func TestCLI_HTTPLoadBalancerList(t *testing.T) {
 	binary := getBinaryPath(t)
 
-	apiURL := os.Getenv("VES_API_URL")
-	p12File := os.Getenv("VES_P12_FILE")
-	p12Password := os.Getenv("VES_P12_PASSWORD")
+	apiURL := os.Getenv("F5XC_API_URL")
+	p12File := os.Getenv("F5XC_P12_FILE")
+	p12Password := os.Getenv("F5XC_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
 		t.Skip("Integration test environment not configured")
 	}
 
 	cmd := exec.Command(binary, "http-loadbalancer", "list", "-n", "shared", "--server-url", apiURL, "--p12-bundle", p12File, "--insecure")
-	cmd.Env = append(os.Environ(), "VES_P12_PASSWORD="+p12Password)
+	cmd.Env = append(os.Environ(), "F5XC_P12_PASSWORD="+p12Password)
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
@@ -203,16 +203,16 @@ func TestCLI_HTTPLoadBalancerList(t *testing.T) {
 func TestCLI_OutputFormatJSON(t *testing.T) {
 	binary := getBinaryPath(t)
 
-	apiURL := os.Getenv("VES_API_URL")
-	p12File := os.Getenv("VES_P12_FILE")
-	p12Password := os.Getenv("VES_P12_PASSWORD")
+	apiURL := os.Getenv("F5XC_API_URL")
+	p12File := os.Getenv("F5XC_P12_FILE")
+	p12Password := os.Getenv("F5XC_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
 		t.Skip("Integration test environment not configured")
 	}
 
 	cmd := exec.Command(binary, "namespace", "list", "-o", "json", "--server-url", apiURL, "--p12-bundle", p12File, "--insecure")
-	cmd.Env = append(os.Environ(), "VES_P12_PASSWORD="+p12Password)
+	cmd.Env = append(os.Environ(), "F5XC_P12_PASSWORD="+p12Password)
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout
@@ -237,16 +237,16 @@ func TestCLI_OutputFormatJSON(t *testing.T) {
 func TestCLI_OutputFormatTable(t *testing.T) {
 	binary := getBinaryPath(t)
 
-	apiURL := os.Getenv("VES_API_URL")
-	p12File := os.Getenv("VES_P12_FILE")
-	p12Password := os.Getenv("VES_P12_PASSWORD")
+	apiURL := os.Getenv("F5XC_API_URL")
+	p12File := os.Getenv("F5XC_P12_FILE")
+	p12Password := os.Getenv("F5XC_P12_PASSWORD")
 
 	if apiURL == "" || p12File == "" || p12Password == "" {
 		t.Skip("Integration test environment not configured")
 	}
 
 	cmd := exec.Command(binary, "namespace", "list", "-o", "table", "--server-url", apiURL, "--p12-bundle", p12File, "--insecure")
-	cmd.Env = append(os.Environ(), "VES_P12_PASSWORD="+p12Password)
+	cmd.Env = append(os.Environ(), "F5XC_P12_PASSWORD="+p12Password)
 
 	var stdout, stderr bytes.Buffer
 	cmd.Stdout = &stdout

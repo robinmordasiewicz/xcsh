@@ -97,7 +97,7 @@ These commands are **enhancements** for easier authentication workflows.
 ```bash
 # Run Phase 2 tests
 export ORIGINAL_VESCTL=./vesctl-0.2.47-original
-export OUR_VESCTL=./vesctl.darwin-arm64
+export OUR_F5XCCTL=./f5xcctl.darwin-arm64
 ./claudedocs/compatibility/tests/phase2-simple/test-simple.sh
 
 # View results

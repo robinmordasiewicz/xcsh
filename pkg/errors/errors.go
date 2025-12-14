@@ -83,7 +83,7 @@ func AuthError(message string) *ExitError {
 		Code:    ExitAuthError,
 		ErrCode: ErrAuthFailed,
 		Message: message,
-		Hint:    "Check your credentials with 'f5xcctl configure show' or set VES_API_TOKEN",
+		Hint:    "Check your credentials with 'f5xcctl configure show' or set F5XC_API_TOKEN",
 	}
 }
 

@@ -44,9 +44,9 @@ pre-commit run --all-files
 ## Integration Testing (Optional)
 Requires environment variables:
 ```bash
-export VES_API_URL="https://tenant.staging.volterra.us"
-export VES_API_P12_FILE="/path/to/cert.p12"
-export VES_P12_PASSWORD="password"
+export F5XC_API_URL="https://tenant.staging.volterra.us"
+export F5XC_API_P12_FILE="/path/to/cert.p12"
+export F5XC_P12_PASSWORD="password"
 make test-int
 ```
 

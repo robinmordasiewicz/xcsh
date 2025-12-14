@@ -23,7 +23,7 @@ var (
 	cacert      string
 	p12Bundle   string
 	hardwareKey bool // Use yubikey for TLS connection
-	useAPIToken bool // Use API token from VES_API_TOKEN environment variable
+	useAPIToken bool // Use API token from F5XC_API_TOKEN environment variable
 
 	// Output control (f5xcctl compatible)
 	outputFormat string // Output format for command (canonical: --output-format)
@@ -83,9 +83,9 @@ var rootCmd = &cobra.Command{
 
 		// Handle API token authentication
 		if useAPIToken {
-			token := os.Getenv("VES_API_TOKEN")
+			token := os.Getenv("F5XC_API_TOKEN")
 			if token == "" {
-				return fmt.Errorf("VES_API_TOKEN environment variable not set")
+				return fmt.Errorf("F5XC_API_TOKEN environment variable not set")
 			}
 			cfg.APIToken = token
 		}
@@ -141,12 +141,12 @@ func init() {
 	_ = viper.BindPFlag("output-format", pf.Lookup("output-format"))
 
 	// Bind environment variables to viper for flags without automatic binding
-	_ = viper.BindEnv("config", "VES_CONFIG")
-	_ = viper.BindEnv("cert", "VES_CERT")
-	_ = viper.BindEnv("key", "VES_KEY")
-	_ = viper.BindEnv("cacert", "VES_CACERT")
-	_ = viper.BindEnv("p12-bundle", "VES_P12_FILE")
-	_ = viper.BindEnv("output-format", "VES_OUTPUT")
+	_ = viper.BindEnv("config", "F5XC_CONFIG")
+	_ = viper.BindEnv("cert", "F5XC_CERT")
+	_ = viper.BindEnv("key", "F5XC_KEY")
+	_ = viper.BindEnv("cacert", "F5XC_CACERT")
+	_ = viper.BindEnv("p12-bundle", "F5XC_P12_FILE")
+	_ = viper.BindEnv("output-format", "F5XC_OUTPUT")
 
 	// Register --spec flag for machine-readable CLI specification
 	RegisterSpecFlag(rootCmd)
@@ -157,9 +157,9 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	// Check VES_CONFIG environment variable if cfgFile not set via CLI flag
+	// Check F5XC_CONFIG environment variable if cfgFile not set via CLI flag
 	if cfgFile == "" {
-		if envConfig := os.Getenv("VES_CONFIG"); envConfig != "" {
+		if envConfig := os.Getenv("F5XC_CONFIG"); envConfig != "" {
 			cfgFile = envConfig
 		}
 	}
@@ -237,45 +237,45 @@ func applyConfigToFlags() {
 	}
 }
 
-// applyEnvironmentVariables applies VES_* environment variables to flags
+// applyEnvironmentVariables applies F5XC_* environment variables to flags
 // This is called after config file values are applied, allowing env vars to override
 func applyEnvironmentVariables() {
-	// VES_API_URL overrides server-url
-	if envURL := os.Getenv("VES_API_URL"); envURL != "" {
+	// F5XC_API_URL overrides server-url
+	if envURL := os.Getenv("F5XC_API_URL"); envURL != "" {
 		serverURL = envURL
 	}
 
-	// VES_CERT overrides cert (only if CLI flag not set)
+	// F5XC_CERT overrides cert (only if CLI flag not set)
 	if cert == "" {
-		if envCert := os.Getenv("VES_CERT"); envCert != "" {
+		if envCert := os.Getenv("F5XC_CERT"); envCert != "" {
 			cert = expandPath(envCert)
 		}
 	}
 
-	// VES_KEY overrides key (only if CLI flag not set)
+	// F5XC_KEY overrides key (only if CLI flag not set)
 	if key == "" {
-		if envKey := os.Getenv("VES_KEY"); envKey != "" {
+		if envKey := os.Getenv("F5XC_KEY"); envKey != "" {
 			key = expandPath(envKey)
 		}
 	}
 
-	// VES_CACERT overrides cacert (only if CLI flag not set)
+	// F5XC_CACERT overrides cacert (only if CLI flag not set)
 	if cacert == "" {
-		if envCACert := os.Getenv("VES_CACERT"); envCACert != "" {
+		if envCACert := os.Getenv("F5XC_CACERT"); envCACert != "" {
 			cacert = expandPath(envCACert)
 		}
 	}
 
-	// VES_P12_FILE overrides p12-bundle (only if CLI flag not set)
+	// F5XC_P12_FILE overrides p12-bundle (only if CLI flag not set)
 	if p12Bundle == "" {
-		if envP12 := os.Getenv("VES_P12_FILE"); envP12 != "" {
+		if envP12 := os.Getenv("F5XC_P12_FILE"); envP12 != "" {
 			p12Bundle = expandPath(envP12)
 		}
 	}
 
-	// VES_OUTPUT overrides output-format (only if CLI flag not set)
+	// F5XC_OUTPUT overrides output-format (only if CLI flag not set)
 	if outputFormat == "" {
-		if envOutput := os.Getenv("VES_OUTPUT"); envOutput != "" {
+		if envOutput := os.Getenv("F5XC_OUTPUT"); envOutput != "" {
 			outputFormat = envOutput
 		}
 	}

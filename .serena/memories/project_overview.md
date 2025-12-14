@@ -22,7 +22,7 @@ f5xcctl is an open-source command-line interface for managing F5 Distributed Clo
 ## Authentication Methods
 1. **P12 Bundle** (recommended): Downloaded from F5 XC Console
 2. **Certificate + Key**: Extracted from P12 or separate files
-3. **Environment Variables**: VES_P12_PASSWORD, VES_API_URL, VES_API_TOKEN, etc.
+3. **Environment Variables**: F5XC_P12_PASSWORD, F5XC_API_URL, F5XC_API_TOKEN, etc.
 
 ## Configuration
 - Default config file: `~/.vesconfig`

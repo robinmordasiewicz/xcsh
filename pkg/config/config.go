@@ -21,7 +21,7 @@ type Config struct {
 	// Key is the path to the client key file
 	Key string `yaml:"key,omitempty"`
 
-	// APIToken indicates API token authentication mode (actual token from VES_API_TOKEN env var)
+	// APIToken indicates API token authentication mode (actual token from F5XC_API_TOKEN env var)
 	APIToken bool `yaml:"api-token,omitempty"`
 }
 

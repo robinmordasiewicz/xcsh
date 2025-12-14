@@ -12,9 +12,9 @@
 #   ./test.sh --help              # Show all options
 #
 # Environment Variables:
-#   VES_API_URL        - F5 XC API URL (e.g., https://tenant.console.ves.volterra.io/api)
-#   VES_API_P12_FILE   - Path to P12 certificate file
-#   VES_P12_PASSWORD   - Password for P12 certificate
+#   F5XC_API_URL        - F5 XC API URL (e.g., https://tenant.console.ves.volterra.io/api)
+#   F5XC_API_P12_FILE   - Path to P12 certificate file
+#   F5XC_P12_PASSWORD   - Password for P12 certificate
 
 set -e
 

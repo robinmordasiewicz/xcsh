@@ -1,6 +1,6 @@
 #!/bin/bash
 # test-configure.sh - Phase 1: Configure/Configuration command help tests
-# Focuses on help text consistency between original and our vesctl
+# Focuses on help text consistency between original and our f5xcctl
 
 set -e
 
@@ -26,12 +26,12 @@ if ! check_original_vesctl; then
 fi
 
 if ! check_our_vesctl; then
-    echo "Our vesctl not found. Exiting."
+    echo "Our f5xcctl not found. Exiting."
     exit 1
 fi
 
 log_info "Original vesctl: ${ORIGINAL_VESCTL}"
-log_info "Our vesctl: ${OUR_VESCTL}"
+log_info "Our f5xcctl: ${OUR_F5XCCTL}"
 log_info "Results directory: ${RESULTS_DIR}"
 echo ""
 

@@ -28,7 +28,7 @@ PHASE_DIR="${RESULTS_DIR}/phase8-output"
 mkdir -p "$PHASE_DIR"
 
 log_info "Original vesctl: ${ORIGINAL_VESCTL}"
-log_info "Our vesctl: ${OUR_VESCTL}"
+log_info "Our f5xcctl: ${OUR_F5XCCTL}"
 log_info "Results directory: ${RESULTS_DIR}"
 echo ""
 
@@ -49,7 +49,7 @@ test_output_identical() {
     local orig_exit=$?
 
     # Run ours with same command
-    $OUR_VESCTL "${cmd_orig[@]}" > "${test_dir}/ours.txt" 2>&1
+    $OUR_F5XCCTL "${cmd_orig[@]}" > "${test_dir}/ours.txt" 2>&1
     local our_exit=$?
 
     echo "orig_exit=$orig_exit" > "${test_dir}/exits.txt"
@@ -106,7 +106,7 @@ test_json_semantic() {
     # Run both
     $ORIGINAL_VESCTL "${cmd_orig[@]}" > "${test_dir}/original.json" 2>&1
     local orig_exit=$?
-    $OUR_VESCTL "${cmd_orig[@]}" > "${test_dir}/ours.json" 2>&1
+    $OUR_F5XCCTL "${cmd_orig[@]}" > "${test_dir}/ours.json" 2>&1
     local our_exit=$?
 
     echo "orig_exit=$orig_exit" > "${test_dir}/exits.txt"

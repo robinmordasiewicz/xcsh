@@ -83,7 +83,7 @@ cd ~/GIT/robinmordasiewicz/vesctl
 
 # Set environment variables
 export ORIGINAL_VESCTL=./vesctl-0.2.35
-export OUR_VESCTL=./vesctl-linux-amd64
+export OUR_F5XCCTL=./f5xcctl-linux-amd64
 
 # Create convenience symlinks
 ln -sf vesctl-0.2.35 vesctl-original
@@ -99,7 +99,7 @@ ln -sf vesctl-linux-amd64 vesctl-ours
 ```bash
 # Set environment variables (use local paths)
 export ORIGINAL_VESCTL=./vesctl-0.2.47-original
-export OUR_VESCTL=./vesctl.darwin-arm64
+export OUR_F5XCCTL=./f5xcctl.darwin-arm64
 
 # Run all behavioral tests (no API calls)
 ./claudedocs/compatibility/tests/phase1-configure/test-behavior.sh
