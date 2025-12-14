@@ -12,8 +12,8 @@ import (
 	"sort"
 	"text/template"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/openapi"
-	"github.com/robinmordasiewicz/vesctl/pkg/types"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/openapi"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/types"
 )
 
 var (
@@ -49,8 +49,8 @@ func main() {
 		fmt.Println("Loading OpenAPI specifications...")
 	}
 
-	// Load all specs
-	specs, err := openapi.LoadAllSpecs(*specsDir)
+	// Load all specs with transformation to normalize legacy references
+	specs, err := openapi.LoadAllSpecsWithTransform(*specsDir, openapi.DefaultTransformConfig())
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error loading specs: %v\n", err)
 		os.Exit(1)
