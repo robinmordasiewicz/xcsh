@@ -7,6 +7,13 @@ on:
         description: 'Ollama model to use'
         required: false
         default: 'deepseek-r1:1.5b'
+  workflow_call:
+    inputs:
+      model:
+        description: 'Ollama model to use'
+        required: false
+        type: string
+        default: 'deepseek-r1:1.5b'
 
 jobs:
   generate:
