@@ -12,12 +12,12 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/naming"
-	"github.com/robinmordasiewicz/vesctl/pkg/output"
-	"github.com/robinmordasiewicz/vesctl/pkg/types"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/naming"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/output"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/types"
 )
 
-// configurationFlags holds flags for configuration commands (vesctl compatibility)
+// configurationFlags holds flags for configuration commands (f5xcctl compatibility)
 type configurationFlags struct {
 	namespace      string
 	name           string
@@ -31,13 +31,13 @@ type configurationFlags struct {
 	yes            bool // Skip confirmation for destructive operations
 }
 
-// configurationCmd represents the configuration command (vesctl compatibility)
+// configurationCmd represents the configuration command (f5xcctl compatibility)
 var configurationCmd = &cobra.Command{
 	Use:     "configuration",
 	Aliases: []string{"cfg", "c"},
 	Short:   "Manage F5 XC configuration objects using CRUD operations.",
 	Long:    `Manage F5 XC configuration objects using CRUD operations.`,
-	Example: `vesctl configuration create virtual_host`,
+	Example: `f5xcctl configuration create virtual_host`,
 }
 
 func init() {
@@ -46,7 +46,7 @@ func init() {
 	// Enable AI-agent-friendly error handling for invalid subcommands
 	configurationCmd.RunE = func(cmd *cobra.Command, args []string) error {
 		if len(args) > 0 {
-			return fmt.Errorf("unknown command %q for %q\n\nUsage: vesctl configuration <action> [resource-type] [name] [flags]\n\nAvailable actions:\n  list, get, create, replace, apply, delete, status, patch, add-labels, remove-labels\n\nRun 'vesctl configuration --help' for usage", args[0], cmd.CommandPath())
+			return fmt.Errorf("unknown command %q for %q\n\nUsage: f5xcctl configuration <action> [resource-type] [name] [flags]\n\nAvailable actions:\n  list, get, create, replace, apply, delete, status, patch, add-labels, remove-labels\n\nRun 'f5xcctl configuration --help' for usage", args[0], cmd.CommandPath())
 		}
 		return cmd.Help()
 	}
@@ -77,13 +77,13 @@ func buildConfigListCmd() *cobra.Command {
 Returns a list of configurations with names, namespaces, and metadata.
 Use --namespace to filter by namespace, or --output-format to control output format.`,
 		Example: `  # List all http_loadbalancers in default namespace
-  vesctl configuration list http_loadbalancer
+  f5xcctl configuration list http_loadbalancer
 
   # List in a specific namespace
-  vesctl configuration list http_loadbalancer -n production
+  f5xcctl configuration list http_loadbalancer -n production
 
   # List with JSON output
-  vesctl configuration list http_loadbalancer --output-format json`,
+  f5xcctl configuration list http_loadbalancer --output-format json`,
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
@@ -102,13 +102,13 @@ Use --namespace to filter by namespace, or --output-format to control output for
 
 		// Build resource-specific examples
 		exampleText := fmt.Sprintf(`  # List all %s in default namespace
-  vesctl configuration list %s
+  f5xcctl configuration list %s
 
   # List %s in a specific namespace
-  vesctl configuration list %s -n production
+  f5xcctl configuration list %s -n production
 
   # List with JSON output
-  vesctl configuration list %s --output-format json`, rt.Name, rt.Name, rt.Name, rt.Name, rt.Name)
+  f5xcctl configuration list %s --output-format json`, rt.Name, rt.Name, rt.Name, rt.Name, rt.Name)
 
 		subCmd := &cobra.Command{
 			Use:     rt.Name,
@@ -137,13 +137,13 @@ func buildConfigGetCmd() *cobra.Command {
 Returns the full configuration including metadata and spec.
 Use --response-format replace-request to get output suitable for editing and replacing.`,
 		Example: `  # Get a specific http_loadbalancer
-  vesctl configuration get http_loadbalancer example-lb
+  f5xcctl configuration get http_loadbalancer example-lb
 
   # Get with replace-request format for editing
-  vesctl configuration get http_loadbalancer example-lb --response-format replace-request
+  f5xcctl configuration get http_loadbalancer example-lb --response-format replace-request
 
   # Get from a specific namespace
-  vesctl configuration get http_loadbalancer example-lb -n production`,
+  f5xcctl configuration get http_loadbalancer example-lb -n production`,
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
@@ -163,13 +163,13 @@ Use --response-format replace-request to get output suitable for editing and rep
 
 		// Build resource-specific examples
 		exampleText := fmt.Sprintf(`  # Get a specific %s
-  vesctl configuration get %s example-resource
+  f5xcctl configuration get %s example-resource
 
   # Get with replace-request format for editing
-  vesctl configuration get %s example-resource --response-format replace-request
+  f5xcctl configuration get %s example-resource --response-format replace-request
 
   # Get from a specific namespace
-  vesctl configuration get %s example-resource -n production`, rt.Name, rt.Name, rt.Name, rt.Name)
+  f5xcctl configuration get %s example-resource -n production`, rt.Name, rt.Name, rt.Name, rt.Name)
 
 		subCmd := &cobra.Command{
 			Use:     fmt.Sprintf("%s <name>", rt.Name),
@@ -195,7 +195,7 @@ func buildConfigCreateCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "create",
 		Short:   "Create a new configuration object from a YAML or JSON file.",
-		Example: "vesctl configuration create virtual_host -i <file>",
+		Example: "f5xcctl configuration create virtual_host -i <file>",
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.inputFile, "input-file", "i", "", "Path to YAML or JSON file containing the resource definition.")
@@ -211,14 +211,14 @@ func buildConfigCreateCmd() *cobra.Command {
 
 		// Build example text
 		exampleText := fmt.Sprintf(`# Create from file
-vesctl configuration create %s -i config.yaml`, rt.Name)
+f5xcctl configuration create %s -i config.yaml`, rt.Name)
 
 		// Add inline JSON example if available
 		if jsonExample := types.GetResourceExample(rt.Name); jsonExample != "" {
 			exampleText += fmt.Sprintf(`
 
 # Create with inline JSON using heredoc
-vesctl configuration create %s --json-data "$(cat <<'EOF'
+f5xcctl configuration create %s --json-data "$(cat <<'EOF'
 %s
 EOF
 )"`, rt.Name, jsonExample)
@@ -250,13 +250,13 @@ func buildConfigDeleteCmd() *cobra.Command {
 This is a destructive operation. Use --yes to skip confirmation prompts.
 In non-interactive mode (scripts, CI/CD), --yes is required.`,
 		Example: `  # Delete an http_loadbalancer (with confirmation prompt)
-  vesctl configuration delete http_loadbalancer example-lb
+  f5xcctl configuration delete http_loadbalancer example-lb
 
   # Delete without confirmation
-  vesctl configuration delete http_loadbalancer example-lb --yes
+  f5xcctl configuration delete http_loadbalancer example-lb --yes
 
   # Delete from a specific namespace
-  vesctl configuration delete http_loadbalancer example-lb -n production --yes`,
+  f5xcctl configuration delete http_loadbalancer example-lb -n production --yes`,
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
@@ -279,13 +279,13 @@ In non-interactive mode (scripts, CI/CD), --yes is required.`,
 
 		// Build resource-specific examples
 		exampleText := fmt.Sprintf(`  # Delete a %s (with confirmation prompt)
-  vesctl configuration delete %s example-resource
+  f5xcctl configuration delete %s example-resource
 
   # Delete without confirmation (for scripts/CI)
-  vesctl configuration delete %s example-resource --yes
+  f5xcctl configuration delete %s example-resource --yes
 
   # Delete from a specific namespace
-  vesctl configuration delete %s example-resource -n production --yes`, rt.Name, rt.Name, rt.Name, rt.Name)
+  f5xcctl configuration delete %s example-resource -n production --yes`, rt.Name, rt.Name, rt.Name, rt.Name)
 
 		subCmd := &cobra.Command{
 			Use:     fmt.Sprintf("%s <name>", rt.Name),
@@ -316,10 +316,10 @@ func buildConfigReplaceCmd() *cobra.Command {
 The resource must already exist. Use --input-file or --json-data to provide the new configuration.
 This is a destructive operation. Use --yes to skip confirmation prompts.`,
 		Example: `  # Replace from YAML file
-  vesctl configuration replace http_loadbalancer -i config.yaml --yes
+  f5xcctl configuration replace http_loadbalancer -i config.yaml --yes
 
   # Replace with inline JSON
-  vesctl configuration replace http_loadbalancer --json-data '{"metadata":{"name":"example-lb"},...}' --yes`,
+  f5xcctl configuration replace http_loadbalancer --json-data '{"metadata":{"name":"example-lb"},...}' --yes`,
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.inputFile, "input-file", "i", "", "Path to YAML or JSON file containing the resource definition.")
@@ -343,14 +343,14 @@ This is a destructive operation. Use --yes to skip confirmation prompts.`,
 
 		// Build example text
 		exampleText := fmt.Sprintf(`  # Replace from file
-  vesctl configuration replace %s -i config.yaml --yes`, rt.Name)
+  f5xcctl configuration replace %s -i config.yaml --yes`, rt.Name)
 
 		// Add inline JSON example if available
 		if jsonExample := types.GetResourceExample(rt.Name); jsonExample != "" {
 			exampleText += fmt.Sprintf(`
 
   # Replace with inline JSON using heredoc
-  vesctl configuration replace %s --json-data "$(cat <<'EOF'
+  f5xcctl configuration replace %s --json-data "$(cat <<'EOF'
 %s
 EOF
 )" --yes`, rt.Name, jsonExample)
@@ -383,13 +383,13 @@ func buildConfigStatusCmd() *cobra.Command {
 Returns the runtime status including deployment state, validation status, and any errors.
 Use --at-site to query status at a specific site.`,
 		Example: `  # Get status of an http_loadbalancer
-  vesctl configuration status http_loadbalancer example-lb
+  f5xcctl configuration status http_loadbalancer example-lb
 
   # Get status at a specific site
-  vesctl configuration status http_loadbalancer example-lb --at-site example-site
+  f5xcctl configuration status http_loadbalancer example-lb --at-site example-site
 
   # Get status from a specific namespace
-  vesctl configuration status http_loadbalancer example-lb -n production`,
+  f5xcctl configuration status http_loadbalancer example-lb -n production`,
 	}
 
 	cmd.PersistentFlags().StringVar(&flags.atSite, "at-site", "", "Site name to query for object status.")
@@ -412,13 +412,13 @@ Use --at-site to query status at a specific site.`,
 
 		// Build resource-specific examples
 		exampleText := fmt.Sprintf(`  # Get status of a %s
-  vesctl configuration status %s example-resource
+  f5xcctl configuration status %s example-resource
 
   # Get status at a specific site
-  vesctl configuration status %s example-resource --at-site example-site
+  f5xcctl configuration status %s example-resource --at-site example-site
 
   # Get status from a specific namespace
-  vesctl configuration status %s example-resource -n production`, rt.Name, rt.Name, rt.Name, rt.Name)
+  f5xcctl configuration status %s example-resource -n production`, rt.Name, rt.Name, rt.Name, rt.Name)
 
 		subCmd := &cobra.Command{
 			Use:     fmt.Sprintf("%s <name>", rt.Name),
@@ -449,10 +449,10 @@ func buildConfigApplyCmd() *cobra.Command {
 Apply is idempotent - it creates the resource if it doesn't exist, or replaces it if it does.
 Use --mode new to fail if the resource already exists (strict create behavior).`,
 		Example: `  # Apply from YAML file (create or replace)
-  vesctl configuration apply http_loadbalancer -i config.yaml
+  f5xcctl configuration apply http_loadbalancer -i config.yaml
 
   # Apply with strict create mode (fail if exists)
-  vesctl configuration apply http_loadbalancer -i config.yaml --mode new`,
+  f5xcctl configuration apply http_loadbalancer -i config.yaml --mode new`,
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.inputFile, "input-file", "i", "", "Path to YAML or JSON file containing the resource definition.")
@@ -476,17 +476,17 @@ Use --mode new to fail if the resource already exists (strict create behavior).`
 
 		// Build example text
 		exampleText := fmt.Sprintf(`  # Apply from file (create or replace)
-  vesctl configuration apply %s -i config.yaml
+  f5xcctl configuration apply %s -i config.yaml
 
   # Apply with strict create mode
-  vesctl configuration apply %s -i config.yaml --mode new`, rt.Name, rt.Name)
+  f5xcctl configuration apply %s -i config.yaml --mode new`, rt.Name, rt.Name)
 
 		// Add inline JSON example if available
 		if jsonExample := types.GetResourceExample(rt.Name); jsonExample != "" {
 			exampleText += fmt.Sprintf(`
 
   # Apply with inline JSON using heredoc
-  vesctl configuration apply %s --json-data "$(cat <<'EOF'
+  f5xcctl configuration apply %s --json-data "$(cat <<'EOF'
 %s
 EOF
 )"`, rt.Name, jsonExample)
@@ -518,7 +518,7 @@ func buildConfigPatchCmd() *cobra.Command {
 
 Note: Patch operation is not yet fully implemented. Use replace for complete updates.`,
 		Example: `  # Patch is not yet implemented - use replace instead
-  vesctl configuration replace http_loadbalancer -i updated-config.yaml`,
+  f5xcctl configuration replace http_loadbalancer -i updated-config.yaml`,
 	}
 
 	cmd.PersistentFlags().StringVar(&flags.name, "name", "", "Name of the target configuration object.")
@@ -565,10 +565,10 @@ func buildConfigAddLabelsCmd() *cobra.Command {
 Labels are key-value pairs used for organizing and selecting resources.
 Use --label-key and --label-value flags (can be repeated for multiple labels).`,
 		Example: `  # Add a single label
-  vesctl configuration add-labels http_loadbalancer example-lb --label-key env --label-value production
+  f5xcctl configuration add-labels http_loadbalancer example-lb --label-key env --label-value production
 
   # Add multiple labels
-  vesctl configuration add-labels http_loadbalancer example-lb \
+  f5xcctl configuration add-labels http_loadbalancer example-lb \
     --label-key env --label-value production \
     --label-key team --label-value platform`,
 	}
@@ -591,10 +591,10 @@ Use --label-key and --label-value flags (can be repeated for multiple labels).`,
 
 		// Build resource-specific examples
 		exampleText := fmt.Sprintf(`  # Add a single label
-  vesctl configuration add-labels %s example-resource --label-key env --label-value production
+  f5xcctl configuration add-labels %s example-resource --label-key env --label-value production
 
   # Add multiple labels
-  vesctl configuration add-labels %s example-resource \
+  f5xcctl configuration add-labels %s example-resource \
     --label-key env --label-value production \
     --label-key team --label-value platform`, rt.Name, rt.Name)
 
@@ -626,10 +626,10 @@ func buildConfigRemoveLabelsCmd() *cobra.Command {
 
 Specify the label keys to remove using --label-key flags (can be repeated for multiple labels).`,
 		Example: `  # Remove a single label
-  vesctl configuration remove-labels http_loadbalancer example-lb --label-key env
+  f5xcctl configuration remove-labels http_loadbalancer example-lb --label-key env
 
   # Remove multiple labels
-  vesctl configuration remove-labels http_loadbalancer example-lb \
+  f5xcctl configuration remove-labels http_loadbalancer example-lb \
     --label-key env \
     --label-key team`,
 	}
@@ -651,10 +651,10 @@ Specify the label keys to remove using --label-key flags (can be repeated for mu
 
 		// Build resource-specific examples
 		exampleText := fmt.Sprintf(`  # Remove a single label
-  vesctl configuration remove-labels %s example-resource --label-key env
+  f5xcctl configuration remove-labels %s example-resource --label-key env
 
   # Remove multiple labels
-  vesctl configuration remove-labels %s example-resource \
+  f5xcctl configuration remove-labels %s example-resource \
     --label-key env \
     --label-key team`, rt.Name, rt.Name)
 
@@ -675,7 +675,7 @@ Specify the label keys to remove using --label-key flags (can be repeated for mu
 	return cmd
 }
 
-// runConfigList executes the list operation (vesctl compatible)
+// runConfigList executes the list operation (f5xcctl compatible)
 func runConfigList(rt *types.ResourceType, flags *configurationFlags) error {
 	client := GetClient()
 	if client == nil {
@@ -708,10 +708,10 @@ func runConfigList(rt *types.ResourceType, flags *configurationFlags) error {
 	return output.Print(result, GetOutputFormat())
 }
 
-// runConfigGet executes the get operation (vesctl compatible)
+// runConfigGet executes the get operation (f5xcctl compatible)
 func runConfigGet(rt *types.ResourceType, flags *configurationFlags) error {
 	// Note: We accept any response-format value including GET_RSP_FORMAT_READ
-	// (original vesctl has a bug that rejects this valid value)
+	// (original f5xcctl has a bug that rejects this valid value)
 
 	client := GetClient()
 	if client == nil {
@@ -741,11 +741,11 @@ func runConfigGet(rt *types.ResourceType, flags *configurationFlags) error {
 		return fmt.Errorf("failed to parse response: %w", err)
 	}
 
-	// Get defaults to YAML output (matching original vesctl)
+	// Get defaults to YAML output (matching original f5xcctl)
 	return output.Print(result, GetOutputFormatWithDefault("yaml"))
 }
 
-// runConfigCreate executes the create operation (vesctl compatible)
+// runConfigCreate executes the create operation (f5xcctl compatible)
 func runConfigCreate(rt *types.ResourceType, flags *configurationFlags) error {
 	client := GetClient()
 	if client == nil {
@@ -784,13 +784,13 @@ func runConfigCreate(rt *types.ResourceType, flags *configurationFlags) error {
 		return fmt.Errorf("failed to parse response: %w", err)
 	}
 
-	// Print "Created" header (matching original vesctl)
+	// Print "Created" header (matching original f5xcctl)
 	fmt.Println("Created")
-	// Create defaults to YAML output (matching original vesctl)
+	// Create defaults to YAML output (matching original f5xcctl)
 	return output.Print(result, GetOutputFormatWithDefault("yaml"))
 }
 
-// runConfigDelete executes the delete operation (vesctl compatible)
+// runConfigDelete executes the delete operation (f5xcctl compatible)
 func runConfigDelete(rt *types.ResourceType, flags *configurationFlags) error {
 	client := GetClient()
 	if client == nil {
@@ -865,7 +865,7 @@ func runConfigDelete(rt *types.ResourceType, flags *configurationFlags) error {
 	return nil
 }
 
-// runConfigReplace executes the replace operation (vesctl compatible)
+// runConfigReplace executes the replace operation (f5xcctl compatible)
 func runConfigReplace(rt *types.ResourceType, flags *configurationFlags) error {
 	client := GetClient()
 	if client == nil {
@@ -929,12 +929,12 @@ func runConfigReplace(rt *types.ResourceType, flags *configurationFlags) error {
 		return formatAPIError("replacing", "PUT", path, resp.StatusCode, resp.Body)
 	}
 
-	// Print only "Replaced" (matching original vesctl - no response body output)
+	// Print only "Replaced" (matching original f5xcctl - no response body output)
 	fmt.Println("Replaced")
 	return nil
 }
 
-// runConfigStatus executes the status operation (vesctl compatible)
+// runConfigStatus executes the status operation (f5xcctl compatible)
 func runConfigStatus(rt *types.ResourceType, flags *configurationFlags) error {
 	client := GetClient()
 	if client == nil {
@@ -964,7 +964,7 @@ func runConfigStatus(rt *types.ResourceType, flags *configurationFlags) error {
 		return fmt.Errorf("failed to parse response: %w", err)
 	}
 
-	// Status defaults to YAML output (matching original vesctl)
+	// Status defaults to YAML output (matching original f5xcctl)
 	return output.Print(result, GetOutputFormatWithDefault("yaml"))
 }
 
@@ -1026,7 +1026,7 @@ func runConfigApply(rt *types.ResourceType, flags *configurationFlags) error {
 			if resp.StatusCode >= 400 {
 				return formatAPIError("replacing", "PUT", getPath, resp.StatusCode, resp.Body)
 			}
-			// Print only "Replaced" (matching original vesctl - no response body output)
+			// Print only "Replaced" (matching original f5xcctl - no response body output)
 			fmt.Println("Replaced")
 			return nil
 		}
@@ -1141,7 +1141,7 @@ func runConfigRemoveLabels(rt *types.ResourceType, flags *configurationFlags) er
 	return nil
 }
 
-// formatAPIError formats an API error to match original vesctl error format
+// formatAPIError formats an API error to match original f5xcctl error format
 func formatAPIError(operation, method, path string, statusCode int, body []byte) error {
 	baseURL := serverURL
 	// Capitalize first letter of operation

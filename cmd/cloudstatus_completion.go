@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/cloudstatus"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/cloudstatus"
 )
 
 // Completion client with longer cache TTL for tab completion

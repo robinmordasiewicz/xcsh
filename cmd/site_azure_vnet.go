@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/output"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/output"
 )
 
 var azureVNetFlags struct {
@@ -40,13 +40,13 @@ var azureVNetCmd = &cobra.Command{
 Azure VNet sites allow you to deploy F5 XC Customer Edge (CE) nodes in your
 Azure Virtual Network, enabling secure connectivity and edge services.`,
 	Example: `  # Create an Azure VNet site from a YAML file
-  vesctl site azure_vnet create -i azure-site.yaml
+  f5xcctl site azure_vnet create -i azure-site.yaml
 
   # Delete an Azure VNet site
-  vesctl site azure_vnet delete --name example-site
+  f5xcctl site azure_vnet delete --name example-site
 
   # Run Terraform to provision infrastructure
-  vesctl site azure_vnet run --name example-site --action apply --auto-approve`,
+  f5xcctl site azure_vnet run --name example-site --action apply --auto-approve`,
 }
 
 var azureVNetCreateCmd = &cobra.Command{
@@ -55,20 +55,20 @@ var azureVNetCreateCmd = &cobra.Command{
 	Long: `Create a new Azure VNet site in F5 Distributed Cloud.
 
 This command registers an Azure VNet site configuration. After creation,
-use 'vesctl site azure_vnet run --action apply' to provision the infrastructure.
+use 'f5xcctl site azure_vnet run --action apply' to provision the infrastructure.
 
 You can provide the site specification via:
 - YAML/JSON file using --input-file
 - Command line flags for common options`,
 	Example: `  # Create from YAML file
-  vesctl site azure_vnet create -i azure-site.yaml
+  f5xcctl site azure_vnet create -i azure-site.yaml
 
   # Create with command line flags
-  vesctl site azure_vnet create --name example-site --region eastus \
+  f5xcctl site azure_vnet create --name example-site --region eastus \
     --vnet-cidr 10.0.0.0/16 --cloud-creds example-azure-creds
 
   # Create with resource group
-  vesctl site azure_vnet create --name example-site --region eastus \
+  f5xcctl site azure_vnet create --name example-site --region eastus \
     --resource-group example-rg --cloud-creds example-azure-creds`,
 	RunE: runAzureVNetCreate,
 }
@@ -79,13 +79,13 @@ var azureVNetDeleteCmd = &cobra.Command{
 	Long: `Delete an Azure VNet site from F5 Distributed Cloud.
 
 Note: This only removes the site configuration from F5 XC. To fully clean up
-Azure resources, first run 'vesctl site azure_vnet run --action destroy' before
+Azure resources, first run 'f5xcctl site azure_vnet run --action destroy' before
 deleting the site configuration.`,
 	Example: `  # Delete a site (after destroying infrastructure)
-  vesctl site azure_vnet delete --name example-site
+  f5xcctl site azure_vnet delete --name example-site
 
   # Delete from a specific namespace
-  vesctl site azure_vnet delete --name example-site -n system`,
+  f5xcctl site azure_vnet delete --name example-site -n system`,
 	RunE: runAzureVNetDelete,
 }
 
@@ -95,12 +95,12 @@ var azureVNetReplaceCmd = &cobra.Command{
 	Long: `Replace an existing Azure VNet site configuration in F5 Distributed Cloud.
 
 This updates the site specification. After replacing, you may need to
-run 'vesctl site azure_vnet run --action apply' to apply infrastructure changes.`,
+run 'f5xcctl site azure_vnet run --action apply' to apply infrastructure changes.`,
 	Example: `  # Replace site configuration from file
-  vesctl site azure_vnet replace -i updated-site.yaml
+  f5xcctl site azure_vnet replace -i updated-site.yaml
 
   # Replace with specific name
-  vesctl site azure_vnet replace --name example-site -i updated-site.yaml`,
+  f5xcctl site azure_vnet replace --name example-site -i updated-site.yaml`,
 	RunE: runAzureVNetReplace,
 }
 
@@ -117,16 +117,16 @@ Available actions:
 - apply: Create or update infrastructure
 - destroy: Remove all infrastructure`,
 	Example: `  # Preview infrastructure changes
-  vesctl site azure_vnet run --name example-site --action plan
+  f5xcctl site azure_vnet run --name example-site --action plan
 
   # Apply infrastructure (with confirmation prompt)
-  vesctl site azure_vnet run --name example-site --action apply
+  f5xcctl site azure_vnet run --name example-site --action apply
 
   # Apply infrastructure automatically (for CI/CD)
-  vesctl site azure_vnet run --name example-site --action apply --auto-approve
+  f5xcctl site azure_vnet run --name example-site --action apply --auto-approve
 
   # Destroy infrastructure
-  vesctl site azure_vnet run --name example-site --action destroy --auto-approve`,
+  f5xcctl site azure_vnet run --name example-site --action destroy --auto-approve`,
 	RunE: runAzureVNetTerraform,
 }
 
@@ -359,7 +359,7 @@ func runAzureVNetTerraform(cmd *cobra.Command, args []string) error {
 	// Setup Terraform directory
 	tfDir := azureVNetFlags.terraformDir
 	if tfDir == "" {
-		tfDir = filepath.Join(os.TempDir(), "vesctl-terraform", azureVNetFlags.name)
+		tfDir = filepath.Join(os.TempDir(), "f5xcctl-terraform", azureVNetFlags.name)
 	}
 
 	if err := os.MkdirAll(tfDir, 0755); err != nil {

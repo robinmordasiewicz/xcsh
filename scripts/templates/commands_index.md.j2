@@ -2,7 +2,7 @@
 title: "{{ title }}"
 description: "{{ description }}"
 keywords:
-  - vesctl
+  - f5xcctl
   - CLI
   - F5 XC
   - F5 Distributed Cloud
@@ -11,15 +11,15 @@ keywords:
 
 # Command Reference
 
-All vesctl commands follow a consistent pattern:
+All f5xcctl commands follow a consistent pattern:
 
 ```bash
-vesctl <command-group> <action> [resource-type] [name] [flags]
+f5xcctl <command-group> <action> [resource-type] [name] [flags]
 ```
 
 ## Command Groups
 
-vesctl organizes commands into logical groups:
+f5xcctl organizes commands into logical groups:
 
 | Command | Description |
 |---------|-------------|
@@ -42,30 +42,30 @@ These flags are available for all commands:
 ### List resources
 
 ```bash
-vesctl configuration list namespace
+f5xcctl configuration list namespace
 ```
 
 ### Get a specific resource
 
 ```bash
-vesctl configuration get namespace example-namespace
+f5xcctl configuration get namespace example-namespace
 ```
 
 ### Create from file
 
 ```bash
-vesctl configuration create http_loadbalancer -i lb.yaml
+f5xcctl configuration create http_loadbalancer -i lb.yaml
 ```
 
 ### Delete a resource
 
 ```bash
-vesctl configuration delete http_loadbalancer example-lb -n example-namespace
+f5xcctl configuration delete http_loadbalancer example-lb -n example-namespace
 ```
 
 ## Output Formats
 
-vesctl supports multiple output formats:
+f5xcctl supports multiple output formats:
 
 | Format | Flag | Description |
 |--------|------|-------------|

@@ -1,5 +1,5 @@
 #!/bin/bash
-# test.sh - Idempotent compatibility test runner for vesctl
+# test.sh - Idempotent compatibility test runner for f5xcctl
 #
 # This script provides a single entry point for running all compatibility tests.
 # It auto-detects the platform and sets appropriate binary paths.
@@ -38,7 +38,7 @@ OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 [[ "$ARCH" == "aarch64" ]] && ARCH="arm64"
 
 echo "=========================================="
-echo "vesctl Compatibility Test Runner"
+echo "f5xcctl Compatibility Test Runner"
 echo "=========================================="
 echo ""
 echo "Platform: ${OS}-${ARCH}"
@@ -50,12 +50,12 @@ PROJECT_ROOT="$(pwd)"
 # Set binary paths based on platform (use absolute paths for consistency)
 if [[ "$OS" == "linux" && "$ARCH" == "amd64" ]]; then
     # Linux amd64: use vesctl-0.2.35 (last working version)
-    export ORIGINAL_VESCTL="${ORIGINAL_VESCTL:-${PROJECT_ROOT}/vesctl-0.2.35}"
-    export OUR_VESCTL="${OUR_VESCTL:-${PROJECT_ROOT}/vesctl}"
+    export ORIGINAL_F5XCCTL="${ORIGINAL_F5XCCTL:-${PROJECT_ROOT}/vesctl-0.2.35}"
+    export OUR_F5XCCTL="${OUR_F5XCCTL:-${PROJECT_ROOT}/f5xcctl}"
 else
     # Other platforms: use 0.2.47 (only for offline tests - has TLS bug)
-    export ORIGINAL_VESCTL="${ORIGINAL_VESCTL:-${PROJECT_ROOT}/vesctl-0.2.47-original}"
-    export OUR_VESCTL="${OUR_VESCTL:-${PROJECT_ROOT}/vesctl.${OS}-${ARCH}}"
+    export ORIGINAL_F5XCCTL="${ORIGINAL_F5XCCTL:-${PROJECT_ROOT}/vesctl-0.2.47-original}"
+    export OUR_F5XCCTL="${OUR_F5XCCTL:-${PROJECT_ROOT}/f5xcctl.${OS}-${ARCH}}"
     echo "WARNING: Only Linux amd64 has a working original binary for API tests"
     echo "         API tests (--with-api) will fail on this platform"
     echo ""
@@ -63,24 +63,24 @@ fi
 
 # Build our binary if missing or source files are newer
 build_if_needed() {
-    if [[ ! -f "$OUR_VESCTL" ]]; then
-        echo "Binary not found: $OUR_VESCTL"
-        echo "Building vesctl..."
-        go build -o "$OUR_VESCTL" .
-        echo "Built: $OUR_VESCTL"
+    if [[ ! -f "$OUR_F5XCCTL" ]]; then
+        echo "Binary not found: $OUR_F5XCCTL"
+        echo "Building f5xcctl..."
+        go build -o "$OUR_F5XCCTL" .
+        echo "Built: $OUR_F5XCCTL"
         echo ""
-    elif [[ $(find . -name "*.go" -newer "$OUR_VESCTL" 2>/dev/null | head -1) ]]; then
+    elif [[ $(find . -name "*.go" -newer "$OUR_F5XCCTL" 2>/dev/null | head -1) ]]; then
         echo "Source files newer than binary, rebuilding..."
-        go build -o "$OUR_VESCTL" .
-        echo "Rebuilt: $OUR_VESCTL"
+        go build -o "$OUR_F5XCCTL" .
+        echo "Rebuilt: $OUR_F5XCCTL"
         echo ""
     fi
 }
 
 # Check for original binary
 check_original() {
-    if [[ ! -x "$ORIGINAL_VESCTL" ]]; then
-        echo "ERROR: Original vesctl not found at: $ORIGINAL_VESCTL"
+    if [[ ! -x "$ORIGINAL_F5XCCTL" ]]; then
+        echo "ERROR: Original vesctl not found at: $ORIGINAL_F5XCCTL"
         echo ""
         echo "Download with:"
         if [[ "$OS" == "linux" && "$ARCH" == "amd64" ]]; then
@@ -99,8 +99,8 @@ build_if_needed
 # Check original binary exists
 check_original
 
-echo "Original: $ORIGINAL_VESCTL"
-echo "Ours:     $OUR_VESCTL"
+echo "Original: $ORIGINAL_F5XCCTL"
+echo "Ours:     $OUR_F5XCCTL"
 echo ""
 
 # Run the compatibility test suite

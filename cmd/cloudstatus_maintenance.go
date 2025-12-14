@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/cloudstatus"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/cloudstatus"
 )
 
 // Maintenance filtering flags
@@ -22,16 +22,16 @@ var cloudstatusMaintenanceCmd = &cobra.Command{
 	Short:   "View scheduled maintenance windows.",
 	Long:    `View scheduled maintenance windows for F5 Distributed Cloud services.`,
 	Example: `  # List all maintenance windows
-  vesctl cloudstatus maintenance list
+  f5xcctl cloudstatus maintenance list
 
   # List upcoming maintenance
-  vesctl cloudstatus maintenance upcoming
+  f5xcctl cloudstatus maintenance upcoming
 
   # List active (in-progress) maintenance
-  vesctl cloudstatus maintenance active
+  f5xcctl cloudstatus maintenance active
 
   # Get maintenance details
-  vesctl cloudstatus maintenance get <maintenance-id>`,
+  f5xcctl cloudstatus maintenance get <maintenance-id>`,
 }
 
 var cloudstatusMaintenanceListCmd = &cobra.Command{
@@ -45,10 +45,10 @@ Status values:
 - verifying: Maintenance is being verified
 - completed: Maintenance has finished`,
 	Example: `  # List all maintenance
-  vesctl cloudstatus maintenance list
+  f5xcctl cloudstatus maintenance list
 
   # Filter by status
-  vesctl cloudstatus maintenance list --status scheduled`,
+  f5xcctl cloudstatus maintenance list --status scheduled`,
 	RunE: runMaintenanceList,
 }
 
@@ -56,8 +56,8 @@ var cloudstatusMaintenanceUpcomingCmd = &cobra.Command{
 	Use:   "upcoming",
 	Short: "List upcoming maintenance windows.",
 	Long:  `List only upcoming (scheduled but not started) maintenance windows.`,
-	Example: `  vesctl cloudstatus maintenance upcoming
-  vesctl cloudstatus maintenance upcoming --output-format json`,
+	Example: `  f5xcctl cloudstatus maintenance upcoming
+  f5xcctl cloudstatus maintenance upcoming --output-format json`,
 	RunE: runMaintenanceUpcoming,
 }
 
@@ -65,7 +65,7 @@ var cloudstatusMaintenanceActiveCmd = &cobra.Command{
 	Use:     "active",
 	Short:   "List in-progress maintenance windows.",
 	Long:    `List maintenance windows that are currently in progress.`,
-	Example: `  vesctl cloudstatus maintenance active`,
+	Example: `  f5xcctl cloudstatus maintenance active`,
 	RunE:    runMaintenanceActive,
 }
 
@@ -73,7 +73,7 @@ var cloudstatusMaintenanceGetCmd = &cobra.Command{
 	Use:     "get <maintenance-id>",
 	Short:   "Get details for a specific maintenance window.",
 	Long:    `Get detailed information about a specific maintenance window by its ID.`,
-	Example: `  vesctl cloudstatus maintenance get xp5l86wjjzyy`,
+	Example: `  f5xcctl cloudstatus maintenance get xp5l86wjjzyy`,
 	Args:    cobra.ExactArgs(1),
 	RunE:    runMaintenanceGet,
 }

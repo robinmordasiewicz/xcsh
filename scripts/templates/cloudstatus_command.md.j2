@@ -15,14 +15,14 @@ aliases:
 {% endif %}
 ---
 
-# vesctl cloudstatus {{ path | join(' ') }}
+# f5xcctl cloudstatus {{ path | join(' ') }}
 
 > {{ command.short | normalize_acronyms }}
 
 ## Synopsis
 
 ```bash
-vesctl cloudstatus {{ path | join(' ') }} [flags]
+f5xcctl cloudstatus {{ path | join(' ') }} [flags]
 ```
 
 {% if command.long and command.long != command.short %}
@@ -37,7 +37,7 @@ vesctl cloudstatus {{ path | join(' ') }} [flags]
 This command can also be invoked as:
 
 {% for alias in command.aliases %}
-- `vesctl cloudstatus {{ alias }}`
+- `f5xcctl cloudstatus {{ alias }}`
 {% endfor %}
 
 {% endif %}

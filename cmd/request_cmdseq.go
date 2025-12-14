@@ -11,9 +11,9 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/client"
-	"github.com/robinmordasiewicz/vesctl/pkg/output"
-	"github.com/robinmordasiewicz/vesctl/pkg/types"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/client"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/output"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/types"
 )
 
 var cmdSeqFlags struct {
@@ -37,13 +37,13 @@ Supported operations:
   - delete: Delete all resources in the sequence
   - replace: Replace existing resources (requires --old-file)`,
 	Example: `  # Create resources from a sequence file
-  vesctl request command-sequence -i objects.yaml --operation create
+  f5xcctl request command-sequence -i objects.yaml --operation create
 
   # Delete resources from a sequence file
-  vesctl request command-sequence -i objects.yaml --operation delete
+  f5xcctl request command-sequence -i objects.yaml --operation delete
 
   # Replace resources (requires old file for comparison)
-  vesctl request command-sequence -i newobjects.yaml --old-file oldobjects.yaml --operation replace`,
+  f5xcctl request command-sequence -i newobjects.yaml --old-file oldobjects.yaml --operation replace`,
 	RunE: runCommandSequence,
 }
 

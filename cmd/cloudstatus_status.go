@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/cloudstatus"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/cloudstatus"
 )
 
 var statusQuiet bool
@@ -29,14 +29,14 @@ Exit Codes:
   3 - Critical system outage (critical)
   4 - System under maintenance (maintenance)`,
 	Example: `  # Quick status check
-  vesctl cloudstatus status
+  f5xcctl cloudstatus status
 
   # CI/CD health gate (exits with appropriate code)
-  vesctl cloudstatus status --quiet
+  f5xcctl cloudstatus status --quiet
   if [ $? -ne 0 ]; then echo "F5 XC has issues"; fi
 
   # JSON output for parsing
-  vesctl cloudstatus status --output-format json`,
+  f5xcctl cloudstatus status --output-format json`,
 	RunE: runCloudstatusStatus,
 }
 

@@ -1,6 +1,6 @@
 name: Compatibility Tests
 
-# DISABLED: No longer enforcing strict compliance with original vesctl binary
+# DISABLED: No longer enforcing strict compliance with original f5xcctl binary
 # Test scripts remain in claudedocs/compatibility/ for reference
 # To run manually, use workflow_dispatch
 on:
@@ -18,8 +18,8 @@ on:
         type: string
 
 env:
-  GO_VERSION: '1.24'
-  ORIGINAL_VESCTL_VERSION: '0.2.35'
+  GO_VERSION: '1.25'
+  ORIGINAL_F5XCCTL_VERSION: '0.2.35'
 
 jobs:
   compatibility:
@@ -45,23 +45,23 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
 
-      - name: Build vesctl
+      - name: Build f5xcctl
         run: |
-          go build -o vesctl .
-          chmod +x vesctl
-          ./vesctl version
+          go build -o f5xcctl .
+          chmod +x f5xcctl
+          ./f5xcctl version
 
-      - name: Download original vesctl
+      - name: Download original f5xcctl
         run: |
-          curl -sL "https://vesio.azureedge.net/releases/vesctl/${{ env.ORIGINAL_VESCTL_VERSION }}/vesctl.linux-amd64.gz" | gunzip > vesctl-${{ env.ORIGINAL_VESCTL_VERSION }}
-          chmod +x vesctl-${{ env.ORIGINAL_VESCTL_VERSION }}
-          ./vesctl-${{ env.ORIGINAL_VESCTL_VERSION }} version || echo "Version check completed"
+          curl -sL "https://vesio.azureedge.net/releases/f5xcctl/${{ env.ORIGINAL_F5XCCTL_VERSION }}/f5xcctl.linux-amd64.gz" | gunzip > f5xcctl-${{ env.ORIGINAL_F5XCCTL_VERSION }}
+          chmod +x f5xcctl-${{ env.ORIGINAL_F5XCCTL_VERSION }}
+          ./f5xcctl-${{ env.ORIGINAL_F5XCCTL_VERSION }} version || echo "Version check completed"
 
       - name: Run compatibility tests (offline phases)
         if: ${{ github.event.inputs.with_api != 'true' }}
         run: |
-          export ORIGINAL_VESCTL="$(pwd)/vesctl-${{ env.ORIGINAL_VESCTL_VERSION }}"
-          export OUR_VESCTL="$(pwd)/vesctl"
+          export ORIGINAL_F5XCCTL="$(pwd)/f5xcctl-${{ env.ORIGINAL_F5XCCTL_VERSION }}"
+          export OUR_F5XCCTL="$(pwd)/f5xcctl"
 
           cd claudedocs/compatibility
           chmod +x run-all-tests.sh
@@ -78,8 +78,8 @@ jobs:
           # Decode P12 from base64 secret
           echo "${{ secrets.VES_P12_BASE64 }}" | base64 -d > /tmp/api-creds.p12
 
-          export ORIGINAL_VESCTL="$(pwd)/vesctl-${{ env.ORIGINAL_VESCTL_VERSION }}"
-          export OUR_VESCTL="$(pwd)/vesctl"
+          export ORIGINAL_F5XCCTL="$(pwd)/f5xcctl-${{ env.ORIGINAL_F5XCCTL_VERSION }}"
+          export OUR_F5XCCTL="$(pwd)/f5xcctl"
 
           cd claudedocs/compatibility
           chmod +x run-all-tests.sh

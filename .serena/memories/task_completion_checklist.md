@@ -1,4 +1,4 @@
-# Task Completion Checklist for vesctl
+# Task Completion Checklist for f5xcctl
 
 ## Before Committing Code
 
@@ -28,8 +28,8 @@ make check              # Runs fmt, verify, and test-unit
 ### Build and Test Binary
 ```bash
 make build              # Build the binary
-./vesctl --help         # Verify CLI works
-./vesctl version        # Check version info
+./f5xcctl --help         # Verify CLI works
+./f5xcctl version        # Check version info
 ```
 
 ### Run Pre-commit Hooks

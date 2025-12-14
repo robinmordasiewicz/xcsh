@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/client"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/client"
 )
 
 // TestResource_ListHTTPLoadBalancers tests listing HTTP load balancers

@@ -10,7 +10,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/cloudstatus"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/cloudstatus"
 )
 
 // Watch flags
@@ -33,19 +33,19 @@ Continuously polls the status API and displays updates. Useful for:
 
 Press Ctrl+C to stop monitoring.`,
 	Example: `  # Default monitoring (60s interval)
-  vesctl cloudstatus watch
+  f5xcctl cloudstatus watch
 
   # Faster polling (30s interval)
-  vesctl cloudstatus watch --interval 30
+  f5xcctl cloudstatus watch --interval 30
 
   # Watch specific components
-  vesctl cloudstatus watch --components "Portal,DNS"
+  f5xcctl cloudstatus watch --components "Portal,DNS"
 
   # Exit when status changes (for alerting)
-  vesctl cloudstatus watch --exit-on-change
+  f5xcctl cloudstatus watch --exit-on-change
 
   # Keep history visible (no screen clear)
-  vesctl cloudstatus watch --no-clear`,
+  f5xcctl cloudstatus watch --no-clear`,
 	RunE: runWatch,
 }
 

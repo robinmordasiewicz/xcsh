@@ -1,4 +1,4 @@
-# Code Style and Conventions for vesctl
+# Code Style and Conventions for f5xcctl
 
 ## Go Code Style
 - **Formatting**: Use `gofmt` (enforced by pre-commit hooks)

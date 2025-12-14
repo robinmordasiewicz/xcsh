@@ -1,19 +1,19 @@
 # Install Script
 
-Install vesctl with automatic platform detection and shell configuration.
+Install f5xcctl with automatic platform detection and shell configuration.
 
 ## Quick Install
 
 === "curl"
 
     ```bash
-    curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | sh
+    curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
     ```
 
 === "wget"
 
     ```bash
-    wget -qO- https://robinmordasiewicz.github.io/vesctl/install.sh | sh
+    wget -qO- https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
     ```
 
 {% if install_output %}
@@ -31,19 +31,19 @@ Install vesctl with automatic platform detection and shell configuration.
 ## Specific Version
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | VES_VERSION={{ version or 'X.Y.Z' }} sh
+curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | VES_VERSION={{ version or 'X.Y.Z' }} sh
 ```
 
 ## Custom Install Directory
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | VES_INSTALL_DIR=$HOME/.local/bin sh
+curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | VES_INSTALL_DIR=$HOME/.local/bin sh
 ```
 
 ## Uninstall
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | sh -s -- --uninstall
+curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh -s -- --uninstall
 ```
 
 ## Environment Variables
@@ -71,4 +71,4 @@ curl -fsSL https://robinmordasiewicz.github.io/vesctl/install.sh | sh -s -- --un
 | macOS | amd64 (Intel), arm64 (Apple Silicon) |
 
 !!! note "Windows"
-    Download manually from [GitHub Releases](https://github.com/robinmordasiewicz/vesctl/releases/latest).
+    Download manually from [GitHub Releases](https://github.com/robinmordasiewicz/f5xcctl/releases/latest).

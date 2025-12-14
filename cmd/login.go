@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/output"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/output"
 )
 
 var loginFlags struct {
@@ -26,7 +26,7 @@ var loginFlags struct {
 var loginCmd = &cobra.Command{
 	Use:    "login",
 	Short:  "Log in to F5 Distributed Cloud",
-	Hidden: true, // Hide from help to match original vesctl
+	Hidden: true, // Hide from help to match original f5xcctl
 	Long: `Authenticate with F5 Distributed Cloud.
 
 This command validates your credentials and saves them to the configuration file.
@@ -35,39 +35,39 @@ You can authenticate using:
   - Certificate and key files
   - API token (set VES_API_TOKEN environment variable)
 
-After successful login, you can use all vesctl commands to manage your resources.`,
+After successful login, you can use all f5xcctl commands to manage your resources.`,
 	Example: `  # Login with P12 bundle
-  vesctl login --tenant example-tenant --p12-bundle ~/.vesctl/example-cert.p12
+  f5xcctl login --tenant example-tenant --p12-bundle ~/.f5xcctl/example-cert.p12
 
   # Login with certificate and key
-  vesctl login --tenant example-tenant --cert ~/.vesctl/cert.pem --key ~/.vesctl/key.pem
+  f5xcctl login --tenant example-tenant --cert ~/.f5xcctl/cert.pem --key ~/.f5xcctl/key.pem
 
   # Login with API token
   export VES_API_TOKEN='your-api-token'
-  vesctl login --tenant example-tenant --api-token
+  f5xcctl login --tenant example-tenant --api-token
 
   # Login (using existing configuration)
-  vesctl login`,
+  f5xcctl login`,
 	RunE: runLogin,
 }
 
 var logoutCmd = &cobra.Command{
 	Use:    "logout",
 	Short:  "Log out from F5 Distributed Cloud",
-	Hidden: true, // Hide from help to match original vesctl
+	Hidden: true, // Hide from help to match original f5xcctl
 	Long:   `Clear saved credentials from the configuration file.`,
 	Example: `  # Log out
-  vesctl logout`,
+  f5xcctl logout`,
 	RunE: runLogout,
 }
 
 var whoamiCmd = &cobra.Command{
 	Use:    "whoami",
 	Short:  "Show current user information",
-	Hidden: true, // Hide from help to match original vesctl
+	Hidden: true, // Hide from help to match original f5xcctl
 	Long:   `Display information about the currently authenticated user.`,
 	Example: `  # Show current user
-  vesctl whoami`,
+  f5xcctl whoami`,
 	RunE: runWhoami,
 }
 
@@ -241,7 +241,7 @@ func runLogout(cmd *cobra.Command, args []string) error {
 func runWhoami(cmd *cobra.Command, args []string) error {
 	client := GetClient()
 	if client == nil {
-		return fmt.Errorf("not logged in - run 'vesctl login' first")
+		return fmt.Errorf("not logged in - run 'f5xcctl login' first")
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

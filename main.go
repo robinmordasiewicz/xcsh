@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/robinmordasiewicz/vesctl/cmd"
-	"github.com/robinmordasiewicz/vesctl/pkg/errors"
+	"github.com/robinmordasiewicz/f5xcctl/cmd"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/errors"
 )
 
 func main() {

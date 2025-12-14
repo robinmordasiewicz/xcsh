@@ -1,9 +1,9 @@
-# GoReleaser configuration for vesctl CLI
+# GoReleaser configuration for f5xcctl CLI
 # Documentation: https://goreleaser.com
 
 version: 2
 
-project_name: vesctl
+project_name: f5xcctl
 
 before:
   hooks:
@@ -12,8 +12,8 @@ before:
     - ./scripts/completions.sh
 
 builds:
-  - id: vesctl
-    binary: vesctl
+  - id: f5xcctl
+    binary: f5xcctl
     main: .
     env:
       - CGO_ENABLED=0
@@ -26,9 +26,9 @@ builds:
       - arm64
     ldflags:
       - -s -w
-      - -X github.com/robinmordasiewicz/vesctl/cmd.Version={{.Version}}
-      - -X github.com/robinmordasiewicz/vesctl/cmd.GitCommit={{.ShortCommit}}
-      - -X github.com/robinmordasiewicz/vesctl/cmd.BuildDate={{.Date}}
+      - -X github.com/robinmordasiewicz/f5xcctl/cmd.Version={{.Version}}
+      - -X github.com/robinmordasiewicz/f5xcctl/cmd.GitCommit={{.ShortCommit}}
+      - -X github.com/robinmordasiewicz/f5xcctl/cmd.BuildDate={{.Date}}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
 archives:
@@ -83,61 +83,61 @@ changelog:
 release:
   github:
     owner: robinmordasiewicz
-    name: vesctl
+    name: f5xcctl
   draft: false
   prerelease: auto
   mode: replace
   header: |
-    ## vesctl {{ .Version }}
+    ## f5xcctl {{ .Version }}
 
     ### Installation
 
     **macOS (Apple Silicon)**
     ```bash
-    curl -LO https://github.com/robinmordasiewicz/vesctl/releases/download/{{ .Tag }}/vesctl_{{ .Version }}_darwin_arm64.tar.gz
-    tar -xzf vesctl_{{ .Version }}_darwin_arm64.tar.gz
-    sudo mv vesctl /usr/local/bin/
+    curl -LO https://github.com/robinmordasiewicz/f5xcctl/releases/download/{{ .Tag }}/f5xcctl_{{ .Version }}_darwin_arm64.tar.gz
+    tar -xzf f5xcctl_{{ .Version }}_darwin_arm64.tar.gz
+    sudo mv f5xcctl /usr/local/bin/
     ```
 
     **macOS (Intel)**
     ```bash
-    curl -LO https://github.com/robinmordasiewicz/vesctl/releases/download/{{ .Tag }}/vesctl_{{ .Version }}_darwin_amd64.tar.gz
-    tar -xzf vesctl_{{ .Version }}_darwin_amd64.tar.gz
-    sudo mv vesctl /usr/local/bin/
+    curl -LO https://github.com/robinmordasiewicz/f5xcctl/releases/download/{{ .Tag }}/f5xcctl_{{ .Version }}_darwin_amd64.tar.gz
+    tar -xzf f5xcctl_{{ .Version }}_darwin_amd64.tar.gz
+    sudo mv f5xcctl /usr/local/bin/
     ```
 
     **Linux (amd64)**
     ```bash
-    curl -LO https://github.com/robinmordasiewicz/vesctl/releases/download/{{ .Tag }}/vesctl_{{ .Version }}_linux_amd64.tar.gz
-    tar -xzf vesctl_{{ .Version }}_linux_amd64.tar.gz
-    sudo mv vesctl /usr/local/bin/
+    curl -LO https://github.com/robinmordasiewicz/f5xcctl/releases/download/{{ .Tag }}/f5xcctl_{{ .Version }}_linux_amd64.tar.gz
+    tar -xzf f5xcctl_{{ .Version }}_linux_amd64.tar.gz
+    sudo mv f5xcctl /usr/local/bin/
     ```
 
     **Linux (arm64)**
     ```bash
-    curl -LO https://github.com/robinmordasiewicz/vesctl/releases/download/{{ .Tag }}/vesctl_{{ .Version }}_linux_arm64.tar.gz
-    tar -xzf vesctl_{{ .Version }}_linux_arm64.tar.gz
-    sudo mv vesctl /usr/local/bin/
+    curl -LO https://github.com/robinmordasiewicz/f5xcctl/releases/download/{{ .Tag }}/f5xcctl_{{ .Version }}_linux_arm64.tar.gz
+    tar -xzf f5xcctl_{{ .Version }}_linux_arm64.tar.gz
+    sudo mv f5xcctl /usr/local/bin/
     ```
 
     **Windows (amd64)**
-    Download `vesctl_{{ .Version }}_windows_amd64.zip` and extract to your PATH.
+    Download `f5xcctl_{{ .Version }}_windows_amd64.zip` and extract to your PATH.
 
     **Windows (arm64)**
-    Download `vesctl_{{ .Version }}_windows_arm64.zip` and extract to your PATH.
+    Download `f5xcctl_{{ .Version }}_windows_arm64.zip` and extract to your PATH.
   footer: |
-    **Full Changelog**: https://github.com/robinmordasiewicz/vesctl/compare/{{ .PreviousTag }}...{{ .Tag }}
+    **Full Changelog**: https://github.com/robinmordasiewicz/f5xcctl/compare/{{ .PreviousTag }}...{{ .Tag }}
 
 # Homebrew cask (replaces deprecated brews section)
 # See: https://goreleaser.com/deprecations#brews
 homebrew_casks:
-  - name: vesctl
+  - name: f5xcctl
     binaries:
-      - vesctl
+      - f5xcctl
     completions:
-      bash: completions/vesctl.bash
-      zsh: completions/vesctl.zsh
-      fish: completions/vesctl.fish
+      bash: completions/f5xcctl.bash
+      zsh: completions/f5xcctl.zsh
+      fish: completions/f5xcctl.fish
     repository:
       owner: robinmordasiewicz
       name: homebrew-tap
@@ -147,17 +147,17 @@ homebrew_casks:
       name: goreleaserbot
       email: bot@goreleaser.com
     commit_msg_template: "chore: Update {{ .ProjectName }} cask to {{ .Tag }}"
-    homepage: https://robinmordasiewicz.github.io/vesctl
+    homepage: https://robinmordasiewicz.github.io/f5xcctl
     description: Command-line interface for F5 Distributed Cloud
     caveats: |
       Shell completions have been installed for bash, zsh, and fish.
 
       For setup instructions, see:
-        https://robinmordasiewicz.github.io/vesctl/install/homebrew/#shell-completions
+        https://robinmordasiewicz.github.io/f5xcctl/install/homebrew/#shell-completions
 
       Quick start:
         Zsh: Usually works automatically. Restart your terminal.
         Bash: Run 'brew install bash-completion@2' first.
         Fish: Works automatically.
 
-      Test with: vesctl [TAB]
+      Test with: f5xcctl [TAB]

@@ -30,7 +30,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.24"
+          go-version: "1.25"
           cache: false
 
       - name: Run golangci-lint
@@ -47,7 +47,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        go-version: ["1.24"]
+        go-version: ["1.25"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -67,7 +67,7 @@ jobs:
 
       - name: Upload coverage
         uses: codecov/codecov-action@v5
-        if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.24'
+        if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.25'
         with:
           files: ./coverage.out
           fail_ci_if_error: false
@@ -82,8 +82,11 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.24"
+          go-version: "1.25"
           cache: true
+
+      - name: Download dependencies
+        run: go mod download
 
       - name: Regenerate schemas
         run: make generate-schemas
@@ -102,7 +105,7 @@ jobs:
         run: |
           echo "Running schema generation twice to verify idempotency..."
           cp pkg/types/schemas_generated.go /tmp/schemas_first.go
-          go run scripts/generate-schemas.go 2>/dev/null
+          make generate-schemas 2>/dev/null
           if ! diff -q pkg/types/schemas_generated.go /tmp/schemas_first.go > /dev/null; then
             echo "::error::Schema generation is not idempotent!"
             diff pkg/types/schemas_generated.go /tmp/schemas_first.go
@@ -137,7 +140,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.24"
+          go-version: "1.25"
           cache: false
 
       - name: Build for all platforms
@@ -182,7 +185,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
-          go-version: "1.24"
+          go-version: "1.25"
           cache: false
 
       - name: Check GoReleaser config

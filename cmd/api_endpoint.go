@@ -9,10 +9,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/output"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/output"
 )
 
-// API-endpoint flags matching original vesctl
+// API-endpoint flags matching original f5xcctl
 var (
 	apiEndpointAppType     string
 	apiEndpointLogColor    bool
@@ -37,7 +37,7 @@ var apiEndpointCmd = &cobra.Command{
 	Use:     "api-endpoint",
 	Short:   "Discover and manage API endpoints within F5 XC service mesh.",
 	Long:    `Discover and manage API endpoints within F5 XC service mesh.`,
-	Example: `vesctl api-endpoint discover --namespace default`,
+	Example: `f5xcctl api-endpoint discover --namespace default`,
 }
 
 var apiEndpointDiscoverCmd = &cobra.Command{
@@ -50,7 +50,7 @@ This command performs three steps:
 1. Find all nodes and edges in the service mesh graph for an App Type
 2. Find all API endpoints discovered between each edge
 3. Display the information in tabular format`,
-	Example: `vesctl api-endpoint discover --namespace default --app-type edge-checkoutcheckout`,
+	Example: `f5xcctl api-endpoint discover --namespace default --app-type edge-checkoutcheckout`,
 	RunE:    runAPIEndpointDiscover,
 }
 
@@ -66,7 +66,7 @@ This command performs three steps:
 3. Create layer 7 policies that allow only known service-to-service communication
 
 You can discover APIs from one namespace and apply policies in another namespace.`,
-	Example: `vesctl api-endpoint control --discover-ns default --app-type edge-checkoutcheckout`,
+	Example: `f5xcctl api-endpoint control --discover-ns default --app-type edge-checkoutcheckout`,
 	RunE:    runAPIEndpointControl,
 }
 
@@ -76,13 +76,13 @@ func init() {
 	// Enable AI-agent-friendly error handling for invalid subcommands
 	apiEndpointCmd.RunE = func(cmd *cobra.Command, args []string) error {
 		if len(args) > 0 {
-			return fmt.Errorf("unknown command %q for %q\n\nUsage: vesctl api-endpoint <action> [flags]\n\nAvailable actions:\n  discover, control\n\nRun 'vesctl api-endpoint --help' for usage", args[0], cmd.CommandPath())
+			return fmt.Errorf("unknown command %q for %q\n\nUsage: f5xcctl api-endpoint <action> [flags]\n\nAvailable actions:\n  discover, control\n\nRun 'f5xcctl api-endpoint --help' for usage", args[0], cmd.CommandPath())
 		}
 		return cmd.Help()
 	}
 	apiEndpointCmd.SuggestionsMinimumDistance = 2
 
-	// API-endpoint flags matching original vesctl
+	// API-endpoint flags matching original f5xcctl
 	apiEndpointCmd.PersistentFlags().StringVar(&apiEndpointAppType, "app-type", "", "App type name labeled on vK8s services or HTTP load balancer objects.")
 	apiEndpointCmd.PersistentFlags().BoolVar(&apiEndpointLogColor, "log-color", true, "Enable colored log output.")
 	apiEndpointCmd.PersistentFlags().BoolVar(&apiEndpointLogFabulous, "log-fabulous", true, "Enable enhanced log formatting.")

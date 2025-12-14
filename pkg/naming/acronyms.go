@@ -1,5 +1,5 @@
 // Package naming provides consistent case conversion and acronym handling
-// for the vesctl CLI tool, ensuring industry-standard acronyms are displayed
+// for the f5xcctl CLI tool, ensuring industry-standard acronyms are displayed
 // correctly in documentation, help text, and user-facing output.
 package naming
 

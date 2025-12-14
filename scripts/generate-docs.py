@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-vesctl Documentation Generator
+f5xcctl Documentation Generator
 
-Generates comprehensive, AI-friendly documentation for all vesctl CLI commands
-by parsing the vesctl --spec JSON output and rendering Jinja2 templates.
+Generates comprehensive, AI-friendly documentation for all f5xcctl CLI commands
+by parsing the f5xcctl --spec JSON output and rendering Jinja2 templates.
 
 Usage:
-    python scripts/generate-docs.py [--vesctl PATH] [--output DIR] [--clean]
+    python scripts/generate-docs.py [--f5xcctl PATH] [--output DIR] [--clean]
 """
 
 import argparse
@@ -308,7 +308,7 @@ class Command:
     @property
     def full_command(self) -> str:
         """Get full command string."""
-        return "vesctl " + " ".join(self.path)
+        return "f5xcctl " + " ".join(self.path)
 
     @property
     def depth(self) -> int:
@@ -342,17 +342,17 @@ class VesctlDocsGenerator:
 
     def __init__(
         self,
-        vesctl_path: str = "./vesctl",
+        f5xcctl_path: str = "./f5xcctl",
         output_dir: str = "docs/commands",
         template_dir: str = "scripts/templates",
     ):
         # Resolve to absolute path to avoid PATH lookup issues
-        self.vesctl_path = Path(vesctl_path).resolve()
+        self.f5xcctl_path = Path(f5xcctl_path).resolve()
         self.output_dir = Path(output_dir)
         self.template_dir = Path(template_dir)
         self.spec: dict = {}
         self.global_flags: list[Flag] = []
-        self.tree = CommandTree(name="vesctl")
+        self.tree = CommandTree(name="f5xcctl")
         self.generated_files: list[Path] = []
 
         # Setup Jinja2 environment
@@ -434,7 +434,7 @@ class VesctlDocsGenerator:
 
         spec = self.resource_api_map[resource]["spec"]
 
-        # Map vesctl action to API operation name
+        # Map f5xcctl action to API operation name
         action_to_op = {
             "create": "Create",
             "list": "List",
@@ -467,19 +467,19 @@ class VesctlDocsGenerator:
         return None
 
     def load_spec(self) -> None:
-        """Load CLI specification from vesctl --spec."""
-        print(f"Loading spec from {self.vesctl_path}...")
+        """Load CLI specification from f5xcctl --spec."""
+        print(f"Loading spec from {self.f5xcctl_path}...")
 
         try:
             result = subprocess.run(
-                [str(self.vesctl_path), "--spec"],
+                [str(self.f5xcctl_path), "--spec"],
                 capture_output=True,
                 text=True,
                 check=True,
             )
             self.spec = json.loads(result.stdout)
         except subprocess.CalledProcessError as e:
-            print(f"Error running vesctl --spec: {e.stderr}")
+            print(f"Error running f5xcctl --spec: {e.stderr}")
             sys.exit(1)
         except json.JSONDecodeError as e:
             print(f"Error parsing spec JSON: {e}")
@@ -532,7 +532,7 @@ class VesctlDocsGenerator:
 
         if command:
             # Build keywords from command path
-            keywords = ["vesctl", "F5 XC", "F5 Distributed Cloud"]
+            keywords = ["f5xcctl", "F5 XC", "F5 Distributed Cloud"]
             keywords.extend(command.path)
             keywords.extend([p.replace("_", " ") for p in command.path])
             fm["keywords"] = sorted(set(keywords))
@@ -567,7 +567,7 @@ class VesctlDocsGenerator:
 
         content = template.render(
             title="Command Reference",
-            description="Complete reference for all vesctl CLI commands",
+            description="Complete reference for all f5xcctl CLI commands",
             commands=top_level,
             global_flags=self.global_flags,
             version=version,
@@ -610,7 +610,7 @@ class VesctlDocsGenerator:
                     subcommands.append(child.command)
 
         fm = self.generate_front_matter(
-            title=f"vesctl {name}",
+            title=f"f5xcctl {name}",
             description=cmd.short,
             command=cmd,
         )
@@ -632,7 +632,7 @@ class VesctlDocsGenerator:
         self.generate_meta_yml(
             group_dir,
             description=cmd.short,
-            tags=["vesctl", name],
+            tags=["f5xcctl", name],
         )
 
         # Generate subcommand documentation based on group type
@@ -675,7 +675,7 @@ class VesctlDocsGenerator:
                     ))
 
             fm = self.generate_front_matter(
-                title=f"vesctl {group} {action}",
+                title=f"f5xcctl {group} {action}",
                 description=cmd.short,
                 command=cmd,
             )
@@ -695,7 +695,7 @@ class VesctlDocsGenerator:
             self.generate_meta_yml(
                 action_dir,
                 description=f"RPC commands for {group}",
-                tags=["vesctl", group, action],
+                tags=["f5xcctl", group, action],
             )
 
             # Generate service-grouped RPC docs
@@ -713,7 +713,7 @@ class VesctlDocsGenerator:
                 resources.append(child.command)
 
         fm = self.generate_front_matter(
-            title=f"vesctl {group} {action}",
+            title=f"f5xcctl {group} {action}",
             description=cmd.short,
             command=cmd,
         )
@@ -733,7 +733,7 @@ class VesctlDocsGenerator:
         self.generate_meta_yml(
             action_dir,
             description=f"{action.replace('_', ' ').title()} commands for {group}",
-            tags=["vesctl", group, action],
+            tags=["f5xcctl", group, action],
         )
 
         # Generate resource type pages
@@ -759,7 +759,7 @@ class VesctlDocsGenerator:
         api_docs_url = self.get_api_docs_url(resource, action)
 
         fm = self.generate_front_matter(
-            title=f"vesctl {group} {action} {resource}",
+            title=f"f5xcctl {group} {action} {resource}",
             description=cmd.short,
             command=cmd,
         )
@@ -807,59 +807,59 @@ class VesctlDocsGenerator:
         examples = {
             'list': f'''```bash
 # List all {resource_display} resources
-vesctl {group} {action} {resource}
+f5xcctl {group} {action} {resource}
 
 # List in specific namespace
-vesctl {group} {action} {resource} -n example-namespace
+f5xcctl {group} {action} {resource} -n example-namespace
 
 # List with JSON output
-vesctl {group} {action} {resource} --output-format json
+f5xcctl {group} {action} {resource} --output-format json
 ```''',
             'get': f'''```bash
 # Get {resource_display} details
-vesctl {group} {action} {resource} example-{resource_kebab}
+f5xcctl {group} {action} {resource} example-{resource_kebab}
 
 # Get with YAML output
-vesctl {group} {action} {resource} example-{resource_kebab} --output-format yaml
+f5xcctl {group} {action} {resource} example-{resource_kebab} --output-format yaml
 ```''',
             'create': f'''```bash
 # Create {resource_display} from file
-vesctl {group} {action} {resource} -i {resource}.yaml
+f5xcctl {group} {action} {resource} -i {resource}.yaml
 ```''',
             'delete': f'''```bash
 # Delete {resource_display}
-vesctl {group} {action} {resource} example-{resource_kebab}
+f5xcctl {group} {action} {resource} example-{resource_kebab}
 
 # Delete with confirmation bypass
-vesctl {group} {action} {resource} example-{resource_kebab} --yes
+f5xcctl {group} {action} {resource} example-{resource_kebab} --yes
 ```''',
             'replace': f'''```bash
 # Replace {resource_display} from file
-vesctl {group} {action} {resource} -i {resource}.yaml
+f5xcctl {group} {action} {resource} -i {resource}.yaml
 ```''',
             'apply': f'''```bash
 # Apply {resource_display} from file
-vesctl {group} {action} {resource} -i {resource}.yaml
+f5xcctl {group} {action} {resource} -i {resource}.yaml
 ```''',
             'patch': f'''```bash
 # Patch {resource_display}
-vesctl {group} {action} {resource} example-{resource_kebab} -i patch.yaml
+f5xcctl {group} {action} {resource} example-{resource_kebab} -i patch.yaml
 ```''',
             'status': f'''```bash
 # Get {resource_display} status
-vesctl {group} {action} {resource} example-{resource_kebab}
+f5xcctl {group} {action} {resource} example-{resource_kebab}
 ```''',
             'add-labels': f'''```bash
 # Add labels to {resource_display}
-vesctl {group} {action} {resource} example-{resource_kebab} --label-key app --label-value web
+f5xcctl {group} {action} {resource} example-{resource_kebab} --label-key app --label-value web
 ```''',
             'remove-labels': f'''```bash
 # Remove labels from {resource_display}
-vesctl {group} {action} {resource} example-{resource_kebab} --label-key app
+f5xcctl {group} {action} {resource} example-{resource_kebab} --label-key app
 ```''',
         }
         return examples.get(action, f'''```bash
-vesctl {group} {action} {resource}
+f5xcctl {group} {action} {resource}
 ```''')
 
     def collect_resources_across_actions(
@@ -935,7 +935,7 @@ vesctl {group} {action} {resource}
             })
 
         fm = self.generate_front_matter(
-            title=f"vesctl {group} {resource}",
+            title=f"f5xcctl {group} {resource}",
             description=f"Manage {to_human_readable(resource)} resources",
             command=sorted_actions[0] if sorted_actions else None,
             resource_type=resource,
@@ -1031,7 +1031,7 @@ vesctl {group} {action} {resource}
         template = self.env.get_template("rpc_service_unified.md.j2")
 
         fm = self.generate_front_matter(
-            title=f"vesctl request rpc {service}",
+            title=f"f5xcctl request rpc {service}",
             description=f"{to_human_readable(service)} service RPC procedures",
             rpc_service=service,
         )
@@ -1334,12 +1334,12 @@ vesctl {group} {action} {resource}
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Generate vesctl CLI documentation"
+        description="Generate f5xcctl CLI documentation"
     )
     parser.add_argument(
-        "--vesctl",
-        default="./vesctl",
-        help="Path to vesctl binary (default: ./vesctl)",
+        "--f5xcctl",
+        default="./f5xcctl",
+        help="Path to f5xcctl binary (default: ./f5xcctl)",
     )
     parser.add_argument(
         "--output",
@@ -1370,7 +1370,7 @@ def main():
     args = parser.parse_args()
 
     generator = VesctlDocsGenerator(
-        vesctl_path=args.vesctl,
+        f5xcctl_path=args.f5xcctl,
         output_dir=args.output,
         template_dir=args.templates,
     )

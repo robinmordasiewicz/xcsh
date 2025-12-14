@@ -1,7 +1,7 @@
-# vesctl CLI Makefile
+# f5xcctl CLI Makefile
 #
 # Usage:
-#   make build        - Build the vesctl binary for current platform
+#   make build        - Build the f5xcctl binary for current platform
 #   make build-all    - Build binaries for all platforms (linux/darwin/windows)
 #   make test         - Run all tests
 #   make test-unit    - Run unit tests only
@@ -12,8 +12,8 @@
 #   make install      - Install binary to GOPATH/bin
 #   make release-dry  - Test GoReleaser without publishing
 
-BINARY_NAME=vesctl
-MODULE=github.com/robinmordasiewicz/vesctl
+BINARY_NAME=f5xcctl
+MODULE=github.com/robinmordasiewicz/f5xcctl
 VERSION?=$(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 GIT_COMMIT?=$(shell git rev-parse HEAD 2>/dev/null || echo "unknown")
 BUILD_TIME=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
@@ -198,11 +198,11 @@ PYTHON ?= python3
 DOCS_OUTPUT = docs/commands
 DOCS_TEMPLATES = scripts/templates
 
-# Generate documentation from vesctl --spec
+# Generate documentation from f5xcctl --spec
 docs: build
 	@echo "Generating documentation from CLI spec..."
 	@$(PYTHON) scripts/generate-docs.py \
-		--vesctl ./$(BINARY_NAME) \
+		--f5xcctl ./$(BINARY_NAME) \
 		--output $(DOCS_OUTPUT) \
 		--templates $(DOCS_TEMPLATES) \
 		--clean \
@@ -232,7 +232,7 @@ docs: build
 docs-nav: build
 	@echo "Generating navigation structure..."
 	@$(PYTHON) scripts/generate-docs.py \
-		--vesctl ./$(BINARY_NAME) \
+		--f5xcctl ./$(BINARY_NAME) \
 		--nav-only \
 		--update-mkdocs
 	@echo "Navigation updated in mkdocs.yml"
@@ -301,7 +301,7 @@ version:
 
 # Show help
 help:
-	@echo "vesctl CLI Makefile"
+	@echo "f5xcctl CLI Makefile"
 	@echo ""
 	@echo "Build Commands:"
 	@echo "  make build          - Build binary for current platform"

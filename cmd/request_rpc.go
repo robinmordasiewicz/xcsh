@@ -11,8 +11,8 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/client"
-	"github.com/robinmordasiewicz/vesctl/pkg/output"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/client"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/output"
 )
 
 var rpcFlags struct {
@@ -26,7 +26,7 @@ var rpcCmd = &cobra.Command{
 	Use:     "rpc",
 	Short:   "RPC Invocation",
 	Long:    `RPC Invocation`,
-	Example: `vesctl request rpc registration.CustomAPI.RegistrationApprove -i approval_req.yaml`,
+	Example: `f5xcctl request rpc registration.CustomAPI.RegistrationApprove -i approval_req.yaml`,
 	Args:    cobra.MaximumNArgs(1),
 	RunE:    runRPC,
 }

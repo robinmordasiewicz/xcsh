@@ -145,7 +145,7 @@ func extractRPCMethods(specDir string) ([]RPCMethod, error) {
 	}
 
 	// Add backward compatibility aliases for methods that were renamed in newer API specs
-	// The original vesctl kept these aliases for backward compatibility
+	// The original f5xcctl kept these aliases for backward compatibility
 	legacyAliases := map[string]string{
 		// Original used NamespaceCustomAPI, new specs use CustomAPI
 		"namespace.NamespaceCustomAPI.CascadeDelete": "namespace.CustomAPI.CascadeDelete",
@@ -355,7 +355,7 @@ func createRPCSubcommand(name, schemaType string) *cobra.Command {
 		Use:   name,
 		Short: "CustomAPI RPC invocation",
 		Long:  "CustomAPI RPC invocation",
-		Example: "vesctl request rpc registration.CustomAPI.RegistrationApprove -i approval_req.yaml",
+		Example: "f5xcctl request rpc registration.CustomAPI.RegistrationApprove -i approval_req.yaml",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// Set the RPC flags from local flags
 			rpcFlags.inputFile = inputFile

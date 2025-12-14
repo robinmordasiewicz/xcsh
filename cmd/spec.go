@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/pflag"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/errors"
-	"github.com/robinmordasiewicz/vesctl/pkg/types"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/errors"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/types"
 )
 
 // specFlag controls whether to output machine-readable spec
@@ -140,7 +140,7 @@ type ExitCodeSpec struct {
 // GenerateSpec generates the CLI specification
 func GenerateSpec(cmd *cobra.Command) *CLISpec {
 	spec := &CLISpec{
-		Name:                  "vesctl",
+		Name:                  "f5xcctl",
 		Version:               Version, // From version.go
 		Description:           cmd.Long,
 		Usage:                 cmd.Use,
@@ -162,7 +162,7 @@ func GenerateSpec(cmd *cobra.Command) *CLISpec {
 // getAIHints returns AI agent guidance
 func getAIHints() AIHintsSpec {
 	return AIHintsSpec{
-		DiscoveryCommand:      "vesctl --spec --output-format json",
+		DiscoveryCommand:      "f5xcctl --spec --output-format json",
 		RecommendedAuthMethod: "p12-bundle",
 		RequiredForAPICalls:   []string{"server-url", "authentication (one of: p12-bundle, cert+key, api-token)"},
 		OutputFormats:         []string{"json", "yaml", "table", "text"},
@@ -170,8 +170,8 @@ func getAIHints() AIHintsSpec {
 		BestPractices: []string{
 			"Use --output-format json for programmatic parsing",
 			"Set VES_API_URL and VES_P12_FILE environment variables for persistent configuration",
-			"Use vesctl configuration list <resource-type> to discover available resources",
-			"Use vesctl configuration get <resource-type> -n <namespace> <name> to retrieve specific resources",
+			"Use f5xcctl configuration list <resource-type> to discover available resources",
+			"Use f5xcctl configuration get <resource-type> -n <namespace> <name> to retrieve specific resources",
 			"Always specify --namespace or -n for namespace-scoped resources",
 			"Use --spec to get complete CLI structure before constructing commands",
 			"Check exit codes for programmatic error handling (0=success, 1=generic, 2=validation, 3=auth, 4=connection, 5=not-found, 6=conflict, 7=rate-limit)",
@@ -268,62 +268,62 @@ func getExamples() []ExampleSpec {
 	return []ExampleSpec{
 		{
 			Task:        "List all namespaces",
-			Command:     "vesctl configuration list namespace",
+			Command:     "f5xcctl configuration list namespace",
 			Description: "Retrieve all namespaces accessible to the authenticated user",
 			Category:    "discovery",
 		},
 		{
 			Task:        "List HTTP load balancers in a namespace",
-			Command:     "vesctl configuration list http_loadbalancer -n <namespace>",
+			Command:     "f5xcctl configuration list http_loadbalancer -n <namespace>",
 			Description: "List all HTTP load balancer configurations in the specified namespace",
 			Category:    "configuration",
 		},
 		{
 			Task:        "Get a specific HTTP load balancer",
-			Command:     "vesctl configuration get http_loadbalancer -n <namespace> <name>",
+			Command:     "f5xcctl configuration get http_loadbalancer -n <namespace> <name>",
 			Description: "Retrieve detailed configuration of a specific HTTP load balancer",
 			Category:    "configuration",
 		},
 		{
 			Task:        "Create a resource from YAML file",
-			Command:     "vesctl configuration create http_loadbalancer -n <namespace> -i <file.yaml>",
+			Command:     "f5xcctl configuration create http_loadbalancer -n <namespace> -i <file.yaml>",
 			Description: "Create a new HTTP load balancer from a YAML specification file",
 			Category:    "configuration",
 		},
 		{
 			Task:        "Delete a resource",
-			Command:     "vesctl configuration delete http_loadbalancer -n <namespace> <name>",
+			Command:     "f5xcctl configuration delete http_loadbalancer -n <namespace> <name>",
 			Description: "Delete an HTTP load balancer by name",
 			Category:    "configuration",
 		},
 		{
 			Task:        "List origin pools",
-			Command:     "vesctl configuration list origin_pool -n <namespace>",
+			Command:     "f5xcctl configuration list origin_pool -n <namespace>",
 			Description: "List all origin pool configurations in the specified namespace",
 			Category:    "configuration",
 		},
 		{
 			Task:        "Output as JSON for parsing",
-			Command:     "vesctl configuration list namespace --output-format json",
+			Command:     "f5xcctl configuration list namespace --output-format json",
 			Description: "Get namespace list in JSON format for programmatic processing",
 			Category:    "output",
 		},
 		{
 			Task:        "Discover API endpoints",
-			Command:     "vesctl api-endpoint list -n <namespace>",
+			Command:     "f5xcctl api-endpoint list -n <namespace>",
 			Description: "List discovered API endpoints within the service mesh",
 			Category:    "discovery",
 		},
 		{
 			Task:        "Get CLI specification",
-			Command:     "vesctl --spec --output-format json",
+			Command:     "f5xcctl --spec --output-format json",
 			Description: "Output complete CLI specification in JSON format for AI/automation tools",
 			Category:    "meta",
 		},
 		{
 			Task:        "Show version and build info",
-			Command:     "vesctl version",
-			Description: "Display vesctl version, commit, build date, and platform information",
+			Command:     "f5xcctl version",
+			Description: "Display f5xcctl version, commit, build date, and platform information",
 			Category:    "meta",
 		},
 	}
@@ -338,35 +338,35 @@ func getWorkflows() []WorkflowSpec {
 			Steps: []WorkflowStep{
 				{Step: 1, Description: "Set API URL", Command: "export VES_API_URL=https://<tenant>.console.ves.volterra.io/api"},
 				{Step: 2, Description: "Set P12 credentials", Command: "export VES_P12_FILE=/path/to/api-creds.p12 && export VES_P12_PASSWORD=<password>"},
-				{Step: 3, Description: "Verify authentication", Command: "vesctl configuration list namespace"},
-				{Step: 4, Description: "Discover resource types", Command: "vesctl --help"},
+				{Step: 3, Description: "Verify authentication", Command: "f5xcctl configuration list namespace"},
+				{Step: 4, Description: "Discover resource types", Command: "f5xcctl --help"},
 			},
 		},
 		{
 			Name:        "deploy-http-load-balancer",
 			Description: "Create an HTTP load balancer with origin pool",
 			Steps: []WorkflowStep{
-				{Step: 1, Description: "Create origin pool", Command: "vesctl configuration create origin_pool -n <namespace> -i origin-pool.yaml"},
-				{Step: 2, Description: "Create HTTP load balancer", Command: "vesctl configuration create http_loadbalancer -n <namespace> -i http-lb.yaml"},
-				{Step: 3, Description: "Verify deployment", Command: "vesctl configuration get http_loadbalancer -n <namespace> <name>"},
+				{Step: 1, Description: "Create origin pool", Command: "f5xcctl configuration create origin_pool -n <namespace> -i origin-pool.yaml"},
+				{Step: 2, Description: "Create HTTP load balancer", Command: "f5xcctl configuration create http_loadbalancer -n <namespace> -i http-lb.yaml"},
+				{Step: 3, Description: "Verify deployment", Command: "f5xcctl configuration get http_loadbalancer -n <namespace> <name>"},
 			},
 		},
 		{
 			Name:        "export-configuration",
 			Description: "Export existing configuration for backup or migration",
 			Steps: []WorkflowStep{
-				{Step: 1, Description: "List resources", Command: "vesctl configuration list http_loadbalancer -n <namespace> --output-format json"},
-				{Step: 2, Description: "Get specific resource as YAML", Command: "vesctl configuration get http_loadbalancer -n <namespace> <name> --output-format yaml > backup.yaml"},
+				{Step: 1, Description: "List resources", Command: "f5xcctl configuration list http_loadbalancer -n <namespace> --output-format json"},
+				{Step: 2, Description: "Get specific resource as YAML", Command: "f5xcctl configuration get http_loadbalancer -n <namespace> <name> --output-format yaml > backup.yaml"},
 			},
 		},
 		{
 			Name:        "update-configuration",
 			Description: "Modify an existing resource configuration",
 			Steps: []WorkflowStep{
-				{Step: 1, Description: "Export current config", Command: "vesctl configuration get http_loadbalancer -n <namespace> <name> --output-format yaml > current.yaml"},
+				{Step: 1, Description: "Export current config", Command: "f5xcctl configuration get http_loadbalancer -n <namespace> <name> --output-format yaml > current.yaml"},
 				{Step: 2, Description: "Edit configuration", Command: "# Edit current.yaml with desired changes"},
-				{Step: 3, Description: "Apply changes", Command: "vesctl configuration replace http_loadbalancer -n <namespace> -i current.yaml"},
-				{Step: 4, Description: "Verify update", Command: "vesctl configuration get http_loadbalancer -n <namespace> <name>"},
+				{Step: 3, Description: "Apply changes", Command: "f5xcctl configuration replace http_loadbalancer -n <namespace> -i current.yaml"},
+				{Step: 4, Description: "Verify update", Command: "f5xcctl configuration get http_loadbalancer -n <namespace> <name>"},
 			},
 		},
 	}

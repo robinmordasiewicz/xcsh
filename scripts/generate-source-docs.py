@@ -40,7 +40,7 @@ def main():
     parser.add_argument("--prereq-output", help="Prerequisites check output")
     parser.add_argument("--clone-output", help="Git clone output")
     parser.add_argument("--build-output", help="Go build output")
-    parser.add_argument("--version-output", help="vesctl version output")
+    parser.add_argument("--version-output", help="f5xcctl version output")
     parser.add_argument("--ldflags-build-output", help="Build with ldflags output")
     parser.add_argument(
         "--output",

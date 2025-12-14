@@ -9,7 +9,7 @@ import (
 
 // TransformConfig holds configuration for spec transformation
 type TransformConfig struct {
-	// VesctlToBinary transforms "vesctl" references to the current binary name
+	// VesctlToBinary transforms "f5xcctl" references to the current binary name
 	VesctlToBinary string
 	// TransformEnvVars transforms VES_* environment variables to F5XC_*
 	TransformEnvVars bool
@@ -28,7 +28,7 @@ var envVarPattern = regexp.MustCompile(`\bVES_([A-Z_]+)\b`)
 
 // TransformSpecReferences transforms legacy references in the spec to current branding.
 // This includes:
-// - "vesctl" → "f5xcctl" (or configured binary name)
+// - "f5xcctl" → "f5xcctl" (or configured binary name)
 // - VES_* environment variables → F5XC_*
 //
 // This function modifies the spec in place.
@@ -83,10 +83,10 @@ func transformText(text string, config *TransformConfig) string {
 		return text
 	}
 
-	// Transform vesctl references
+	// Transform f5xcctl references
 	if config.VesctlToBinary != "" {
-		// Case-insensitive replacement for various vesctl patterns
-		text = strings.ReplaceAll(text, "vesctl", config.VesctlToBinary)
+		// Case-insensitive replacement for various f5xcctl patterns
+		text = strings.ReplaceAll(text, "f5xcctl", config.VesctlToBinary)
 		text = strings.ReplaceAll(text, "Vesctl", capitalizeFirst(config.VesctlToBinary))
 		text = strings.ReplaceAll(text, "VESCTL", strings.ToUpper(config.VesctlToBinary))
 	}

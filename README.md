@@ -1,10 +1,10 @@
-# vesctl
+# f5xcctl
 
 A command-line interface for managing F5 Distributed Cloud resources.
 
 ## Documentation
 
-Full documentation is available at **[robinmordasiewicz.github.io/vesctl](https://robinmordasiewicz.github.io/vesctl)**
+Full documentation is available at **[robinmordasiewicz.github.io/f5xcctl](https://robinmordasiewicz.github.io/f5xcctl)**
 
 ## Installation
 
@@ -12,13 +12,13 @@ Full documentation is available at **[robinmordasiewicz.github.io/vesctl](https:
 
 ```bash
 brew tap robinmordasiewicz/tap
-brew install --cask vesctl
+brew install --cask f5xcctl
 ```
 
 ### Install Script
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/robinmordasiewicz/vesctl/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/robinmordasiewicz/f5xcctl/main/install.sh | sh
 ```
 
 ## License

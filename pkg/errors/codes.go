@@ -1,9 +1,9 @@
-// Package errors provides standardized exit codes and error types for vesctl.
+// Package errors provides standardized exit codes and error types for f5xcctl.
 // These codes enable AI agents and automation scripts to programmatically
 // determine the nature of errors and take appropriate action.
 package errors
 
-// Exit codes for vesctl CLI
+// Exit codes for f5xcctl CLI
 // These codes follow a hierarchical scheme where higher codes indicate more specific errors.
 const (
 	// ExitSuccess indicates the command completed successfully

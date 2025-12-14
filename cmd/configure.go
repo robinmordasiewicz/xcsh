@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/output"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/output"
 )
 
 var configureFlags struct {
@@ -26,7 +26,7 @@ var configureFlags struct {
 var configureCmd = &cobra.Command{
 	Use:    "configure",
 	Short:  "Configure CLI settings",
-	Hidden: true, // Hide from help to match original vesctl
+	Hidden: true, // Hide from help to match original f5xcctl
 	Long: `Configure the F5 Distributed Cloud CLI settings.
 
 This command helps you set up your CLI configuration including:
@@ -36,15 +36,15 @@ This command helps you set up your CLI configuration including:
 
 The configuration is saved to ~/.vesconfig (or the path specified by --config).`,
 	Example: `  # Interactive configuration
-  vesctl configure
+  f5xcctl configure
 
   # Non-interactive configuration
-  vesctl configure --server-url https://example-tenant.console.ves.volterra.io/api \
-    --p12-bundle ~/.vesctl/example-cert.p12
+  f5xcctl configure --server-url https://example-tenant.console.ves.volterra.io/api \
+    --p12-bundle ~/.f5xcctl/example-cert.p12
 
   # Configure with certificate and key
-  vesctl configure --server-url https://example-tenant.console.ves.volterra.io/api \
-    --cert ~/.vesctl/cert.pem --key ~/.vesctl/key.pem`,
+  f5xcctl configure --server-url https://example-tenant.console.ves.volterra.io/api \
+    --cert ~/.f5xcctl/cert.pem --key ~/.f5xcctl/key.pem`,
 	RunE: runConfigure,
 }
 
@@ -53,7 +53,7 @@ var configureShowCmd = &cobra.Command{
 	Short: "Show current configuration",
 	Long:  `Display the current CLI configuration settings.`,
 	Example: `  # Show current configuration
-  vesctl configure show`,
+  f5xcctl configure show`,
 	RunE: runConfigureShow,
 }
 
@@ -70,13 +70,13 @@ Available keys:
   - api-token: Enable API token auth (true/false)
   - output: Default output format (json, yaml, table)`,
 	Example: `  # Set the server URL
-  vesctl configure set server-url https://example-tenant.console.ves.volterra.io/api
+  f5xcctl configure set server-url https://example-tenant.console.ves.volterra.io/api
 
   # Enable API token authentication
-  vesctl configure set api-token true
+  f5xcctl configure set api-token true
 
   # Set the default output format
-  vesctl configure set output yaml`,
+  f5xcctl configure set output yaml`,
 	Args: cobra.ExactArgs(2),
 	RunE: runConfigureSet,
 }
@@ -248,7 +248,7 @@ func runConfigureShow(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		if os.IsNotExist(err) {
 			fmt.Printf("No configuration file found at %s\n", configPath)
-			fmt.Println("Run 'vesctl configure' to create one.")
+			fmt.Println("Run 'f5xcctl configure' to create one.")
 			return nil
 		}
 		return fmt.Errorf("failed to read config: %w", err)

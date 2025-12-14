@@ -25,7 +25,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Generate homebrew docs with real version info"
     )
-    parser.add_argument("--version", help="vesctl version")
+    parser.add_argument("--version", help="f5xcctl version")
     parser.add_argument("--commit", help="Git commit hash")
     parser.add_argument("--built", help="Build timestamp")
     parser.add_argument("--go-version", help="Go version used for build")

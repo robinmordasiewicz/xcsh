@@ -83,7 +83,7 @@ func AuthError(message string) *ExitError {
 		Code:    ExitAuthError,
 		ErrCode: ErrAuthFailed,
 		Message: message,
-		Hint:    "Check your credentials with 'vesctl configure show' or set VES_API_TOKEN",
+		Hint:    "Check your credentials with 'f5xcctl configure show' or set VES_API_TOKEN",
 	}
 }
 
@@ -172,7 +172,7 @@ func FromHTTPStatus(statusCode int, operation, body string) *ExitError {
 		hint = "Check your input data and try again"
 	case 401:
 		message = fmt.Sprintf("%s failed: authentication required", operation)
-		hint = "Check your credentials with 'vesctl configure show'"
+		hint = "Check your credentials with 'f5xcctl configure show'"
 	case 403:
 		message = fmt.Sprintf("%s failed: permission denied", operation)
 		hint = "You may not have access to this resource"

@@ -43,9 +43,9 @@ func init() {
 
 var versionCmd = &cobra.Command{
 	Use:     "version",
-	Short:   "Display vesctl version and build information.",
-	Long:    `Display vesctl version and build information.`,
-	Example: `vesctl version`,
+	Short:   "Display f5xcctl version and build information.",
+	Long:    `Display f5xcctl version and build information.`,
+	Example: `f5xcctl version`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Short commit hash (7 chars like GitHub)
 		commit := GitCommit
@@ -53,7 +53,7 @@ var versionCmd = &cobra.Command{
 			commit = commit[:7]
 		}
 
-		fmt.Printf("vesctl version %s\n", Version)
+		fmt.Printf("f5xcctl version %s\n", Version)
 		fmt.Printf("  commit:   %s\n", commit)
 		fmt.Printf("  built:    %s\n", BuildDate)
 		fmt.Printf("  go:       %s\n", runtime.Version())

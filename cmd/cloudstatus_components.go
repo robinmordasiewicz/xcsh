@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/cloudstatus"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/cloudstatus"
 )
 
 // Component filtering flags
@@ -28,19 +28,19 @@ var cloudstatusComponentsCmd = &cobra.Command{
 	Short: "Manage and view F5 Cloud Status components.",
 	Long:  `View and filter F5 Distributed Cloud service components and their status.`,
 	Example: `  # List all components
-  vesctl cloudstatus components list
+  f5xcctl cloudstatus components list
 
   # List degraded components only
-  vesctl cloudstatus components list --degraded-only
+  f5xcctl cloudstatus components list --degraded-only
 
   # List PoP components
-  vesctl cloudstatus components list --pop
+  f5xcctl cloudstatus components list --pop
 
   # Get a specific component
-  vesctl cloudstatus components get <component-id>
+  f5xcctl cloudstatus components get <component-id>
 
   # List component groups
-  vesctl cloudstatus components groups`,
+  f5xcctl cloudstatus components groups`,
 }
 
 var cloudstatusComponentsListCmd = &cobra.Command{
@@ -55,19 +55,19 @@ Supports filtering by:
 - Services: Show only service components
 - Degraded: Show only non-operational components`,
 	Example: `  # List all components
-  vesctl cloudstatus components list
+  f5xcctl cloudstatus components list
 
   # Filter by group
-  vesctl cloudstatus components list --group "Services"
+  f5xcctl cloudstatus components list --group "Services"
 
   # Filter by status
-  vesctl cloudstatus components list --status degraded_performance
+  f5xcctl cloudstatus components list --status degraded_performance
 
   # Show only degraded components
-  vesctl cloudstatus components list --degraded-only
+  f5xcctl cloudstatus components list --degraded-only
 
   # Show only PoP components
-  vesctl cloudstatus components list --pop`,
+  f5xcctl cloudstatus components list --pop`,
 	RunE: runComponentsList,
 }
 
@@ -76,10 +76,10 @@ var cloudstatusComponentsGetCmd = &cobra.Command{
 	Short: "Get details for a specific component.",
 	Long:  `Get detailed information about a specific component by its ID or name.`,
 	Example: `  # Get by ID
-  vesctl cloudstatus components get ybcpdlwcdq67
+  f5xcctl cloudstatus components get ybcpdlwcdq67
 
   # Get by name (partial match)
-  vesctl cloudstatus components get "Portal"`,
+  f5xcctl cloudstatus components get "Portal"`,
 	Args: cobra.ExactArgs(1),
 	RunE: runComponentsGet,
 }
@@ -89,10 +89,10 @@ var cloudstatusComponentsGroupsCmd = &cobra.Command{
 	Short: "List component groups.",
 	Long:  `List all component groups and their hierarchy.`,
 	Example: `  # List groups
-  vesctl cloudstatus components groups
+  f5xcctl cloudstatus components groups
 
   # List groups with component counts
-  vesctl cloudstatus components groups --with-components`,
+  f5xcctl cloudstatus components groups --with-components`,
 	RunE: runComponentsGroups,
 }
 

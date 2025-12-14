@@ -1,4 +1,4 @@
-# Suggested Commands for vesctl Development
+# Suggested Commands for f5xcctl Development
 
 ## Build Commands
 ```bash
@@ -6,7 +6,7 @@ make build              # Build binary for current platform (darwin-arm64)
 make build-all          # Build for all platforms (linux/darwin/windows)
 make install            # Install binary to GOPATH/bin
 make clean              # Clean build artifacts
-go build -o vesctl .    # Direct Go build
+go build -o f5xcctl .    # Direct Go build
 ```
 
 ## Test Commands
@@ -41,8 +41,8 @@ make version            # Show version info
 ## Development Commands
 ```bash
 make watch              # Rebuild on file changes (requires fswatch)
-./vesctl --help         # Test the built CLI
-./vesctl version        # Check version info
+./f5xcctl --help         # Test the built CLI
+./f5xcctl version        # Check version info
 ```
 
 ## Documentation

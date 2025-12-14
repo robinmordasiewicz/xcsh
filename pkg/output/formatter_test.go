@@ -45,14 +45,14 @@ func TestNew_NoneFormat(t *testing.T) {
 func TestNew_EmptyDefault(t *testing.T) {
 	f := New("")
 	if f.format != FormatTable {
-		t.Errorf("Expected Table format as default (matching original vesctl), got %v", f.format)
+		t.Errorf("Expected Table format as default (matching original f5xcctl), got %v", f.format)
 	}
 }
 
 func TestNew_InvalidDefault(t *testing.T) {
 	f := New("invalid")
 	if f.format != FormatTable {
-		t.Errorf("Expected Table format for invalid input (matching original vesctl), got %v", f.format)
+		t.Errorf("Expected Table format for invalid input (matching original f5xcctl), got %v", f.format)
 	}
 }
 

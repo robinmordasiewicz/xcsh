@@ -1,10 +1,10 @@
-# vesctl Codebase Structure
+# f5xcctl Codebase Structure
 
 ## Root Directory
 ```
-vesctl/
+f5xcctl/
 ├── main.go              # Entry point - calls cmd.Execute()
-├── go.mod               # Go module definition (github.com/robinmordasiewicz/vesctl)
+├── go.mod               # Go module definition (github.com/robinmordasiewicz/f5xcctl)
 ├── go.sum               # Dependency checksums
 ├── Makefile             # Build, test, lint commands
 ├── .goreleaser.yaml     # GoReleaser configuration

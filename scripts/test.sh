@@ -1,7 +1,7 @@
 #!/bin/bash
-# vesctl CLI Test Runner
+# f5xcctl CLI Test Runner
 #
-# This script runs all tests for the vesctl CLI tool.
+# This script runs all tests for the f5xcctl CLI tool.
 #
 # Usage:
 #   ./scripts/test.sh              # Run all tests
@@ -73,12 +73,12 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-echo -e "${GREEN}vesctl CLI Test Runner${NC}"
+echo -e "${GREEN}f5xcctl CLI Test Runner${NC}"
 echo "================================"
 
 # Build the binary first
-echo -e "\n${YELLOW}Building vesctl binary...${NC}"
-go build -o vesctl .
+echo -e "\n${YELLOW}Building f5xcctl binary...${NC}"
+go build -o f5xcctl .
 echo -e "${GREEN}✓ Build successful${NC}"
 
 # Check if integration test environment is configured

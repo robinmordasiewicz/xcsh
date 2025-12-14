@@ -2,11 +2,11 @@
 """
 CloudStatus Documentation Generator
 
-Generates comprehensive documentation for the vesctl cloudstatus command group
-by parsing vesctl --spec JSON output and rendering Jinja2 templates.
+Generates comprehensive documentation for the f5xcctl cloudstatus command group
+by parsing f5xcctl --spec JSON output and rendering Jinja2 templates.
 
 Usage:
-    python scripts/generate-cloudstatus-docs.py [--vesctl PATH] [--output DIR] [--clean]
+    python scripts/generate-cloudstatus-docs.py [--f5xcctl PATH] [--output DIR] [--clean]
 """
 
 import argparse
@@ -23,29 +23,29 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from naming import to_human_readable, normalize_acronyms, to_title_case
 
 
-def load_spec(vesctl_path: str) -> dict:
-    """Run vesctl --spec and return the full CLI spec."""
+def load_spec(f5xcctl_path: str) -> dict:
+    """Run f5xcctl --spec and return the full CLI spec."""
     try:
         result = subprocess.run(
-            [vesctl_path, "--spec", "--output-format", "json"],
+            [f5xcctl_path, "--spec", "--output-format", "json"],
             capture_output=True,
             text=True,
             check=True
         )
         return json.loads(result.stdout)
     except subprocess.CalledProcessError as e:
-        print(f"Error running vesctl --spec: {e.stderr}", file=sys.stderr)
+        print(f"Error running f5xcctl --spec: {e.stderr}", file=sys.stderr)
         sys.exit(1)
     except json.JSONDecodeError as e:
-        print(f"Error parsing vesctl --spec output: {e}", file=sys.stderr)
+        print(f"Error parsing f5xcctl --spec output: {e}", file=sys.stderr)
         sys.exit(1)
 
 
-def load_cloudstatus_spec(vesctl_path: str) -> dict:
-    """Run vesctl cloudstatus --spec for extended cloudstatus-specific data."""
+def load_cloudstatus_spec(f5xcctl_path: str) -> dict:
+    """Run f5xcctl cloudstatus --spec for extended cloudstatus-specific data."""
     try:
         result = subprocess.run(
-            [vesctl_path, "cloudstatus", "--spec", "--output-format", "json"],
+            [f5xcctl_path, "cloudstatus", "--spec", "--output-format", "json"],
             capture_output=True,
             text=True,
             check=True
@@ -53,10 +53,10 @@ def load_cloudstatus_spec(vesctl_path: str) -> dict:
         return json.loads(result.stdout)
     except subprocess.CalledProcessError as e:
         # cloudstatus --spec might not be available, return empty dict
-        print(f"Note: vesctl cloudstatus --spec not available: {e.stderr}", file=sys.stderr)
+        print(f"Note: f5xcctl cloudstatus --spec not available: {e.stderr}", file=sys.stderr)
         return {}
     except json.JSONDecodeError as e:
-        print(f"Error parsing vesctl cloudstatus --spec output: {e}", file=sys.stderr)
+        print(f"Error parsing f5xcctl cloudstatus --spec output: {e}", file=sys.stderr)
         return {}
 
 
@@ -95,20 +95,20 @@ def create_front_matter(cmd: dict, command_type: str = "command") -> dict:
     """Create YAML front matter for a documentation page."""
     path = cmd.get("path", [])
     name = get_command_name(cmd)
-    full_command = " ".join(["vesctl"] + path)
+    full_command = " ".join(["f5xcctl"] + path)
 
     if command_type == "overview":
-        title = f"Cloud Status - vesctl {name}"
+        title = f"Cloud Status - f5xcctl {name}"
         description = cmd.get("short", f"Manage {to_human_readable(name)} resources")
     elif command_type == "group":
-        title = f"{to_human_readable(name)} - vesctl cloudstatus"
+        title = f"{to_human_readable(name)} - f5xcctl cloudstatus"
         description = cmd.get("short", f"Manage {to_human_readable(name)}")
     else:
-        title = f"vesctl cloudstatus {' '.join(path[1:])}"
+        title = f"f5xcctl cloudstatus {' '.join(path[1:])}"
         description = cmd.get("short", "")
 
     keywords = [
-        "vesctl",
+        "f5xcctl",
         "F5",
         "F5 XC",
         "F5 Distributed Cloud",
@@ -311,12 +311,12 @@ def generate_nav_structure(cloudstatus_cmd: dict) -> list:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Generate cloudstatus documentation from vesctl --spec"
+        description="Generate cloudstatus documentation from f5xcctl --spec"
     )
     parser.add_argument(
-        "--vesctl",
-        default="./vesctl",
-        help="Path to vesctl binary (default: ./vesctl)"
+        "--f5xcctl",
+        default="./f5xcctl",
+        help="Path to f5xcctl binary (default: ./f5xcctl)"
     )
     parser.add_argument(
         "--output",
@@ -342,13 +342,13 @@ def main():
     args = parser.parse_args()
 
     # Resolve paths
-    vesctl_path = Path(args.vesctl).resolve()
+    f5xcctl_path = Path(args.f5xcctl).resolve()
     output_dir = Path(args.output)
     templates_dir = Path(args.templates)
 
-    # Verify vesctl exists
-    if not vesctl_path.exists():
-        print(f"Error: vesctl not found at {vesctl_path}", file=sys.stderr)
+    # Verify f5xcctl exists
+    if not f5xcctl_path.exists():
+        print(f"Error: f5xcctl not found at {f5xcctl_path}", file=sys.stderr)
         sys.exit(1)
 
     # Verify templates exist
@@ -356,9 +356,9 @@ def main():
         print(f"Error: Templates directory not found at {templates_dir}", file=sys.stderr)
         sys.exit(1)
 
-    print(f"Loading spec from {vesctl_path}...")
-    spec = load_spec(str(vesctl_path))
-    extended_spec = load_cloudstatus_spec(str(vesctl_path))
+    print(f"Loading spec from {f5xcctl_path}...")
+    spec = load_spec(str(f5xcctl_path))
+    extended_spec = load_cloudstatus_spec(str(f5xcctl_path))
 
     # Find cloudstatus command
     cloudstatus_cmd = find_cloudstatus_command(spec)

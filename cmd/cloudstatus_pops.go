@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/cloudstatus"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/cloudstatus"
 )
 
 // PoP filtering flags
@@ -30,16 +30,16 @@ access to F5 XC services. Available regions:
 - oceania
 - middle-east`,
 	Example: `  # List all PoPs
-  vesctl cloudstatus pops list
+  f5xcctl cloudstatus pops list
 
   # List PoPs in a specific region
-  vesctl cloudstatus pops list --region north-america
+  f5xcctl cloudstatus pops list --region north-america
 
   # Get regional status summary
-  vesctl cloudstatus pops status
+  f5xcctl cloudstatus pops status
 
   # Get status for a specific region
-  vesctl cloudstatus pops status --region europe`,
+  f5xcctl cloudstatus pops status --region europe`,
 }
 
 var cloudstatusPopsListCmd = &cobra.Command{
@@ -47,11 +47,11 @@ var cloudstatusPopsListCmd = &cobra.Command{
 	Short: "List PoP locations.",
 	Long:  `List all Point of Presence (PoP) locations and their current status.`,
 	Example: `  # List all PoPs
-  vesctl cloudstatus pops list
+  f5xcctl cloudstatus pops list
 
   # List PoPs by region
-  vesctl cloudstatus pops list --region north-america
-  vesctl cloudstatus pops list --region europe`,
+  f5xcctl cloudstatus pops list --region north-america
+  f5xcctl cloudstatus pops list --region europe`,
 	RunE: runPopsList,
 }
 
@@ -60,10 +60,10 @@ var cloudstatusPopsStatusCmd = &cobra.Command{
 	Short: "Get aggregated status by region.",
 	Long:  `Get aggregated status summary for each geographic region.`,
 	Example: `  # All regions summary
-  vesctl cloudstatus pops status
+  f5xcctl cloudstatus pops status
 
   # Specific region
-  vesctl cloudstatus pops status --region asia`,
+  f5xcctl cloudstatus pops status --region asia`,
 	RunE: runPopsStatus,
 }
 

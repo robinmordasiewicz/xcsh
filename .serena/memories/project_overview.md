@@ -1,7 +1,7 @@
-# vesctl Project Overview
+# f5xcctl Project Overview
 
 ## Purpose
-vesctl is an open-source command-line interface for managing F5 Distributed Cloud (formerly Volterra) resources. It follows Azure CLI-style command patterns for intuitive resource management.
+f5xcctl is an open-source command-line interface for managing F5 Distributed Cloud (formerly Volterra) resources. It follows Azure CLI-style command patterns for intuitive resource management.
 
 ## Tech Stack
 - **Language**: Go 1.22

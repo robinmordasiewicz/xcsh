@@ -9,7 +9,7 @@ command_group: "{{ front_matter.command_group }}"
 resource_type: "{{ front_matter.resource_type }}"
 ---
 
-# vesctl {{ group }} {{ resource }}
+# f5xcctl {{ group }} {{ resource }}
 
 > Manage {{ resource | to_human_readable }} resources in F5 Distributed Cloud
 
@@ -27,48 +27,48 @@ resource_type: "{{ front_matter.resource_type }}"
 
 ```bash
 # Create from file
-vesctl {{ group }} create {{ resource }} -i {{ resource }}.yaml
+f5xcctl {{ group }} create {{ resource }} -i {{ resource }}.yaml
 
 # Verify creation
-vesctl {{ group }} list {{ resource }}
+f5xcctl {{ group }} list {{ resource }}
 
 # Get details
-vesctl {{ group }} get {{ resource }} <name>
+f5xcctl {{ group }} get {{ resource }} <name>
 ```
 
 ### Update a {{ resource | to_human_readable }}
 
 ```bash
 # Replace entire resource
-vesctl {{ group }} replace {{ resource }} -i {{ resource }}.yaml
+f5xcctl {{ group }} replace {{ resource }} -i {{ resource }}.yaml
 
 # Or apply changes (create or update)
-vesctl {{ group }} apply {{ resource }} -i {{ resource }}.yaml
+f5xcctl {{ group }} apply {{ resource }} -i {{ resource }}.yaml
 
 # Patch specific fields
-vesctl {{ group }} patch {{ resource }} <name> -i patch.yaml
+f5xcctl {{ group }} patch {{ resource }} <name> -i patch.yaml
 ```
 
 ### Manage labels
 
 ```bash
 # Add labels
-vesctl {{ group }} add-labels {{ resource }} <name> --label-key app --label-value web
+f5xcctl {{ group }} add-labels {{ resource }} <name> --label-key app --label-value web
 
 # Remove labels
-vesctl {{ group }} remove-labels {{ resource }} <name> --label-key app
+f5xcctl {{ group }} remove-labels {{ resource }} <name> --label-key app
 ```
 
 ### Delete a {{ resource | to_human_readable }}
 
 ```bash
-vesctl {{ group }} delete {{ resource }} <name>
+f5xcctl {{ group }} delete {{ resource }} <name>
 
 # With confirmation bypass
-vesctl {{ group }} delete {{ resource }} <name> --yes
+f5xcctl {{ group }} delete {{ resource }} <name> --yes
 ```
 
 ## See Also
 
-- [vesctl {{ group }}](../index.md) - {{ group | to_human_readable }} commands
+- [f5xcctl {{ group }}](../index.md) - {{ group | to_human_readable }} commands
 - [Command Reference](../../index.md)

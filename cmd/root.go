@@ -8,15 +8,15 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/robinmordasiewicz/vesctl/pkg/client"
-	"github.com/robinmordasiewicz/vesctl/pkg/config"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/client"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/config"
 )
 
 var (
 	// Config file path
 	cfgFile string
 
-	// Connection settings (vesctl compatible)
+	// Connection settings (f5xcctl compatible)
 	serverURL   string
 	cert        string
 	key         string
@@ -25,11 +25,11 @@ var (
 	hardwareKey bool // Use yubikey for TLS connection
 	useAPIToken bool // Use API token from VES_API_TOKEN environment variable
 
-	// Output control (vesctl compatible)
+	// Output control (f5xcctl compatible)
 	outputFormat string // Output format for command (canonical: --output-format)
 	outputDir    string // Output dir for command
 
-	// Behavior flags (vesctl compatible)
+	// Behavior flags (f5xcctl compatible)
 	showCurl       bool // Emit requests from program in CURL format
 	timeout        int  // Timeout (in seconds) for command to finish
 	nonInteractive bool // Fail on missing arguments instead of prompting
@@ -43,7 +43,7 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "vesctl",
+	Use:   "f5xcctl",
 	Short: "Command-line interface for F5 Distributed Cloud services.",
 	Long:  `Command-line interface for F5 Distributed Cloud services.`,
 	// Run handles the root command when no subcommand is specified
@@ -64,7 +64,7 @@ var rootCmd = &cobra.Command{
 			"__complete":       true, // Cobra's shell completion handler
 			"__completeNoDesc": true, // Cobra's shell completion handler (no descriptions)
 			"help":             true,
-			"vesctl":           true, // Root command itself
+			"f5xcctl":           true, // Root command itself
 		}
 		if skipCommands[cmd.Name()] {
 			return nil
@@ -108,10 +108,10 @@ func Execute() error {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// Global flags matching original vesctl exactly
+	// Global flags matching original f5xcctl exactly
 	pf := rootCmd.PersistentFlags()
 
-	// Connection settings (vesctl compatible)
+	// Connection settings (f5xcctl compatible)
 	pf.StringVarP(&cacert, "cacert", "a", "", "Path to the server CA certificate file for TLS verification.")
 	pf.StringVarP(&cert, "cert", "c", "", "Path to the client certificate file for mTLS authentication.")
 	pf.StringVar(&cfgFile, "config", "", "Path to configuration file.")
@@ -365,10 +365,10 @@ func helpTemplateWithEnvVars() string {
 	// Add examples section
 	examplesSection := `
 Examples:
-  vesctl configuration list namespace                    List all namespaces
-  vesctl configuration get http_loadbalancer -n shared   Get a specific resource
-  vesctl request /api/web/namespaces                     Execute custom API request
-  vesctl --spec --output-format json                     Output CLI spec for automation
+  f5xcctl configuration list namespace                    List all namespaces
+  f5xcctl configuration get http_loadbalancer -n shared   Get a specific resource
+  f5xcctl request /api/web/namespaces                     Execute custom API request
+  f5xcctl --spec --output-format json                     Output CLI spec for automation
 `
 
 	// Add configuration precedence section
@@ -377,7 +377,7 @@ Configuration:
   Config file:  ~/.vesconfig
   Priority:     CLI flags > environment variables > config file > defaults
 
-Learn more:    https://robinmordasiewicz.github.io/vesctl/
+Learn more:    https://robinmordasiewicz.github.io/f5xcctl/
 `
 
 	// Custom template based on Cobra's default, with additional sections

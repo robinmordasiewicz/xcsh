@@ -15,14 +15,14 @@ aliases:
 {% endif %}
 ---
 
-# vesctl {{ command.name }}
+# f5xcctl {{ command.name }}
 
 > {{ command.short }}
 
 ## Synopsis
 
 ```bash
-vesctl {{ command.name }} <command> [flags]
+f5xcctl {{ command.name }} <command> [flags]
 ```
 
 {% if command.long and command.long != command.short %}
@@ -37,7 +37,7 @@ vesctl {{ command.name }} <command> [flags]
 This command can also be invoked as:
 
 {% for alias in command.aliases %}
-- `vesctl {{ alias }}`
+- `f5xcctl {{ alias }}`
 {% endfor %}
 
 {% endif %}
@@ -73,7 +73,7 @@ This command can also be invoked as:
 
 - [Command Reference](../index.md)
 {% for sub in subcommands[:5] %}
-{% if flat_links %}- [vesctl {{ command.name }} {{ sub.name }}]({{ sub.name }}.md)
-{% else %}- [vesctl {{ command.name }} {{ sub.name }}]({{ sub.name }}/index.md)
+{% if flat_links %}- [f5xcctl {{ command.name }} {{ sub.name }}]({{ sub.name }}.md)
+{% else %}- [f5xcctl {{ command.name }} {{ sub.name }}]({{ sub.name }}/index.md)
 {% endif %}
 {% endfor %}

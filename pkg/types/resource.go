@@ -1,6 +1,6 @@
 package types
 
-import "github.com/robinmordasiewicz/vesctl/pkg/naming"
+import "github.com/robinmordasiewicz/f5xcctl/pkg/naming"
 
 // ResourceType defines a F5 XC resource type
 type ResourceType struct {
