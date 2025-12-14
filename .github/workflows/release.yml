@@ -80,11 +80,30 @@ jobs:
           go-version: '1.25'
           cache: true
 
+      - name: Build CLI for spec hash
+        run: make build
+
+      - name: Compute spec hash
+        id: spec-hash
+        run: |
+          SPEC_HASH=$(./f5xcctl --spec | sha256sum | cut -d' ' -f1)
+          echo "hash=$SPEC_HASH" >> $GITHUB_OUTPUT
+          echo "Spec hash: $SPEC_HASH"
+
+      - name: Check LLM descriptions cache
+        id: cache-descriptions
+        uses: actions/cache@v4
+        with:
+          path: pkg/types/descriptions_generated.json
+          key: llm-descriptions-${{ steps.spec-hash.outputs.hash }}
+
       - name: Install Ollama
+        if: steps.cache-descriptions.outputs.cache-hit != 'true'
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
 
       - name: Start Ollama Server
+        if: steps.cache-descriptions.outputs.cache-hit != 'true'
         run: |
           ollama serve &
           for i in {1..30}; do
@@ -97,12 +116,23 @@ jobs:
           done
 
       - name: Pull Model
+        if: steps.cache-descriptions.outputs.cache-hit != 'true'
         run: |
           echo "Pulling model deepseek-r1:1.5b..."
           ollama pull "deepseek-r1:1.5b"
 
-      - name: Generate Schemas with LLM Descriptions
-        run: make generate-schemas-with-llm
+      - name: Generate LLM Descriptions
+        if: steps.cache-descriptions.outputs.cache-hit != 'true'
+        run: |
+          echo "Cache miss - generating LLM descriptions..."
+          make generate-schemas-with-llm
+
+      - name: Use cached descriptions
+        if: steps.cache-descriptions.outputs.cache-hit == 'true'
+        run: |
+          echo "Cache hit - using cached LLM descriptions"
+          echo "Regenerating schemas with cached descriptions..."
+          go run scripts/generate-schemas.go -v -update-resources -use-llm-descriptions
 
       - name: Verify Build
         run: |
