@@ -33,7 +33,7 @@ PLATFORMS=linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64
         build-linux-amd64 build-linux-arm64 build-darwin-amd64 build-darwin-arm64 build-windows-amd64 \
         docs docs-nav docs-clean docs-serve docs-check generate-examples \
         generate-schemas validate-schemas report-schemas generate-schemas-strict \
-        generate-llm-descriptions generate-schemas-with-llm
+        generate-llm-descriptions generate-schemas-with-llm maybe-llm-descriptions
 
 # Default target
 all: build
@@ -291,7 +291,8 @@ generate-schemas-strict:
 	@echo "Generating schemas (strict mode)..."
 	@go run scripts/generate-schemas.go -v -strict
 
-# Generate LLM descriptions (requires Ollama running locally with deepseek model)
+# Generate LLM descriptions (requires Ollama running with deepseek model)
+# This target fails if Ollama is not available - use for explicit regeneration
 generate-llm-descriptions:
 	@echo "Generating LLM-enhanced descriptions..."
 	@if ! curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then \
@@ -305,10 +306,24 @@ generate-llm-descriptions:
 		-v
 	@echo "Descriptions written to pkg/types/descriptions_generated.json"
 
-# Regenerate schemas using LLM descriptions
+# Regenerate schemas using LLM descriptions (explicit regeneration)
 generate-schemas-with-llm: generate-llm-descriptions
 	@go run scripts/generate-schemas.go -v -update-resources -use-llm-descriptions
 	@echo "Schemas regenerated with LLM descriptions"
+
+# Attempt LLM description generation if Ollama is available (silent skip if not)
+# This is used by the build process to opportunistically regenerate descriptions
+maybe-llm-descriptions:
+	@if curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then \
+		echo "Ollama detected, regenerating LLM descriptions..."; \
+		go run scripts/generate-llm-descriptions.go \
+			-specs docs/specifications/api \
+			-output pkg/types/descriptions_generated.json \
+			-v && \
+		go run scripts/generate-schemas.go -v -update-resources -use-llm-descriptions; \
+	else \
+		echo "Ollama not running, using existing descriptions"; \
+	fi
 
 # Show version info
 version:
@@ -361,6 +376,7 @@ help:
 	@echo "  make generate-schemas-strict - Generate schemas, fail on missing critical"
 	@echo "  make generate-llm-descriptions - Generate LLM descriptions (requires Ollama)"
 	@echo "  make generate-schemas-with-llm - Regenerate schemas with LLM descriptions"
+	@echo "  make maybe-llm-descriptions    - Auto-detect Ollama and regenerate if available"
 	@echo ""
 	@echo "Development Commands:"
 	@echo "  make watch          - Rebuild on file changes"

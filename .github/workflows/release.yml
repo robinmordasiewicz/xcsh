@@ -96,18 +96,8 @@ jobs:
           echo "Pulling model deepseek-r1:1.5b..."
           ollama pull "deepseek-r1:1.5b"
 
-      - name: Generate LLM Descriptions
-        run: |
-          go run scripts/generate-llm-descriptions.go \
-            -specs docs/specifications/api \
-            -output pkg/types/descriptions_generated.json \
-            -model "deepseek-r1:1.5b" \
-            -ollama-url http://localhost:11434 \
-            -v
-
-      - name: Regenerate Schemas with LLM Descriptions
-        run: |
-          go run scripts/generate-schemas.go -v -update-resources -use-llm-descriptions
+      - name: Generate Schemas with LLM Descriptions
+        run: make generate-schemas-with-llm
 
       - name: Verify Build
         run: |
