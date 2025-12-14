@@ -47,6 +47,15 @@ var criticalResources = []string{
 	"gcp_vpc_site",
 }
 
+// metadataOnlyResources are resources that intentionally have empty CreateSpecType schemas
+// These resources only require metadata (name, namespace, labels) for creation - no additional spec fields
+// The empty schema is expected behavior from the upstream F5 XC API, not a bug
+var metadataOnlyResources = []string{
+	"token",       // Site admission tokens - creation generates a token, no config needed
+	"role",        // RBAC roles - standard CRUD uses empty spec (custom endpoint has fields)
+	"tpm_manager", // TPM management - creation only needs metadata
+}
+
 // exclusiveWithRegex matches "Exclusive with [field1 field2 ...]" in descriptions
 var exclusiveWithRegex = regexp.MustCompile(`[Ee]xclusive with \[([^\]]+)\]`)
 
@@ -183,6 +192,16 @@ func isCriticalResource(name string) bool {
 	return false
 }
 
+// isMetadataOnlyResource returns true if the resource is known to have an intentionally empty schema
+func isMetadataOnlyResource(name string) bool {
+	for _, r := range metadataOnlyResources {
+		if r == name {
+			return true
+		}
+	}
+	return false
+}
+
 // printMissingReport prints a detailed report of missing specs
 func printMissingReport(missing, critical []string) {
 	fmt.Println("\n=== Schema Generation Report ===")
@@ -214,9 +233,11 @@ func validateGeneratedSchemas(schemas map[string]types.ResourceSchemaInfo) {
 	var issues []string
 
 	for name, schema := range schemas {
-		// Check for empty schemas
+		// Check for empty schemas (skip known metadata-only resources)
 		if len(schema.Fields) == 0 && len(schema.OneOfGroups) == 0 {
-			issues = append(issues, fmt.Sprintf("%s: empty schema (no fields or oneOf groups)", name))
+			if !isMetadataOnlyResource(name) {
+				issues = append(issues, fmt.Sprintf("%s: empty schema (no fields or oneOf groups)", name))
+			}
 		}
 
 		// Check for missing descriptions on critical resources
