@@ -85,13 +85,8 @@ jobs:
           go-version: "1.24"
           cache: true
 
-      - name: Build local packages
-        run: |
-          go mod tidy
-          go build ./pkg/...
-
       - name: Regenerate schemas
-        run: go run scripts/generate-schemas.go -v
+        run: make generate-schemas
 
       - name: Check for uncommitted changes
         run: |
