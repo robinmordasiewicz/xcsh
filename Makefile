@@ -32,7 +32,8 @@ PLATFORMS=linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64
         release-dry release-snapshot verify check watch \
         build-linux-amd64 build-linux-arm64 build-darwin-amd64 build-darwin-arm64 build-windows-amd64 \
         docs docs-nav docs-clean docs-serve docs-check generate-examples \
-        generate-schemas validate-schemas report-schemas generate-schemas-strict
+        generate-schemas validate-schemas report-schemas generate-schemas-strict \
+        generate-llm-descriptions generate-schemas-with-llm
 
 # Default target
 all: build
@@ -290,6 +291,25 @@ generate-schemas-strict:
 	@echo "Generating schemas (strict mode)..."
 	@go run scripts/generate-schemas.go -v -strict
 
+# Generate LLM descriptions (requires Ollama running locally with deepseek model)
+generate-llm-descriptions:
+	@echo "Generating LLM-enhanced descriptions..."
+	@if ! curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then \
+		echo "Error: Ollama not running. Start with: ollama serve"; \
+		echo "Then pull the model: ollama pull deepseek-r1:1.5b"; \
+		exit 1; \
+	fi
+	@go run scripts/generate-llm-descriptions.go \
+		-specs docs/specifications/api \
+		-output pkg/types/descriptions_generated.json \
+		-v
+	@echo "Descriptions written to pkg/types/descriptions_generated.json"
+
+# Regenerate schemas using LLM descriptions
+generate-schemas-with-llm: generate-llm-descriptions
+	@go run scripts/generate-schemas.go -v -update-resources -use-llm-descriptions
+	@echo "Schemas regenerated with LLM descriptions"
+
 # Show version info
 version:
 	@echo "Version: $(VERSION)"
@@ -339,6 +359,8 @@ help:
 	@echo "  make validate-schemas  - Validate schemas without regenerating"
 	@echo "  make report-schemas    - Report missing specs and coverage"
 	@echo "  make generate-schemas-strict - Generate schemas, fail on missing critical"
+	@echo "  make generate-llm-descriptions - Generate LLM descriptions (requires Ollama)"
+	@echo "  make generate-schemas-with-llm - Regenerate schemas with LLM descriptions"
 	@echo ""
 	@echo "Development Commands:"
 	@echo "  make watch          - Rebuild on file changes"

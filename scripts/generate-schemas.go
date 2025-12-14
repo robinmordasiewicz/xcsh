@@ -19,15 +19,20 @@ import (
 )
 
 var (
-	outputFile      = flag.String("output", "pkg/types/schemas_generated.go", "Output file path")
-	resourcesFile   = flag.String("resources-output", "pkg/types/resources_generated.go", "Resources output file path")
-	specsDir        = flag.String("specs", "docs/specifications/api", "Directory containing OpenAPI specs")
-	verbose         = flag.Bool("v", false, "Verbose output")
-	strict          = flag.Bool("strict", false, "Fail on critical resource missing specs")
-	validateOnly    = flag.Bool("validate", false, "Validate only, don't write output")
-	reportMissing   = flag.Bool("report", false, "Report all missing specs and exit")
-	updateResources = flag.Bool("update-resources", false, "Also regenerate resources_generated.go with full descriptions")
+	outputFile          = flag.String("output", "pkg/types/schemas_generated.go", "Output file path")
+	resourcesFile       = flag.String("resources-output", "pkg/types/resources_generated.go", "Resources output file path")
+	specsDir            = flag.String("specs", "docs/specifications/api", "Directory containing OpenAPI specs")
+	verbose             = flag.Bool("v", false, "Verbose output")
+	strict              = flag.Bool("strict", false, "Fail on critical resource missing specs")
+	validateOnly        = flag.Bool("validate", false, "Validate only, don't write output")
+	reportMissing       = flag.Bool("report", false, "Report all missing specs and exit")
+	updateResources     = flag.Bool("update-resources", false, "Also regenerate resources_generated.go with full descriptions")
+	useLLMDescriptions  = flag.Bool("use-llm-descriptions", false, "Use LLM-generated descriptions from JSON file")
+	llmDescriptionsFile = flag.String("llm-descriptions-file", "pkg/types/descriptions_generated.json", "Path to LLM descriptions JSON")
 )
+
+// llmDescriptions holds pre-generated LLM descriptions loaded from JSON
+var llmDescriptions map[string]string
 
 // criticalResources are resources that MUST have schemas generated
 // These are core F5 XC resources that AI assistants commonly work with
@@ -114,8 +119,41 @@ func isImmutableField(fieldName string) (bool, string) {
 	return false, ""
 }
 
+// loadLLMDescriptions loads pre-generated LLM descriptions from a JSON file
+func loadLLMDescriptions() error {
+	if !*useLLMDescriptions {
+		return nil
+	}
+
+	data, err := os.ReadFile(*llmDescriptionsFile)
+	if err != nil {
+		return fmt.Errorf("failed to read LLM descriptions file %s: %w", *llmDescriptionsFile, err)
+	}
+
+	var output struct {
+		Generated    string            `json:"generated"`
+		Descriptions map[string]string `json:"descriptions"`
+	}
+	if err := json.Unmarshal(data, &output); err != nil {
+		return fmt.Errorf("failed to parse LLM descriptions JSON: %w", err)
+	}
+
+	llmDescriptions = output.Descriptions
+	if *verbose {
+		fmt.Printf("Loaded %d LLM-generated descriptions from %s (generated: %s)\n",
+			len(llmDescriptions), *llmDescriptionsFile, output.Generated)
+	}
+	return nil
+}
+
 func main() {
 	flag.Parse()
+
+	// Load LLM descriptions if enabled
+	if err := loadLLMDescriptions(); err != nil {
+		fmt.Fprintf(os.Stderr, "Warning: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Continuing with original descriptions...\n")
+	}
 
 	if *verbose {
 		fmt.Println("Loading OpenAPI specifications...")
@@ -321,7 +359,14 @@ func validateGeneratedSchemas(schemas map[string]types.ResourceSchemaInfo) {
 
 // getResourceDescription returns the best available description for a resource.
 // Prefers the OpenAPI info.description (file-level) over schema.description.
-func getResourceDescription(spec *openapi.Spec, schema *openapi.Schema) string {
+func getResourceDescription(resourceName string, spec *openapi.Spec, schema *openapi.Schema) string {
+	// Use LLM description if available (pre-generated with grammar corrections)
+	if llmDescriptions != nil {
+		if desc, ok := llmDescriptions[resourceName]; ok && desc != "" {
+			return desc
+		}
+	}
+
 	// Prefer info-level description (richer content)
 	if spec.Info.Description != "" {
 		return spec.Info.Description
@@ -347,7 +392,7 @@ func extractSchemaInfo(resourceName string, spec *openapi.Spec) *types.ResourceS
 
 	info := &types.ResourceSchemaInfo{
 		ResourceName:   resourceName,
-		Description:    getResourceDescription(spec, schema),
+		Description:    getResourceDescription(resourceName, spec, schema),
 		Fields:         make(map[string]types.FieldInfo),
 		OneOfGroups:    []types.OneOfGroup{},
 		RequiredFields: schema.Required,
@@ -716,6 +761,14 @@ func init() {
 func buildDescriptionMap(mapper *openapi.SpecMapper, resources []*types.ResourceType) map[string]string {
 	descriptions := make(map[string]string)
 	for _, rt := range resources {
+		// Use LLM description if available (pre-generated with grammar corrections)
+		if llmDescriptions != nil {
+			if desc, ok := llmDescriptions[rt.Name]; ok && desc != "" {
+				descriptions[rt.Name] = desc
+				continue
+			}
+		}
+		// Fall back to OpenAPI spec description
 		spec := mapper.FindSpec(rt.Name)
 		if spec != nil && spec.Info.Description != "" {
 			descriptions[rt.Name] = spec.Info.Description
