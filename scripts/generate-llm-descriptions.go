@@ -22,17 +22,19 @@ import (
 )
 
 var (
-	specsDir       = flag.String("specs", "docs/specifications/api", "OpenAPI specs directory")
-	ollamaURL      = flag.String("ollama-url", "http://localhost:11434", "Ollama API URL")
-	model          = flag.String("model", "deepseek-r1:1.5b", "LLM model to use")
-	outputFile     = flag.String("output", "pkg/types/descriptions_generated.json", "Output JSON file")
-	timeout        = flag.Duration("timeout", 120*time.Second, "Per-request timeout")
-	verbose        = flag.Bool("v", false, "Verbose output")
-	dryRun         = flag.Bool("dry-run", false, "Print what would be done without calling LLM")
-	workers        = flag.Int("workers", 8, "Number of parallel workers (default: 8)")
-	maxRetries     = flag.Int("max-retries", 3, "Maximum retries per request on timeout")
-	failThreshold  = flag.Float64("fail-threshold", 0.2, "Fail if error rate exceeds this (0.0-1.0)")
-	ciMode         = flag.Bool("ci", false, "CI mode: use GitHub Actions annotations for errors")
+	specsDir        = flag.String("specs", "docs/specifications/api", "OpenAPI specs directory")
+	ollamaURL       = flag.String("ollama-url", "http://localhost:11434", "Ollama API URL")
+	model           = flag.String("model", "deepseek-r1:1.5b", "LLM model to use")
+	outputFile      = flag.String("output", "pkg/types/descriptions_generated.json", "Output JSON file")
+	timeout         = flag.Duration("timeout", 120*time.Second, "Per-request timeout")
+	verbose         = flag.Bool("v", false, "Verbose output")
+	dryRun          = flag.Bool("dry-run", false, "Print what would be done without calling LLM")
+	workers         = flag.Int("workers", 8, "Number of parallel workers (default: 8)")
+	maxRetries      = flag.Int("max-retries", 3, "Maximum retries per request on timeout")
+	failThreshold   = flag.Float64("fail-threshold", 0.2, "Fail if error rate exceeds this (0.0-1.0)")
+	ciMode          = flag.Bool("ci", false, "CI mode: use GitHub Actions annotations and fail-fast on errors")
+	failFast        = flag.Bool("fail-fast", false, "Exit immediately on first error (auto-enabled in CI mode)")
+	maxConsecErrors = flag.Int("max-consec-errors", 3, "Max consecutive errors before aborting (0=disabled)")
 )
 
 // DescriptionOutput is the JSON output format
@@ -149,12 +151,17 @@ func main() {
 
 	fmt.Printf("Found %d OpenAPI specs, %d are resources to process\n", len(specs), len(jobs))
 
+	// Enable fail-fast in CI mode by default
+	effectiveFailFast := *failFast || *ciMode
+
 	// Process specs with worker pool
 	var (
-		processed int32
-		errorsMu  sync.Mutex
-		descMu    sync.Mutex
-		wg        sync.WaitGroup
+		processed       int32
+		consecutiveErrs int32
+		aborted         int32
+		errorsMu        sync.Mutex
+		descMu          sync.Mutex
+		wg              sync.WaitGroup
 	)
 
 	// Create job channel
@@ -169,6 +176,11 @@ func main() {
 		go func(workerID int) {
 			defer wg.Done()
 			for job := range jobChan {
+				// Check if we should abort
+				if atomic.LoadInt32(&aborted) == 1 {
+					return
+				}
+
 				if *verbose {
 					fmt.Printf("[Worker %d] Processing %s...\n", workerID, job.resourceName)
 				}
@@ -186,6 +198,10 @@ func main() {
 	// Send jobs to workers
 	go func() {
 		for _, job := range jobs {
+			// Check if we should abort before sending more jobs
+			if atomic.LoadInt32(&aborted) == 1 {
+				break
+			}
 			jobChan <- job
 		}
 		close(jobChan)
@@ -197,16 +213,52 @@ func main() {
 		close(resultChan)
 	}()
 
-	// Collect results
+	// Collect results with fail-fast support
 	for result := range resultChan {
 		if result.err != nil {
-			// Always log errors (not just in verbose mode)
-			fmt.Fprintf(os.Stderr, "  Error [%s]: %v\n", result.resourceName, result.err)
+			// Always log errors with full context for troubleshooting
+			logError("[%s]: %v", result.resourceName, result.err)
 			errorsMu.Lock()
 			output.Errors = append(output.Errors, fmt.Sprintf("%s: %v", result.resourceName, result.err))
+			currentErrors := len(output.Errors)
 			errorsMu.Unlock()
+
+			// Track consecutive errors
+			atomic.AddInt32(&consecutiveErrs, 1)
+
+			// Fail fast: exit immediately on first error
+			if effectiveFailFast {
+				logError("Aborting due to fail-fast mode (first error encountered)")
+				logError("Resource '%s' failed after %d retries", result.resourceName, *maxRetries)
+				logError("Check Ollama server status: curl %s/api/tags", *ollamaURL)
+				atomic.StoreInt32(&aborted, 1)
+				// Drain remaining results
+				go func() {
+					for range resultChan {
+					}
+				}()
+				os.Exit(1)
+			}
+
+			// Check consecutive error threshold
+			if *maxConsecErrors > 0 && atomic.LoadInt32(&consecutiveErrs) >= int32(*maxConsecErrors) {
+				logError("Aborting: %d consecutive errors exceeded threshold", *maxConsecErrors)
+				logError("Total errors so far: %d", currentErrors)
+				logError("This usually indicates Ollama is not responding correctly")
+				logError("Check: curl -X POST %s/api/generate -d '{\"model\":\"%s\",\"prompt\":\"test\"}'", *ollamaURL, *model)
+				atomic.StoreInt32(&aborted, 1)
+				// Drain remaining results
+				go func() {
+					for range resultChan {
+					}
+				}()
+				os.Exit(1)
+			}
 			continue
 		}
+
+		// Reset consecutive error counter on success
+		atomic.StoreInt32(&consecutiveErrs, 0)
 
 		if result.description != "" {
 			descMu.Lock()
