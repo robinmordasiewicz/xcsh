@@ -149,14 +149,15 @@ jobs:
         if: steps.cache-descriptions.outputs.cache-hit != 'true'
         run: |
           echo "Cache miss - generating LLM descriptions..."
-          # Run with CI mode for GitHub Actions annotations and longer timeout
+          # Run with CI mode for GitHub Actions annotations
+          # Using 1 worker to diagnose concurrency issues with Ollama
           go run scripts/generate-llm-descriptions.go \
             -ci \
             -v \
-            -timeout 180s \
-            -max-retries 3 \
+            -timeout 300s \
+            -max-retries 5 \
             -fail-threshold 0.2 \
-            -workers 4 \
+            -workers 1 \
             -specs docs/specifications/api \
             -output pkg/types/descriptions_generated.json
 

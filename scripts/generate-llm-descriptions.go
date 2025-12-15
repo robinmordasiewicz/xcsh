@@ -641,17 +641,19 @@ func checkModelAvailable(model string) bool {
 }
 
 // warmupModel sends a simple request to ensure the model is loaded into memory
+// and validates that it actually produces output
 func warmupModel() error {
 	fmt.Println("Warming up model (loading into memory)...")
 	start := time.Now()
 
+	// Use a simple prompt that should always produce output
 	reqBody := OllamaRequest{
 		Model:  *model,
-		Prompt: "Say 'ready' in one word.",
+		Prompt: "Respond with exactly one word: ready",
 		Stream: false,
 		Options: map[string]interface{}{
 			"temperature": 0.0,
-			"num_predict": 10,
+			"num_predict": 50, // Allow enough tokens for thinking models
 		},
 	}
 
@@ -668,18 +670,35 @@ func warmupModel() error {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != 200 {
-		body, _ := io.ReadAll(resp.Body)
-		return fmt.Errorf("warmup returned %d: %s", resp.StatusCode, string(body))
-	}
-
-	// Read and discard response
-	_, err = io.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return fmt.Errorf("failed to read warmup response: %w", err)
 	}
 
-	fmt.Printf("✅ Model warmed up in %v\n", time.Since(start).Round(time.Second))
+	if resp.StatusCode != 200 {
+		return fmt.Errorf("warmup returned %d: %s", resp.StatusCode, string(body))
+	}
+
+	// Parse response to validate model is actually generating output
+	var result OllamaResponse
+	if err := json.Unmarshal(body, &result); err != nil {
+		return fmt.Errorf("failed to parse warmup response: %w (body: %s)", err, string(body))
+	}
+
+	if result.Response == "" {
+		return fmt.Errorf("warmup returned empty response - model may not be working correctly (body: %s)", string(body))
+	}
+
+	duration := time.Since(start).Round(time.Second)
+	responseLen := len(result.Response)
+	responsePreview := result.Response
+	if len(responsePreview) > 100 {
+		responsePreview = responsePreview[:100] + "..."
+	}
+	fmt.Printf("✅ Model warmed up in %v (response: %d chars)\n", duration, responseLen)
+	if *verbose {
+		fmt.Printf("   Warmup response: %s\n", strings.ReplaceAll(responsePreview, "\n", "\\n"))
+	}
 	return nil
 }
 
