@@ -1048,6 +1048,9 @@ jobs:
 
       - name: Cache generated docs for future builds
         if: needs.generate.result == 'success'
+        # continue-on-error: cache save can fail if another concurrent workflow already saved this key
+        # This is expected when multiple workflows complete simultaneously (race condition)
+        continue-on-error: true
         uses: actions/cache/save@v4
         with:
           path: docs/commands/
