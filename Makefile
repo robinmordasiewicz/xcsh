@@ -34,9 +34,10 @@ LLM_WORKERS?=8
 .PHONY: all build build-all test test-unit test-int clean lint fmt install help \
         release-dry release-snapshot verify check watch \
         build-linux-amd64 build-linux-arm64 build-darwin-amd64 build-darwin-arm64 build-windows-amd64 \
-        docs docs-nav docs-clean docs-serve docs-check generate-examples \
+        docs docs-all docs-nav docs-clean docs-serve docs-check docs-build generate-examples \
         generate-schemas validate-schemas report-schemas generate-schemas-strict \
-        generate-llm-descriptions generate-schemas-with-llm maybe-llm-descriptions
+        generate-llm-descriptions generate-schemas-with-llm maybe-llm-descriptions \
+        ci pre-commit pre-push verify-schemas-ci
 
 # Default target
 all: build
@@ -347,6 +348,103 @@ maybe-llm-descriptions:
 		-v
 	@go run scripts/generate-schemas.go -v -update-resources -use-llm-descriptions
 
+# =============================================================================
+# CI/CD Consistency Targets
+# These targets mirror the GitHub Actions CI pipeline for local development
+# =============================================================================
+
+# Run the full CI pipeline locally (mirrors ci.yml workflow)
+# This is what GitHub Actions runs on every push/PR
+ci: lint test-unit verify-schemas-ci build release-dry
+	@echo ""
+	@echo "✅ CI pipeline completed successfully!"
+	@echo "   This mirrors the GitHub Actions CI workflow."
+
+# Verify schemas match CI expectations (mirrors verify-schemas job in ci.yml)
+verify-schemas-ci:
+	@echo "Verifying schemas (CI mode)..."
+	@cp pkg/types/schemas_generated.go /tmp/schemas_before.go
+	@$(MAKE) generate-schemas 2>/dev/null
+	@if ! diff -q pkg/types/schemas_generated.go /tmp/schemas_before.go > /dev/null 2>&1; then \
+		echo "::error::Schema file is out of sync with OpenAPI specs!"; \
+		echo "Run 'make generate-schemas' locally and commit the changes."; \
+		diff pkg/types/schemas_generated.go /tmp/schemas_before.go || true; \
+		mv /tmp/schemas_before.go pkg/types/schemas_generated.go; \
+		exit 1; \
+	fi
+	@rm /tmp/schemas_before.go
+	@echo "✅ Schemas are up to date and idempotent"
+
+# Pre-commit hook: fast checks before committing
+# Run this before every commit to catch issues early
+pre-commit: fmt lint test-unit
+	@echo ""
+	@echo "✅ Pre-commit checks passed!"
+
+# Pre-push hook: comprehensive checks before pushing
+# Run this before pushing to ensure CI will pass
+pre-push: ci docs-all
+	@echo ""
+	@echo "✅ Pre-push checks passed!"
+	@echo "   Your changes are ready to push."
+
+# =============================================================================
+# Documentation Generation (mirrors docs.yml workflow)
+# =============================================================================
+
+# Generate ALL documentation (mirrors docs.yml generate job)
+docs-all: build
+	@echo "Generating all documentation..."
+	@echo ""
+	@echo "Step 1/4: Command documentation..."
+	@$(PYTHON) scripts/generate-docs.py \
+		--f5xcctl ./$(BINARY_NAME) \
+		--output $(DOCS_OUTPUT) \
+		--templates $(DOCS_TEMPLATES) \
+		--clean \
+		--update-mkdocs
+	@echo ""
+	@echo "Step 2/4: CloudStatus documentation..."
+	@$(PYTHON) scripts/generate-cloudstatus-docs.py \
+		--f5xcctl ./$(BINARY_NAME) \
+		--output docs/commands/cloudstatus \
+		--clean
+	@echo ""
+	@echo "Step 3/4: Homebrew documentation..."
+	@VERSION_OUTPUT=$$(./$(BINARY_NAME) version); \
+	VERSION=$$(echo "$$VERSION_OUTPUT" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo "dev"); \
+	COMMIT=$$(echo "$$VERSION_OUTPUT" | grep 'commit:' | awk '{print $$2}' || echo "local"); \
+	BUILT=$$(echo "$$VERSION_OUTPUT" | grep 'built:' | awk '{print $$2}' || echo "now"); \
+	GO_VER=$$(echo "$$VERSION_OUTPUT" | grep 'go:' | awk '{print $$2}' || echo ""); \
+	PLATFORM=$$(echo "$$VERSION_OUTPUT" | grep 'platform:' | awk '{print $$2}' || echo ""); \
+	$(PYTHON) scripts/generate-homebrew-docs.py \
+		--version "$$VERSION" \
+		--commit "$$COMMIT" \
+		--built "$$BUILT" \
+		--go-version "$$GO_VER" \
+		--platform "$$PLATFORM" \
+		--output docs/install/homebrew.md
+	@echo ""
+	@echo "Step 4/4: Source build documentation..."
+	@$(PYTHON) scripts/generate-source-docs.py \
+		--go-version "$$(go version | grep -oE 'go[0-9]+\.[0-9]+\.[0-9]+')" \
+		--output docs/install/source.md
+	@echo ""
+	@echo "✅ All documentation generated!"
+	@echo "   Command docs: $(DOCS_OUTPUT)"
+	@echo "   Files: $$(find $(DOCS_OUTPUT) -name '*.md' | wc -l) markdown files"
+
+# Build the MkDocs documentation site (mirrors docs.yml build job)
+docs-build: docs-all
+	@echo "Building MkDocs site..."
+	@if command -v mkdocs > /dev/null; then \
+		mkdocs build --strict; \
+		echo "✅ Site built successfully in site/"; \
+	else \
+		echo "mkdocs not installed. Install with: pip install -r requirements-docs.txt"; \
+		exit 1; \
+	fi
+
 # Show version info
 version:
 	@echo "Version: $(VERSION)"
@@ -360,37 +458,45 @@ version:
 help:
 	@echo "f5xcctl CLI Makefile"
 	@echo ""
-	@echo "Build Commands:"
+	@echo "=== CI/CD Consistency Targets (RECOMMENDED) ==="
+	@echo "  make ci             - Run full CI pipeline locally (mirrors GitHub Actions)"
+	@echo "  make pre-commit     - Fast checks before committing (fmt, lint, test)"
+	@echo "  make pre-push       - Comprehensive checks before pushing (ci + docs)"
+	@echo ""
+	@echo "=== Build Commands ==="
 	@echo "  make build          - Build binary for current platform"
 	@echo "  make build-all      - Build binaries for all platforms (linux/darwin/windows)"
 	@echo "  make install        - Install binary to GOPATH/bin"
 	@echo "  make clean          - Clean build artifacts"
 	@echo ""
-	@echo "Test Commands:"
+	@echo "=== Test Commands ==="
 	@echo "  make test           - Run all tests"
 	@echo "  make test-unit      - Run unit tests only"
 	@echo "  make test-int       - Run integration tests (requires env vars)"
 	@echo "  make test-coverage  - Run tests with coverage report"
 	@echo ""
-	@echo "Quality Commands:"
+	@echo "=== Quality Commands ==="
 	@echo "  make fmt            - Format code"
 	@echo "  make lint           - Run linter"
 	@echo "  make verify         - Verify code compiles"
 	@echo "  make check          - Run all checks (fmt, vet, test)"
+	@echo "  make verify-schemas-ci - Verify schemas match CI expectations"
 	@echo ""
-	@echo "Release Commands:"
+	@echo "=== Release Commands ==="
 	@echo "  make release-dry    - Test GoReleaser without publishing"
 	@echo "  make release-snapshot - Build snapshot release"
 	@echo "  make version        - Show version info"
 	@echo ""
-	@echo "Documentation Commands:"
-	@echo "  make docs           - Generate documentation from CLI spec"
+	@echo "=== Documentation Commands ==="
+	@echo "  make docs           - Generate command documentation only"
+	@echo "  make docs-all       - Generate ALL documentation (mirrors CI)"
+	@echo "  make docs-build     - Generate docs and build MkDocs site"
 	@echo "  make docs-nav       - Update mkdocs.yml navigation only"
 	@echo "  make docs-clean     - Clean generated documentation"
 	@echo "  make docs-serve     - Generate docs and serve locally"
 	@echo "  make docs-check     - Show current spec hash"
 	@echo ""
-	@echo "Code Generation Commands:"
+	@echo "=== Code Generation Commands ==="
 	@echo "  make generate-examples - Generate CLI examples from OpenAPI specs"
 	@echo "  make generate-schemas  - Generate resource schemas from OpenAPI specs"
 	@echo "  make validate-schemas  - Validate schemas without regenerating"
@@ -400,15 +506,28 @@ help:
 	@echo "  make generate-schemas-with-llm - Regenerate schemas with LLM descriptions"
 	@echo "  make maybe-llm-descriptions    - Auto-detect Ollama and regenerate if available"
 	@echo ""
-	@echo "Development Commands:"
+	@echo "=== Development Workflow ==="
 	@echo "  make watch          - Rebuild on file changes"
 	@echo ""
-	@echo "Environment Variables (for integration tests):"
-	@echo "  F5XC_API_URL        - API URL"
+	@echo "=== Recommended Workflow ==="
+	@echo "  Before committing:  make pre-commit"
+	@echo "  Before pushing:     make pre-push"
+	@echo "  Full CI locally:    make ci"
+	@echo ""
+	@echo "=== Environment Variables ==="
+	@echo "  F5XC_API_URL        - API URL (for integration tests)"
 	@echo "  F5XC_API_P12_FILE   - Path to P12 certificate bundle"
 	@echo "  F5XC_P12_PASSWORD   - Password for P12 bundle"
+	@echo "  LLM_WORKERS         - Number of parallel LLM workers (default: 8)"
 	@echo ""
-	@echo "Creating a Release:"
-	@echo "  1. Update version: git tag v1.0.0"
-	@echo "  2. Push tag: git push origin v1.0.0"
-	@echo "  3. GitHub Actions will automatically build and publish"
+	@echo "=== Creating a Release ==="
+	@echo "  Releases are fully automated via GitHub Actions:"
+	@echo "  1. Commit changes to main branch"
+	@echo "  2. Push to origin (git push)"
+	@echo "  3. GitHub Actions automatically:"
+	@echo "     - Runs CI tests"
+	@echo "     - Creates semantic version tag"
+	@echo "     - Generates LLM descriptions (if needed)"
+	@echo "     - Builds and signs binaries"
+	@echo "     - Updates Homebrew tap"
+	@echo "     - Generates and deploys documentation"

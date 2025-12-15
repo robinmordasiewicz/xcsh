@@ -64,7 +64,7 @@ var rootCmd = &cobra.Command{
 			"__complete":       true, // Cobra's shell completion handler
 			"__completeNoDesc": true, // Cobra's shell completion handler (no descriptions)
 			"help":             true,
-			"f5xcctl":           true, // Root command itself
+			"f5xcctl":          true, // Root command itself
 		}
 		if skipCommands[cmd.Name()] {
 			return nil
