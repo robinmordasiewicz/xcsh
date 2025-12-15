@@ -16,6 +16,8 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"sync"
+	"sync/atomic"
 	"time"
 )
 
@@ -27,12 +29,14 @@ var (
 	timeout    = flag.Duration("timeout", 60*time.Second, "Per-request timeout")
 	verbose    = flag.Bool("v", false, "Verbose output")
 	dryRun     = flag.Bool("dry-run", false, "Print what would be done without calling LLM")
+	workers    = flag.Int("workers", 8, "Number of parallel workers (default: 8)")
 )
 
 // DescriptionOutput is the JSON output format
 type DescriptionOutput struct {
 	Generated    string            `json:"generated"`
 	Model        string            `json:"model"`
+	Workers      int               `json:"workers"`
 	Descriptions map[string]string `json:"descriptions"`
 	Errors       []string          `json:"errors,omitempty"`
 }
@@ -62,12 +66,35 @@ type RawInfo struct {
 	Description string `json:"description"`
 }
 
+// specJob represents a work item for the worker pool
+type specJob struct {
+	path         string
+	resourceName string
+}
+
+// specResult represents the result of processing a spec
+type specResult struct {
+	resourceName string
+	description  string
+	err          error
+}
+
 func main() {
 	flag.Parse()
+
+	// Validate workers
+	if *workers < 1 {
+		*workers = 1
+	}
+	if *workers > 32 {
+		fmt.Fprintf(os.Stderr, "Warning: %d workers is very high, capping at 32\n", *workers)
+		*workers = 32
+	}
 
 	output := DescriptionOutput{
 		Generated:    time.Now().UTC().Format(time.RFC3339),
 		Model:        *model,
+		Workers:      *workers,
 		Descriptions: make(map[string]string),
 	}
 
@@ -84,7 +111,7 @@ func main() {
 			fmt.Fprintf(os.Stderr, "Install with: ollama pull %s\n", *model)
 			os.Exit(1)
 		}
-		fmt.Printf("Using Ollama at %s with model %s\n", *ollamaURL, *model)
+		fmt.Printf("Using Ollama at %s with model %s (%d workers)\n", *ollamaURL, *model, *workers)
 	}
 
 	// Find all OpenAPI specs
@@ -95,44 +122,93 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("Found %d OpenAPI specs\n", len(specs))
-
-	// Process each spec
-	processed := 0
+	// Filter to valid resource specs
+	var jobs []specJob
 	for _, specPath := range specs {
 		resourceName := extractResourceName(specPath)
 		if resourceName == "" {
 			continue
 		}
-
-		// Skip non-resource specs (e.g., common types)
 		if !isResourceSpec(specPath) {
 			continue
 		}
+		jobs = append(jobs, specJob{path: specPath, resourceName: resourceName})
+	}
 
-		if *verbose {
-			fmt.Printf("Processing %s...\n", resourceName)
-		}
+	fmt.Printf("Found %d OpenAPI specs, %d are resources to process\n", len(specs), len(jobs))
 
-		desc, err := processSpec(specPath, resourceName)
-		if err != nil {
-			if *verbose {
-				fmt.Printf("  Error: %v\n", err)
+	// Process specs with worker pool
+	var (
+		processed int32
+		errorsMu  sync.Mutex
+		descMu    sync.Mutex
+		wg        sync.WaitGroup
+	)
+
+	// Create job channel
+	jobChan := make(chan specJob, len(jobs))
+
+	// Create result channel
+	resultChan := make(chan specResult, len(jobs))
+
+	// Start workers
+	for w := 0; w < *workers; w++ {
+		wg.Add(1)
+		go func(workerID int) {
+			defer wg.Done()
+			for job := range jobChan {
+				if *verbose {
+					fmt.Printf("[Worker %d] Processing %s...\n", workerID, job.resourceName)
+				}
+
+				desc, err := processSpec(job.path, job.resourceName)
+				resultChan <- specResult{
+					resourceName: job.resourceName,
+					description:  desc,
+					err:          err,
+				}
 			}
-			output.Errors = append(output.Errors, fmt.Sprintf("%s: %v", resourceName, err))
+		}(w)
+	}
+
+	// Send jobs to workers
+	go func() {
+		for _, job := range jobs {
+			jobChan <- job
+		}
+		close(jobChan)
+	}()
+
+	// Wait for workers and close result channel
+	go func() {
+		wg.Wait()
+		close(resultChan)
+	}()
+
+	// Collect results
+	for result := range resultChan {
+		if result.err != nil {
+			if *verbose {
+				fmt.Printf("  Error [%s]: %v\n", result.resourceName, result.err)
+			}
+			errorsMu.Lock()
+			output.Errors = append(output.Errors, fmt.Sprintf("%s: %v", result.resourceName, result.err))
+			errorsMu.Unlock()
 			continue
 		}
 
-		if desc != "" {
-			output.Descriptions[resourceName] = desc
-			processed++
+		if result.description != "" {
+			descMu.Lock()
+			output.Descriptions[result.resourceName] = result.description
+			descMu.Unlock()
+			atomic.AddInt32(&processed, 1)
 			if *verbose {
-				fmt.Printf("  OK: %s\n", truncate(desc, 60))
+				fmt.Printf("  OK [%s]: %s\n", result.resourceName, truncate(result.description, 60))
 			}
 		}
 	}
 
-	fmt.Printf("\nProcessed %d resources, %d errors\n", processed, len(output.Errors))
+	fmt.Printf("\nProcessed %d resources, %d errors (using %d workers)\n", processed, len(output.Errors), *workers)
 
 	// Write JSON output
 	jsonData, err := json.MarshalIndent(output, "", "  ")

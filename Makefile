@@ -28,6 +28,9 @@ DIST_DIR=dist
 # Platforms for cross-compilation
 PLATFORMS=linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64
 
+# LLM description generation settings
+LLM_WORKERS?=8
+
 .PHONY: all build build-all test test-unit test-int clean lint fmt install help \
         release-dry release-snapshot verify check watch \
         build-linux-amd64 build-linux-arm64 build-darwin-amd64 build-darwin-arm64 build-windows-amd64 \
@@ -293,8 +296,9 @@ generate-schemas-strict:
 
 # Generate LLM descriptions (requires Ollama running with deepseek model)
 # This target fails if Ollama is not available - use for explicit regeneration
+# Override workers with: make generate-llm-descriptions LLM_WORKERS=4
 generate-llm-descriptions:
-	@echo "Generating LLM-enhanced descriptions..."
+	@echo "Generating LLM-enhanced descriptions ($(LLM_WORKERS) workers)..."
 	@if ! curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then \
 		echo "Error: Ollama not running. Start with: ollama serve"; \
 		echo "Then pull the model: ollama pull deepseek-r1:1.5b"; \
@@ -303,6 +307,7 @@ generate-llm-descriptions:
 	@go run scripts/generate-llm-descriptions.go \
 		-specs docs/specifications/api \
 		-output pkg/types/descriptions_generated.json \
+		-workers $(LLM_WORKERS) \
 		-v
 	@echo "Descriptions written to pkg/types/descriptions_generated.json"
 
@@ -334,10 +339,11 @@ maybe-llm-descriptions:
 		echo ""; \
 		exit 1; \
 	fi
-	@echo "Ollama detected, regenerating LLM descriptions..."
+	@echo "Ollama detected, regenerating LLM descriptions ($(LLM_WORKERS) workers)..."
 	@go run scripts/generate-llm-descriptions.go \
 		-specs docs/specifications/api \
 		-output pkg/types/descriptions_generated.json \
+		-workers $(LLM_WORKERS) \
 		-v
 	@go run scripts/generate-schemas.go -v -update-resources -use-llm-descriptions
 
