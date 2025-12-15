@@ -150,13 +150,14 @@ jobs:
         run: |
           echo "Cache miss - generating LLM descriptions..."
           # Run with CI mode for GitHub Actions annotations
+          # Use 2 workers to avoid overwhelming Ollama on CI runners
           go run scripts/generate-llm-descriptions.go \
             -ci \
             -v \
-            -timeout 120s \
+            -timeout 180s \
             -max-retries 3 \
             -fail-threshold 0.2 \
-            -workers 4 \
+            -workers 2 \
             -model "mistral:7b-instruct" \
             -specs docs/specifications/api \
             -output pkg/types/descriptions_generated.json
