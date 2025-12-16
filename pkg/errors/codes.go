@@ -35,6 +35,14 @@ const (
 	// ExitRateLimitError indicates rate limiting was encountered
 	// Examples: too many requests (429)
 	ExitRateLimitError = 7
+
+	// ExitQuotaExceeded indicates a subscription quota would be exceeded
+	// Examples: too many load balancers, resource limit reached
+	ExitQuotaExceeded = 8
+
+	// ExitFeatureNotAvail indicates a required feature is not available
+	// Examples: addon service not subscribed, requires plan upgrade
+	ExitFeatureNotAvail = 9
 )
 
 // Error code strings for machine-readable error messages
@@ -64,6 +72,11 @@ const (
 	// Operation errors
 	ErrOperationFailed    = "ERR_OPERATION_FAILED"
 	ErrOperationCancelled = "ERR_OPERATION_CANCELLED"
+
+	// Subscription errors
+	ErrQuotaExceeded   = "ERR_QUOTA_EXCEEDED"
+	ErrFeatureNotAvail = "ERR_FEATURE_NOT_AVAILABLE"
+	ErrUpgradeRequired = "ERR_UPGRADE_REQUIRED"
 )
 
 // HTTPStatusToExitCode maps HTTP status codes to exit codes
@@ -131,6 +144,10 @@ func ExitCodeDescription(code int) string {
 		return "Resource conflict"
 	case ExitRateLimitError:
 		return "Rate limited"
+	case ExitQuotaExceeded:
+		return "Subscription quota exceeded"
+	case ExitFeatureNotAvail:
+		return "Feature not available in subscription"
 	default:
 		return "Unknown exit code"
 	}

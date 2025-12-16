@@ -247,10 +247,14 @@ func getAIHints() AIHintsSpec {
 			"Use f5xcctl configuration get <resource-type> -n <namespace> <name> to retrieve specific resources",
 			"Always specify --namespace or -n for namespace-scoped resources",
 			"Use --spec to get complete CLI structure before constructing commands",
-			"Check exit codes for programmatic error handling (0=success, 1=generic, 2=validation, 3=auth, 4=connection, 5=not-found, 6=conflict, 7=rate-limit)",
+			"Check exit codes for programmatic error handling (0=success, 1=generic, 2=validation, 3=auth, 4=connection, 5=not-found, 6=conflict, 7=rate-limit, 8=quota-exceeded, 9=feature-unavailable)",
 			"Use resource_schemas in --spec output to understand field constraints, validation rules, and mutual exclusivity",
 			"Follow oneof_groups in resource schemas to ensure only one choice per mutually exclusive group is configured",
 			"Use decision_tree in resource schemas to determine required fields based on configuration choices",
+			"Use 'f5xcctl subscription show' to identify tenant tier before deploying tier-specific features",
+			"Use 'f5xcctl subscription validate' before terraform apply to catch quota/feature issues early",
+			"Check addon service status with 'f5xcctl subscription addons' before using features like bot-defense",
+			"Monitor quota usage with 'f5xcctl subscription quota' to prevent deployment failures",
 		},
 	}
 }
@@ -399,6 +403,36 @@ func getExamples() []ExampleSpec {
 			Description: "Display f5xcctl version, commit, build date, and platform information",
 			Category:    "meta",
 		},
+		{
+			Task:        "Show subscription summary",
+			Command:     "f5xcctl subscription show --output-format json",
+			Description: "Display subscription tier, active addons, and quota summary for AI assistants",
+			Category:    "subscription",
+		},
+		{
+			Task:        "List active addon services",
+			Command:     "f5xcctl subscription addons --filter active",
+			Description: "List all actively subscribed addon services",
+			Category:    "subscription",
+		},
+		{
+			Task:        "Check quota usage",
+			Command:     "f5xcctl subscription quota -n <namespace>",
+			Description: "Display quota limits and current usage in a namespace",
+			Category:    "subscription",
+		},
+		{
+			Task:        "Validate resource creation",
+			Command:     "f5xcctl subscription validate --resource-type http_loadbalancer --count 5",
+			Description: "Check if 5 additional HTTP load balancers can be created within quota",
+			Category:    "subscription",
+		},
+		{
+			Task:        "Validate feature availability",
+			Command:     "f5xcctl subscription validate --feature bot-defense",
+			Description: "Verify if bot-defense addon service is subscribed and available",
+			Category:    "subscription",
+		},
 	}
 }
 
@@ -440,6 +474,29 @@ func getWorkflows() []WorkflowSpec {
 				{Step: 2, Description: "Edit configuration", Command: "# Edit current.yaml with desired changes"},
 				{Step: 3, Description: "Apply changes", Command: "f5xcctl configuration replace http_loadbalancer -n <namespace> -i current.yaml"},
 				{Step: 4, Description: "Verify update", Command: "f5xcctl configuration get http_loadbalancer -n <namespace> <name>"},
+			},
+		},
+		{
+			Name:        "pre-deployment-validation",
+			Description: "Validate subscription capabilities before Terraform deployment",
+			Steps: []WorkflowStep{
+				{Step: 1, Description: "Check subscription tier", Command: "f5xcctl subscription show --output-format json"},
+				{Step: 2, Description: "Verify addon services", Command: "f5xcctl subscription addons --filter active --output-format json"},
+				{Step: 3, Description: "Check quota availability", Command: "f5xcctl subscription quota -n <namespace> --output-format json"},
+				{Step: 4, Description: "Validate specific resources", Command: "f5xcctl subscription validate --resource-type http_loadbalancer --count <planned_count>"},
+				{Step: 5, Description: "Validate required features", Command: "f5xcctl subscription validate --feature <required_addon>", Optional: true},
+				{Step: 6, Description: "Proceed with deployment", Command: "terraform apply"},
+			},
+		},
+		{
+			Name:        "quota-troubleshooting",
+			Description: "Diagnose and resolve quota-related deployment failures",
+			Steps: []WorkflowStep{
+				{Step: 1, Description: "Check overall quota status", Command: "f5xcctl subscription quota -n <namespace>"},
+				{Step: 2, Description: "Identify exceeded quotas", Command: "f5xcctl subscription quota -n <namespace> --output-format json | jq '.objects[] | select(.status == \"EXCEEDED\")'"},
+				{Step: 3, Description: "List resources of exceeded type", Command: "f5xcctl configuration list <resource_type> -n <namespace>"},
+				{Step: 4, Description: "Clean up unused resources", Command: "f5xcctl configuration delete <resource_type> -n <namespace> <unused_name>"},
+				{Step: 5, Description: "Revalidate quota", Command: "f5xcctl subscription validate --resource-type <resource_type> --count 1"},
 			},
 		},
 	}
@@ -522,6 +579,8 @@ func getExitCodes() []ExitCodeSpec {
 		{Code: errors.ExitNotFoundError, Name: "ExitNotFoundError", Description: "Resource not found"},
 		{Code: errors.ExitConflictError, Name: "ExitConflictError", Description: "Resource conflict"},
 		{Code: errors.ExitRateLimitError, Name: "ExitRateLimitError", Description: "Rate limited"},
+		{Code: errors.ExitQuotaExceeded, Name: "ExitQuotaExceeded", Description: "Subscription quota exceeded"},
+		{Code: errors.ExitFeatureNotAvail, Name: "ExitFeatureNotAvail", Description: "Feature not available in subscription"},
 	}
 }
 
