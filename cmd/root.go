@@ -70,6 +70,17 @@ var rootCmd = &cobra.Command{
 			return nil
 		}
 
+		// Check if API URL is configured
+		if serverURL == "" {
+			return fmt.Errorf("F5 Distributed Cloud API URL is not configured.\n\n" +
+				"Please set the API URL using one of the following methods:\n" +
+				"  1. Environment variable: export F5XC_API_URL=\"https://tenant.console.ves.volterra.io\"\n" +
+				"  2. Command-line flag:    --server-url \"https://tenant.console.ves.volterra.io\"\n" +
+				"  3. Configuration file:   Add 'server_url' to ~/.f5xcconfig\n\n" +
+				"Replace 'tenant' with your actual F5 XC tenant name.\n" +
+				"For staging environment, use: https://tenant.staging.volterra.us")
+		}
+
 		// Initialize the API client
 		cfg := &client.Config{
 			ServerURL: serverURL,
@@ -82,12 +93,11 @@ var rootCmd = &cobra.Command{
 		}
 
 		// Handle API token authentication
-		if useAPIToken {
-			token := os.Getenv("F5XC_API_TOKEN")
-			if token == "" {
-				return fmt.Errorf("F5XC_API_TOKEN environment variable not set")
-			}
+		// Check environment variable first, then fall back to flag
+		if token := os.Getenv("F5XC_API_TOKEN"); token != "" {
 			cfg.APIToken = token
+		} else if useAPIToken {
+			return fmt.Errorf("F5XC_API_TOKEN environment variable not set")
 		}
 
 		var err error
@@ -147,6 +157,7 @@ func init() {
 	_ = viper.BindEnv("cacert", "F5XC_CACERT")
 	_ = viper.BindEnv("p12-bundle", "F5XC_P12_FILE")
 	_ = viper.BindEnv("output-format", "F5XC_OUTPUT")
+	_ = viper.BindEnv("server-url", "F5XC_API_URL")
 
 	// Register --spec flag for machine-readable CLI specification
 	RegisterSpecFlag(rootCmd)
@@ -181,7 +192,7 @@ func initConfig() {
 		viper.SetConfigName(".f5xcconfig")
 	}
 
-	viper.SetEnvPrefix("VES")
+	viper.SetEnvPrefix("F5XC")
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err == nil {
@@ -190,9 +201,21 @@ func initConfig() {
 		}
 		applyConfigToFlags()
 	} else {
-		// No config file found, apply default
+		// No config file found, check environment variables or apply default
 		if serverURL == "" {
-			serverURL = "http://localhost:8001"
+			// Try F5XC_API_URL environment variable first
+			if apiURL := os.Getenv("F5XC_API_URL"); apiURL != "" {
+				normalized, err := client.NormalizeAPIURL(apiURL)
+				if err != nil {
+					// If normalization fails, use the raw URL (backward compatibility)
+					if debug {
+						fmt.Fprintf(os.Stderr, "Warning: Failed to normalize F5XC_API_URL: %v\n", err)
+					}
+					serverURL = apiURL
+				} else {
+					serverURL = normalized
+				}
+			}
 		}
 	}
 }
@@ -204,16 +227,21 @@ func applyConfigToFlags() {
 	if err != nil {
 		// If config file couldn't be loaded, still check environment variables
 		applyEnvironmentVariables()
-		// Apply fallback default if still not set
-		if serverURL == "" {
-			serverURL = "http://localhost:8001"
-		}
 		return
 	}
 
 	// Apply config file values first (lowest precedence after defaults)
 	if serverURL == "" && cfg.ServerURL != "" {
-		serverURL = cfg.ServerURL
+		normalized, err := client.NormalizeAPIURL(cfg.ServerURL)
+		if err != nil {
+			// If normalization fails, use the raw URL (backward compatibility)
+			if debug {
+				fmt.Fprintf(os.Stderr, "Warning: Failed to normalize server URL from config: %v\n", err)
+			}
+			serverURL = cfg.ServerURL
+		} else {
+			serverURL = normalized
+		}
 	}
 	if cert == "" && cfg.Cert != "" {
 		cert = expandPath(cfg.Cert)
@@ -230,19 +258,23 @@ func applyConfigToFlags() {
 
 	// Apply environment variables (higher precedence than config file)
 	applyEnvironmentVariables()
-
-	// Apply fallback default if still not set
-	if serverURL == "" {
-		serverURL = "http://localhost:8001"
-	}
 }
 
 // applyEnvironmentVariables applies F5XC_* environment variables to flags
 // This is called after config file values are applied, allowing env vars to override
 func applyEnvironmentVariables() {
-	// F5XC_API_URL overrides server-url
+	// F5XC_API_URL overrides server-url (with normalization)
 	if envURL := os.Getenv("F5XC_API_URL"); envURL != "" {
-		serverURL = envURL
+		normalized, err := client.NormalizeAPIURL(envURL)
+		if err != nil {
+			// If normalization fails, use the raw URL (backward compatibility)
+			if debug {
+				fmt.Fprintf(os.Stderr, "Warning: Failed to normalize F5XC_API_URL: %v\n", err)
+			}
+			serverURL = envURL
+		} else {
+			serverURL = normalized
+		}
 	}
 
 	// F5XC_CERT overrides cert (only if CLI flag not set)
@@ -277,6 +309,13 @@ func applyEnvironmentVariables() {
 	if outputFormat == "" {
 		if envOutput := os.Getenv("F5XC_OUTPUT"); envOutput != "" {
 			outputFormat = envOutput
+		}
+	}
+
+	// F5XC_API_TOKEN automatically enables API token authentication
+	if !useAPIToken {
+		if envToken := os.Getenv("F5XC_API_TOKEN"); envToken != "" {
+			useAPIToken = true
 		}
 	}
 }
