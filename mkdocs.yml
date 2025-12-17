@@ -418,7 +418,6 @@ nav:
         - Virtual Appliance: commands/configuration/virtual_appliance.md
         - Voltshare: commands/configuration/voltshare.md
         - Workload Flavor: commands/configuration/workload_flavor.md
-    - Help: commands/help/index.md
     - Request:
       - Request Overview: commands/request/index.md
       - Command Sequence: commands/request/command-sequence/index.md
@@ -595,7 +594,6 @@ nav:
       - Quota: commands/subscription/quota/index.md
       - Show: commands/subscription/show/index.md
       - Validate: commands/subscription/validate/index.md
-    - Version: commands/version/index.md
   - Guides:
     - guides/index.md
     - Load Balancers: guides/load-balancer.md

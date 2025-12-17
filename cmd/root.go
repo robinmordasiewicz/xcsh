@@ -48,9 +48,10 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "f5xcctl",
-	Short: "Command-line interface for F5 Distributed Cloud services.",
-	Long:  `Command-line interface for F5 Distributed Cloud services.`,
+	Use:     "f5xcctl",
+	Version: Version, // Enables --version and -v flags
+	Short:   "Command-line interface for F5 Distributed Cloud services.",
+	Long:    `Command-line interface for F5 Distributed Cloud services.`,
 	// Run handles the root command when no subcommand is specified
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Handle --spec flag for root command
@@ -172,6 +173,9 @@ func init() {
 
 	// Register --spec flag for machine-readable CLI specification
 	RegisterSpecFlag(rootCmd)
+
+	// Set custom version template for clean one-liner output (--version, -v)
+	rootCmd.SetVersionTemplate("f5xcctl version {{.Version}}\n")
 
 	// Set custom help template with Environment Variables section
 	rootCmd.SetHelpTemplate(helpTemplateWithEnvVars())

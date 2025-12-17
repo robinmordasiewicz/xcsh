@@ -42,8 +42,9 @@ func init() {
 }
 
 var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Display f5xcctl version and build information.",
+	Use:    "version",
+	Hidden: true, // Hide from help - users should use --version or -v flag
+	Short:  "Display f5xcctl version and build information.",
 	Long: `Display f5xcctl version and build information.
 
 Shows the current version, git commit hash, build date, Go version,
