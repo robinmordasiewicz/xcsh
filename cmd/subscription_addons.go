@@ -59,6 +59,9 @@ func init() {
 
 	subscriptionAddonsCmd.Flags().BoolVar(&addonsShowAll, "all", false, "Show all addon services including denied ones.")
 	subscriptionAddonsCmd.Flags().StringVar(&addonsFilter, "filter", "", "Filter by status: active, available, denied.")
+
+	// Register completion for --filter flag
+	_ = subscriptionAddonsCmd.RegisterFlagCompletionFunc("filter", completeAddonFilter)
 }
 
 func runSubscriptionAddons(cmd *cobra.Command, args []string) error {

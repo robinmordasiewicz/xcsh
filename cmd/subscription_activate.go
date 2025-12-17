@@ -54,6 +54,9 @@ func init() {
 		"Name of the addon service to activate (required).")
 
 	_ = subscriptionActivateCmd.MarkFlagRequired("addon")
+
+	// Register completion for --addon flag (shows available addons)
+	_ = subscriptionActivateCmd.RegisterFlagCompletionFunc("addon", completeAddonName)
 }
 
 func runSubscriptionActivate(cmd *cobra.Command, args []string) error {

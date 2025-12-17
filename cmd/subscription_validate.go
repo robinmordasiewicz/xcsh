@@ -58,6 +58,10 @@ func init() {
 	subscriptionValidateCmd.Flags().StringVar(&validateResourceType, "resource-type", "", "Resource type to validate quota for (e.g., http_loadbalancer, origin_pool).")
 	subscriptionValidateCmd.Flags().IntVar(&validateCount, "count", 1, "Number of resources to create (default: 1).")
 	subscriptionValidateCmd.Flags().StringVar(&validateFeature, "feature", "", "Feature/addon to validate availability (e.g., bot-defense, api-security).")
+
+	// Register completions for validate flags
+	_ = subscriptionValidateCmd.RegisterFlagCompletionFunc("resource-type", completeResourceType)
+	_ = subscriptionValidateCmd.RegisterFlagCompletionFunc("feature", completeFeatureName)
 }
 
 func runSubscriptionValidate(cmd *cobra.Command, args []string) error {

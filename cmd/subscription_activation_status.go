@@ -50,6 +50,9 @@ func init() {
 
 	subscriptionActivationStatusCmd.Flags().StringVar(&activationStatusAddon, "addon", "",
 		"Filter to a specific addon service.")
+
+	// Register completion for --addon flag (shows pending and active addons)
+	_ = subscriptionActivationStatusCmd.RegisterFlagCompletionFunc("addon", completePendingAddonName)
 }
 
 func runSubscriptionActivationStatus(cmd *cobra.Command, args []string) error {
