@@ -643,3 +643,247 @@ func BuildCurlCommand(baseURL, path string, query url.Values) string {
 	}
 	return fmt.Sprintf("curl -X GET '%s' -H 'Content-Type: application/json'", fullURL)
 }
+
+// ActivationDeniedError represents an access denial for addon activation
+type ActivationDeniedError struct {
+	AddonService string
+	AccessStatus string
+}
+
+func (e *ActivationDeniedError) Error() string {
+	return fmt.Sprintf("activation denied for '%s': %s", e.AddonService, AccessStatusDescription(e.AccessStatus))
+}
+
+// IsUpgradeRequired returns true if the error is due to needing a plan upgrade
+func (e *ActivationDeniedError) IsUpgradeRequired() bool {
+	return e.AccessStatus == AccessUpgradeRequired
+}
+
+// IsContactSales returns true if the error requires contacting sales
+func (e *ActivationDeniedError) IsContactSales() bool {
+	return e.AccessStatus == AccessContactSales
+}
+
+// addonSubscriptionRequest is the API request body for creating a subscription
+type addonSubscriptionRequest struct {
+	Metadata addonSubscriptionMetadata `json:"metadata"`
+	Spec     addonSubscriptionSpec     `json:"spec"`
+}
+
+type addonSubscriptionMetadata struct {
+	Name      string `json:"name"`
+	Namespace string `json:"namespace"`
+}
+
+type addonSubscriptionSpec struct {
+	AddonService string `json:"addon_service"`
+}
+
+// addonSubscriptionResponse is the API response from subscription creation
+type addonSubscriptionResponse struct {
+	Metadata struct {
+		Name string `json:"name"`
+		UID  string `json:"uid"`
+	} `json:"metadata"`
+	Spec struct {
+		State          string `json:"state"`
+		ActivationType string `json:"activation_type,omitempty"`
+	} `json:"spec,omitempty"`
+	Status struct {
+		SubscriptionState string `json:"subscription_state,omitempty"`
+	} `json:"status,omitempty"`
+}
+
+// ActivateAddon creates an addon subscription request
+// For SelfActivationType: activates immediately
+// For PartiallyManaged/FullyManaged: creates pending request for SRE approval
+func (c *Client) ActivateAddon(ctx context.Context, namespace, addonService string) (*ActivationResponse, error) {
+	if namespace == "" {
+		namespace = "system"
+	}
+
+	// 1. Pre-flight validation: Check if addon can be activated
+	addonInfo, err := c.GetAddonServiceActivationStatus(ctx, addonService)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get addon status: %w", err)
+	}
+
+	// 2. Check access status and return appropriate error
+	switch addonInfo.AccessStatus {
+	case AccessDenied:
+		return &ActivationResponse{
+			AddonService: addonService,
+			AccessStatus: addonInfo.AccessStatus,
+			Message:      fmt.Sprintf("Access denied for addon '%s'", addonService),
+			NextSteps:    "Check your subscription tier and policy configuration",
+		}, &ActivationDeniedError{AddonService: addonService, AccessStatus: addonInfo.AccessStatus}
+
+	case AccessUpgradeRequired:
+		return &ActivationResponse{
+			AddonService: addonService,
+			AccessStatus: addonInfo.AccessStatus,
+			Message:      fmt.Sprintf("Addon '%s' requires a subscription plan upgrade", addonService),
+			NextSteps:    "Upgrade your subscription plan via F5 XC Console or contact F5 sales",
+		}, &ActivationDeniedError{AddonService: addonService, AccessStatus: addonInfo.AccessStatus}
+
+	case AccessContactSales:
+		return &ActivationResponse{
+			AddonService: addonService,
+			AccessStatus: addonInfo.AccessStatus,
+			Message:      fmt.Sprintf("Addon '%s' requires contacting F5 sales", addonService),
+			NextSteps:    "Contact F5 sales to enable this addon for your tenant",
+		}, &ActivationDeniedError{AddonService: addonService, AccessStatus: addonInfo.AccessStatus}
+
+	case AccessEOL:
+		return &ActivationResponse{
+			AddonService: addonService,
+			AccessStatus: addonInfo.AccessStatus,
+			Message:      fmt.Sprintf("Addon '%s' is end-of-life and cannot be activated", addonService),
+			NextSteps:    "Consider alternative addons or contact F5 support",
+		}, &ActivationDeniedError{AddonService: addonService, AccessStatus: addonInfo.AccessStatus}
+
+	case AccessInternalService:
+		return &ActivationResponse{
+			AddonService: addonService,
+			AccessStatus: addonInfo.AccessStatus,
+			Message:      fmt.Sprintf("Addon '%s' is an internal service and cannot be activated", addonService),
+			NextSteps:    "This addon is managed internally by F5",
+		}, &ActivationDeniedError{AddonService: addonService, AccessStatus: addonInfo.AccessStatus}
+	}
+
+	// 3. Check if already active
+	if addonInfo.State == StateSubscribed {
+		return &ActivationResponse{
+			AddonService:      addonService,
+			Namespace:         namespace,
+			SubscriptionState: SubscriptionEnabled,
+			AccessStatus:      addonInfo.AccessStatus,
+			ActivationType:    addonInfo.ActivationType,
+			Message:           fmt.Sprintf("Addon '%s' is already active", addonService),
+			IsImmediate:       true,
+		}, nil
+	}
+
+	// 4. Create subscription request
+	reqBody := addonSubscriptionRequest{
+		Metadata: addonSubscriptionMetadata{
+			Name:      addonService,
+			Namespace: namespace,
+		},
+		Spec: addonSubscriptionSpec{
+			AddonService: addonService,
+		},
+	}
+
+	path := fmt.Sprintf("/api/web/namespaces/%s/addon_subscriptions", namespace)
+	resp, err := c.apiClient.Post(ctx, path, reqBody)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create addon subscription: %w", err)
+	}
+
+	if resp.StatusCode != 200 && resp.StatusCode != 201 && resp.StatusCode != 202 {
+		return nil, fmt.Errorf("API returned status %d: %s", resp.StatusCode, string(resp.Body))
+	}
+
+	var subResp addonSubscriptionResponse
+	if err := json.Unmarshal(resp.Body, &subResp); err != nil {
+		return nil, fmt.Errorf("failed to parse subscription response: %w", err)
+	}
+
+	// 5. Determine activation type and build response
+	activationType := addonInfo.ActivationType
+	subscriptionState := subResp.Status.SubscriptionState
+	if subscriptionState == "" {
+		subscriptionState = SubscriptionPending
+	}
+	isPending := subscriptionState == SubscriptionPending
+	isImmediate := subscriptionState == SubscriptionEnabled
+
+	result := &ActivationResponse{
+		AddonService:      addonService,
+		Namespace:         namespace,
+		SubscriptionState: subscriptionState,
+		ActivationType:    activationType,
+		AccessStatus:      AccessAllowed,
+		RequestID:         subResp.Metadata.UID,
+		IsPending:         isPending,
+		IsImmediate:       isImmediate,
+	}
+
+	// 6. Set appropriate message based on activation type
+	switch activationType {
+	case ActivationSelf:
+		if isImmediate {
+			result.Message = fmt.Sprintf("Addon '%s' activated successfully", addonService)
+		} else {
+			result.Message = fmt.Sprintf("Addon '%s' activation in progress", addonService)
+			result.NextSteps = "Activation should complete within a few minutes. Use 'f5xcctl subscription activation-status' to check progress."
+		}
+	case ActivationPartiallyManaged:
+		result.Message = fmt.Sprintf("Addon '%s' activation request submitted (partially managed)", addonService)
+		result.NextSteps = "Request requires partial backend processing. Use 'f5xcctl subscription activation-status' to monitor progress."
+	case ActivationManaged:
+		result.Message = fmt.Sprintf("Addon '%s' activation request submitted (fully managed)", addonService)
+		result.NextSteps = "Request requires SRE approval. This may take up to 24 hours. Use 'f5xcctl subscription activation-status' to check status."
+	default:
+		result.Message = fmt.Sprintf("Addon '%s' activation request submitted", addonService)
+		if isPending {
+			result.NextSteps = "Use 'f5xcctl subscription activation-status' to check status."
+		}
+	}
+
+	return result, nil
+}
+
+// GetPendingActivations retrieves all pending addon activation requests
+func (c *Client) GetPendingActivations(ctx context.Context, namespace string) (*ActivationStatusResult, error) {
+	if namespace == "" {
+		namespace = "system"
+	}
+
+	// Get all addon services
+	addons, err := c.GetAddonServices(ctx, namespace)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get addon services: %w", err)
+	}
+
+	result := &ActivationStatusResult{
+		PendingActivations: []PendingActivation{},
+		ActiveAddons:       []string{},
+	}
+
+	for _, addon := range addons {
+		// Check for pending state
+		if addon.IsPending() {
+			pending := PendingActivation{
+				AddonService:      addon.Name,
+				Namespace:         addon.Namespace,
+				SubscriptionState: SubscriptionPending,
+				ActivationType:    addon.ActivationType,
+				Message:           getActivationMessage(addon.ActivationType),
+			}
+			result.PendingActivations = append(result.PendingActivations, pending)
+		}
+
+		// Track active addons
+		if addon.IsActive() {
+			result.ActiveAddons = append(result.ActiveAddons, addon.Name)
+		}
+	}
+
+	result.TotalPending = len(result.PendingActivations)
+	return result, nil
+}
+
+func getActivationMessage(activationType string) string {
+	switch activationType {
+	case ActivationSelf:
+		return "Self-activation in progress"
+	case ActivationPartiallyManaged:
+		return "Awaiting partial backend processing"
+	case ActivationManaged:
+		return "Awaiting SRE approval"
+	default:
+		return "Activation pending"
+	}
+}
