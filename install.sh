@@ -110,13 +110,11 @@ http_download() {
                 if curl -fsSL --connect-timeout 30 --max-time 120 -o "$OUTPUT" "$URL" 2>/dev/null; then
                     return 0
                 fi
-                EXIT_CODE=$?
                 ;;
             wget)
                 if wget -q --timeout=30 -O "$OUTPUT" "$URL" 2>/dev/null; then
                     return 0
                 fi
-                EXIT_CODE=$?
                 ;;
             *)
                 error "Neither curl nor wget found. Please install one of them and try again."
@@ -716,7 +714,7 @@ setup_bash_completion() {
     SUDO_CMD="$2"
 
     # Try system-wide location first
-    if [ -d "/etc/bash_completion.d" ] && [ -w "/etc/bash_completion.d" -o -n "$SUDO_CMD" ]; then
+    if [ -d "/etc/bash_completion.d" ] && { [ -w "/etc/bash_completion.d" ] || [ -n "$SUDO_CMD" ]; }; then
         status "Setting up bash completion (system-wide)..."
         if $SUDO_CMD sh -c "\"$VESCTL_BIN\" completion bash > /etc/bash_completion.d/f5xcctl" 2>/dev/null; then
             success "Bash completion installed to /etc/bash_completion.d/f5xcctl"

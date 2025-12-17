@@ -1,1 +1,0 @@
-Error getting object ves.io.schema.namespace.Object:system: Fetching object from api gateway: Get "https://nferreira.staging.volterra.us/api/public/namespaces/system?response_format=4": context deadline exceeded (Client.Timeout exceeded while awaiting headers)

@@ -1,6 +1,0 @@
-Usage:
-Examples:
-Available Commands:
-Flags:
-Global Flags:
-Use "vesctl configuration list [command] --help" for more information about a command.

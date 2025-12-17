@@ -1,8 +1,0 @@
-metadata:
-  name: vesctl-test-ns-1764921183-2
-  labels:
-    test-type: compatibility
-    created-by: vesctl-test
-  annotations:
-    description: "Second test namespace for vesctl compatibility testing"
-spec: {}

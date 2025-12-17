@@ -1,3 +1,0 @@
-Error: unknown command "login" for "vesctl"
-Run 'vesctl --help' for usage.
-unknown command "login" for "vesctl"

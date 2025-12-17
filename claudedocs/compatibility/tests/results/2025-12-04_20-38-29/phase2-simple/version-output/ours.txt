@@ -1,5 +1,0 @@
-version: dev
-git_commit: unknown
-build_date: unknown
-go_version: go1.25.5
-platform: darwin/arm64

@@ -75,6 +75,13 @@ var EnvVarRegistry = []EnvVarSpec{
 		Required:    false,
 		Sensitive:   true,
 	},
+	{
+		Name:        "F5XC_SUBSCRIPTION_TIER",
+		Description: "Cached subscription tier (Standard/Advanced) to skip API detection",
+		RelatedFlag: "",
+		Required:    false,
+		Sensitive:   false,
+	},
 }
 
 // GetEnvVarByName returns the EnvVarSpec for a given environment variable name.

@@ -1,9 +1,13 @@
 # f5xcctl Project Overview
 
 ## Purpose
-f5xcctl is an open-source command-line interface for managing F5 Distributed Cloud (formerly Volterra) resources. It follows Azure CLI-style command patterns for intuitive resource management.
+
+f5xcctl is an open-source command-line interface for managing F5 Distributed Cloud
+(formerly Volterra) resources. It follows Azure CLI-style command patterns for
+intuitive resource management.
 
 ## Tech Stack
+
 - **Language**: Go 1.22
 - **CLI Framework**: Cobra (github.com/spf13/cobra)
 - **Configuration**: Viper (github.com/spf13/viper)
@@ -13,6 +17,7 @@ f5xcctl is an open-source command-line interface for managing F5 Distributed Clo
 - **Documentation**: MkDocs with Material theme
 
 ## Key Features
+
 - CRUD operations for F5 XC resources (HTTP/TCP load balancers, origin pools, etc.)
 - Multiple output formats: JSON, YAML, table, TSV
 - P12 bundle or certificate/key authentication
@@ -20,10 +25,12 @@ f5xcctl is an open-source command-line interface for managing F5 Distributed Clo
 - Cross-platform builds (Linux, macOS, Windows)
 
 ## Authentication Methods
+
 1. **P12 Bundle** (recommended): Downloaded from F5 XC Console
 2. **Certificate + Key**: Extracted from P12 or separate files
 3. **Environment Variables**: F5XC_P12_PASSWORD, F5XC_API_URL, F5XC_API_TOKEN, etc.
 
 ## Configuration
+
 - Default config file: `~/.f5xcconfig`
 - Supports YAML format with server-urls, cert, key, p12-bundle options

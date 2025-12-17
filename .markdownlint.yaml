@@ -4,11 +4,8 @@
 # Default state for all rules
 default: true
 
-# Line length - allow longer lines for documentation
-MD013:
-  line_length: 120
-  code_blocks: false
-  tables: false
+# Line length - disabled for HTML-heavy docs with inline SVGs
+MD013: false
 
 # Allow inline HTML (needed for some documentation features)
 MD033: false
@@ -22,3 +19,9 @@ MD041: true
 
 # Allow bare URLs (common in CLIs)
 MD034: false
+
+# Ordered list item prefix - disabled due to code blocks breaking list context
+MD029: false
+
+# Code block style - disabled (conflicts with MkDocs tabbed content syntax)
+MD046: false

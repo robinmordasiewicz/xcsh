@@ -1,8 +1,0 @@
---- /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_07-54-49/get-response-proto/original.stderr	2025-12-06 08:03:10.839962814 +0000
-+++ /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_07-54-49/get-response-proto/ours.stderr	2025-12-06 08:03:16.167395297 +0000
-@@ -1,4 +1,4 @@
--Error: Invalid value GET_RSP_FORMAT_READ for response-format
-+Error: Error getting object: Getting object: request failed: Get "https://nferreira.staging.volterra.us/api/web/namespaces/vesctl-test-ns-1765007689-1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
- Usage:
-   vesctl configuration get namespace <name> [flags]
- 

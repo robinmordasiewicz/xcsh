@@ -1,9 +1,0 @@
---- /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_21-00-21/phase3-no-api/config-replace-flags/original_flags.txt	2025-12-04 21:00:50.047180329 -0500
-+++ /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase3-auth-crud/../results/2025-12-04_21-00-21/phase3-no-api/config-replace-flags/ours_flags.txt	2025-12-04 21:00:50.090857929 -0500
-@@ -1,5 +1,5 @@
- Flags:
-   -h, --help                help for replace
--  -i, --input-file string   File containing ReplaceRequest content in yaml form
-+  -i, --input-file string   File containing ReplaceRequest contents in yaml form
-       --json-data string    Inline ReplaceRequest contents in json form
- 

@@ -1,5 +1,0 @@
-Flags:
-  -h, --help               help for patch
-      --name string        Name of object
-  -n, --namespace string   Namespace of object (default "default")
-

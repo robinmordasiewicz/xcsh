@@ -1,8 +1,0 @@
---- /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_08-53-40/get-system/original.stderr	2025-12-06 09:01:39.556994731 +0000
-+++ /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_08-53-40/get-system/ours.stderr	2025-12-06 09:01:44.866693469 +0000
-@@ -1,4 +1,4 @@
--Error: Error getting object ves.io.schema.namespace.Object:system: Fetching object from api gateway: Get "https://nferreira.staging.volterra.us/api/public/namespaces/system?response_format=4": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
-+Error: Error getting object: Getting object: request failed: Get "https://nferreira.staging.volterra.us/api/web/namespaces/system": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
- Usage:
-   vesctl configuration get namespace <name> [flags]
- 

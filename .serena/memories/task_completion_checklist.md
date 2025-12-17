@@ -3,22 +3,26 @@
 ## Before Committing Code
 
 ### 1. Format and Lint
+
 ```bash
 make fmt                # Format Go code
 make lint               # Run golangci-lint
 ```
 
 ### 2. Verify Compilation
+
 ```bash
 make verify             # Run go build and go vet
 ```
 
 ### 3. Run Tests
+
 ```bash
 make test-unit          # Run unit tests with race detection
 ```
 
 ### 4. Quick Full Check
+
 ```bash
 make check              # Runs fmt, verify, and test-unit
 ```
@@ -26,6 +30,7 @@ make check              # Runs fmt, verify, and test-unit
 ## For Significant Changes
 
 ### Build and Test Binary
+
 ```bash
 make build              # Build the binary
 ./f5xcctl --help         # Verify CLI works
@@ -33,16 +38,20 @@ make build              # Build the binary
 ```
 
 ### Run Pre-commit Hooks
+
 ```bash
 pre-commit run --all-files
 ```
 
 ### Update Documentation (if needed)
+
 - Update docs/ markdown files
 - Run `mkdocs serve` to preview
 
 ## Integration Testing (Optional)
+
 Requires environment variables:
+
 ```bash
 export F5XC_API_URL="https://tenant.staging.volterra.us"
 export F5XC_API_P12_FILE="/path/to/cert.p12"
@@ -51,6 +60,7 @@ make test-int
 ```
 
 ## Release Preparation
+
 ```bash
 make release-dry        # Test GoReleaser
 git tag v1.x.x          # Create version tag
@@ -58,6 +68,7 @@ git push origin v1.x.x  # Push tag (triggers GitHub Actions release)
 ```
 
 ## Commit Message Format
+
 - Use conventional commits style when appropriate
 - Be descriptive about what changed and why
 - Reference issues if applicable

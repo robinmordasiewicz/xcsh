@@ -1,4 +1,0 @@
-orig_exit=1
-our_exit=1
-orig_match=1
-our_match=1

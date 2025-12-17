@@ -37,7 +37,7 @@ LLM_WORKERS?=8
         docs docs-all docs-nav docs-clean docs-serve docs-check docs-build generate-examples \
         generate-schemas validate-schemas report-schemas generate-schemas-strict \
         generate-llm-descriptions generate-schemas-with-llm maybe-llm-descriptions \
-        ci pre-commit pre-push verify-schemas-ci
+        ci pre-commit pre-push verify-schemas-ci verify-lint-config
 
 # Default target
 all: build
@@ -132,8 +132,38 @@ fmt:
 	@echo "Formatting code..."
 	go fmt ./...
 
+# Canonical golangci-lint version - single source of truth
+# This MUST match .github/workflows/ci.yml env.GOLANGCI_LINT_VERSION
+GOLANGCI_LINT_VERSION := v2.7.2
+
+# Verify lint configuration consistency (mirrors CI verify-lint-config job)
+verify-lint-config:
+	@echo "Verifying golangci-lint version consistency..."
+	@PRECOMMIT_VERSION=$$(grep -A2 'repo: https://github.com/golangci/golangci-lint' .pre-commit-config.yaml | grep 'rev:' | sed 's/.*rev: //'); \
+	CI_VERSION=$$(grep 'GOLANGCI_LINT_VERSION:' .github/workflows/ci.yml | head -1 | sed 's/.*: //'); \
+	echo "  Makefile version:    $(GOLANGCI_LINT_VERSION)"; \
+	echo "  Pre-commit version:  $$PRECOMMIT_VERSION"; \
+	echo "  CI workflow version: $$CI_VERSION"; \
+	if [ "$(GOLANGCI_LINT_VERSION)" != "$$PRECOMMIT_VERSION" ]; then \
+		echo ""; \
+		echo "❌ ERROR: Pre-commit version mismatch!"; \
+		echo "   Expected: $(GOLANGCI_LINT_VERSION)"; \
+		echo "   Found:    $$PRECOMMIT_VERSION"; \
+		echo "   Update .pre-commit-config.yaml to use $(GOLANGCI_LINT_VERSION)"; \
+		exit 1; \
+	fi; \
+	if [ "$(GOLANGCI_LINT_VERSION)" != "$$CI_VERSION" ]; then \
+		echo ""; \
+		echo "❌ ERROR: CI workflow version mismatch!"; \
+		echo "   Expected: $(GOLANGCI_LINT_VERSION)"; \
+		echo "   Found:    $$CI_VERSION"; \
+		echo "   Update .github/workflows/ci.yml GOLANGCI_LINT_VERSION"; \
+		exit 1; \
+	fi
+	@echo "✅ All golangci-lint versions are consistent"
+
 # Run linter (requires golangci-lint)
-lint:
+lint: verify-lint-config
 	@echo "Running linter..."
 	@if command -v golangci-lint > /dev/null; then \
 		golangci-lint run --timeout=5m; \
@@ -424,9 +454,10 @@ help:
 	@echo ""
 	@echo "=== Quality Commands ==="
 	@echo "  make fmt            - Format code"
-	@echo "  make lint           - Run linter"
+	@echo "  make lint           - Run linter (includes version check)"
 	@echo "  make verify         - Verify code compiles"
 	@echo "  make check          - Run all checks (fmt, vet, test)"
+	@echo "  make verify-lint-config - Verify golangci-lint versions match"
 	@echo "  make verify-schemas-ci - Verify schemas match CI expectations"
 	@echo ""
 	@echo "=== Release Commands ==="

@@ -1,8 +1,0 @@
---- /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_00-09-40/get-nonexistent/original.stderr	2025-12-06 00:16:01.289581252 +0000
-+++ /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_00-09-40/get-nonexistent/ours.stderr	2025-12-06 00:16:02.215583043 +0000
-@@ -1,4 +1,4 @@
--Error: Error getting object ves.io.schema.namespace.Object:vesctl-test-nonexistent: Fetching object from api gateway: Unsuccessful GET at URL https://nferreira.staging.volterra.us/api/public/namespaces/vesctl-test-nonexistent, status code 404, body {"code":5,"details":[{"code":"UNKNOWN","details":"GetResource: ves.io.schema.namespace.Object.default: Key nferreira-cuxnbbdn//vesctl-test-nonexistent does not exist","timestamp":"2025-12-06T00:16:01Z"}],"message":"ves.io.schema.namespace.Object: vesctl-test-nonexistent does not exist in namespace "}, err %!s(<nil>)
-+Error: API error: {"code":5,"details":[{"code":"UNKNOWN","details":"GetResource: ves.io.schema.namespace.Object.default: Key nferreira-cuxnbbdn//vesctl-test-nonexistent does not exist","timestamp":"2025-12-06T00:16:02Z"}],"message":"ves.io.schema.namespace.Object: vesctl-test-nonexistent does not exist in namespace "}
- Usage:
-   vesctl configuration get namespace <name> [flags]
- 

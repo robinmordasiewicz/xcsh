@@ -1,8 +1,0 @@
---- /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_08-53-40/list-post-create-json/original.stderr	2025-12-06 09:02:11.943250749 +0000
-+++ /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_08-53-40/list-post-create-json/ours.stderr	2025-12-06 09:02:17.309954702 +0000
-@@ -1,4 +1,4 @@
--Error listing: Fetching object collection from api gateway: Get "https://nferreira.staging.volterra.us/api/public/namespaces": context deadline exceeded (Client.Timeout exceeded while awaiting headers)Error: 2 errors occurred:;	* Fetching object collection from api gateway: Get "https://nferreira.staging.volterra.us/api/public/namespaces": context deadline exceeded (Client.Timeout exceeded while awaiting headers);	* Fetching object collection from api gateway: Get "https://nferreira.staging.volterra.us/api/public/namespaces": context deadline exceeded (Client.Timeout exceeded while awaiting headers);;
-+Error: Error listing object: Listing object: request failed: Get "https://nferreira.staging.volterra.us/api/web/namespaces": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
- Usage:
-   vesctl configuration list namespace [flags]
- 

@@ -1,9 +1,0 @@
---- /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase5-resources/../results/2025-12-06_16-56-44/phase5-resources/get-certificate-flags/original_flags.txt	2025-12-06 17:08:47.466843468 +0000
-+++ /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase5-resources/../results/2025-12-06_16-56-44/phase5-resources/get-certificate-flags/ours_flags.txt	2025-12-06 17:08:47.709872217 +0000
-@@ -1,5 +1,3 @@
- Flags:
--  -h, --help                     help for get
--  -n, --namespace string         Namespace in which to get object (default "default")
--      --response-format string   Format in get response (default 'read', others 'replace-request') (default "read")
-+  -h, --help   help for certificate
- 

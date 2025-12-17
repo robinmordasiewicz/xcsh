@@ -26,6 +26,35 @@ type ResourceSchemaInfo struct {
 
 	// RequiredFields lists fields that are always required regardless of choices
 	RequiredFields []string `json:"required_fields"`
+
+	// RequiredTier is the minimum subscription tier required for this resource
+	// Values: "STANDARD", "ADVANCED" (empty means no restriction)
+	RequiredTier string `json:"required_tier,omitempty"`
+
+	// RequiredAddons lists addon services that must be subscribed for this resource
+	// e.g., ["bot-defense", "api-security"]
+	RequiredAddons []string `json:"required_addons,omitempty"`
+
+	// HelpAnnotation is shown in --help output for tier-restricted resources
+	// e.g., "[Requires Advanced]"
+	HelpAnnotation string `json:"help_annotation,omitempty"`
+
+	// TierRestrictedFields maps field paths to their subscription tier requirements
+	// AI assistants can use this to determine which fields are available based on tier
+	TierRestrictedFields map[string]TierRequirement `json:"tier_restricted_fields,omitempty"`
+}
+
+// TierRequirement defines the subscription requirement for a field
+type TierRequirement struct {
+	// MinimumTier is the minimum subscription tier required
+	// Values: "STANDARD", "ADVANCED"
+	MinimumTier string `json:"minimum_tier"`
+
+	// RequiredAddons lists addon services that must be subscribed
+	RequiredAddons []string `json:"required_addons,omitempty"`
+
+	// Description explains why this tier is required
+	Description string `json:"description,omitempty"`
 }
 
 // FieldInfo contains complete metadata for a single field.

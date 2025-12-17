@@ -1,5 +1,0 @@
-Flags:
-  -h, --help                help for remove-labels
-      --label-key strings   Key part of label to remove
-  -n, --namespace string    Namespace of configuration object (default "default")
-

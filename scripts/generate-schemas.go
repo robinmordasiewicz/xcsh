@@ -19,14 +19,14 @@ import (
 )
 
 var (
-	outputFile          = flag.String("output", "pkg/types/schemas_generated.go", "Output file path")
-	resourcesFile       = flag.String("resources-output", "pkg/types/resources_generated.go", "Resources output file path")
-	specsDir            = flag.String("specs", "docs/specifications/api", "Directory containing OpenAPI specs")
-	verbose             = flag.Bool("v", false, "Verbose output")
-	strict              = flag.Bool("strict", false, "Fail on critical resource missing specs")
-	validateOnly        = flag.Bool("validate", false, "Validate only, don't write output")
-	reportMissing       = flag.Bool("report", false, "Report all missing specs and exit")
-	updateResources     = flag.Bool("update-resources", false, "Also regenerate resources_generated.go with full descriptions")
+	outputFile      = flag.String("output", "pkg/types/schemas_generated.go", "Output file path")
+	resourcesFile   = flag.String("resources-output", "pkg/types/resources_generated.go", "Resources output file path")
+	specsDir        = flag.String("specs", "docs/specifications/api", "Directory containing OpenAPI specs")
+	verbose         = flag.Bool("v", false, "Verbose output")
+	strict          = flag.Bool("strict", false, "Fail on critical resource missing specs")
+	validateOnly    = flag.Bool("validate", false, "Validate only, don't write output")
+	reportMissing   = flag.Bool("report", false, "Report all missing specs and exit")
+	updateResources = flag.Bool("update-resources", false, "Also regenerate resources_generated.go with full descriptions")
 )
 
 // criticalResources are resources that MUST have schemas generated

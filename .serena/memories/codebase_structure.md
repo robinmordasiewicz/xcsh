@@ -1,7 +1,8 @@
 # f5xcctl Codebase Structure
 
 ## Root Directory
-```
+
+```text
 f5xcctl/
 ├── main.go              # Entry point - calls cmd.Execute()
 ├── go.mod               # Go module definition (github.com/robinmordasiewicz/f5xcctl)
@@ -18,7 +19,8 @@ f5xcctl/
 ```
 
 ## cmd/ - CLI Commands (Cobra)
-```
+
+```text
 cmd/
 ├── root.go              # Root command and global flags
 ├── version.go           # Version command
@@ -44,7 +46,8 @@ cmd/
 ```
 
 ## pkg/ - Reusable Packages
-```
+
+```text
 pkg/
 ├── config/
 │   ├── config.go        # Configuration loading and management
@@ -65,7 +68,8 @@ pkg/
 ```
 
 ## docs/ - MkDocs Documentation
-```
+
+```text
 docs/
 ├── index.md             # Documentation home
 ├── getting-started/     # Installation, authentication, quickstart
@@ -78,7 +82,8 @@ docs/
 ```
 
 ## Other Directories
-```
+
+```text
 ├── tests/               # Integration tests
 ├── scripts/             # Utility scripts
 ├── dist/                # Build output directory
@@ -87,6 +92,7 @@ docs/
 ```
 
 ## Key Dependencies
+
 - `github.com/spf13/cobra` - CLI framework
 - `github.com/spf13/viper` - Configuration management
 - `gopkg.in/yaml.v3` - YAML parsing

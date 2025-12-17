@@ -1,8 +1,0 @@
---- /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_08-53-40/replace-from-file/original.stderr	2025-12-06 09:03:10.160869551 +0000
-+++ /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_08-53-40/replace-from-file/ours.stderr	2025-12-06 09:03:15.506567322 +0000
-@@ -1,4 +1,4 @@
--Error: Error replacing object ves.io.schema.namespace.Object: Replacing object: Put "https://nferreira.staging.volterra.us/api/public/namespaces/vesctl-test-ns-1765011220-1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
-+Error: Error replacing object: Replacing object: request failed: Put "https://nferreira.staging.volterra.us/api/web/namespaces/vesctl-test-ns-1765011220-1": context deadline exceeded (Client.Timeout exceeded while awaiting headers)
- Usage:
-   vesctl configuration replace namespace [flags]
- 

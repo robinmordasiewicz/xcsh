@@ -150,9 +150,10 @@ func outputSubscriptionTable(info *subscription.SubscriptionInfo) error {
 		displayQuotas := selectTopQuotas(summary.Objects, 5)
 		for _, q := range displayQuotas {
 			statusIndicator := ""
-			if q.Status == "EXCEEDED" {
+			switch q.Status {
+			case "EXCEEDED":
 				statusIndicator = " (!!!)"
-			} else if q.Status == "WARNING" {
+			case "WARNING":
 				statusIndicator = " (!)"
 			}
 

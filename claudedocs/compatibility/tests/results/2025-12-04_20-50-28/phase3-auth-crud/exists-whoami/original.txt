@@ -1,3 +1,0 @@
-Error: unknown command "whoami" for "vesctl"
-Run 'vesctl --help' for usage.
-unknown command "whoami" for "vesctl"

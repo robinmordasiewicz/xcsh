@@ -1,3 +1,0 @@
-unknown command "nonexistent_command" for "vesctl"
-Error: unknown command "nonexistent_command" for "vesctl"
-Run 'vesctl --help' for usage.

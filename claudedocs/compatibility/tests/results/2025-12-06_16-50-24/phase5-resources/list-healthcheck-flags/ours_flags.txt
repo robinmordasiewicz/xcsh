@@ -1,3 +1,0 @@
-Flags:
-  -h, --help   help for healthcheck
-

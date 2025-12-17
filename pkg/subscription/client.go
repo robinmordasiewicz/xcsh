@@ -98,10 +98,10 @@ type quotaAPIResponse struct {
 }
 
 type quotaEntry struct {
-	Limit       quotaLimit  `json:"limit,omitempty"`
-	Usage       quotaUsage  `json:"usage,omitempty"`
-	DisplayName string      `json:"display_name,omitempty"`
-	Description string      `json:"description,omitempty"`
+	Limit       quotaLimit `json:"limit,omitempty"`
+	Usage       quotaUsage `json:"usage,omitempty"`
+	DisplayName string     `json:"display_name,omitempty"`
+	Description string     `json:"description,omitempty"`
 }
 
 type quotaLimit struct {
@@ -420,10 +420,8 @@ func (c *Client) ValidateResource(ctx context.Context, req ValidationRequest) (*
 		Checks: []ValidationCheck{},
 	}
 
-	namespace := req.Namespace
-	if namespace == "" {
-		namespace = "system"
-	}
+	// Note: namespace from req.Namespace is not used because quotas are tenant-level
+	// The quota API always uses "system" namespace as the tenant context
 
 	// Validate quota if resource type and count specified
 	// Note: Quotas are tenant-level, not namespace-level

@@ -1,5 +1,0 @@
-Flags:
-  -h, --help                     help for get
-  -n, --namespace string         Namespace in which to get object (default "default")
-      --response-format string   Format in get response (default 'read', others 'replace-request') (default "read")
-

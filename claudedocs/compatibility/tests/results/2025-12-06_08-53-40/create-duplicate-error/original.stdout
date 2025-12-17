@@ -1,1 +1,0 @@
-Error creating object: Creating object: Unsuccessful POST at URL https://nferreira.staging.volterra.us/api/public/namespaces, status code 409, body {"code":6,"details":[],"message":"Object already exists"}, err %!s(<nil>)

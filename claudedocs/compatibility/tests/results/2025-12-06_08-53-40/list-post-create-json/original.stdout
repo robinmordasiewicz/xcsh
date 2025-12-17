@@ -1,2 +1,0 @@
-
-2 errors occurred:;	* Fetching object collection from api gateway: Get "https://nferreira.staging.volterra.us/api/public/namespaces": context deadline exceeded (Client.Timeout exceeded while awaiting headers);	* Fetching object collection from api gateway: Get "https://nferreira.staging.volterra.us/api/public/namespaces": context deadline exceeded (Client.Timeout exceeded while awaiting headers);;

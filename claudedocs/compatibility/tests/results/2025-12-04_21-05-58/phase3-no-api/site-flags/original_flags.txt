@@ -1,6 +1,0 @@
-Flags:
-  -h, --help            help for site
-      --log-color       enable color for your logs (default true)
-      --log-fabulous    enable fabulous writer for your logs (default true)
-      --log-level int   Log Level for Site Deployment (default 3)
-

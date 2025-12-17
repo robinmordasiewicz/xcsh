@@ -1,8 +1,0 @@
---- /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_00-09-40/create-duplicate-error/original.stderr	2025-12-06 00:13:56.217339853 +0000
-+++ /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_00-09-40/create-duplicate-error/ours.stderr	2025-12-06 00:13:57.051341459 +0000
-@@ -1,4 +1,4 @@
--Error: Error creating object: Creating object: Unsuccessful POST at URL https://nferreira.staging.volterra.us/api/public/namespaces, status code 409, body {"code":6,"details":[],"message":"Object already exists"}, err %!s(<nil>)
-+Error: API error: {"code":6,"details":[],"message":"Object already exists"}
- Usage:
-   vesctl configuration create namespace [flags]
- 

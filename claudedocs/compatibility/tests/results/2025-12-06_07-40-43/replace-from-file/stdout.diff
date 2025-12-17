@@ -1,5 +1,0 @@
---- /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_07-40-43/replace-from-file/original.normalized.json	2025-12-06 07:49:57.538705577 +0000
-+++ /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_07-40-43/replace-from-file/ours.normalized.json	2025-12-06 07:49:57.576713824 +0000
-@@ -1 +1 @@
--Replaced
-+{}

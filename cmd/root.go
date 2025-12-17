@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -10,6 +11,7 @@ import (
 
 	"github.com/robinmordasiewicz/f5xcctl/pkg/client"
 	"github.com/robinmordasiewicz/f5xcctl/pkg/config"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
 )
 
 var (
@@ -39,6 +41,9 @@ var (
 
 	// Global client instance
 	apiClient *client.Client
+
+	// Subscription validator for pre-execution validation
+	subscriptionValidator *subscription.Validator
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -104,6 +109,12 @@ var rootCmd = &cobra.Command{
 		apiClient, err = client.New(cfg)
 		if err != nil {
 			return fmt.Errorf("failed to initialize client: %w", err)
+		}
+
+		// Initialize subscription tier detection and caching
+		// This runs in background and doesn't block command execution
+		if apiClient != nil && !subscription.IsTierCached() {
+			go initSubscriptionContext(cmd.Context())
 		}
 
 		return nil
@@ -376,6 +387,44 @@ func GetTimeout() int {
 // ShowCurl returns whether to emit CURL format
 func ShowCurl() bool {
 	return showCurl
+}
+
+// initSubscriptionContext detects and caches the subscription tier.
+// This is called once at startup to cache the tier for subsequent commands.
+func initSubscriptionContext(ctx context.Context) {
+	if apiClient == nil {
+		return
+	}
+
+	subClient := subscription.NewClient(apiClient)
+	subscriptionValidator = subscription.NewValidator(subClient)
+
+	// Detect and cache tier (errors are logged but don't fail the command)
+	_, err := subscriptionValidator.DetectAndCacheTier(ctx)
+	if err != nil && debug {
+		fmt.Fprintf(os.Stderr, "Warning: Failed to detect subscription tier: %v\n", err)
+	}
+}
+
+// GetSubscriptionValidator returns the subscription validator.
+// If not initialized, creates one with the current API client.
+func GetSubscriptionValidator() *subscription.Validator {
+	if subscriptionValidator == nil && apiClient != nil {
+		subClient := subscription.NewClient(apiClient)
+		subscriptionValidator = subscription.NewValidator(subClient)
+	}
+	return subscriptionValidator
+}
+
+// EnsureSubscriptionTier ensures the subscription tier is cached.
+// This should be called before commands that need tier information synchronously.
+func EnsureSubscriptionTier(ctx context.Context) (string, error) {
+	validator := GetSubscriptionValidator()
+	if validator == nil {
+		// No API client, return default
+		return "Standard", nil
+	}
+	return validator.GetCurrentTier(ctx)
 }
 
 // helpTemplateWithEnvVars returns a custom help template that includes environment variables

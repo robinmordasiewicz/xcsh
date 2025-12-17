@@ -1,8 +1,0 @@
---- /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase5-resources/../results/2025-12-06_16-50-24/phase5-resources/list-user-flags/original_flags.txt	2025-12-06 17:04:18.162827301 +0000
-+++ /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase5-resources/../results/2025-12-06_16-50-24/phase5-resources/list-user-flags/ours_flags.txt	2025-12-06 17:04:18.420856060 +0000
-@@ -1,4 +1,3 @@
- Flags:
--  -h, --help               help for list
--  -n, --namespace string   Namespace in which to list objects (default "default")
-+  -h, --help   help for user
- 

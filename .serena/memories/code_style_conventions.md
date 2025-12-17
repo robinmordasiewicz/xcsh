@@ -1,13 +1,16 @@
 # Code Style and Conventions for f5xcctl
 
 ## Go Code Style
+
 - **Formatting**: Use `gofmt` (enforced by pre-commit hooks)
 - **Indentation**: Tabs for Go files
 - **Line Length**: Standard Go conventions apply
 - **Naming**: Follow Go conventions (camelCase for unexported, PascalCase for exported)
 
 ## Linting (golangci-lint)
+
 Enabled linters:
+
 - `errcheck` - Check for unchecked errors
 - `gosimple` - Simplify code suggestions
 - `govet` - Report suspicious constructs
@@ -16,25 +19,29 @@ Enabled linters:
 - `unused` - Check for unused code
 
 Disabled:
+
 - `depguard` - Dependency guard disabled
 
 ## File Conventions
+
 | File Type | Indent | Size |
 |-----------|--------|------|
 | *.go | tabs | - |
-| *.yml, *.yaml | spaces | 2 |
+| *.yml,*.yaml | spaces | 2 |
 | *.json | spaces | 2 |
 | *.sh | spaces | 2 |
 | Makefile | tabs | - |
 | *.md | spaces | - (no trailing whitespace trim) |
 
 ## Markdown Style
+
 - Line length: 120 chars max (code blocks and tables exempt)
 - Inline HTML allowed
 - Duplicate headings allowed in different sections
 - Bare URLs allowed
 
 ## Project Structure Patterns
+
 - **cmd/**: CLI commands (Cobra-based)
 - **pkg/**: Reusable packages
   - `config/`: Configuration management
@@ -46,6 +53,7 @@ Disabled:
 - **scripts/**: Utility scripts
 
 ## Pre-commit Hooks
+
 - Trailing whitespace trimming
 - Unix line endings (LF)
 - YAML/JSON validation

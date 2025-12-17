@@ -1,5 +1,0 @@
-Flags:
-      --at-site string     Site name (e.g. ce01) at which to query configuration object status
-  -h, --help               help for status
-  -n, --namespace string   Namespace of configuration object (default "default")
-

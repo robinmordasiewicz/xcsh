@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -11,6 +12,7 @@ import (
 	"gopkg.in/yaml.v3"
 
 	"github.com/robinmordasiewicz/f5xcctl/pkg/errors"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
 	"github.com/robinmordasiewicz/f5xcctl/pkg/types"
 )
 
@@ -25,22 +27,24 @@ func RegisterSpecFlag(rootCmd *cobra.Command) {
 
 // CLISpec represents the complete CLI specification
 type CLISpec struct {
-	Name                  string                              `json:"name" yaml:"name"`
-	Version               string                              `json:"version" yaml:"version"`
-	Description           string                              `json:"description" yaml:"description"`
-	Usage                 string                              `json:"usage" yaml:"usage"`
-	AIHints               AIHintsSpec                         `json:"ai_hints" yaml:"ai_hints"`
-	AuthenticationMethods []AuthMethodSpec                    `json:"authentication_methods" yaml:"authentication_methods"`
-	SemanticCategories    SemanticCategoriesSpec              `json:"semantic_categories" yaml:"semantic_categories"`
-	FlagRelationships     FlagRelationshipsSpec               `json:"flag_relationships" yaml:"flag_relationships"`
-	Examples              []ExampleSpec                       `json:"examples" yaml:"examples"`
-	Workflows             []WorkflowSpec                      `json:"workflows" yaml:"workflows"`
-	EnvironmentVariables  []EnvVarSpec                        `json:"environment_variables" yaml:"environment_variables"`
-	GlobalFlags           []FlagSpec                          `json:"global_flags" yaml:"global_flags"`
-	Commands              []CommandSpec                       `json:"commands" yaml:"commands"`
-	ExitCodes             []ExitCodeSpec                      `json:"exit_codes" yaml:"exit_codes"`
-	SystemLabels          SystemLabelsSpec                    `json:"system_labels" yaml:"system_labels"`
-	ResourceSchemas       map[string]types.ResourceSchemaInfo `json:"resource_schemas" yaml:"resource_schemas"`
+	Name                  string                                `json:"name" yaml:"name"`
+	Version               string                                `json:"version" yaml:"version"`
+	Description           string                                `json:"description" yaml:"description"`
+	Usage                 string                                `json:"usage" yaml:"usage"`
+	AIHints               AIHintsSpec                           `json:"ai_hints" yaml:"ai_hints"`
+	AuthenticationMethods []AuthMethodSpec                      `json:"authentication_methods" yaml:"authentication_methods"`
+	SemanticCategories    SemanticCategoriesSpec                `json:"semantic_categories" yaml:"semantic_categories"`
+	FlagRelationships     FlagRelationshipsSpec                 `json:"flag_relationships" yaml:"flag_relationships"`
+	Examples              []ExampleSpec                         `json:"examples" yaml:"examples"`
+	Workflows             []WorkflowSpec                        `json:"workflows" yaml:"workflows"`
+	EnvironmentVariables  []EnvVarSpec                          `json:"environment_variables" yaml:"environment_variables"`
+	GlobalFlags           []FlagSpec                            `json:"global_flags" yaml:"global_flags"`
+	Commands              []CommandSpec                         `json:"commands" yaml:"commands"`
+	ExitCodes             []ExitCodeSpec                        `json:"exit_codes" yaml:"exit_codes"`
+	SystemLabels          SystemLabelsSpec                      `json:"system_labels" yaml:"system_labels"`
+	ResourceSchemas       map[string]types.ResourceSchemaInfo   `json:"resource_schemas" yaml:"resource_schemas"`
+	SubscriptionContext   *subscription.SubscriptionContextSpec `json:"subscription_context,omitempty" yaml:"subscription_context,omitempty"`
+	FeatureTierMap        subscription.FeatureTierMapSpec       `json:"feature_tier_map" yaml:"feature_tier_map"`
 }
 
 // AIHintsSpec provides guidance for AI agents on how to use the CLI
@@ -174,8 +178,94 @@ func GenerateSpec(cmd *cobra.Command) *CLISpec {
 		ExitCodes:             getExitCodes(),
 		SystemLabels:          getSystemLabels(),
 		ResourceSchemas:       types.GetAllResourceSchemas(),
+		FeatureTierMap:        subscription.GenerateFeatureTierMapSpec(),
 	}
+
+	// Try to populate subscription context if validator is available
+	validator := GetSubscriptionValidator()
+	if validator != nil {
+		ctx := context.Background()
+		if subCtx, err := validator.GenerateSubscriptionContext(ctx); err == nil {
+			spec.SubscriptionContext = subCtx
+		}
+	} else {
+		// Provide default context based on cached tier or default
+		spec.SubscriptionContext = getDefaultSubscriptionContext()
+	}
+
 	return spec
+}
+
+// getDefaultSubscriptionContext returns a subscription context when validator is unavailable
+func getDefaultSubscriptionContext() *subscription.SubscriptionContextSpec {
+	cacheInfo := subscription.GetTierCacheInfo()
+
+	tier := cacheInfo.Tier
+	if tier == "" {
+		tier = "Unknown"
+	}
+
+	tierSource := "Unknown"
+	if cacheInfo.IsFromEnv {
+		tierSource = "F5XC_SUBSCRIPTION_TIER environment variable"
+	} else if cacheInfo.IsFromAPI {
+		tierSource = "Detected from F5 XC API"
+	} else if cacheInfo.IsDefault {
+		tierSource = "Default (API unavailable)"
+	} else if tier != "Unknown" {
+		tierSource = "Cached value"
+	}
+
+	// Build feature lists from registry
+	registry := subscription.NewFeatureRegistry()
+
+	var available []string
+	var restricted []subscription.RestrictedFeatureSpec
+
+	for _, feature := range registry.GetAllFeatures() {
+		if subscription.IsTierCached() {
+			// Check if current tier meets minimum requirement for this feature
+			if isTierSufficientForSpec(tier, feature.MinimumTier) {
+				available = append(available, feature.FeatureName)
+			} else {
+				restricted = append(restricted, subscription.RestrictedFeatureSpec{
+					Feature:        feature.FeatureName,
+					DisplayName:    feature.DisplayName,
+					RequiredTier:   feature.MinimumTier,
+					RequiredAddons: feature.RequiredAddons,
+					HelpAnnotation: feature.HelpAnnotation,
+				})
+			}
+		} else {
+			// If tier unknown, list all features as available with notes
+			available = append(available, feature.FeatureName)
+		}
+	}
+
+	return &subscription.SubscriptionContextSpec{
+		CurrentTier:        tier,
+		TierSource:         tierSource,
+		AvailableFeatures:  available,
+		RestrictedFeatures: restricted,
+	}
+}
+
+// isTierSufficientForSpec checks if currentTier meets requiredTier for spec output
+func isTierSufficientForSpec(currentTier, requiredTier string) bool {
+	// Tier order: Standard (2) < Advanced (3)
+	tierOrder := map[string]int{
+		"":                        0,
+		subscription.TierNoTier:   0,
+		subscription.TierStandard: 2,
+		"Standard":                2,
+		subscription.TierAdvanced: 3,
+		"Advanced":                3,
+	}
+
+	currentOrder := tierOrder[currentTier]
+	requiredOrder := tierOrder[requiredTier]
+
+	return currentOrder >= requiredOrder
 }
 
 // getSystemLabels returns documentation about system-managed labels

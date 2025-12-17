@@ -1,3 +1,0 @@
-Error: unknown command "configure" for "vesctl"
-Run 'vesctl --help' for usage.
-unknown command "configure" for "vesctl"

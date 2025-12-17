@@ -26,6 +26,18 @@ type ResourceType struct {
 	// DeleteConfig contains custom delete configuration
 	// If nil, standard DELETE method is used
 	DeleteConfig *DeleteConfig
+
+	// RequiredTier is the minimum subscription tier required for this resource
+	// Values: "STANDARD", "ADVANCED" (empty means no restriction)
+	RequiredTier string
+
+	// RequiredAddons lists addon services that must be subscribed for this resource
+	// e.g., ["bot-defense", "api-security"]
+	RequiredAddons []string
+
+	// HelpAnnotation is shown in --help output for tier-restricted resources
+	// e.g., "[Requires Advanced]"
+	HelpAnnotation string
 }
 
 // HumanReadableName returns the human-readable name of the resource type

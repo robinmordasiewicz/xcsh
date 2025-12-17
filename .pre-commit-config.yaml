@@ -16,6 +16,8 @@ repos:
         args: ['--fix=lf']
       - id: check-yaml
         name: Validate YAML syntax
+        args: ['--unsafe']
+        exclude: '^mkdocs\.yml$'
       - id: check-json
         name: Validate JSON syntax
       - id: check-added-large-files
@@ -33,7 +35,7 @@ repos:
 
   # Go linting - matches CI/CD golangci-lint v2
   - repo: https://github.com/golangci/golangci-lint
-    rev: v2.1.6
+    rev: v2.7.2
     hooks:
       - id: golangci-lint
         name: Run golangci-lint

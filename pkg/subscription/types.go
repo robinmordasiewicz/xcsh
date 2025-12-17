@@ -4,12 +4,14 @@
 package subscription
 
 // Addon service tier values - determines feature capabilities
+// Note: Only Standard and Advanced are active subscription tiers.
+// Basic and Premium are discontinued but kept for API compatibility.
 const (
 	TierNoTier   = "NO_TIER"
-	TierBasic    = "BASIC"
-	TierStandard = "STANDARD"
-	TierAdvanced = "ADVANCED"
-	TierPremium  = "PREMIUM"
+	TierBasic    = "BASIC"    // Discontinued - maps to Standard
+	TierStandard = "STANDARD" // Active tier
+	TierAdvanced = "ADVANCED" // Active tier
+	TierPremium  = "PREMIUM"  // Discontinued - maps to Advanced
 )
 
 // Addon service state values - subscription status
@@ -22,12 +24,12 @@ const (
 
 // Addon service access status values - availability based on plan
 const (
-	AccessAllowed         = "AS_AC_ALLOWED"                  // Can subscribe
-	AccessDenied          = "AS_AC_PBAC_DENY"                // Access denied by policy
-	AccessUpgradeRequired = "AS_AC_PBAC_DENY_UPGRADE_PLAN"   // Requires plan upgrade
-	AccessContactSales    = "AS_AC_PBAC_DENY_CONTACT_SALES"  // Requires sales contact
-	AccessInternalService = "AS_AC_PBAC_DENY_INTERNAL_SVC"   // Internal service only
-	AccessUnknown         = "AS_AC_UNKNOWN"                  // Unknown status
+	AccessAllowed         = "AS_AC_ALLOWED"                 // Can subscribe
+	AccessDenied          = "AS_AC_PBAC_DENY"               // Access denied by policy
+	AccessUpgradeRequired = "AS_AC_PBAC_DENY_UPGRADE_PLAN"  // Requires plan upgrade
+	AccessContactSales    = "AS_AC_PBAC_DENY_CONTACT_SALES" // Requires sales contact
+	AccessInternalService = "AS_AC_PBAC_DENY_INTERNAL_SVC"  // Internal service only
+	AccessUnknown         = "AS_AC_UNKNOWN"                 // Unknown status
 )
 
 // Activation type values - how the addon is managed
@@ -111,11 +113,11 @@ func (a *AddonServiceInfo) NeedsContactSales() bool {
 
 // QuotaSummary provides an overview of quota usage
 type QuotaSummary struct {
-	TotalLimits   int         `json:"total_limits" yaml:"total_limits"`
-	LimitsAtRisk  int         `json:"limits_at_risk" yaml:"limits_at_risk"`
-	LimitsExceeded int        `json:"limits_exceeded" yaml:"limits_exceeded"`
-	Objects       []QuotaItem `json:"objects,omitempty" yaml:"objects,omitempty"`
-	Resources     []QuotaItem `json:"resources,omitempty" yaml:"resources,omitempty"`
+	TotalLimits    int         `json:"total_limits" yaml:"total_limits"`
+	LimitsAtRisk   int         `json:"limits_at_risk" yaml:"limits_at_risk"`
+	LimitsExceeded int         `json:"limits_exceeded" yaml:"limits_exceeded"`
+	Objects        []QuotaItem `json:"objects,omitempty" yaml:"objects,omitempty"`
+	Resources      []QuotaItem `json:"resources,omitempty" yaml:"resources,omitempty"`
 }
 
 // QuotaUsageInfo represents detailed quota limits and current usage
@@ -128,14 +130,14 @@ type QuotaUsageInfo struct {
 
 // QuotaItem represents a single quota with limit and usage
 type QuotaItem struct {
-	Name         string  `json:"name" yaml:"name"`
-	DisplayName  string  `json:"display_name" yaml:"display_name"`
-	Description  string  `json:"description,omitempty" yaml:"description,omitempty"`
-	ObjectType   string  `json:"object_type,omitempty" yaml:"object_type,omitempty"`
-	Limit        float64 `json:"limit" yaml:"limit"`
-	Usage        float64 `json:"usage" yaml:"usage"`
-	Percentage   float64 `json:"percentage" yaml:"percentage"`
-	Status       string  `json:"status" yaml:"status"` // OK, WARNING, EXCEEDED
+	Name        string  `json:"name" yaml:"name"`
+	DisplayName string  `json:"display_name" yaml:"display_name"`
+	Description string  `json:"description,omitempty" yaml:"description,omitempty"`
+	ObjectType  string  `json:"object_type,omitempty" yaml:"object_type,omitempty"`
+	Limit       float64 `json:"limit" yaml:"limit"`
+	Usage       float64 `json:"usage" yaml:"usage"`
+	Percentage  float64 `json:"percentage" yaml:"percentage"`
+	Status      string  `json:"status" yaml:"status"` // OK, WARNING, EXCEEDED
 }
 
 // IsExceeded returns true if usage equals or exceeds the limit
@@ -159,19 +161,19 @@ func (q *QuotaItem) RemainingCapacity() float64 {
 
 // RateLimit represents API rate limiting configuration
 type RateLimit struct {
-	Name     string `json:"name" yaml:"name"`
-	Rate     int    `json:"rate" yaml:"rate"`
-	Burst    int    `json:"burst" yaml:"burst"`
-	Unit     string `json:"unit" yaml:"unit"` // per-minute, per-second, etc.
+	Name  string `json:"name" yaml:"name"`
+	Rate  int    `json:"rate" yaml:"rate"`
+	Burst int    `json:"burst" yaml:"burst"`
+	Unit  string `json:"unit" yaml:"unit"` // per-minute, per-second, etc.
 }
 
 // ValidationRequest represents a request to validate deployment feasibility
 type ValidationRequest struct {
-	ResourceType   string `json:"resource_type,omitempty" yaml:"resource_type,omitempty"`
-	Count          int    `json:"count,omitempty" yaml:"count,omitempty"`
-	Feature        string `json:"feature,omitempty" yaml:"feature,omitempty"`
-	TerraformPlan  string `json:"terraform_plan,omitempty" yaml:"terraform_plan,omitempty"`
-	Namespace      string `json:"namespace,omitempty" yaml:"namespace,omitempty"`
+	ResourceType  string `json:"resource_type,omitempty" yaml:"resource_type,omitempty"`
+	Count         int    `json:"count,omitempty" yaml:"count,omitempty"`
+	Feature       string `json:"feature,omitempty" yaml:"feature,omitempty"`
+	TerraformPlan string `json:"terraform_plan,omitempty" yaml:"terraform_plan,omitempty"`
+	Namespace     string `json:"namespace,omitempty" yaml:"namespace,omitempty"`
 }
 
 // ValidationResult represents the result of a deployment validation
@@ -184,17 +186,17 @@ type ValidationResult struct {
 
 // ValidationCheck represents a single validation check
 type ValidationCheck struct {
-	Type          string `json:"type" yaml:"type"`                                 // quota, feature, addon
-	Resource      string `json:"resource,omitempty" yaml:"resource,omitempty"`     // Resource type being checked
-	Feature       string `json:"feature,omitempty" yaml:"feature,omitempty"`       // Feature being checked
-	Current       int    `json:"current,omitempty" yaml:"current,omitempty"`       // Current usage
-	Requested     int    `json:"requested,omitempty" yaml:"requested,omitempty"`   // Requested count
-	Limit         int    `json:"limit,omitempty" yaml:"limit,omitempty"`           // Quota limit
-	RequiredTier  string `json:"required_tier,omitempty" yaml:"required_tier,omitempty"`
-	CurrentTier   string `json:"current_tier,omitempty" yaml:"current_tier,omitempty"`
-	Status        string `json:"status,omitempty" yaml:"status,omitempty"`         // Addon subscription status
-	Result        string `json:"result" yaml:"result"`                             // PASS, FAIL, WARNING
-	Message       string `json:"message,omitempty" yaml:"message,omitempty"`
+	Type         string `json:"type" yaml:"type"`                               // quota, feature, addon
+	Resource     string `json:"resource,omitempty" yaml:"resource,omitempty"`   // Resource type being checked
+	Feature      string `json:"feature,omitempty" yaml:"feature,omitempty"`     // Feature being checked
+	Current      int    `json:"current,omitempty" yaml:"current,omitempty"`     // Current usage
+	Requested    int    `json:"requested,omitempty" yaml:"requested,omitempty"` // Requested count
+	Limit        int    `json:"limit,omitempty" yaml:"limit,omitempty"`         // Quota limit
+	RequiredTier string `json:"required_tier,omitempty" yaml:"required_tier,omitempty"`
+	CurrentTier  string `json:"current_tier,omitempty" yaml:"current_tier,omitempty"`
+	Status       string `json:"status,omitempty" yaml:"status,omitempty"` // Addon subscription status
+	Result       string `json:"result" yaml:"result"`                     // PASS, FAIL, WARNING
+	Message      string `json:"message,omitempty" yaml:"message,omitempty"`
 }
 
 // IsPassed returns true if the check passed
@@ -249,17 +251,17 @@ func (v *ValidationResult) FailedCount() int {
 
 // Spec represents the subscription command specification for AI assistants
 type Spec struct {
-	CommandGroup      string                 `json:"command_group" yaml:"command_group"`
-	Description       string                 `json:"description" yaml:"description"`
-	Discovery         DiscoverySpec          `json:"discovery" yaml:"discovery"`
-	ValidationCommand string                 `json:"validation_command" yaml:"validation_command"`
-	AddonTiers        []string               `json:"addon_tiers" yaml:"addon_tiers"`
-	AddonStates       []string               `json:"addon_states" yaml:"addon_states"`
-	AccessStatuses    []string               `json:"access_statuses" yaml:"access_statuses"`
-	QuotaTypes        []string               `json:"quota_types" yaml:"quota_types"`
-	AIHints           []string               `json:"ai_hints" yaml:"ai_hints"`
-	ExitCodes         []ExitCodeSpec         `json:"exit_codes" yaml:"exit_codes"`
-	Workflows         []WorkflowSpec         `json:"workflows" yaml:"workflows"`
+	CommandGroup      string         `json:"command_group" yaml:"command_group"`
+	Description       string         `json:"description" yaml:"description"`
+	Discovery         DiscoverySpec  `json:"discovery" yaml:"discovery"`
+	ValidationCommand string         `json:"validation_command" yaml:"validation_command"`
+	AddonTiers        []string       `json:"addon_tiers" yaml:"addon_tiers"`
+	AddonStates       []string       `json:"addon_states" yaml:"addon_states"`
+	AccessStatuses    []string       `json:"access_statuses" yaml:"access_statuses"`
+	QuotaTypes        []string       `json:"quota_types" yaml:"quota_types"`
+	AIHints           []string       `json:"ai_hints" yaml:"ai_hints"`
+	ExitCodes         []ExitCodeSpec `json:"exit_codes" yaml:"exit_codes"`
+	Workflows         []WorkflowSpec `json:"workflows" yaml:"workflows"`
 }
 
 // DiscoverySpec describes how AI assistants can discover subscription information
@@ -303,7 +305,7 @@ func GenerateSpec() *Spec {
 			Description: "Use these commands to discover tenant subscription capabilities before deployment.",
 		},
 		ValidationCommand: "f5xcctl subscription validate",
-		AddonTiers:        []string{TierNoTier, TierBasic, TierStandard, TierAdvanced, TierPremium},
+		AddonTiers:        []string{TierStandard, TierAdvanced}, // Only active tiers
 		AddonStates:       []string{StateNone, StatePending, StateSubscribed, StateError},
 		AccessStatuses:    []string{AccessAllowed, AccessDenied, AccessUpgradeRequired, AccessContactSales, AccessInternalService},
 		QuotaTypes:        []string{"objects", "resources", "apis"},
@@ -353,13 +355,13 @@ func TierDescription(tier string) string {
 	case TierNoTier:
 		return "No Tier"
 	case TierBasic:
-		return "Basic"
+		return "Standard" // Basic discontinued, maps to Standard
 	case TierStandard:
 		return "Standard"
 	case TierAdvanced:
 		return "Advanced"
 	case TierPremium:
-		return "Premium"
+		return "Advanced" // Premium discontinued, maps to Advanced
 	default:
 		return "Unknown"
 	}

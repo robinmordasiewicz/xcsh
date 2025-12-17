@@ -1,7 +1,0 @@
---cloud-creds
--i,
---machine-type
---name
---region
---ssh-key
---subscription-id

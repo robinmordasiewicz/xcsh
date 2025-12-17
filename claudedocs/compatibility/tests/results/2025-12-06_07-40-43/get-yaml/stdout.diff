@@ -1,7 +1,0 @@
---- /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_07-40-43/get-yaml/original.normalized.json	2025-12-06 07:47:22.508276441 +0000
-+++ /home/ubuntu/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-06_07-40-43/get-yaml/ours.normalized.json	2025-12-06 07:47:22.558280582 +0000
-@@ -31,4 +31,3 @@
-   owner_view: null
-   tenant: nferreira-cuxnbbdn
-   uid: ba657969-62ba-479f-85b0-4dfd75700f94
--

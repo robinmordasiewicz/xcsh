@@ -1,2 +1,0 @@
-orig_exit=1
-our_exit=0

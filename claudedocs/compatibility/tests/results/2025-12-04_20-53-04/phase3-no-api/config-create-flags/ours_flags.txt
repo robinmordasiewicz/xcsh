@@ -1,5 +1,0 @@
-Flags:
-  -h, --help                help for create
-  -i, --input-file string   File containing CreateRequest contents in yaml form
-      --json-data string    Inline CreateRequest contents in json form
-

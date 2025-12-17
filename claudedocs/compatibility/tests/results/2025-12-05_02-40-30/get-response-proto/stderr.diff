@@ -1,8 +1,0 @@
---- /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-05_02-40-30/get-response-proto/original.stderr	2025-12-05 02:40:52.914550814 -0500
-+++ /Users/r.mordasiewicz/GIT/robinmordasiewicz/vesctl/claudedocs/compatibility/tests/phase4-namespace/../results/2025-12-05_02-40-30/get-response-proto/ours.stderr	2025-12-05 02:40:53.275004718 -0500
-@@ -1,4 +1,4 @@
--Error: Invalid value GET_RSP_FORMAT_READ for response-format
-+Error: API error: {"code":5,"details":[{"code":"UNKNOWN","details":"GetResource: ves.io.schema.namespace.Object.default: Key f5-amer-ent-qyyfhhfj//vesctl-test-ns-1764920430-1 does not exist","timestamp":"2025-12-05T07:40:53Z"}],"message":"ves.io.schema.namespace.Object: vesctl-test-ns-1764920430-1 does not exist in namespace "}
- Usage:
-   vesctl configuration get namespace <name> [flags]
- 

@@ -1,1 +1,0 @@
-vesctl dev

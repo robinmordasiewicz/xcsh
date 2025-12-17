@@ -12,8 +12,10 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
+	"github.com/robinmordasiewicz/f5xcctl/pkg/errors"
 	"github.com/robinmordasiewicz/f5xcctl/pkg/naming"
 	"github.com/robinmordasiewicz/f5xcctl/pkg/output"
+	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
 	"github.com/robinmordasiewicz/f5xcctl/pkg/types"
 )
 
@@ -29,6 +31,33 @@ type configurationFlags struct {
 	labelValues    []string
 	atSite         string
 	yes            bool // Skip confirmation for destructive operations
+}
+
+// getTierAnnotation returns the tier annotation for a resource type if it requires
+// a higher subscription tier than Standard. Returns empty string if no annotation needed.
+func getTierAnnotation(resourceType string) string {
+	registry := subscription.NewFeatureRegistry()
+	features := registry.GetFeaturesForResource(resourceType)
+	if len(features) == 0 {
+		return ""
+	}
+
+	// Find the highest tier requirement among all features
+	for _, f := range features {
+		if f.HelpAnnotation != "" {
+			return f.HelpAnnotation
+		}
+	}
+	return ""
+}
+
+// formatShortWithTier creates a Short description with tier annotation if needed
+func formatShortWithTier(action, displayName, resourceType string) string {
+	annotation := getTierAnnotation(resourceType)
+	if annotation != "" {
+		return fmt.Sprintf("%s %s %s", action, displayName, annotation)
+	}
+	return fmt.Sprintf("%s %s", action, displayName)
 }
 
 // configurationCmd represents the configuration command (f5xcctl compatibility)
@@ -112,7 +141,7 @@ Use --namespace to filter by namespace, or --output-format to control output for
 
 		subCmd := &cobra.Command{
 			Use:     rt.Name,
-			Short:   fmt.Sprintf("List %s", displayName),
+			Short:   formatShortWithTier("List", displayName, rt.Name),
 			Long:    longDesc,
 			Example: exampleText,
 			RunE: func(cmd *cobra.Command, args []string) error {
@@ -173,7 +202,7 @@ Use --response-format replace-request to get output suitable for editing and rep
 
 		subCmd := &cobra.Command{
 			Use:     fmt.Sprintf("%s <name>", rt.Name),
-			Short:   fmt.Sprintf("Get %s", displayName),
+			Short:   formatShortWithTier("Get", displayName, rt.Name),
 			Long:    longDesc,
 			Example: exampleText,
 			Args:    cobra.ExactArgs(1),
@@ -226,9 +255,13 @@ EOF
 
 		subCmd := &cobra.Command{
 			Use:     rt.Name,
-			Short:   fmt.Sprintf("Create %s", displayName),
+			Short:   formatShortWithTier("Create", displayName, rt.Name),
 			Example: exampleText,
 			RunE: func(cmd *cobra.Command, args []string) error {
+				// Pre-validate subscription before creating resource
+				if err := validateSubscriptionForResource(cmd.Context(), rtCopy.Name); err != nil {
+					return err
+				}
 				return runConfigCreate(rtCopy, &flags)
 			},
 		}
@@ -289,7 +322,7 @@ In non-interactive mode (scripts, CI/CD), --yes is required.`,
 
 		subCmd := &cobra.Command{
 			Use:     fmt.Sprintf("%s <name>", rt.Name),
-			Short:   fmt.Sprintf("Delete %s", displayName),
+			Short:   formatShortWithTier("Delete", displayName, rt.Name),
 			Long:    longDesc,
 			Example: exampleText,
 			Args:    cobra.ExactArgs(1),
@@ -358,10 +391,14 @@ EOF
 
 		subCmd := &cobra.Command{
 			Use:     rt.Name,
-			Short:   fmt.Sprintf("Replace %s", displayName),
+			Short:   formatShortWithTier("Replace", displayName, rt.Name),
 			Long:    longDesc,
 			Example: exampleText,
 			RunE: func(cmd *cobra.Command, args []string) error {
+				// Pre-validate subscription before replacing resource
+				if err := validateSubscriptionForResource(cmd.Context(), rtCopy.Name); err != nil {
+					return err
+				}
 				return runConfigReplace(rtCopy, &flags)
 			},
 		}
@@ -422,7 +459,7 @@ Use --at-site to query status at a specific site.`,
 
 		subCmd := &cobra.Command{
 			Use:     fmt.Sprintf("%s <name>", rt.Name),
-			Short:   fmt.Sprintf("Status of %s", displayName),
+			Short:   formatShortWithTier("Status of", displayName, rt.Name),
 			Long:    longDesc,
 			Example: exampleText,
 			Args:    cobra.ExactArgs(1),
@@ -494,10 +531,14 @@ EOF
 
 		subCmd := &cobra.Command{
 			Use:     rt.Name,
-			Short:   fmt.Sprintf("Apply %s", displayName),
+			Short:   formatShortWithTier("Apply", displayName, rt.Name),
 			Long:    longDesc,
 			Example: exampleText,
 			RunE: func(cmd *cobra.Command, args []string) error {
+				// Pre-validate subscription before applying resource
+				if err := validateSubscriptionForResource(cmd.Context(), rtCopy.Name); err != nil {
+					return err
+				}
 				return runConfigApply(rtCopy, &flags)
 			},
 		}
@@ -745,6 +786,74 @@ func runConfigGet(rt *types.ResourceType, flags *configurationFlags) error {
 	return output.Print(result, GetOutputFormatWithDefault("yaml"))
 }
 
+// ensureNamespaceExists checks if a namespace exists and creates it if not.
+// Returns nil if namespace exists or was successfully created.
+// Reserved namespaces (system, shared, default) are always assumed to exist.
+func ensureNamespaceExists(ctx context.Context, namespace string) error {
+	if namespace == "" {
+		return nil
+	}
+
+	// Reserved namespaces are always assumed to exist
+	reservedNamespaces := map[string]bool{
+		"system":  true,
+		"shared":  true,
+		"default": true,
+	}
+	if reservedNamespaces[namespace] {
+		return nil
+	}
+
+	client := GetClient()
+	if client == nil {
+		return fmt.Errorf("client not initialized")
+	}
+
+	// Try to get the namespace
+	path := fmt.Sprintf("/api/web/namespaces/%s", namespace)
+	resp, err := client.Get(ctx, path, nil)
+	if err == nil && resp.StatusCode == 200 {
+		// Namespace exists
+		return nil
+	}
+
+	// If namespace doesn't exist (404), create it
+	if resp != nil && resp.StatusCode == 404 {
+		output.PrintInfo(fmt.Sprintf("Namespace '%s' does not exist, creating it...", namespace))
+
+		createPayload := map[string]interface{}{
+			"metadata": map[string]interface{}{
+				"name": namespace,
+			},
+			"spec": map[string]interface{}{},
+		}
+
+		createResp, err := client.Post(ctx, "/api/web/namespaces", createPayload)
+		if err != nil {
+			return fmt.Errorf("failed to create namespace '%s': %w", namespace, err)
+		}
+
+		if createResp.StatusCode >= 400 {
+			// Check if it's a conflict (namespace was created by another process)
+			if createResp.StatusCode == 409 {
+				output.PrintInfo(fmt.Sprintf("Namespace '%s' already exists (created concurrently)", namespace))
+				return nil
+			}
+			return fmt.Errorf("failed to create namespace '%s': status %d, body: %s",
+				namespace, createResp.StatusCode, string(createResp.Body))
+		}
+
+		output.PrintInfo(fmt.Sprintf("Namespace '%s' created successfully", namespace))
+		return nil
+	}
+
+	// Other error
+	if err != nil {
+		return fmt.Errorf("failed to check namespace '%s': %w", namespace, err)
+	}
+	return fmt.Errorf("failed to check namespace '%s': status %d", namespace, resp.StatusCode)
+}
+
 // runConfigCreate executes the create operation (f5xcctl compatible)
 func runConfigCreate(rt *types.ResourceType, flags *configurationFlags) error {
 	client := GetClient()
@@ -768,6 +877,13 @@ func runConfigCreate(rt *types.ResourceType, flags *configurationFlags) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
+
+	// Ensure namespace exists before creating resource (auto-create if needed)
+	if rt.SupportsNamespace && namespace != "" {
+		if err := ensureNamespaceExists(ctx, namespace); err != nil {
+			return fmt.Errorf("failed to ensure namespace exists: %w", err)
+		}
+	}
 
 	path := rt.BuildAPIPath(namespace, "")
 	resp, err := client.Post(ctx, path, resource)
@@ -919,6 +1035,13 @@ func runConfigReplace(rt *types.ResourceType, flags *configurationFlags) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
+	// Ensure namespace exists before replacing resource (auto-create if needed)
+	if rt.SupportsNamespace && namespace != "" {
+		if err := ensureNamespaceExists(ctx, namespace); err != nil {
+			return fmt.Errorf("failed to ensure namespace exists: %w", err)
+		}
+	}
+
 	path := rt.BuildAPIPath(namespace, name)
 	resp, err := client.Put(ctx, path, resource)
 	if err != nil {
@@ -994,6 +1117,13 @@ func runConfigApply(rt *types.ResourceType, flags *configurationFlags) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
+
+	// Ensure namespace exists before applying resource (auto-create if needed)
+	if rt.SupportsNamespace && namespace != "" {
+		if err := ensureNamespaceExists(ctx, namespace); err != nil {
+			return fmt.Errorf("failed to ensure namespace exists: %w", err)
+		}
+	}
 
 	// If mode is "new", only create (fail if exists)
 	if flags.mode == "new" {
@@ -1177,4 +1307,37 @@ func loadConfigResource(inputFile, jsonData string) (map[string]interface{}, err
 	}
 
 	return resource, nil
+}
+
+// validateSubscriptionForResource validates that the current subscription allows
+// creating/modifying the specified resource type. Returns an error with exit code 9
+// (ExitFeatureNotAvail) if the resource requires a higher subscription tier.
+func validateSubscriptionForResource(ctx context.Context, resourceType string) error {
+	validator := GetSubscriptionValidator()
+	if validator == nil {
+		// No validator available, allow the operation
+		return nil
+	}
+
+	result, err := validator.ValidateResourceAccess(ctx, resourceType)
+	if err != nil {
+		// Validation error, log warning but don't block
+		if IsDebug() {
+			fmt.Fprintf(os.Stderr, "Warning: subscription validation failed: %v\n", err)
+		}
+		return nil
+	}
+
+	if !result.IsAllowed {
+		// Resource not allowed by subscription
+		errMsg := result.ErrorMessage
+		if result.Recommendation != "" {
+			errMsg += "\n\nTo resolve:\n  - " + result.Recommendation
+		}
+		errMsg += "\n\nFor more information:\n  f5xcctl subscription show      # View current subscription\n  f5xcctl subscription addons    # View addon services"
+
+		return errors.NewExitError(errors.ExitFeatureNotAvail, errors.ErrFeatureNotAvail, errMsg)
+	}
+
+	return nil
 }
