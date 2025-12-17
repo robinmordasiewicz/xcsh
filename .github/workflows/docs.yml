@@ -11,12 +11,12 @@ on:
       force_regenerate:
         description: 'Force documentation regeneration (ignore spec hash)'
         required: false
-        default: 'false'
+        default: false
         type: boolean
       test_homebrew:
         description: 'Test Homebrew installation and update docs'
         required: false
-        default: 'false'
+        default: false
         type: boolean
   push:
     branches: [main]

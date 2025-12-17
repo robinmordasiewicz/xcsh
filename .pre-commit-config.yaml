@@ -66,3 +66,14 @@ repos:
         name: Lint Markdown files
         args: ['--fix']
         exclude: '^docs/commands/'  # Exclude auto-generated docs
+
+  # JSON/YAML Schema validation
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.34.0
+    hooks:
+      - id: check-github-workflows
+        name: Validate GitHub Workflows
+      - id: check-jsonschema
+        name: Validate GoReleaser config
+        files: ^\.goreleaser\.ya?ml$
+        args: ['--schemafile', 'https://goreleaser.com/static/schema.json']

@@ -9,7 +9,7 @@ on:
       with_api:
         description: 'Run API-dependent tests'
         required: false
-        default: 'false'
+        default: false
         type: boolean
       phase:
         description: 'Specific phase to run (1-9 or all)'
