@@ -10,8 +10,27 @@ var requestCmd = &cobra.Command{
 	Use:     "request",
 	Aliases: []string{"req", "r"},
 	Short:   "Execute custom API requests to F5 Distributed Cloud.",
-	Long:    `Execute custom API requests to F5 Distributed Cloud.`,
-	Example: `f5xcctl request secrets encrypt --policy-doc temp_policy --public-key pub_key secret`,
+	Long: `Execute custom API requests to F5 Distributed Cloud services.
+
+This command group provides access to specialized F5 XC API operations
+that aren't covered by standard configuration commands. Use these for
+advanced operations like secret encryption, RPC calls, and command sequencing.
+
+AVAILABLE SERVICES:
+  secrets           Encrypt and manage secrets using F5 XC policy-based encryption
+  rpc               Execute raw RPC calls to F5 XC API endpoints
+  command-sequence  Run multiple API operations from a sequence file
+
+AI assistants should use 'f5xcctl request <service> --help' for service-specific
+options and available actions.`,
+	Example: `  # Encrypt a secret using policy-based encryption
+  f5xcctl request secrets encrypt --policy-doc policy.yaml --public-key key.pem secret
+
+  # Execute a command sequence from file
+  f5xcctl request command-sequence -i commands.yaml
+
+  # Check available request services
+  f5xcctl request --help`,
 }
 
 func init() {

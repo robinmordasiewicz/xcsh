@@ -34,10 +34,33 @@ var (
 )
 
 var apiEndpointCmd = &cobra.Command{
-	Use:     "api-endpoint",
-	Short:   "Discover and manage API endpoints within F5 XC service mesh.",
-	Long:    `Discover and manage API endpoints within F5 XC service mesh.`,
-	Example: `f5xcctl api-endpoint discover --namespace default`,
+	Use:   "api-endpoint",
+	Short: "Discover and manage API endpoints within F5 XC service mesh.",
+	Long: `Discover and manage API endpoints within F5 XC service mesh.
+
+This command group provides tools for API discovery and security policy
+generation based on service mesh traffic analysis. F5 XC automatically
+discovers API endpoints from observed traffic between services.
+
+WORKFLOW:
+  1. Use 'discover' to find API endpoints between services
+  2. Review discovered endpoints and their communication patterns
+  3. Use 'control' to generate L7 policies based on discoveries
+
+COMMANDS:
+  discover  Find API endpoints in service mesh traffic
+  control   Generate L7 policies from discovered endpoints
+
+AI assistants should run 'discover' first to understand the service mesh
+topology before using 'control' to create security policies.`,
+	Example: `  # Discover API endpoints in a namespace
+  f5xcctl api-endpoint discover --namespace default --app-type my-app
+
+  # Create L7 policies from discovered endpoints
+  f5xcctl api-endpoint control --discover-ns default --app-type my-app
+
+  # Check available commands
+  f5xcctl api-endpoint --help`,
 }
 
 var apiEndpointDiscoverCmd = &cobra.Command{

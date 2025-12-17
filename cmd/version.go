@@ -42,10 +42,22 @@ func init() {
 }
 
 var versionCmd = &cobra.Command{
-	Use:     "version",
-	Short:   "Display f5xcctl version and build information.",
-	Long:    `Display f5xcctl version and build information.`,
-	Example: `f5xcctl version`,
+	Use:   "version",
+	Short: "Display f5xcctl version and build information.",
+	Long: `Display f5xcctl version and build information.
+
+Shows the current version, git commit hash, build date, Go version,
+and platform information. Useful for debugging, support requests,
+and verifying installation.
+
+OUTPUT FIELDS:
+  version   Release version (semver format)
+  commit    Git commit hash (7-character short form)
+  built     Build timestamp (ISO 8601 format)
+  go        Go runtime version used to compile
+  platform  Operating system and architecture (e.g., darwin/arm64)`,
+	Example: `  # Show version information
+  f5xcctl version`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Short commit hash (7 chars like GitHub)
 		commit := GitCommit
