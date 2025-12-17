@@ -144,26 +144,6 @@ func extractRPCMethods(specDir string) ([]RPCMethod, error) {
 		}
 	}
 
-	// Add backward compatibility aliases for methods that were renamed in newer API specs
-	// The original f5xcctl kept these aliases for backward compatibility
-	legacyAliases := map[string]string{
-		// Original used NamespaceCustomAPI, new specs use CustomAPI
-		"namespace.NamespaceCustomAPI.CascadeDelete": "namespace.CustomAPI.CascadeDelete",
-		"namespace.NamespaceCustomAPI.SuggestValues": "namespace.CustomAPI.SuggestValues",
-	}
-	for aliasName, sourceName := range legacyAliases {
-		if source, exists := methodMap[sourceName]; exists {
-			if _, aliasExists := methodMap[aliasName]; !aliasExists {
-				alias := RPCMethod{
-					FullName:   source.FullName,
-					ShortName:  aliasName,
-					SchemaType: source.SchemaType,
-				}
-				methodMap[aliasName] = alias
-			}
-		}
-	}
-
 	// Convert map to sorted slice
 	var methods []RPCMethod
 	for _, m := range methodMap {

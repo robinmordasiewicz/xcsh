@@ -18,7 +18,7 @@ var (
 	// Config file path
 	cfgFile string
 
-	// Connection settings (f5xcctl compatible)
+	// Connection settings
 	serverURL   string
 	cert        string
 	key         string
@@ -27,11 +27,11 @@ var (
 	hardwareKey bool // Use yubikey for TLS connection
 	useAPIToken bool // Use API token from F5XC_API_TOKEN environment variable
 
-	// Output control (f5xcctl compatible)
+	// Output control
 	outputFormat string // Output format for command (canonical: --output-format)
 	outputDir    string // Output dir for command
 
-	// Behavior flags (f5xcctl compatible)
+	// Behavior flags
 	showCurl       bool // Emit requests from program in CURL format
 	timeout        int  // Timeout (in seconds) for command to finish
 	nonInteractive bool // Fail on missing arguments instead of prompting
@@ -129,20 +129,18 @@ func Execute() error {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// Global flags matching original f5xcctl exactly
+	// Global flags
 	pf := rootCmd.PersistentFlags()
 
-	// Connection settings (f5xcctl compatible)
+	// Connection settings
 	pf.StringVarP(&cacert, "cacert", "a", "", "Path to the server CA certificate file for TLS verification.")
 	pf.StringVarP(&cert, "cert", "c", "", "Path to the client certificate file for mTLS authentication.")
 	pf.StringVar(&cfgFile, "config", "", "Path to configuration file.")
 	pf.BoolVar(&hardwareKey, "hardwareKey", false, "Use a YubiKey hardware security module for TLS authentication.")
 	pf.StringVarP(&key, "key", "k", "", "Path to the client private key file for mTLS authentication.")
 
-	// Output format: --output-format is canonical, --outfmt is hidden alias for backward compatibility
+	// Output format
 	pf.StringVar(&outputFormat, "output-format", "", "Set the output format to text, json, yaml, or table.")
-	pf.StringVar(&outputFormat, "outfmt", "", "Output format for command (deprecated: use --output-format).")
-	_ = pf.MarkHidden("outfmt") // Hide deprecated alias
 
 	pf.StringVarP(&outputDir, "output", "o", "./", "Directory path for command output files.")
 	pf.StringVar(&p12Bundle, "p12-bundle", "", "Path to PKCS#12 bundle file containing client certificate and key.")

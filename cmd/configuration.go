@@ -19,7 +19,7 @@ import (
 	"github.com/robinmordasiewicz/f5xcctl/pkg/types"
 )
 
-// configurationFlags holds flags for configuration commands (f5xcctl compatibility)
+// configurationFlags holds flags for configuration commands
 type configurationFlags struct {
 	namespace      string
 	name           string
