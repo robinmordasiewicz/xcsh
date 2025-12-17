@@ -39,6 +39,19 @@ const (
 	ActivationManaged          = "managed"           // Fully managed by F5
 )
 
+// Subscription state values - lifecycle of addon subscriptions
+const (
+	SubscriptionPending        = "SUBSCRIPTION_PENDING"         // Request submitted, awaiting activation
+	SubscriptionEnabled        = "SUBSCRIPTION_ENABLED"         // Addon is active and enabled
+	SubscriptionDisablePending = "SUBSCRIPTION_DISABLE_PENDING" // Deactivation in progress
+	SubscriptionDisabled       = "SUBSCRIPTION_DISABLED"        // Addon is disabled
+)
+
+// Access status for end-of-life addons
+const (
+	AccessEOL = "AS_AC_EOL" // End of life, cannot activate
+)
+
 // Validation result status
 const (
 	ValidationPass    = "PASS"
@@ -109,6 +122,33 @@ func (a *AddonServiceInfo) NeedsUpgrade() bool {
 // NeedsContactSales returns true if the addon requires contacting sales
 func (a *AddonServiceInfo) NeedsContactSales() bool {
 	return a.AccessStatus == AccessContactSales
+}
+
+// IsSelfActivation returns true if the addon can be self-activated
+func (a *AddonServiceInfo) IsSelfActivation() bool {
+	return a.ActivationType == ActivationSelf
+}
+
+// IsManagedActivation returns true if the addon requires backend intervention
+func (a *AddonServiceInfo) IsManagedActivation() bool {
+	return a.ActivationType == ActivationPartiallyManaged || a.ActivationType == ActivationManaged
+}
+
+// IsEndOfLife returns true if the addon is end-of-life
+func (a *AddonServiceInfo) IsEndOfLife() bool {
+	return a.AccessStatus == AccessEOL
+}
+
+// CanActivate returns true if the addon can be activated (allowed and not already active)
+func (a *AddonServiceInfo) CanActivate() bool {
+	return a.AccessStatus == AccessAllowed &&
+		a.State != StateSubscribed &&
+		!a.IsEndOfLife()
+}
+
+// IsPending returns true if the addon has a pending activation
+func (a *AddonServiceInfo) IsPending() bool {
+	return a.State == StatePending
 }
 
 // QuotaSummary provides an overview of quota usage
@@ -249,6 +289,36 @@ func (v *ValidationResult) FailedCount() int {
 	return count
 }
 
+// ActivationResponse represents the result of an addon activation attempt
+type ActivationResponse struct {
+	AddonService      string `json:"addon_service" yaml:"addon_service"`
+	Namespace         string `json:"namespace,omitempty" yaml:"namespace,omitempty"`
+	SubscriptionState string `json:"subscription_state,omitempty" yaml:"subscription_state,omitempty"`
+	ActivationType    string `json:"activation_type,omitempty" yaml:"activation_type,omitempty"`
+	AccessStatus      string `json:"access_status,omitempty" yaml:"access_status,omitempty"`
+	RequestID         string `json:"request_id,omitempty" yaml:"request_id,omitempty"`
+	Message           string `json:"message" yaml:"message"`
+	NextSteps         string `json:"next_steps,omitempty" yaml:"next_steps,omitempty"`
+	IsPending         bool   `json:"is_pending" yaml:"is_pending"`
+	IsImmediate       bool   `json:"is_immediate" yaml:"is_immediate"`
+}
+
+// PendingActivation represents a pending addon activation request
+type PendingActivation struct {
+	AddonService      string `json:"addon_service" yaml:"addon_service"`
+	Namespace         string `json:"namespace,omitempty" yaml:"namespace,omitempty"`
+	SubscriptionState string `json:"subscription_state" yaml:"subscription_state"`
+	ActivationType    string `json:"activation_type,omitempty" yaml:"activation_type,omitempty"`
+	Message           string `json:"message,omitempty" yaml:"message,omitempty"`
+}
+
+// ActivationStatusResult contains pending activations and active addons
+type ActivationStatusResult struct {
+	PendingActivations []PendingActivation `json:"pending_activations" yaml:"pending_activations"`
+	ActiveAddons       []string            `json:"active_addons" yaml:"active_addons"`
+	TotalPending       int                 `json:"total_pending" yaml:"total_pending"`
+}
+
 // Spec represents the subscription command specification for AI assistants
 type Spec struct {
 	CommandGroup      string         `json:"command_group" yaml:"command_group"`
@@ -301,6 +371,7 @@ func GenerateSpec() *Spec {
 				"f5xcctl subscription show --output-format json",
 				"f5xcctl subscription addons --output-format json",
 				"f5xcctl subscription quota --output-format json",
+				"f5xcctl subscription activation-status --output-format json",
 			},
 			Description: "Use these commands to discover tenant subscription capabilities before deployment.",
 		},
@@ -318,6 +389,10 @@ func GenerateSpec() *Spec {
 			"Addon services with AccessUpgradeRequired need a plan upgrade to enable",
 			"Addon services with AccessContactSales require contacting F5 sales",
 			"Use --namespace flag to check quotas in specific namespaces",
+			"Use 'f5xcctl subscription activate --addon <name>' to activate available addons",
+			"Exit code 9 from activate indicates feature not available (denied, upgrade required, contact sales)",
+			"Use 'f5xcctl subscription activation-status' to check pending activation requests",
+			"Self-activation addons activate immediately; managed addons require SRE approval",
 		},
 		ExitCodes: []ExitCodeSpec{
 			{Code: 0, Name: "ExitSuccess", Description: "All validations passed"},
@@ -343,6 +418,15 @@ func GenerateSpec() *Spec {
 				Steps: []WorkflowStep{
 					{Step: 1, Description: "List all addon services", Command: "f5xcctl subscription addons --all --output-format json"},
 					{Step: 2, Description: "Check specific addon status", Command: "f5xcctl subscription validate --feature bot-defense"},
+				},
+			},
+			{
+				Name:        "addon-activation",
+				Description: "Activate addon services and monitor status",
+				Steps: []WorkflowStep{
+					{Step: 1, Description: "List available addons", Command: "f5xcctl subscription addons --filter available --output-format json"},
+					{Step: 2, Description: "Activate desired addon", Command: "f5xcctl subscription activate --addon <name>"},
+					{Step: 3, Description: "Check activation status", Command: "f5xcctl subscription activation-status --addon <name>"},
 				},
 			},
 		},
@@ -412,5 +496,35 @@ func QuotaStatusFromPercentage(percentage float64) string {
 		return "WARNING"
 	default:
 		return "OK"
+	}
+}
+
+// ActivationTypeDescription returns a human-readable description for an activation type
+func ActivationTypeDescription(activationType string) string {
+	switch activationType {
+	case ActivationSelf:
+		return "Self-Activation (immediate)"
+	case ActivationPartiallyManaged:
+		return "Partially Managed (requires approval)"
+	case ActivationManaged:
+		return "Fully Managed (SRE intervention required)"
+	default:
+		return "Unknown"
+	}
+}
+
+// SubscriptionStateDescription returns a human-readable description for a subscription state
+func SubscriptionStateDescription(state string) string {
+	switch state {
+	case SubscriptionPending:
+		return "Pending Activation"
+	case SubscriptionEnabled:
+		return "Enabled"
+	case SubscriptionDisablePending:
+		return "Pending Deactivation"
+	case SubscriptionDisabled:
+		return "Disabled"
+	default:
+		return state
 	}
 }
