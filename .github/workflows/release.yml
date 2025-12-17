@@ -356,6 +356,11 @@ jobs:
               end
             end
 
+            # Clear zsh completion cache after install/upgrade
+            postflight do
+              system_command "/bin/rm", args: ["-f", "#{Dir.home}/.zcompdump", "#{Dir.home}/.zcompdump-#{Socket.gethostname}-*"]
+            end
+
             caveats <<~EOS
               Shell completions have been installed for bash, zsh, and fish.
 

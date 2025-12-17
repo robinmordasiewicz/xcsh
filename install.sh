@@ -747,6 +747,8 @@ setup_zsh_completion() {
             success "Zsh completion installed to ${ZSH_COMPLETION_DIR}/_f5xcctl"
             # Automatically configure RC file
             add_zsh_completion_config "$ZSH_COMPLETION_DIR" || true
+            # Clear zsh completion cache to ensure new completions are loaded
+            rm -f "${ZDOTDIR:-$HOME}"/.zcompdump* 2>/dev/null
             return 0
         fi
     fi

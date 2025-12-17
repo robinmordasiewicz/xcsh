@@ -1,6 +1,6 @@
 # Shell Completion
 
-Enable tab completion for your shell:
+Enable tab completion for your shell.
 
 ## Bash
 
@@ -18,11 +18,11 @@ f5xcctl completion bash > $(brew --prefix)/etc/bash_completion.d/f5xcctl
 ## Zsh
 
 ```bash
-# Enable completion system
+# Enable completion system (if not already enabled)
 echo "autoload -U compinit; compinit" >> ~/.zshrc
 
 # Install completion
-f5xcctl completion zsh > "${fpath[1]}/_vesctl"
+f5xcctl completion zsh > "${fpath[1]}/_f5xcctl"
 ```
 
 ## Fish
@@ -35,4 +35,30 @@ f5xcctl completion fish > ~/.config/fish/completions/f5xcctl.fish
 
 ```powershell
 f5xcctl completion powershell | Out-String | Invoke-Expression
+```
+
+## Troubleshooting
+
+### Completions not working after upgrade
+
+Zsh caches completion functions in `~/.zcompdump*` files. After upgrading f5xcctl, the stale cache may prevent new completions from loading.
+
+**Fix:** Clear the cache and restart your shell:
+
+```bash
+rm -f ~/.zcompdump* && exec zsh
+```
+
+### Completions not loading at all
+
+Ensure the completion system is enabled in your `~/.zshrc`:
+
+```bash
+autoload -Uz compinit && compinit
+```
+
+Then restart your shell or run:
+
+```bash
+source ~/.zshrc
 ```
