@@ -2,14 +2,12 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
 
 	xerrors "github.com/robinmordasiewicz/f5xcctl/pkg/errors"
 	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
@@ -61,10 +59,9 @@ func init() {
 
 func runSubscriptionActivate(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
-	client := GetSubscriptionClient()
-
-	if client == nil {
-		return fmt.Errorf("subscription client not initialized")
+	client, err := requireSubscriptionClient()
+	if err != nil {
+		return err
 	}
 
 	namespace := GetSubscriptionNamespace()
@@ -75,7 +72,10 @@ func runSubscriptionActivate(cmd *cobra.Command, args []string) error {
 	// Handle activation denied errors with appropriate exit code
 	var deniedErr *subscription.ActivationDeniedError
 	if errors.As(err, &deniedErr) {
-		if outputErr := outputActivationResult(result, GetOutputFormatWithDefault("table")); outputErr != nil {
+		format := GetOutputFormatWithDefault("table")
+		if outputErr := formatOutputWithTableFallback(result, format, func() error {
+			return outputActivationTable(result)
+		}); outputErr != nil {
 			return outputErr
 		}
 		os.Exit(xerrors.ExitFeatureNotAvail) // Exit code 9
@@ -88,33 +88,16 @@ func runSubscriptionActivate(cmd *cobra.Command, args []string) error {
 
 	// Output result
 	format := GetOutputFormatWithDefault("table")
-	if err := outputActivationResult(result, format); err != nil {
-		return err
-	}
-
-	return nil
+	return formatOutputWithTableFallback(result, format, func() error {
+		return outputActivationTable(result)
+	})
 }
 
-func outputActivationResult(result *subscription.ActivationResponse, format string) error {
+func outputActivationTable(result *subscription.ActivationResponse) error {
 	if result == nil {
 		return fmt.Errorf("no activation result")
 	}
 
-	switch format {
-	case "json":
-		encoder := json.NewEncoder(os.Stdout)
-		encoder.SetIndent("", "  ")
-		return encoder.Encode(result)
-	case "yaml":
-		encoder := yaml.NewEncoder(os.Stdout)
-		encoder.SetIndent(2)
-		return encoder.Encode(result)
-	default:
-		return outputActivationTable(result)
-	}
-}
-
-func outputActivationTable(result *subscription.ActivationResponse) error {
 	// Determine status indicator
 	var statusLabel string
 	if result.IsImmediate {

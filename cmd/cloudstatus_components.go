@@ -119,9 +119,9 @@ func init() {
 }
 
 func runComponentsList(cmd *cobra.Command, args []string) error {
-	client := GetCloudStatusClient()
-	if client == nil {
-		return fmt.Errorf("cloudstatus client not initialized")
+	client, err := requireCloudStatusClient()
+	if err != nil {
+		return err
 	}
 
 	resp, err := client.GetComponents()
@@ -228,9 +228,9 @@ func runComponentsList(cmd *cobra.Command, args []string) error {
 }
 
 func runComponentsGet(cmd *cobra.Command, args []string) error {
-	client := GetCloudStatusClient()
-	if client == nil {
-		return fmt.Errorf("cloudstatus client not initialized")
+	client, err := requireCloudStatusClient()
+	if err != nil {
+		return err
 	}
 
 	componentID := args[0]
@@ -310,9 +310,9 @@ func printComponentDetails(comp *cloudstatus.Component) {
 }
 
 func runComponentsGroups(cmd *cobra.Command, args []string) error {
-	client := GetCloudStatusClient()
-	if client == nil {
-		return fmt.Errorf("cloudstatus client not initialized")
+	client, err := requireCloudStatusClient()
+	if err != nil {
+		return err
 	}
 
 	groups, err := client.GetComponentGroups()

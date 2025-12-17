@@ -2,13 +2,10 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
 
 	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
 )
@@ -57,10 +54,9 @@ func init() {
 
 func runSubscriptionActivationStatus(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
-	client := GetSubscriptionClient()
-
-	if client == nil {
-		return fmt.Errorf("subscription client not initialized")
+	client, err := requireSubscriptionClient()
+	if err != nil {
+		return err
 	}
 
 	namespace := GetSubscriptionNamespace()
@@ -82,22 +78,9 @@ func runSubscriptionActivationStatus(cmd *cobra.Command, args []string) error {
 	}
 
 	format := GetOutputFormatWithDefault("table")
-	return outputActivationStatus(result, format)
-}
-
-func outputActivationStatus(result *subscription.ActivationStatusResult, format string) error {
-	switch format {
-	case "json":
-		encoder := json.NewEncoder(os.Stdout)
-		encoder.SetIndent("", "  ")
-		return encoder.Encode(result)
-	case "yaml":
-		encoder := yaml.NewEncoder(os.Stdout)
-		encoder.SetIndent(2)
-		return encoder.Encode(result)
-	default:
+	return formatOutputWithTableFallback(result, format, func() error {
 		return outputActivationStatusTable(result)
-	}
+	})
 }
 
 func outputActivationStatusTable(result *subscription.ActivationStatusResult) error {

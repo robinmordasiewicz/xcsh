@@ -94,9 +94,9 @@ func init() {
 }
 
 func runMaintenanceList(cmd *cobra.Command, args []string) error {
-	client := GetCloudStatusClient()
-	if client == nil {
-		return fmt.Errorf("cloudstatus client not initialized")
+	client, err := requireCloudStatusClient()
+	if err != nil {
+		return err
 	}
 
 	resp, err := client.GetMaintenances()
@@ -115,9 +115,9 @@ func runMaintenanceList(cmd *cobra.Command, args []string) error {
 }
 
 func runMaintenanceUpcoming(cmd *cobra.Command, args []string) error {
-	client := GetCloudStatusClient()
-	if client == nil {
-		return fmt.Errorf("cloudstatus client not initialized")
+	client, err := requireCloudStatusClient()
+	if err != nil {
+		return err
 	}
 
 	resp, err := client.GetUpcomingMaintenances()
@@ -129,9 +129,9 @@ func runMaintenanceUpcoming(cmd *cobra.Command, args []string) error {
 }
 
 func runMaintenanceActive(cmd *cobra.Command, args []string) error {
-	client := GetCloudStatusClient()
-	if client == nil {
-		return fmt.Errorf("cloudstatus client not initialized")
+	client, err := requireCloudStatusClient()
+	if err != nil {
+		return err
 	}
 
 	resp, err := client.GetMaintenances()
@@ -145,9 +145,9 @@ func runMaintenanceActive(cmd *cobra.Command, args []string) error {
 }
 
 func runMaintenanceGet(cmd *cobra.Command, args []string) error {
-	client := GetCloudStatusClient()
-	if client == nil {
-		return fmt.Errorf("cloudstatus client not initialized")
+	client, err := requireCloudStatusClient()
+	if err != nil {
+		return err
 	}
 
 	maintenanceID := args[0]

@@ -69,9 +69,9 @@ type watchState struct {
 }
 
 func runWatch(cmd *cobra.Command, args []string) error {
-	client := GetCloudStatusClient()
-	if client == nil {
-		return fmt.Errorf("cloudstatus client not initialized")
+	client, err := requireCloudStatusClient()
+	if err != nil {
+		return err
 	}
 
 	// Parse component filter

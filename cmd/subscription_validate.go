@@ -2,13 +2,11 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
 
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
 
 	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
 )
@@ -66,10 +64,9 @@ func init() {
 
 func runSubscriptionValidate(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
-	client := GetSubscriptionClient()
-
-	if client == nil {
-		return fmt.Errorf("subscription client not initialized")
+	client, err := requireSubscriptionClient()
+	if err != nil {
+		return err
 	}
 
 	// Require at least one validation type
@@ -124,7 +121,9 @@ func runSubscriptionValidate(cmd *cobra.Command, args []string) error {
 
 	// Output based on format
 	format := GetOutputFormatWithDefault("table")
-	if err := outputValidation(result, format); err != nil {
+	if err := formatOutputWithTableFallback(result, format, func() error {
+		return outputValidationTable(result)
+	}); err != nil {
 		return err
 	}
 
@@ -208,21 +207,6 @@ func validateFeatureAvailability(ctx context.Context, client *subscription.Clien
 	}
 
 	return result, nil
-}
-
-func outputValidation(result *subscription.ValidationResult, format string) error {
-	switch format {
-	case "json":
-		encoder := json.NewEncoder(os.Stdout)
-		encoder.SetIndent("", "  ")
-		return encoder.Encode(result)
-	case "yaml":
-		encoder := yaml.NewEncoder(os.Stdout)
-		encoder.SetIndent(2)
-		return encoder.Encode(result)
-	default:
-		return outputValidationTable(result)
-	}
 }
 
 func outputValidationTable(result *subscription.ValidationResult) error {

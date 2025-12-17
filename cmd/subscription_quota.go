@@ -2,14 +2,11 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"os"
 	"sort"
 	"strings"
 
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v3"
 
 	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
 )
@@ -54,10 +51,9 @@ func init() {
 
 func runSubscriptionQuota(cmd *cobra.Command, args []string) error {
 	ctx := context.Background()
-	client := GetSubscriptionClient()
-
-	if client == nil {
-		return fmt.Errorf("subscription client not initialized")
+	client, err := requireSubscriptionClient()
+	if err != nil {
+		return err
 	}
 
 	// Note: Quotas are tenant-level, not namespace-level
@@ -83,22 +79,9 @@ func runSubscriptionQuota(cmd *cobra.Command, args []string) error {
 
 	// Output based on format
 	format := GetOutputFormatWithDefault("table")
-	return outputQuota(quotaInfo, format)
-}
-
-func outputQuota(quotaInfo *subscription.QuotaUsageInfo, format string) error {
-	switch format {
-	case "json":
-		encoder := json.NewEncoder(os.Stdout)
-		encoder.SetIndent("", "  ")
-		return encoder.Encode(quotaInfo)
-	case "yaml":
-		encoder := yaml.NewEncoder(os.Stdout)
-		encoder.SetIndent(2)
-		return encoder.Encode(quotaInfo)
-	default:
+	return formatOutputWithTableFallback(quotaInfo, format, func() error {
 		return outputQuotaTable(quotaInfo)
-	}
+	})
 }
 
 func outputQuotaTable(quotaInfo *subscription.QuotaUsageInfo) error {
