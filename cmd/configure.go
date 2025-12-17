@@ -25,7 +25,7 @@ var configureFlags struct {
 
 var configureCmd = &cobra.Command{
 	Use:    "configure",
-	Short:  "Configure CLI settings",
+	Short:  "Configure CLI settings.",
 	Hidden: true, // Hide from help to match original f5xcctl
 	Long: `Configure the F5 Distributed Cloud CLI settings.
 

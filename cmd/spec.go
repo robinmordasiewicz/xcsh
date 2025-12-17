@@ -645,6 +645,7 @@ func extractFlags(flags *pflag.FlagSet) []FlagSpec {
 			Type:        f.Value.Type(),
 			Default:     f.DefValue,
 			Description: f.Usage,
+			Required:    isRequiredFlag(f),
 		}
 
 		flagSpecs = append(flagSpecs, flagSpec)
@@ -656,6 +657,17 @@ func extractFlags(flags *pflag.FlagSet) []FlagSpec {
 	})
 
 	return flagSpecs
+}
+
+// isRequiredFlag checks if a flag is marked as required via Cobra's annotation system.
+// Cobra uses BashCompOneRequiredFlag annotation when MarkFlagRequired() is called.
+func isRequiredFlag(f *pflag.Flag) bool {
+	if f.Annotations == nil {
+		return false
+	}
+	// Cobra sets this annotation when a flag is marked required
+	_, ok := f.Annotations[cobra.BashCompOneRequiredFlag]
+	return ok
 }
 
 // getExitCodes returns the exit code specifications

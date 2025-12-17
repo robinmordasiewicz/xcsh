@@ -123,6 +123,8 @@ var rootCmd = &cobra.Command{
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 func Execute() error {
+	// Configure help system after all commands are registered
+	initHelpSystem()
 	return rootCmd.Execute()
 }
 
@@ -482,4 +484,89 @@ func spaces(n int) string {
 		s += " "
 	}
 	return s
+}
+
+// helpSystemInitialized tracks whether the help system has been set up
+var helpSystemInitialized bool
+
+// initHelpSystem configures help command visibility and templates.
+// This runs after all commands are registered but before Execute() runs.
+func initHelpSystem() {
+	if helpSystemInitialized {
+		return
+	}
+	helpSystemInitialized = true
+
+	// Set a hidden help command - users should use --help flag instead
+	// The help command still works if typed directly, just hidden from listing
+	rootCmd.SetHelpCommand(&cobra.Command{
+		Use:    "help [command]",
+		Short:  "Help about any command",
+		Hidden: true,
+		Run: func(c *cobra.Command, args []string) {
+			if len(args) == 0 {
+				_ = rootCmd.Help()
+				return
+			}
+			cmd, _, err := rootCmd.Find(args)
+			if cmd == nil || err != nil {
+				c.Printf("Unknown help topic %#q\n", args)
+				_ = rootCmd.Usage()
+				return
+			}
+			_ = cmd.Help()
+		},
+	})
+
+	// Apply custom usage template that properly filters hidden commands
+	applyUsageTemplateRecursively(rootCmd, usageTemplateWithHiddenFilter())
+
+	// Apply custom help template to all commands recursively
+	applyHelpTemplateRecursively(rootCmd, helpTemplateWithEnvVars())
+}
+
+// usageTemplateWithHiddenFilter returns a usage template that properly filters hidden commands
+func usageTemplateWithHiddenFilter() string {
+	return `Usage:{{if .Runnable}}
+  {{.UseLine}}{{end}}{{if .HasAvailableSubCommands}}
+  {{.CommandPath}} [command]{{end}}{{if gt (len .Aliases) 0}}
+
+Aliases:
+  {{.NameAndAliases}}{{end}}{{if .HasExample}}
+
+Examples:
+{{.Example}}{{end}}{{if .HasAvailableSubCommands}}{{$cmds := .Commands}}{{if eq (len .Groups) 0}}
+
+Available Commands:{{range $cmds}}{{if (and .IsAvailableCommand (not .Hidden))}}
+  {{rpad .Name .NamePadding }} {{.Short}}{{end}}{{end}}{{end}}{{end}}{{if .HasAvailableLocalFlags}}
+
+Flags:
+{{.LocalFlags.FlagUsages | trimTrailingWhitespaces}}{{end}}{{if .HasAvailableInheritedFlags}}
+
+Global Flags:
+{{.InheritedFlags.FlagUsages | trimTrailingWhitespaces}}{{end}}{{if .HasHelpSubCommands}}
+
+Additional help topics:{{range .Commands}}{{if .IsAdditionalHelpTopicCommand}}
+  {{rpad .CommandPath .CommandPathPadding}} {{.Short}}{{end}}{{end}}{{end}}{{if .HasAvailableSubCommands}}
+
+Use "{{.CommandPath}} [command] --help" for more information about a command.{{end}}
+`
+}
+
+// applyUsageTemplateRecursively applies custom usage template to all commands
+func applyUsageTemplateRecursively(cmd *cobra.Command, template string) {
+	cmd.SetUsageTemplate(template)
+	for _, subCmd := range cmd.Commands() {
+		applyUsageTemplateRecursively(subCmd, template)
+	}
+}
+
+// applyHelpTemplateRecursively applies custom help template to all commands
+// in the command tree. This ensures consistent help formatting with environment
+// variables section across all subcommands.
+func applyHelpTemplateRecursively(cmd *cobra.Command, template string) {
+	cmd.SetHelpTemplate(template)
+	for _, subCmd := range cmd.Commands() {
+		applyHelpTemplateRecursively(subCmd, template)
+	}
 }

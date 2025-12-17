@@ -65,8 +65,47 @@ var configurationCmd = &cobra.Command{
 	Use:     "configuration",
 	Aliases: []string{"cfg", "c"},
 	Short:   "Manage F5 XC configuration objects using CRUD operations.",
-	Long:    `Manage F5 XC configuration objects using CRUD operations.`,
-	Example: `f5xcctl configuration create virtual_host`,
+	Long: `Manage F5 Distributed Cloud configuration objects using CRUD operations.
+
+This is the primary command group for managing F5 XC resources. It supports
+standard create, read, update, and delete operations across all resource types
+in your F5 XC tenant.
+
+OPERATIONS:
+  list           List resources of a type (optionally filtered by namespace)
+  get            Retrieve a specific resource by name
+  create         Create a new resource from YAML/JSON file
+  replace        Replace an existing resource completely
+  apply          Create or update (upsert) a resource
+  delete         Remove a resource by name
+  status         Check the operational status of a resource
+  patch          Partially update a resource
+  add-labels     Add labels to a resource
+  remove-labels  Remove labels from a resource
+
+COMMON RESOURCE TYPES:
+  namespace, http_loadbalancer, origin_pool, healthcheck, app_firewall,
+  service_policy, route, virtual_host, tcp_loadbalancer, dns_zone
+
+AI assistants should use 'f5xcctl configuration list namespace' first to
+discover available namespaces, then explore resources within each namespace.`,
+	Example: `  # List all namespaces
+  f5xcctl configuration list namespace
+
+  # List HTTP load balancers in a namespace
+  f5xcctl configuration list http_loadbalancer -n my-namespace
+
+  # Get a specific resource as YAML
+  f5xcctl configuration get http_loadbalancer -n my-namespace my-lb --output-format yaml
+
+  # Create a resource from file
+  f5xcctl configuration create http_loadbalancer -n my-namespace -i lb-config.yaml
+
+  # Delete a resource (with confirmation)
+  f5xcctl configuration delete http_loadbalancer -n my-namespace my-lb
+
+  # Apply (create or update) a resource
+  f5xcctl configuration apply http_loadbalancer -n my-namespace -i lb-config.yaml`,
 }
 
 func init() {

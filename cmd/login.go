@@ -25,7 +25,7 @@ var loginFlags struct {
 
 var loginCmd = &cobra.Command{
 	Use:    "login",
-	Short:  "Log in to F5 Distributed Cloud",
+	Short:  "Log in to F5 Distributed Cloud.",
 	Hidden: true, // Hide from help to match original f5xcctl
 	Long: `Authenticate with F5 Distributed Cloud.
 
@@ -53,7 +53,7 @@ After successful login, you can use all f5xcctl commands to manage your resource
 
 var logoutCmd = &cobra.Command{
 	Use:    "logout",
-	Short:  "Log out from F5 Distributed Cloud",
+	Short:  "Log out from F5 Distributed Cloud.",
 	Hidden: true, // Hide from help to match original f5xcctl
 	Long:   `Clear saved credentials from the configuration file.`,
 	Example: `  # Log out
