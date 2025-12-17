@@ -589,12 +589,12 @@ nav:
         - Run: commands/site/azure_vnet/run.md
     - Subscription:
       - Overview: commands/subscription/index.md
-      - Activate: commands/subscription/activate.md
-      - Activation Status: commands/subscription/activation-status.md
-      - Addons: commands/subscription/addons.md
-      - Quota: commands/subscription/quota.md
-      - Show: commands/subscription/show.md
-      - Validate: commands/subscription/validate.md
+      - Activate: commands/subscription/activate/index.md
+      - Activation Status: commands/subscription/activation-status/index.md
+      - Addons: commands/subscription/addons/index.md
+      - Quota: commands/subscription/quota/index.md
+      - Show: commands/subscription/show/index.md
+      - Validate: commands/subscription/validate/index.md
     - Version: commands/version/index.md
   - Guides:
     - guides/index.md
