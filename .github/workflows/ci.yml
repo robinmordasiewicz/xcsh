@@ -115,8 +115,11 @@ jobs:
       - name: Download dependencies
         run: go mod download
 
+      - name: Download enriched API specifications
+        run: ./scripts/download-specs.sh
+
       - name: Regenerate schemas
-        run: make generate-schemas
+        run: go run scripts/generate-schemas.go
 
       - name: Check for uncommitted changes
         run: |
@@ -132,7 +135,7 @@ jobs:
         run: |
           echo "Running schema generation twice to verify idempotency..."
           cp pkg/types/schemas_generated.go /tmp/schemas_first.go
-          make generate-schemas 2>/dev/null
+          go run scripts/generate-schemas.go 2>/dev/null
           if ! diff -q pkg/types/schemas_generated.go /tmp/schemas_first.go > /dev/null; then
             echo "::error::Schema generation is not idempotent!"
             diff pkg/types/schemas_generated.go /tmp/schemas_first.go
@@ -169,6 +172,9 @@ jobs:
         with:
           go-version: "1.25"
           cache: false
+
+      - name: Download enriched API specifications
+        run: ./scripts/download-specs.sh
 
       - name: Build for all platforms
         run: |
