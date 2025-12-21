@@ -26,18 +26,18 @@ f5xcctl configuration list http_loadbalancer
   → f5xcctl lb list http_loadbalancer (using alias)
 
 # Get a resource
-f5xcctl configuration get origin_pool mypool -n production
-  → f5xcctl infrastructure get origin_pool mypool -n production
-  → f5xcctl infra get origin_pool mypool -n production (using alias)
+f5xcctl configuration get origin_pool example-pool -n production
+  → f5xcctl infrastructure get origin_pool example-pool -n production
+  → f5xcctl infra get origin_pool example-pool -n production (using alias)
 
 # Create a resource
 f5xcctl configuration create certificate -i cert.yaml
   → f5xcctl identity create certificate -i cert.yaml
 
 # Delete a resource
-f5xcctl configuration delete http_loadbalancer my-lb --yes
-  → f5xcctl load_balancer delete http_loadbalancer my-lb --yes
-  → f5xcctl lb delete http_loadbalancer my-lb --yes
+f5xcctl configuration delete http_loadbalancer example-lb --yes
+  → f5xcctl load_balancer delete http_loadbalancer example-lb --yes
+  → f5xcctl lb delete http_loadbalancer example-lb --yes
 ```
 
 ### Added

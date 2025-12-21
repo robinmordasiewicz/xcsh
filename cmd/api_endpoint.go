@@ -54,10 +54,10 @@ COMMANDS:
 AI assistants should run 'discover' first to understand the service mesh
 topology before using 'control' to create security policies.`,
 	Example: `  # Discover API endpoints in a namespace
-  f5xcctl api-endpoint discover --namespace default --app-type my-app
+  f5xcctl api-endpoint discover --namespace default --app-type example-app
 
   # Create L7 policies from discovered endpoints
-  f5xcctl api-endpoint control --discover-ns default --app-type my-app
+  f5xcctl api-endpoint control --discover-ns default --app-type example-app
 
   # Check available commands
   f5xcctl api-endpoint --help`,

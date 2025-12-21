@@ -64,10 +64,10 @@ f5xcctl lb list http_loadbalancer -n production
 
 ```bash
 # Get a load balancer configuration
-f5xcctl load_balancer get http_loadbalancer my-lb
+f5xcctl load_balancer get http_loadbalancer example-lb
 
 # Get from specific namespace
-f5xcctl lb get http_loadbalancer my-lb -n production
+f5xcctl lb get http_loadbalancer example-lb -n production
 ```
 
 #### Create a Resource
@@ -77,17 +77,17 @@ f5xcctl lb get http_loadbalancer my-lb -n production
 f5xcctl load_balancer create http_loadbalancer -i lb-config.yaml
 
 # Create from inline JSON
-f5xcctl lb create origin_pool --json-data '{"metadata":{"name":"my-pool"},...}'
+f5xcctl lb create origin_pool --json-data '{"metadata":{"name":"example-pool"},...}'
 ```
 
 #### Delete a Resource
 
 ```bash
 # Delete with confirmation
-f5xcctl load_balancer delete http_loadbalancer my-lb
+f5xcctl load_balancer delete http_loadbalancer example-lb
 
 # Delete without confirmation (for scripts)
-f5xcctl lb delete http_loadbalancer my-lb --yes
+f5xcctl lb delete http_loadbalancer example-lb --yes
 ```
 
 #### Apply (Create or Update)

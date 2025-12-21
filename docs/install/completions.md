@@ -90,7 +90,7 @@ f5xcctl infrastructure get <TAB>
 f5xcctl load_balancer list http_loadbalancer -n <TAB>
 # Suggests: default, production, staging, etc. (from your F5 XC tenant)
 
-f5xcctl lb get origin_pool my-pool -n <TAB>
+f5xcctl lb get origin_pool example-pool -n <TAB>
 # Dynamic namespace completion for your specific namespace
 ```
 
@@ -99,7 +99,7 @@ f5xcctl lb get origin_pool my-pool -n <TAB>
 ```bash
 # Complete resource names (requires API access)
 f5xcctl load_balancer get http_loadbalancer <TAB>
-# Suggests: my-lb-1, prod-lb, staging-lb, etc. (from your namespace)
+# Suggests: example-lb-1, prod-lb, staging-lb, etc. (from your namespace)
 
 f5xcctl infrastructure delete origin_pool <TAB>
 # Shows available origin pools to delete
@@ -109,10 +109,10 @@ f5xcctl infrastructure delete origin_pool <TAB>
 
 ```bash
 # Complete label keys
-f5xcctl load_balancer add-labels http_loadbalancer my-lb --label-key <TAB>
+f5xcctl load_balancer add-labels http_loadbalancer example-lb --label-key <TAB>
 # Suggests: environment, application, owner, cost-center, tier, version
 
-f5xcctl lb add-labels http_loadbalancer my-lb -n production --label-key <TAB>
+f5xcctl lb add-labels http_loadbalancer example-lb -n production --label-key <TAB>
 # Common F5 XC label keys
 ```
 

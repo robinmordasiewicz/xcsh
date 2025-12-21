@@ -109,7 +109,7 @@ f5xcctl --api-token configuration list namespace
 
 ```bash
 export F5XC_API_TOKEN='your-api-token'
-f5xcctl login --tenant my-tenant --api-token
+f5xcctl login --tenant example-tenant --api-token
 ```
 
 ## Configuration File
