@@ -333,8 +333,8 @@ func getAIHints() AIHintsSpec {
 		BestPractices: []string{
 			"Use --output-format json for programmatic parsing",
 			"Set F5XC_API_URL and F5XC_P12_FILE environment variables for persistent configuration",
-			"Use f5xcctl configuration list <resource-type> to discover available resources",
-			"Use f5xcctl configuration get <resource-type> -n <namespace> <name> to retrieve specific resources",
+			"Use f5xcctl <domain> list <resource-type> to discover available resources (e.g., f5xcctl lb list http_loadbalancer)",
+			"Use f5xcctl <domain> get <resource-type> -n <namespace> <name> to retrieve specific resources (e.g., f5xcctl infra get origin_pool -n prod mypool)",
 			"Always specify --namespace or -n for namespace-scoped resources",
 			"Use --spec to get complete CLI structure before constructing commands",
 			"Check exit codes for programmatic error handling (0=success, 1=generic, 2=validation, 3=auth, 4=connection, 5=not-found, 6=conflict, 7=rate-limit, 8=quota-exceeded, 9=feature-unavailable)",

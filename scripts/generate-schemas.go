@@ -236,14 +236,15 @@ func main() {
 	// Final validation
 	validateGeneratedSchemas(schemas)
 
-	// Optionally update resources_generated.go with full descriptions
+	// Optionally update resources_generated.go with full descriptions and domain mappings
 	if *updateResources {
 		descriptionMap := buildDescriptionMap(mapper, allResources)
-		if err := writeResourcesFile(*resourcesFile, allResources, descriptionMap); err != nil {
+		domainMap := buildResourceDomainMap(specs, mapper, allResources)
+		if err := writeResourcesFile(*resourcesFile, allResources, descriptionMap, domainMap); err != nil {
 			fmt.Fprintf(os.Stderr, "Error writing resources file: %v\n", err)
 			os.Exit(1)
 		}
-		fmt.Printf("Updated %s with full descriptions\n", *resourcesFile)
+		fmt.Printf("Updated %s with full descriptions and domain mappings\n", *resourcesFile)
 	}
 }
 
@@ -725,8 +726,118 @@ func buildDescriptionMap(mapper *openapi.SpecMapper, resources []*types.Resource
 	return descriptions
 }
 
-// writeResourcesFile generates resources_generated.go with full descriptions
-func writeResourcesFile(outputPath string, resources []*types.ResourceType, descriptions map[string]string) error {
+// domainIndexEntry represents a single entry in the domain index
+type domainIndexEntry struct {
+	Domain string `json:"domain"`
+	Title  string `json:"title"`
+	File   string `json:"file"`
+}
+
+// domainIndexFile represents the complete domain index
+type domainIndexFile struct {
+	Version         string               `json:"version"`
+	Specifications  []domainIndexEntry   `json:"specifications"`
+}
+
+// loadDomainIndex loads the domain mappings from .specs/index.json
+func loadDomainIndex(indexPath string) (map[string]string, error) {
+	// Map from filename (e.g., "load_balancer.json") to domain name
+	fileToDomain := make(map[string]string)
+
+	data, err := os.ReadFile(indexPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read domain index: %w", err)
+	}
+
+	var index domainIndexFile
+	if err := json.Unmarshal(data, &index); err != nil {
+		return nil, fmt.Errorf("failed to parse domain index: %w", err)
+	}
+
+	for _, spec := range index.Specifications {
+		fileToDomain[spec.File] = spec.Domain
+	}
+
+	return fileToDomain, nil
+}
+
+// ResourceDomainInfo contains domain information for a resource
+type ResourceDomainInfo struct {
+	PrimaryDomain string   // Domain containing CreateRequest schema (authoritative)
+	Domains       []string // All domains this resource appears in
+}
+
+// buildResourceDomainMap builds a mapping of resources to their domains from OpenAPI specs
+func buildResourceDomainMap(specs map[string]*openapi.Spec, mapper *openapi.SpecMapper, resources []*types.ResourceType) map[string]*ResourceDomainInfo {
+	domainMap := make(map[string]*ResourceDomainInfo)
+
+	// Load domain index to extract domain from filenames
+	fileToDomain, err := loadDomainIndex(".specs/index.json")
+	if err != nil {
+		if *verbose {
+			fmt.Fprintf(os.Stderr, "Warning: could not load domain index: %v\n", err)
+		}
+		// Fall back to extracting domain from filename
+	}
+
+	// For each resource, find all specs that contain it
+	for _, rt := range resources {
+		info := &ResourceDomainInfo{
+			Domains: []string{},
+		}
+
+		// Check each spec file to see if it contains this resource
+		for filePath, spec := range specs {
+			// Extract domain from filename (e.g., "load_balancer.json" -> "load_balancer")
+			// The filepath from LoadAllSpecs is the full path, so extract just the filename
+			filename := filepath.Base(filePath)
+			domain := ""
+			if d, ok := fileToDomain[filename]; ok {
+				domain = d
+			} else {
+				// Fallback: extract from filename
+				domain = strings.TrimSuffix(filename, ".json")
+			}
+
+			if domain == "other" || domain == "" {
+				// Skip the "other" domain or invalid domains
+				continue
+			}
+
+			// Check if resource is in this spec
+			// First check for CreateRequest (primary domain indicator)
+			if spec.FindCreateRequestSchema(rt.Name) != nil {
+				// This domain has the CreateRequest - it's the primary domain
+				if info.PrimaryDomain == "" {
+					info.PrimaryDomain = domain
+				}
+				// Add to domains list if not already there
+				if !contains(info.Domains, domain) {
+					info.Domains = append(info.Domains, domain)
+				}
+			} else if spec.FindCreateSpecTypeSchema(rt.Name) != nil {
+				// Has CreateSpecType schema but no CreateRequest - it's a secondary domain
+				if !contains(info.Domains, domain) {
+					info.Domains = append(info.Domains, domain)
+				}
+				// Only set PrimaryDomain if we haven't found one yet
+				if info.PrimaryDomain == "" {
+					info.PrimaryDomain = domain
+				}
+			}
+		}
+
+		// Sort domains for deterministic output
+		sort.Strings(info.Domains)
+
+		domainMap[rt.Name] = info
+	}
+
+	return domainMap
+}
+
+// writeResourcesFile generates resources_generated.go with full descriptions and domain mappings
+func writeResourcesFile(outputPath string, resources []*types.ResourceType, descriptions map[string]string, domainMap map[string]*ResourceDomainInfo) error {
 	// Ensure output directory exists
 	dir := filepath.Dir(outputPath)
 	if err := os.MkdirAll(dir, 0755); err != nil {
@@ -771,7 +882,8 @@ func registerGeneratedResources() {
 			desc = fullDesc
 		}
 
-		if err := writeResourceEntry(f, rt, desc); err != nil {
+		domainInfo := domainMap[rt.Name]
+		if err := writeResourceEntry(f, rt, desc, domainInfo); err != nil {
 			return err
 		}
 	}
@@ -787,7 +899,7 @@ func registerGeneratedResources() {
 }
 
 // writeResourceEntry writes a single resource registration to the file
-func writeResourceEntry(f *os.File, rt *types.ResourceType, description string) error {
+func writeResourceEntry(f *os.File, rt *types.ResourceType, description string, domainInfo *ResourceDomainInfo) error {
 	// Start the registration
 	entry := fmt.Sprintf(`	Register(&ResourceType{
 		Name:              %q,
@@ -825,12 +937,37 @@ func writeResourceEntry(f *os.File, rt *types.ResourceType, description string) 
 		}
 	}
 
+	// Add domain information if available
+	if domainInfo != nil && (domainInfo.PrimaryDomain != "" || len(domainInfo.Domains) > 0) {
+		domainEntry := fmt.Sprintf(`
+		PrimaryDomain:    %q,
+		Domains:          []string{%s},`,
+			domainInfo.PrimaryDomain,
+			formatDomainSlice(domainInfo.Domains),
+		)
+		if _, err := f.WriteString(domainEntry); err != nil {
+			return err
+		}
+	}
+
 	// Close the registration
 	if _, err := f.WriteString("\n\t})\n\n"); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+// formatDomainSlice formats a slice of domains as Go code
+func formatDomainSlice(domains []string) string {
+	if len(domains) == 0 {
+		return ""
+	}
+	var parts []string
+	for _, d := range domains {
+		parts = append(parts, fmt.Sprintf("%q", d))
+	}
+	return strings.Join(parts, ", ")
 }
 
 // formatOperations formats ResourceOperations as Go code

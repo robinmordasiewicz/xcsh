@@ -38,6 +38,14 @@ type ResourceType struct {
 	// HelpAnnotation is shown in --help output for tier-restricted resources
 	// e.g., "[Requires Advanced]"
 	HelpAnnotation string
+
+	// PrimaryDomain is the domain containing the CreateRequest schema
+	// This is the authoritative domain for resource creation
+	PrimaryDomain string
+
+	// Domains lists all domains this resource appears in
+	// Enables cross-domain resource access (resource accessible from multiple domains)
+	Domains []string
 }
 
 // HumanReadableName returns the human-readable name of the resource type
