@@ -88,6 +88,9 @@ Use --namespace to filter by namespace, or --output-format to control output for
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
 
+	// Register flag completions
+	_ = cmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
+
 	// Get resources for this domain (cross-domain enabled)
 	resources := types.GetByDomain(domain)
 	sortResourcesByName(resources)
@@ -147,6 +150,9 @@ Use --response-format replace-request to get output suitable for editing and rep
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
 	cmd.PersistentFlags().StringVar(&flags.responseFormat, "response-format", "read", "Response format: 'read' for display or 'replace-request' for editing.")
 
+	// Register flag completions
+	_ = cmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
+
 	// Get resources for this domain
 	resources := types.GetByDomain(domain)
 	sortResourcesByName(resources)
@@ -172,16 +178,18 @@ Use --response-format replace-request to get output suitable for editing and rep
   f5xcctl %s get %s example-resource -n production`, rt.Name, domain, rt.Name, domain, rt.Name, domain, rt.Name)
 
 		subCmd := &cobra.Command{
-			Use:     fmt.Sprintf("%s <name>", rt.Name),
-			Short:   formatShortWithTier("Get", displayName, rt.Name),
-			Long:    longDesc,
-			Example: exampleText,
-			Args:    cobra.ExactArgs(1),
+			Use:               fmt.Sprintf("%s <name>", rt.Name),
+			Short:             formatShortWithTier("Get", displayName, rt.Name),
+			Long:              longDesc,
+			Example:           exampleText,
+			Args:              cobra.ExactArgs(1),
+			ValidArgsFunction: completeResourceName(domain, rtCopy.Name),
 			RunE: func(cmd *cobra.Command, args []string) error {
 				flags.name = args[0]
 				return runConfigGet(rtCopy, &flags)
 			},
 		}
+		_ = subCmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
 		cmd.AddCommand(subCmd)
 	}
 
@@ -207,6 +215,9 @@ Provide a YAML or JSON file with the resource configuration using --input-file.`
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
 	cmd.PersistentFlags().StringVarP(&flags.inputFile, "input-file", "i", "", "Path to YAML/JSON file containing the resource configuration.")
 	cmd.PersistentFlags().StringVar(&flags.mode, "mode", "raw", "Input mode: 'raw' for direct config or 'form' for interactive mode.")
+
+	// Register flag completions
+	_ = cmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
 
 	// Get resources for this domain
 	resources := types.GetByDomain(domain)
@@ -242,6 +253,7 @@ Provide a YAML or JSON file with the resource configuration using --input-file.`
 				return runConfigCreate(rtCopy, &flags)
 			},
 		}
+		_ = subCmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
 		cmd.AddCommand(subCmd)
 	}
 
@@ -266,6 +278,9 @@ Requires confirmation unless --yes is specified.`, domainInfo.DisplayName, domai
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
 	cmd.PersistentFlags().BoolVar(&flags.yes, "yes", false, "Skip confirmation prompt.")
+
+	// Register flag completions
+	_ = cmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
 
 	// Get resources for this domain
 	resources := types.GetByDomain(domain)
@@ -293,16 +308,18 @@ Requires confirmation unless --yes is specified.`, domainInfo.DisplayName, domai
   f5xcctl %s delete %s -n my-namespace my-resource --yes`, domain, rt.Name, domain, rt.Name)
 
 		subCmd := &cobra.Command{
-			Use:     fmt.Sprintf("%s <name>", rt.Name),
-			Short:   formatShortWithTier("Delete", displayName, rt.Name),
-			Long:    longDesc,
-			Example: exampleText,
-			Args:    cobra.ExactArgs(1),
+			Use:               fmt.Sprintf("%s <name>", rt.Name),
+			Short:             formatShortWithTier("Delete", displayName, rt.Name),
+			Long:              longDesc,
+			Example:           exampleText,
+			Args:              cobra.ExactArgs(1),
+			ValidArgsFunction: completeResourceName(domain, rtCopy.Name),
 			RunE: func(cmd *cobra.Command, args []string) error {
 				flags.name = args[0]
 				return runConfigDelete(rtCopy, &flags)
 			},
 		}
+		_ = subCmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
 		cmd.AddCommand(subCmd)
 	}
 
@@ -328,6 +345,9 @@ Use apply for create-or-update semantics.`, domainInfo.DisplayName, domainInfo.D
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
 	cmd.PersistentFlags().StringVarP(&flags.inputFile, "input-file", "i", "", "Path to YAML/JSON file containing the updated configuration.")
+
+	// Register flag completions
+	_ = cmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
 
 	// Get resources for this domain
 	resources := types.GetByDomain(domain)
@@ -362,6 +382,7 @@ Use apply for create-or-update semantics.`, domainInfo.DisplayName, domainInfo.D
 				return runConfigReplace(rtCopy, &flags)
 			},
 		}
+		_ = subCmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
 		cmd.AddCommand(subCmd)
 	}
 
@@ -386,6 +407,9 @@ Returns the current operational state and any relevant status information.`, dom
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
 
+	// Register flag completions
+	_ = cmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
+
 	// Get resources for this domain
 	resources := types.GetByDomain(domain)
 	sortResourcesByName(resources)
@@ -408,16 +432,18 @@ Returns the current operational state and any relevant status information.`, dom
   f5xcctl %s status %s -n my-namespace my-resource`, domain, rt.Name)
 
 		subCmd := &cobra.Command{
-			Use:     fmt.Sprintf("%s <name>", rt.Name),
-			Short:   formatShortWithTier("Status", displayName, rt.Name),
-			Long:    longDesc,
-			Example: exampleText,
-			Args:    cobra.ExactArgs(1),
+			Use:               fmt.Sprintf("%s <name>", rt.Name),
+			Short:             formatShortWithTier("Status", displayName, rt.Name),
+			Long:              longDesc,
+			Example:           exampleText,
+			Args:              cobra.ExactArgs(1),
+			ValidArgsFunction: completeResourceName(domain, rtCopy.Name),
 			RunE: func(cmd *cobra.Command, args []string) error {
 				flags.name = args[0]
 				return runConfigStatus(rtCopy, &flags)
 			},
 		}
+		_ = subCmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
 		cmd.AddCommand(subCmd)
 	}
 
@@ -442,6 +468,9 @@ If the resource exists, it will be updated. If it doesn't exist, it will be crea
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
 	cmd.PersistentFlags().StringVarP(&flags.inputFile, "input-file", "i", "", "Path to YAML/JSON file containing the resource configuration.")
+
+	// Register flag completions
+	_ = cmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
 
 	// Get resources for this domain
 	resources := types.GetByDomain(domain)
@@ -474,6 +503,7 @@ If the resource exists, it will be updated. If it doesn't exist, it will be crea
 				return runConfigApply(rtCopy, &flags)
 			},
 		}
+		_ = subCmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
 		cmd.AddCommand(subCmd)
 	}
 
@@ -499,6 +529,9 @@ Only specified fields will be updated. Other fields remain unchanged.`, domainIn
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
 	cmd.PersistentFlags().StringVarP(&flags.inputFile, "input-file", "i", "", "Path to YAML/JSON file containing the fields to patch.")
 
+	// Register flag completions
+	_ = cmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
+
 	// Get resources for this domain
 	resources := types.GetByDomain(domain)
 	sortResourcesByName(resources)
@@ -522,16 +555,18 @@ Only specified fields will be updated. Other fields remain unchanged.`, domainIn
   f5xcctl %s patch %s -n my-namespace my-resource -i patch.yaml`, domain, rt.Name)
 
 		subCmd := &cobra.Command{
-			Use:     fmt.Sprintf("%s <name>", rt.Name),
-			Short:   formatShortWithTier("Patch", displayName, rt.Name),
-			Long:    longDesc,
-			Example: exampleText,
-			Args:    cobra.ExactArgs(1),
+			Use:               fmt.Sprintf("%s <name>", rt.Name),
+			Short:             formatShortWithTier("Patch", displayName, rt.Name),
+			Long:              longDesc,
+			Example:           exampleText,
+			Args:              cobra.ExactArgs(1),
+			ValidArgsFunction: completeResourceName(domain, rtCopy.Name),
 			RunE: func(cmd *cobra.Command, args []string) error {
 				flags.name = args[0]
 				return runConfigPatch(rtCopy, &flags)
 			},
 		}
+		_ = subCmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
 		cmd.AddCommand(subCmd)
 	}
 
@@ -558,6 +593,10 @@ Specify label key-value pairs using --label-key and --label-value flags.`, domai
 	cmd.PersistentFlags().StringArrayVar(&flags.labelKeys, "label-key", []string{}, "Label keys to add.")
 	cmd.PersistentFlags().StringArrayVar(&flags.labelValues, "label-value", []string{}, "Corresponding label values.")
 
+	// Register flag completions
+	_ = cmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
+	_ = cmd.RegisterFlagCompletionFunc("label-key", completeLabelKey)
+
 	// Get resources for this domain
 	resources := types.GetByDomain(domain)
 	sortResourcesByName(resources)
@@ -576,16 +615,19 @@ Specify label key-value pairs using --label-key and --label-value flags.`, domai
   f5xcctl %s add-labels %s -n my-namespace my-resource --label-key env --label-value prod`, domain, rt.Name)
 
 		subCmd := &cobra.Command{
-			Use:     fmt.Sprintf("%s <name>", rt.Name),
-			Short:   formatShortWithTier("Add-labels", displayName, rt.Name),
-			Long:    longDesc,
-			Example: exampleText,
-			Args:    cobra.ExactArgs(1),
+			Use:               fmt.Sprintf("%s <name>", rt.Name),
+			Short:             formatShortWithTier("Add-labels", displayName, rt.Name),
+			Long:              longDesc,
+			Example:           exampleText,
+			Args:              cobra.ExactArgs(1),
+			ValidArgsFunction: completeResourceName(domain, rtCopy.Name),
 			RunE: func(cmd *cobra.Command, args []string) error {
 				flags.name = args[0]
 				return runConfigAddLabels(rtCopy, &flags)
 			},
 		}
+		_ = subCmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
+		_ = subCmd.RegisterFlagCompletionFunc("label-key", completeLabelKey)
 		cmd.AddCommand(subCmd)
 	}
 
@@ -611,6 +653,10 @@ Specify the label keys to remove using --label-key flags.`, domainInfo.DisplayNa
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
 	cmd.PersistentFlags().StringArrayVar(&flags.labelKeys, "label-key", []string{}, "Label keys to remove.")
 
+	// Register flag completions
+	_ = cmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
+	_ = cmd.RegisterFlagCompletionFunc("label-key", completeLabelKey)
+
 	// Get resources for this domain
 	resources := types.GetByDomain(domain)
 	sortResourcesByName(resources)
@@ -629,16 +675,19 @@ Specify the label keys to remove using --label-key flags.`, domainInfo.DisplayNa
   f5xcctl %s remove-labels %s -n my-namespace my-resource --label-key env`, domain, rt.Name)
 
 		subCmd := &cobra.Command{
-			Use:     fmt.Sprintf("%s <name>", rt.Name),
-			Short:   formatShortWithTier("Remove-labels", displayName, rt.Name),
-			Long:    longDesc,
-			Example: exampleText,
-			Args:    cobra.ExactArgs(1),
+			Use:               fmt.Sprintf("%s <name>", rt.Name),
+			Short:             formatShortWithTier("Remove-labels", displayName, rt.Name),
+			Long:              longDesc,
+			Example:           exampleText,
+			Args:              cobra.ExactArgs(1),
+			ValidArgsFunction: completeResourceName(domain, rtCopy.Name),
 			RunE: func(cmd *cobra.Command, args []string) error {
 				flags.name = args[0]
 				return runConfigRemoveLabels(rtCopy, &flags)
 			},
 		}
+		_ = subCmd.RegisterFlagCompletionFunc("namespace", completeNamespace)
+		_ = subCmd.RegisterFlagCompletionFunc("label-key", completeLabelKey)
 		cmd.AddCommand(subCmd)
 	}
 

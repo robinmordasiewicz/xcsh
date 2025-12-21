@@ -134,12 +134,12 @@ See git history for details on v4.45.0 and earlier releases.
 ### Support
 
 For migration assistance or questions about the new structure:
+
 - Check `f5xcctl <domain> --help` for available operations
 - Use `f5xcctl <domain> <operation> --help` for operation-specific help
 - See examples in domain help text
 
 ---
 
-[Unreleased]: https://github.com/robinmordasiewicz/f5xcctl/compare/v5.0.0...HEAD
 [5.0.0]: https://github.com/robinmordasiewicz/f5xcctl/releases/tag/v5.0.0
 [4.45.0]: https://github.com/robinmordasiewicz/f5xcctl/releases/tag/v4.45.0

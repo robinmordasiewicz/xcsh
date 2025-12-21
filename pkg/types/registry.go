@@ -13,7 +13,7 @@ type Registry struct {
 
 	// Domain indexes (lazy-initialized, cached)
 	domainResources map[string][]*ResourceType // domain → resources
-	primaryDomain   map[string]string            // resourceName → primary domain
+	primaryDomain   map[string]string          // resourceName → primary domain
 }
 
 // Global registry instance

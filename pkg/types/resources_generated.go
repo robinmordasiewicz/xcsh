@@ -15,8 +15,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/address_allocators",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -26,8 +26,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/advertise_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -73,8 +73,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/alert_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "observability",
-		Domains:          []string{"observability"},
+		PrimaryDomain:     "observability",
+		Domains:           []string{"observability"},
 	})
 
 	Register(&ResourceType{
@@ -84,8 +84,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/alert_receivers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "observability",
-		Domains:          []string{"observability"},
+		PrimaryDomain:     "observability",
+		Domains:           []string{"observability"},
 	})
 
 	Register(&ResourceType{
@@ -95,8 +95,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/web/namespaces/{namespace}/api_credentials",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "identity",
-		Domains:          []string{"identity"},
+		PrimaryDomain:     "identity",
+		Domains:           []string{"identity"},
 	})
 
 	Register(&ResourceType{
@@ -106,8 +106,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/api_definitions",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -180,8 +180,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/app_api_groups",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "api_security",
-		Domains:          []string{"api_security"},
+		PrimaryDomain:     "api_security",
+		Domains:           []string{"api_security"},
 	})
 
 	Register(&ResourceType{
@@ -191,8 +191,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/app_firewalls",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -211,8 +211,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/app_settings",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "applications",
-		Domains:          []string{"applications"},
+		PrimaryDomain:     "applications",
+		Domains:           []string{"applications"},
 	})
 
 	Register(&ResourceType{
@@ -222,8 +222,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/app_types",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "applications",
-		Domains:          []string{"applications"},
+		PrimaryDomain:     "applications",
+		Domains:           []string{"applications"},
 	})
 
 	Register(&ResourceType{
@@ -233,8 +233,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/authentications",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "identity",
-		Domains:          []string{"identity"},
+		PrimaryDomain:     "identity",
+		Domains:           []string{"identity"},
 	})
 
 	Register(&ResourceType{
@@ -244,8 +244,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/aws_tgw_sites",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure",
-		Domains:          []string{"infrastructure"},
+		PrimaryDomain:     "infrastructure",
+		Domains:           []string{"infrastructure"},
 	})
 
 	Register(&ResourceType{
@@ -255,8 +255,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/aws_vpc_sites",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure",
-		Domains:          []string{"infrastructure"},
+		PrimaryDomain:     "infrastructure",
+		Domains:           []string{"infrastructure"},
 	})
 
 	Register(&ResourceType{
@@ -266,8 +266,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/azure_vnet_sites",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure",
-		Domains:          []string{"infrastructure"},
+		PrimaryDomain:     "infrastructure",
+		Domains:           []string{"infrastructure"},
 	})
 
 	Register(&ResourceType{
@@ -277,8 +277,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/bgps",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -288,8 +288,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/bgp_asn_sets",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -299,8 +299,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/bgp_routing_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -328,8 +328,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/apms",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "bigip",
-		Domains:          []string{"bigip"},
+		PrimaryDomain:     "bigip",
+		Domains:           []string{"bigip"},
 	})
 
 	Register(&ResourceType{
@@ -339,8 +339,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/bigipconnector/namespaces/{namespace}/bigip_irules",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "bigip",
-		Domains:          []string{"bigip"},
+		PrimaryDomain:     "bigip",
+		Domains:           []string{"bigip"},
 	})
 
 	Register(&ResourceType{
@@ -377,8 +377,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/bot_defense_app_infrastructures",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -388,8 +388,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/cdn_cache_rules",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "cdn",
-		Domains:          []string{"cdn"},
+		PrimaryDomain:     "cdn",
+		Domains:           []string{"cdn"},
 	})
 
 	Register(&ResourceType{
@@ -399,8 +399,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/cdn_loadbalancers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "cdn",
-		Domains:          []string{"cdn"},
+		PrimaryDomain:     "cdn",
+		Domains:           []string{"cdn"},
 	})
 
 	Register(&ResourceType{
@@ -410,8 +410,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/certificates",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "identity",
-		Domains:          []string{"identity"},
+		PrimaryDomain:     "identity",
+		Domains:           []string{"identity"},
 	})
 
 	Register(&ResourceType{
@@ -421,8 +421,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/certificate_chains",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "identity",
-		Domains:          []string{"identity"},
+		PrimaryDomain:     "identity",
+		Domains:           []string{"identity"},
 	})
 
 	Register(&ResourceType{
@@ -441,8 +441,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/system/edge_credentials",
 		SupportsNamespace: false,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -452,8 +452,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/cloud_credentialss",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure",
-		Domains:          []string{"infrastructure"},
+		PrimaryDomain:     "infrastructure",
+		Domains:           []string{"infrastructure"},
 	})
 
 	Register(&ResourceType{
@@ -463,8 +463,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/cloud_elastic_ips",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -474,8 +474,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/cloud_links",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -494,8 +494,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/clusters",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "service_mesh",
-		Domains:          []string{"service_mesh"},
+		PrimaryDomain:     "service_mesh",
+		Domains:           []string{"service_mesh"},
 	})
 
 	Register(&ResourceType{
@@ -505,8 +505,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/cminstances",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "integrations",
-		Domains:          []string{"integrations"},
+		PrimaryDomain:     "integrations",
+		Domains:           []string{"integrations"},
 	})
 
 	Register(&ResourceType{
@@ -516,8 +516,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/web/namespaces/{namespace}/contacts",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "identity",
-		Domains:          []string{"identity"},
+		PrimaryDomain:     "identity",
+		Domains:           []string{"identity"},
 	})
 
 	Register(&ResourceType{
@@ -527,8 +527,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/container_registrys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "service_mesh",
-		Domains:          []string{"service_mesh"},
+		PrimaryDomain:     "service_mesh",
+		Domains:           []string{"service_mesh"},
 	})
 
 	Register(&ResourceType{
@@ -538,8 +538,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/crls",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -549,8 +549,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/web/namespaces/{namespace}/customer_supports",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "operations",
-		Domains:          []string{"operations"},
+		PrimaryDomain:     "operations",
+		Domains:           []string{"operations"},
 	})
 
 	Register(&ResourceType{
@@ -578,8 +578,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/data_types",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -589,8 +589,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/dc_cluster_groups",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -609,8 +609,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/discoverys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "service_mesh",
-		Domains:          []string{"service_mesh"},
+		PrimaryDomain:     "service_mesh",
+		Domains:           []string{"service_mesh"},
 	})
 
 	Register(&ResourceType{
@@ -620,8 +620,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/dns_compliance_checkss",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -631,8 +631,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/dns_domains",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -642,8 +642,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_lb_health_checks",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -653,8 +653,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_lb_pools",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -664,8 +664,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_load_balancers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -675,8 +675,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/dns/namespaces/{namespace}/dns_zones",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -704,8 +704,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/endpoints",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "service_mesh",
-		Domains:          []string{"service_mesh"},
+		PrimaryDomain:     "service_mesh",
+		Domains:           []string{"service_mesh"},
 	})
 
 	Register(&ResourceType{
@@ -715,8 +715,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/enhanced_firewall_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -726,8 +726,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/external_connectors",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -737,8 +737,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/fast_acls",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -748,8 +748,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/fast_acl_rules",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -759,8 +759,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/filter_sets",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -770,8 +770,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/fleets",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -799,8 +799,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/forward_proxy_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "load_balancer",
-		Domains:          []string{"load_balancer"},
+		PrimaryDomain:     "load_balancer",
+		Domains:           []string{"load_balancer"},
 	})
 
 	Register(&ResourceType{
@@ -810,8 +810,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/forwarding_classs",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -821,8 +821,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/gcp_vpc_sites",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure",
-		Domains:          []string{"infrastructure"},
+		PrimaryDomain:     "infrastructure",
+		Domains:           []string{"infrastructure"},
 	})
 
 	Register(&ResourceType{
@@ -832,8 +832,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/geo_location_sets",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -852,8 +852,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/global_log_receivers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "observability",
-		Domains:          []string{"observability"},
+		PrimaryDomain:     "observability",
+		Domains:           []string{"observability"},
 	})
 
 	Register(&ResourceType{
@@ -899,8 +899,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/healthchecks",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "load_balancer",
-		Domains:          []string{"load_balancer"},
+		PrimaryDomain:     "load_balancer",
+		Domains:           []string{"load_balancer"},
 	})
 
 	Register(&ResourceType{
@@ -910,8 +910,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/http_loadbalancers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "load_balancer",
-		Domains:          []string{"load_balancer"},
+		PrimaryDomain:     "load_balancer",
+		Domains:           []string{"load_balancer"},
 	})
 
 	Register(&ResourceType{
@@ -921,8 +921,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/ike1s",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "vpn",
-		Domains:          []string{"vpn"},
+		PrimaryDomain:     "vpn",
+		Domains:           []string{"vpn"},
 	})
 
 	Register(&ResourceType{
@@ -932,8 +932,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/ike2s",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "vpn",
-		Domains:          []string{"vpn"},
+		PrimaryDomain:     "vpn",
+		Domains:           []string{"vpn"},
 	})
 
 	Register(&ResourceType{
@@ -943,8 +943,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/ike_phase1_profiles",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "vpn",
-		Domains:          []string{"vpn"},
+		PrimaryDomain:     "vpn",
+		Domains:           []string{"vpn"},
 	})
 
 	Register(&ResourceType{
@@ -954,8 +954,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/ike_phase2_profiles",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "vpn",
-		Domains:          []string{"vpn"},
+		PrimaryDomain:     "vpn",
+		Domains:           []string{"vpn"},
 	})
 
 	Register(&ResourceType{
@@ -983,8 +983,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_asns",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure_protection",
-		Domains:          []string{"infrastructure_protection"},
+		PrimaryDomain:     "infrastructure_protection",
+		Domains:           []string{"infrastructure_protection"},
 	})
 
 	Register(&ResourceType{
@@ -994,8 +994,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_asn_prefixs",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure_protection",
-		Domains:          []string{"infrastructure_protection"},
+		PrimaryDomain:     "infrastructure_protection",
+		Domains:           []string{"infrastructure_protection"},
 	})
 
 	Register(&ResourceType{
@@ -1005,8 +1005,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_deny_list_rules",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure_protection",
-		Domains:          []string{"infrastructure_protection"},
+		PrimaryDomain:     "infrastructure_protection",
+		Domains:           []string{"infrastructure_protection"},
 	})
 
 	Register(&ResourceType{
@@ -1016,8 +1016,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_firewall_rules",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure_protection",
-		Domains:          []string{"infrastructure_protection"},
+		PrimaryDomain:     "infrastructure_protection",
+		Domains:           []string{"infrastructure_protection"},
 	})
 
 	Register(&ResourceType{
@@ -1027,8 +1027,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_firewall_rule_groups",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure_protection",
-		Domains:          []string{"infrastructure_protection"},
+		PrimaryDomain:     "infrastructure_protection",
+		Domains:           []string{"infrastructure_protection"},
 	})
 
 	Register(&ResourceType{
@@ -1056,8 +1056,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_internet_prefix_advertisements",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure_protection",
-		Domains:          []string{"infrastructure_protection"},
+		PrimaryDomain:     "infrastructure_protection",
+		Domains:           []string{"infrastructure_protection"},
 	})
 
 	Register(&ResourceType{
@@ -1067,8 +1067,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/infraprotect_tunnels",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure_protection",
-		Domains:          []string{"infrastructure_protection"},
+		PrimaryDomain:     "infrastructure_protection",
+		Domains:           []string{"infrastructure_protection"},
 	})
 
 	Register(&ResourceType{
@@ -1078,8 +1078,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/ip_prefix_sets",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -1089,8 +1089,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/k8s_clusters",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure",
-		Domains:          []string{"infrastructure"},
+		PrimaryDomain:     "infrastructure",
+		Domains:           []string{"infrastructure"},
 	})
 
 	Register(&ResourceType{
@@ -1100,8 +1100,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/k8s_cluster_roles",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "identity",
-		Domains:          []string{"identity"},
+		PrimaryDomain:     "identity",
+		Domains:           []string{"identity"},
 	})
 
 	Register(&ResourceType{
@@ -1111,8 +1111,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/k8s_cluster_role_bindings",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "identity",
-		Domains:          []string{"identity"},
+		PrimaryDomain:     "identity",
+		Domains:           []string{"identity"},
 	})
 
 	Register(&ResourceType{
@@ -1122,8 +1122,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/k8s_pod_security_admissions",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure",
-		Domains:          []string{"infrastructure"},
+		PrimaryDomain:     "infrastructure",
+		Domains:           []string{"infrastructure"},
 	})
 
 	Register(&ResourceType{
@@ -1133,8 +1133,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/k8s_pod_security_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure",
-		Domains:          []string{"infrastructure"},
+		PrimaryDomain:     "infrastructure",
+		Domains:           []string{"infrastructure"},
 	})
 
 	Register(&ResourceType{
@@ -1144,8 +1144,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/known_labels",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "config",
-		Domains:          []string{"config"},
+		PrimaryDomain:     "config",
+		Domains:           []string{"config"},
 	})
 
 	Register(&ResourceType{
@@ -1155,8 +1155,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/known_label_keys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "config",
-		Domains:          []string{"config"},
+		PrimaryDomain:     "config",
+		Domains:           []string{"config"},
 	})
 
 	Register(&ResourceType{
@@ -1175,8 +1175,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/log_receivers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "observability",
-		Domains:          []string{"observability"},
+		PrimaryDomain:     "observability",
+		Domains:           []string{"observability"},
 	})
 
 	Register(&ResourceType{
@@ -1195,8 +1195,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/malicious_user_mitigations",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -1247,8 +1247,8 @@ func registerGeneratedResources() {
 			Method:      "POST",
 			IncludeBody: true,
 		},
-		PrimaryDomain:    "identity",
-		Domains:          []string{"identity"},
+		PrimaryDomain: "identity",
+		Domains:       []string{"identity"},
 	})
 
 	Register(&ResourceType{
@@ -1267,8 +1267,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/nat_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -1278,8 +1278,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/network_connectors",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -1289,8 +1289,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/network_firewalls",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -1300,8 +1300,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/network_interfaces",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -1311,8 +1311,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/network_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -1322,8 +1322,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/network_policy_rules",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -1342,8 +1342,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/network_policy_views",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -1353,8 +1353,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/nfv_services",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "service_mesh",
-		Domains:          []string{"service_mesh"},
+		PrimaryDomain:     "service_mesh",
+		Domains:           []string{"service_mesh"},
 	})
 
 	Register(&ResourceType{
@@ -1535,8 +1535,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/origin_pools",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "load_balancer",
-		Domains:          []string{"load_balancer"},
+		PrimaryDomain:     "load_balancer",
+		Domains:           []string{"load_balancer"},
 	})
 
 	Register(&ResourceType{
@@ -1591,8 +1591,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/policers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -1602,8 +1602,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/policy_based_routings",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -1613,8 +1613,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/protocol_inspections",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -1624,8 +1624,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/protocol_policers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -1635,8 +1635,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/proxys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "load_balancer",
-		Domains:          []string{"load_balancer"},
+		PrimaryDomain:     "load_balancer",
+		Domains:           []string{"load_balancer"},
 	})
 
 	Register(&ResourceType{
@@ -1655,8 +1655,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/web/namespaces/{namespace}/quotas",
 		SupportsNamespace: true,
 		Operations:        ReadOnlyOperations(),
-		PrimaryDomain:    "billing",
-		Domains:          []string{"billing"},
+		PrimaryDomain:     "billing",
+		Domains:           []string{"billing"},
 	})
 
 	Register(&ResourceType{
@@ -1666,8 +1666,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/rate_limiters",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -1677,8 +1677,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/rate_limiter_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -1697,8 +1697,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/registrations",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure",
-		Domains:          []string{"infrastructure"},
+		PrimaryDomain:     "infrastructure",
+		Domains:           []string{"infrastructure"},
 	})
 
 	Register(&ResourceType{
@@ -1717,8 +1717,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/report_configs",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "observability",
-		Domains:          []string{"observability"},
+		PrimaryDomain:     "observability",
+		Domains:           []string{"observability"},
 	})
 
 	Register(&ResourceType{
@@ -1728,8 +1728,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/web/namespaces/{namespace}/roles",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "identity",
-		Domains:          []string{"identity"},
+		PrimaryDomain:     "identity",
+		Domains:           []string{"identity"},
 	})
 
 	Register(&ResourceType{
@@ -1739,8 +1739,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/routes",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -1768,8 +1768,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/secret_management_accesss",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -1779,8 +1779,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/secret_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -1790,8 +1790,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/secret_policy_rules",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -1801,8 +1801,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/securemesh_sites",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure",
-		Domains:          []string{"infrastructure"},
+		PrimaryDomain:     "infrastructure",
+		Domains:           []string{"infrastructure"},
 	})
 
 	Register(&ResourceType{
@@ -1812,8 +1812,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/securemesh_site_v2s",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure",
-		Domains:          []string{"infrastructure"},
+		PrimaryDomain:     "infrastructure",
+		Domains:           []string{"infrastructure"},
 	})
 
 	Register(&ResourceType{
@@ -1823,8 +1823,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/segments",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -1843,8 +1843,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/sensitive_data_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "api_security",
-		Domains:          []string{"api_security"},
+		PrimaryDomain:     "api_security",
+		Domains:           []string{"api_security"},
 	})
 
 	Register(&ResourceType{
@@ -1854,8 +1854,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/service_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -1865,8 +1865,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/service_policy_rules",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -2155,8 +2155,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/site_mesh_groups",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -2166,8 +2166,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/srv6_network_slices",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -2195,8 +2195,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/subnets",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -2242,8 +2242,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/tcp_loadbalancers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "load_balancer",
-		Domains:          []string{"load_balancer"},
+		PrimaryDomain:     "load_balancer",
+		Domains:           []string{"load_balancer"},
 	})
 
 	Register(&ResourceType{
@@ -2262,8 +2262,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/tenant_configurations",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "tenant_management",
-		Domains:          []string{"tenant_management"},
+		PrimaryDomain:     "tenant_management",
+		Domains:           []string{"tenant_management"},
 	})
 
 	Register(&ResourceType{
@@ -2345,8 +2345,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/tokens",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "identity",
-		Domains:          []string{"identity"},
+		PrimaryDomain:     "identity",
+		Domains:           []string{"identity"},
 	})
 
 	Register(&ResourceType{
@@ -2365,8 +2365,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/tpm_api_keys",
 		SupportsNamespace: true,
 		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: true, Delete: false, Status: false},
-		PrimaryDomain:    "integrations",
-		Domains:          []string{"integrations"},
+		PrimaryDomain:     "integrations",
+		Domains:           []string{"integrations"},
 	})
 
 	Register(&ResourceType{
@@ -2376,8 +2376,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/tpm_categorys",
 		SupportsNamespace: true,
 		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: true, Delete: false, Status: false},
-		PrimaryDomain:    "integrations",
-		Domains:          []string{"integrations"},
+		PrimaryDomain:     "integrations",
+		Domains:           []string{"integrations"},
 	})
 
 	Register(&ResourceType{
@@ -2387,8 +2387,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/tpm_managers",
 		SupportsNamespace: true,
 		Operations:        ResourceOperations{Create: true, Get: true, List: true, Update: false, Delete: false, Status: false},
-		PrimaryDomain:    "integrations",
-		Domains:          []string{"integrations"},
+		PrimaryDomain:     "integrations",
+		Domains:           []string{"integrations"},
 	})
 
 	Register(&ResourceType{
@@ -2407,8 +2407,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/trusted_ca_lists",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -2418,8 +2418,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/tunnels",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "vpn",
-		Domains:          []string{"vpn"},
+		PrimaryDomain:     "vpn",
+		Domains:           []string{"vpn"},
 	})
 
 	Register(&ResourceType{
@@ -2429,8 +2429,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/udp_loadbalancers",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "load_balancer",
-		Domains:          []string{"load_balancer"},
+		PrimaryDomain:     "load_balancer",
+		Domains:           []string{"load_balancer"},
 	})
 
 	Register(&ResourceType{
@@ -2485,8 +2485,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/usb_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure",
-		Domains:          []string{"infrastructure"},
+		PrimaryDomain:     "infrastructure",
+		Domains:           []string{"infrastructure"},
 	})
 
 	Register(&ResourceType{
@@ -2514,8 +2514,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/user_identifications",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "identity",
-		Domains:          []string{"identity"},
+		PrimaryDomain:     "identity",
+		Domains:           []string{"identity"},
 	})
 
 	Register(&ResourceType{
@@ -2561,8 +2561,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/virtual_hosts",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -2572,8 +2572,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/virtual_k8ss",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure",
-		Domains:          []string{"infrastructure"},
+		PrimaryDomain:     "infrastructure",
+		Domains:           []string{"infrastructure"},
 	})
 
 	Register(&ResourceType{
@@ -2583,8 +2583,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/virtual_networks",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -2594,8 +2594,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/virtual_sites",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "networking",
-		Domains:          []string{"networking"},
+		PrimaryDomain:     "networking",
+		Domains:           []string{"networking"},
 	})
 
 	Register(&ResourceType{
@@ -2614,8 +2614,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/voltshare_admin_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -2625,8 +2625,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/voltstack_sites",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "infrastructure",
-		Domains:          []string{"infrastructure"},
+		PrimaryDomain:     "infrastructure",
+		Domains:           []string{"infrastructure"},
 	})
 
 	Register(&ResourceType{
@@ -2645,8 +2645,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/waf_exclusion_policys",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "security",
-		Domains:          []string{"security"},
+		PrimaryDomain:     "security",
+		Domains:           []string{"security"},
 	})
 
 	Register(&ResourceType{
@@ -2674,8 +2674,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/workloads",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "applications",
-		Domains:          []string{"applications"},
+		PrimaryDomain:     "applications",
+		Domains:           []string{"applications"},
 	})
 
 	Register(&ResourceType{
@@ -2685,8 +2685,8 @@ func registerGeneratedResources() {
 		APIPath:           "/api/config/namespaces/{namespace}/workload_flavors",
 		SupportsNamespace: true,
 		Operations:        AllOperations(),
-		PrimaryDomain:    "applications",
-		Domains:          []string{"applications"},
+		PrimaryDomain:     "applications",
+		Domains:           []string{"applications"},
 	})
 
 }

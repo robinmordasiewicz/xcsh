@@ -735,8 +735,8 @@ type domainIndexEntry struct {
 
 // domainIndexFile represents the complete domain index
 type domainIndexFile struct {
-	Version         string               `json:"version"`
-	Specifications  []domainIndexEntry   `json:"specifications"`
+	Version        string             `json:"version"`
+	Specifications []domainIndexEntry `json:"specifications"`
 }
 
 // loadDomainIndex loads the domain mappings from .specs/index.json
