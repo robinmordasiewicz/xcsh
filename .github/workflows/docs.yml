@@ -246,12 +246,38 @@ jobs:
             --clean \
             --update-mkdocs
 
-      - name: Generate cloudstatus documentation
+      - name: Validate cloudstatus documentation structure
         run: |
-          python scripts/generate-cloudstatus-docs.py \
-            --f5xcctl ./f5xcctl \
-            --output docs/commands/cloudstatus \
-            --clean
+          echo "=== Validating cloudstatus documentation structure ==="
+
+          # Define required files matching mkdocs.yml navigation
+          REQUIRED_FILES=(
+            "docs/commands/cloudstatus/status/index.md"
+            "docs/commands/cloudstatus/summary/index.md"
+            "docs/commands/cloudstatus/watch/index.md"
+            "docs/commands/cloudstatus/components/index.md"
+            "docs/commands/cloudstatus/incidents/index.md"
+            "docs/commands/cloudstatus/maintenance/index.md"
+            "docs/commands/cloudstatus/pops/index.md"
+          )
+
+          MISSING_FILES=()
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [ ! -f "$file" ]; then
+              MISSING_FILES+=("$file")
+            fi
+          done
+
+          if [ ${#MISSING_FILES[@]} -gt 0 ]; then
+            echo "::error::Missing required cloudstatus documentation files"
+            printf '  ❌ %s\n' "${MISSING_FILES[@]}"
+            echo ""
+            echo "Generated structure:"
+            ls -R docs/commands/cloudstatus/ || echo "Directory not found"
+            exit 1
+          fi
+
+          echo "✅ All required cloudstatus documentation files present"
 
       - name: Save spec hash to cache
         run: |
