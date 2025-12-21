@@ -11,7 +11,6 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/errors"
 	"github.com/robinmordasiewicz/f5xcctl/pkg/output"
 	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
 	"github.com/robinmordasiewicz/f5xcctl/pkg/types"
@@ -27,7 +26,6 @@ type configurationFlags struct {
 	mode           string
 	labelKeys      []string
 	labelValues    []string
-	atSite         string
 	yes            bool // Skip confirmation for destructive operations
 }
 
@@ -651,35 +649,3 @@ func loadConfigResource(inputFile, jsonData string) (map[string]interface{}, err
 	return resource, nil
 }
 
-// validateSubscriptionForResource validates that the current subscription allows
-// creating/modifying the specified resource type. Returns an error with exit code 9
-// (ExitFeatureNotAvail) if the resource requires a higher subscription tier.
-func validateSubscriptionForResource(ctx context.Context, resourceType string) error {
-	validator := GetSubscriptionValidator()
-	if validator == nil {
-		// No validator available, allow the operation
-		return nil
-	}
-
-	result, err := validator.ValidateResourceAccess(ctx, resourceType)
-	if err != nil {
-		// Validation error, log warning but don't block
-		if IsDebug() {
-			fmt.Fprintf(os.Stderr, "Warning: subscription validation failed: %v\n", err)
-		}
-		return nil
-	}
-
-	if !result.IsAllowed {
-		// Resource not allowed by subscription
-		errMsg := result.ErrorMessage
-		if result.Recommendation != "" {
-			errMsg += "\n\nTo resolve:\n  - " + result.Recommendation
-		}
-		errMsg += "\n\nFor more information:\n  f5xcctl subscription show      # View current subscription\n  f5xcctl subscription addons    # View addon services"
-
-		return errors.NewExitError(errors.ExitFeatureNotAvail, errors.ErrFeatureNotAvail, errMsg)
-	}
-
-	return nil
-}
