@@ -42,7 +42,7 @@ func New(format string) *Formatter {
 	case "yaml":
 		f.format = FormatYAML
 	case "table", "text", "":
-		f.format = FormatTable // Default to table for compatibility with original f5xcctl
+		f.format = FormatTable // Default to table for compatibility with original xcsh
 	case "tsv":
 		f.format = FormatTSV
 	case "none":
@@ -86,9 +86,9 @@ func (f *Formatter) formatJSON(data interface{}) error {
 	return encoder.Encode(data)
 }
 
-// formatYAML outputs data as YAML (matching original f5xcctl format)
+// formatYAML outputs data as YAML (matching original xcsh format)
 func (f *Formatter) formatYAML(data interface{}) error {
-	// Use yaml.v2 Marshal for compatibility with original f5xcctl output format
+	// Use yaml.v2 Marshal for compatibility with original xcsh output format
 	// yaml.v2 uses 2-space indent and doesn't indent array items under parent keys
 	out, err := yamlv2.Marshal(data)
 	if err != nil {
@@ -98,12 +98,12 @@ func (f *Formatter) formatYAML(data interface{}) error {
 	if err != nil {
 		return err
 	}
-	// Add trailing newline to match original f5xcctl format
+	// Add trailing newline to match original xcsh format
 	_, err = f.writer.Write([]byte("\n"))
 	return err
 }
 
-// formatTable outputs data as an ASCII box table matching original f5xcctl format
+// formatTable outputs data as an ASCII box table matching original xcsh format
 func (f *Formatter) formatTable(data interface{}) error {
 	// Extract items from list response
 	items := extractItems(data)
@@ -111,12 +111,12 @@ func (f *Formatter) formatTable(data interface{}) error {
 		return nil
 	}
 
-	// Define columns for namespace list (matching original f5xcctl)
+	// Define columns for namespace list (matching original xcsh)
 	// Original format: NAMESPACE | NAME | LABELS
 	headers := []string{"NAMESPACE", "NAME", "LABELS"}
 
-	// Fixed column widths matching original f5xcctl output
-	// Original f5xcctl uses fixed widths: NAMESPACE=9, NAME=27, LABELS=30
+	// Fixed column widths matching original xcsh output
+	// Original xcsh uses fixed widths: NAMESPACE=9, NAME=27, LABELS=30
 	fixedWidths := []int{9, 27, 30}
 
 	// Calculate actual column widths (max of fixed width and header/content width)
@@ -285,7 +285,7 @@ func getStringField(m map[string]interface{}, key string) string {
 	return ""
 }
 
-// getLabelsString formats labels as map[key:value key:value] (matching original f5xcctl format)
+// getLabelsString formats labels as map[key:value key:value] (matching original xcsh format)
 func getLabelsString(m map[string]interface{}) string {
 	labels, ok := m["labels"]
 	if !ok {
@@ -565,7 +565,7 @@ func PrintAPIError(statusCode int, body []byte, operation string) {
 	// Provide helpful hints based on status code
 	switch statusCode {
 	case 401:
-		fmt.Fprintf(os.Stderr, "\nHint: Authentication failed. Check your credentials with 'f5xcctl configure show'\n")
+		fmt.Fprintf(os.Stderr, "\nHint: Authentication failed. Check your credentials with 'xcsh configure show'\n")
 	case 403:
 		fmt.Fprintf(os.Stderr, "\nHint: Permission denied. You may not have access to this resource.\n")
 	case 404:

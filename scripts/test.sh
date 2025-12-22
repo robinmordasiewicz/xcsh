@@ -1,7 +1,7 @@
 #!/bin/bash
-# f5xcctl CLI Test Runner
+# xcsh CLI Test Runner
 #
-# This script runs all tests for the f5xcctl CLI tool.
+# This script runs all tests for the xcsh CLI tool.
 #
 # Usage:
 #   ./scripts/test.sh              # Run all tests
@@ -73,12 +73,12 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-echo -e "${GREEN}f5xcctl CLI Test Runner${NC}"
+echo -e "${GREEN}xcsh CLI Test Runner${NC}"
 echo "================================"
 
 # Build the binary first
-echo -e "\n${YELLOW}Building f5xcctl binary...${NC}"
-go build -o f5xcctl .
+echo -e "\n${YELLOW}Building xcsh binary...${NC}"
+go build -o xcsh .
 echo -e "${GREEN}✓ Build successful${NC}"
 
 # Check if integration test environment is configured

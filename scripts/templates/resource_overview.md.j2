@@ -9,7 +9,7 @@ command_group: "{{ front_matter.command_group }}"
 resource_type: "{{ front_matter.resource_type }}"
 ---
 
-# f5xcctl {{ group }} {{ resource }}
+# xcsh {{ group }} {{ resource }}
 
 > Manage {{ resource | to_human_readable }} resources in F5 Distributed Cloud
 
@@ -27,48 +27,48 @@ resource_type: "{{ front_matter.resource_type }}"
 
 ```bash
 # Create from file
-f5xcctl {{ group }} create {{ resource }} -i {{ resource }}.yaml
+xcsh {{ group }} create {{ resource }} -i {{ resource }}.yaml
 
 # Verify creation
-f5xcctl {{ group }} list {{ resource }}
+xcsh {{ group }} list {{ resource }}
 
 # Get details
-f5xcctl {{ group }} get {{ resource }} <name>
+xcsh {{ group }} get {{ resource }} <name>
 ```
 
 ### Update a {{ resource | to_human_readable }}
 
 ```bash
 # Replace entire resource
-f5xcctl {{ group }} replace {{ resource }} -i {{ resource }}.yaml
+xcsh {{ group }} replace {{ resource }} -i {{ resource }}.yaml
 
 # Or apply changes (create or update)
-f5xcctl {{ group }} apply {{ resource }} -i {{ resource }}.yaml
+xcsh {{ group }} apply {{ resource }} -i {{ resource }}.yaml
 
 # Patch specific fields
-f5xcctl {{ group }} patch {{ resource }} <name> -i patch.yaml
+xcsh {{ group }} patch {{ resource }} <name> -i patch.yaml
 ```
 
 ### Manage labels
 
 ```bash
 # Add labels
-f5xcctl {{ group }} add-labels {{ resource }} <name> --label-key app --label-value web
+xcsh {{ group }} add-labels {{ resource }} <name> --label-key app --label-value web
 
 # Remove labels
-f5xcctl {{ group }} remove-labels {{ resource }} <name> --label-key app
+xcsh {{ group }} remove-labels {{ resource }} <name> --label-key app
 ```
 
 ### Delete a {{ resource | to_human_readable }}
 
 ```bash
-f5xcctl {{ group }} delete {{ resource }} <name>
+xcsh {{ group }} delete {{ resource }} <name>
 
 # With confirmation bypass
-f5xcctl {{ group }} delete {{ resource }} <name> --yes
+xcsh {{ group }} delete {{ resource }} <name> --yes
 ```
 
 ## See Also
 
-- [f5xcctl {{ group }}](../index.md) - {{ group | to_human_readable }} commands
+- [xcsh {{ group }}](../index.md) - {{ group | to_human_readable }} commands
 - [Command Reference](../../index.md)

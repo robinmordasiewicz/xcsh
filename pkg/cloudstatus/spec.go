@@ -189,39 +189,39 @@ func GenerateSpec() *Spec {
 
 func getAIHints() AIHints {
 	return AIHints{
-		DiscoveryCommand:       "f5xcctl cloudstatus --spec --output-format json",
-		QuickStatusCheck:       "f5xcctl cloudstatus status",
-		ComprehensiveStatus:    "f5xcctl cloudstatus summary --output-format json",
-		MonitoringSetup:        "f5xcctl cloudstatus watch --interval 60",
+		DiscoveryCommand:       "xcsh cloudstatus --spec --output-format json",
+		QuickStatusCheck:       "xcsh cloudstatus status",
+		ComprehensiveStatus:    "xcsh cloudstatus summary --output-format json",
+		MonitoringSetup:        "xcsh cloudstatus watch --interval 60",
 		AuthenticationRequired: false,
 		RecommendedPolling:     60,
 		BestPractices: []string{
-			"Use 'f5xcctl cloudstatus status --quiet' in CI/CD to get exit codes (0=healthy)",
-			"Use 'f5xcctl cloudstatus summary --output-format json' for complete state",
-			"Use 'f5xcctl cloudstatus watch' for continuous monitoring",
-			"Filter by region with 'f5xcctl cloudstatus pops list --region <region>'",
+			"Use 'xcsh cloudstatus status --quiet' in CI/CD to get exit codes (0=healthy)",
+			"Use 'xcsh cloudstatus summary --output-format json' for complete state",
+			"Use 'xcsh cloudstatus watch' for continuous monitoring",
+			"Filter by region with 'xcsh cloudstatus pops list --region <region>'",
 			"Check incidents first when troubleshooting connectivity issues",
 			"Use --no-cache for real-time status during incidents",
 		},
 		UseCases: []UseCaseSpec{
 			{
 				Scenario:    "Pre-deployment health check",
-				Command:     "f5xcctl cloudstatus status --quiet || exit 1",
+				Command:     "xcsh cloudstatus status --quiet || exit 1",
 				Description: "Block deployment if F5 XC has active issues",
 			},
 			{
 				Scenario:    "Incident investigation",
-				Command:     "f5xcctl cloudstatus incidents active --output-format json",
+				Command:     "xcsh cloudstatus incidents active --output-format json",
 				Description: "Get current incidents affecting services",
 			},
 			{
 				Scenario:    "Regional status check",
-				Command:     "f5xcctl cloudstatus pops status --region north-america",
+				Command:     "xcsh cloudstatus pops status --region north-america",
 				Description: "Check status of North America PoPs",
 			},
 			{
 				Scenario:    "Maintenance awareness",
-				Command:     "f5xcctl cloudstatus maintenance upcoming",
+				Command:     "xcsh cloudstatus maintenance upcoming",
 				Description: "View upcoming maintenance windows",
 			},
 		},
@@ -322,8 +322,8 @@ func getCommands() []CommandSpec {
 			},
 			ExitCodes: []int{0, 1, 2, 3, 4},
 			Examples: []string{
-				"f5xcctl cloudstatus status",
-				"f5xcctl cloudstatus status --quiet && echo 'All systems operational'",
+				"xcsh cloudstatus status",
+				"xcsh cloudstatus status --quiet && echo 'All systems operational'",
 			},
 		},
 		{
@@ -448,9 +448,9 @@ func getWorkflows() []WorkflowSpec {
 			Name:        "ci-cd-health-gate",
 			Description: "Block deployment when F5 XC has issues",
 			Steps: []WorkflowStep{
-				{Step: 1, Command: "f5xcctl cloudstatus status --quiet", Description: "Check overall status"},
+				{Step: 1, Command: "xcsh cloudstatus status --quiet", Description: "Check overall status"},
 				{Step: 2, Command: "[ $? -eq 0 ] || exit 1", Description: "Exit if not healthy"},
-				{Step: 3, Command: "f5xcctl cloudstatus incidents active --output-format json | jq '. | length'", Description: "Count active incidents"},
+				{Step: 3, Command: "xcsh cloudstatus incidents active --output-format json | jq '. | length'", Description: "Count active incidents"},
 				{Step: 4, Command: "# Proceed with deployment if healthy", Description: "Continue deployment"},
 			},
 		},
@@ -458,27 +458,27 @@ func getWorkflows() []WorkflowSpec {
 			Name:        "incident-investigation",
 			Description: "Investigate service issues",
 			Steps: []WorkflowStep{
-				{Step: 1, Command: "f5xcctl cloudstatus status", Description: "Quick status check"},
-				{Step: 2, Command: "f5xcctl cloudstatus incidents active", Description: "View active incidents"},
-				{Step: 3, Command: "f5xcctl cloudstatus incidents get <id>", Description: "Get incident details"},
-				{Step: 4, Command: "f5xcctl cloudstatus incidents updates <id>", Description: "View incident timeline"},
+				{Step: 1, Command: "xcsh cloudstatus status", Description: "Quick status check"},
+				{Step: 2, Command: "xcsh cloudstatus incidents active", Description: "View active incidents"},
+				{Step: 3, Command: "xcsh cloudstatus incidents get <id>", Description: "Get incident details"},
+				{Step: 4, Command: "xcsh cloudstatus incidents updates <id>", Description: "View incident timeline"},
 			},
 		},
 		{
 			Name:        "regional-status-check",
 			Description: "Check status for specific regions",
 			Steps: []WorkflowStep{
-				{Step: 1, Command: "f5xcctl cloudstatus pops status", Description: "Overview of all regions"},
-				{Step: 2, Command: "f5xcctl cloudstatus pops list --region north-america", Description: "List North America PoPs"},
-				{Step: 3, Command: "f5xcctl cloudstatus components list --pop --degraded-only", Description: "Find degraded PoPs"},
+				{Step: 1, Command: "xcsh cloudstatus pops status", Description: "Overview of all regions"},
+				{Step: 2, Command: "xcsh cloudstatus pops list --region north-america", Description: "List North America PoPs"},
+				{Step: 3, Command: "xcsh cloudstatus components list --pop --degraded-only", Description: "Find degraded PoPs"},
 			},
 		},
 		{
 			Name:        "continuous-monitoring",
 			Description: "Set up continuous monitoring",
 			Steps: []WorkflowStep{
-				{Step: 1, Command: "f5xcctl cloudstatus watch --interval 30", Description: "Start monitoring"},
-				{Step: 2, Command: "f5xcctl cloudstatus watch --exit-on-change && alert", Description: "Alert on change"},
+				{Step: 1, Command: "xcsh cloudstatus watch --interval 30", Description: "Start monitoring"},
+				{Step: 2, Command: "xcsh cloudstatus watch --exit-on-change && alert", Description: "Alert on change"},
 			},
 		},
 	}

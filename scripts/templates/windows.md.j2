@@ -1,6 +1,6 @@
 # Windows
 
-Install f5xcctl on Windows using PowerShell.
+Install xcsh on Windows using PowerShell.
 
 ## Quick Install
 
@@ -11,19 +11,19 @@ Download and extract the latest release:
     ```powershell
     # Download latest release
     $version = "{{ version or 'X.Y.Z' }}"
-    $url = "https://github.com/robinmordasiewicz/f5xcctl/releases/download/v$version/f5xcctl_${version}_windows_amd64.zip"
-    Invoke-WebRequest -Uri $url -OutFile f5xcctl.zip
+    $url = "https://github.com/robinmordasiewicz/xcsh/releases/download/v$version/xcsh_${version}_windows_amd64.zip"
+    Invoke-WebRequest -Uri $url -OutFile xcsh.zip
 
     # Extract to installation directory
-    $installDir = "$env:LOCALAPPDATA\Programs\f5xcctl"
+    $installDir = "$env:LOCALAPPDATA\Programs\xcsh"
     New-Item -ItemType Directory -Force -Path $installDir | Out-Null
-    Expand-Archive -Path f5xcctl.zip -DestinationPath $installDir -Force
+    Expand-Archive -Path xcsh.zip -DestinationPath $installDir -Force
 
     # Add to PATH for current session
     $env:PATH = "$installDir;$env:PATH"
 
     # Verify installation
-    f5xcctl version
+    xcsh version
     ```
 
 === "PowerShell (arm64)"
@@ -31,19 +31,19 @@ Download and extract the latest release:
     ```powershell
     # Download latest release
     $version = "{{ version or 'X.Y.Z' }}"
-    $url = "https://github.com/robinmordasiewicz/f5xcctl/releases/download/v$version/f5xcctl_${version}_windows_arm64.zip"
-    Invoke-WebRequest -Uri $url -OutFile f5xcctl.zip
+    $url = "https://github.com/robinmordasiewicz/xcsh/releases/download/v$version/xcsh_${version}_windows_arm64.zip"
+    Invoke-WebRequest -Uri $url -OutFile xcsh.zip
 
     # Extract to installation directory
-    $installDir = "$env:LOCALAPPDATA\Programs\f5xcctl"
+    $installDir = "$env:LOCALAPPDATA\Programs\xcsh"
     New-Item -ItemType Directory -Force -Path $installDir | Out-Null
-    Expand-Archive -Path f5xcctl.zip -DestinationPath $installDir -Force
+    Expand-Archive -Path xcsh.zip -DestinationPath $installDir -Force
 
     # Add to PATH for current session
     $env:PATH = "$installDir;$env:PATH"
 
     # Verify installation
-    f5xcctl version
+    xcsh version
     ```
 
 {% if install_output %}
@@ -60,11 +60,11 @@ Download and extract the latest release:
 
 ## Permanent PATH Configuration
 
-To make f5xcctl available in all PowerShell sessions, add it to your user PATH:
+To make xcsh available in all PowerShell sessions, add it to your user PATH:
 
 ```powershell
 # Add to user PATH permanently
-$installDir = "$env:LOCALAPPDATA\Programs\f5xcctl"
+$installDir = "$env:LOCALAPPDATA\Programs\xcsh"
 $currentPath = [Environment]::GetEnvironmentVariable("PATH", "User")
 if ($currentPath -notlike "*$installDir*") {
     [Environment]::SetEnvironmentVariable("PATH", "$installDir;$currentPath", "User")
@@ -76,24 +76,24 @@ if ($currentPath -notlike "*$installDir*") {
 
 Alternatively, download directly from GitHub:
 
-1. Visit [GitHub Releases](https://github.com/robinmordasiewicz/f5xcctl/releases/latest)
-2. Download `f5xcctl_{{ version or 'X.Y.Z' }}_windows_amd64.zip` (or `arm64` for ARM processors)
+1. Visit [GitHub Releases](https://github.com/robinmordasiewicz/xcsh/releases/latest)
+2. Download `xcsh_{{ version or 'X.Y.Z' }}_windows_amd64.zip` (or `arm64` for ARM processors)
 3. Extract to a directory of your choice
 4. Add the directory to your PATH
 
 ## Verify Installation
 
-After installation, verify f5xcctl is working:
+After installation, verify xcsh is working:
 
 ```powershell
-f5xcctl version
+xcsh version
 ```
 
 {% if version and commit and built %}
 Expected output:
 
 ```text
-f5xcctl version {{ version }}
+xcsh version {{ version }}
   commit:   {{ commit }}
   built:    {{ built }}
   go:       {{ go_version if go_version else "go1.23.x" }}
@@ -107,10 +107,10 @@ Enable PowerShell tab completion:
 
 ```powershell
 # Load completions for current session
-f5xcctl completion powershell | Out-String | Invoke-Expression
+xcsh completion powershell | Out-String | Invoke-Expression
 
 # Add to PowerShell profile for all sessions
-f5xcctl completion powershell >> $PROFILE
+xcsh completion powershell >> $PROFILE
 ```
 
 !!! note "PowerShell Profile"
@@ -126,37 +126,37 @@ To upgrade to a newer version:
 ```powershell
 # Download and extract new version (same as install)
 $version = "NEW_VERSION"
-$url = "https://github.com/robinmordasiewicz/f5xcctl/releases/download/v$version/f5xcctl_${version}_windows_amd64.zip"
-Invoke-WebRequest -Uri $url -OutFile f5xcctl.zip
-Expand-Archive -Path f5xcctl.zip -DestinationPath "$env:LOCALAPPDATA\Programs\f5xcctl" -Force
+$url = "https://github.com/robinmordasiewicz/xcsh/releases/download/v$version/xcsh_${version}_windows_amd64.zip"
+Invoke-WebRequest -Uri $url -OutFile xcsh.zip
+Expand-Archive -Path xcsh.zip -DestinationPath "$env:LOCALAPPDATA\Programs\xcsh" -Force
 ```
 
 ## Uninstall
 
-Remove f5xcctl from your system:
+Remove xcsh from your system:
 
 ```powershell
 # Remove installation directory
-Remove-Item -Recurse -Force "$env:LOCALAPPDATA\Programs\f5xcctl"
+Remove-Item -Recurse -Force "$env:LOCALAPPDATA\Programs\xcsh"
 
 # Remove from user PATH
-$installDir = "$env:LOCALAPPDATA\Programs\f5xcctl"
+$installDir = "$env:LOCALAPPDATA\Programs\xcsh"
 $currentPath = [Environment]::GetEnvironmentVariable("PATH", "User")
 $newPath = ($currentPath -split ';' | Where-Object { $_ -ne $installDir }) -join ';'
 [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
 
 # Remove completion from profile (if added)
-# Edit $PROFILE and remove the f5xcctl completion line
+# Edit $PROFILE and remove the xcsh completion line
 ```
 
 ## Troubleshooting
 
-### "f5xcctl is not recognized"
+### "xcsh is not recognized"
 
 Ensure the installation directory is in your PATH:
 
 ```powershell
-$env:PATH -split ';' | Select-String "f5xcctl"
+$env:PATH -split ';' | Select-String "xcsh"
 ```
 
 If not found, add it manually or restart your terminal after permanent PATH configuration.

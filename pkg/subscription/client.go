@@ -817,18 +817,18 @@ func (c *Client) ActivateAddon(ctx context.Context, namespace, addonService stri
 			result.Message = fmt.Sprintf("Addon '%s' activated successfully", addonService)
 		} else {
 			result.Message = fmt.Sprintf("Addon '%s' activation in progress", addonService)
-			result.NextSteps = "Activation should complete within a few minutes. Use 'f5xcctl subscription activation-status' to check progress."
+			result.NextSteps = "Activation should complete within a few minutes. Use 'xcsh subscription activation-status' to check progress."
 		}
 	case ActivationPartiallyManaged:
 		result.Message = fmt.Sprintf("Addon '%s' activation request submitted (partially managed)", addonService)
-		result.NextSteps = "Request requires partial backend processing. Use 'f5xcctl subscription activation-status' to monitor progress."
+		result.NextSteps = "Request requires partial backend processing. Use 'xcsh subscription activation-status' to monitor progress."
 	case ActivationManaged:
 		result.Message = fmt.Sprintf("Addon '%s' activation request submitted (fully managed)", addonService)
-		result.NextSteps = "Request requires SRE approval. This may take up to 24 hours. Use 'f5xcctl subscription activation-status' to check status."
+		result.NextSteps = "Request requires SRE approval. This may take up to 24 hours. Use 'xcsh subscription activation-status' to check status."
 	default:
 		result.Message = fmt.Sprintf("Addon '%s' activation request submitted", addonService)
 		if isPending {
-			result.NextSteps = "Use 'f5xcctl subscription activation-status' to check status."
+			result.NextSteps = "Use 'xcsh subscription activation-status' to check status."
 		}
 	}
 

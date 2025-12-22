@@ -400,7 +400,7 @@ docs-all: build
 	@echo ""
 	@echo "Step 2/4: CloudStatus documentation..."
 	@$(PYTHON) scripts/generate-cloudstatus-docs.py \
-		--f5xcctl ./$(BINARY_NAME) \
+		--cli-binary ./$(BINARY_NAME) \
 		--output docs/commands/cloudstatus \
 		--clean
 	@echo ""

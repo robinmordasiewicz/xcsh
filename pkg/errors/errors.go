@@ -83,7 +83,7 @@ func AuthError(message string) *ExitError {
 		Code:    ExitAuthError,
 		ErrCode: ErrAuthFailed,
 		Message: message,
-		Hint:    "Check your credentials with 'f5xcctl configure show' or set F5XC_API_TOKEN",
+		Hint:    "Check your credentials with 'xcsh configure show' or set F5XC_API_TOKEN",
 	}
 }
 
@@ -172,7 +172,7 @@ func FromHTTPStatus(statusCode int, operation, body string) *ExitError {
 		hint = "Check your input data and try again"
 	case 401:
 		message = fmt.Sprintf("%s failed: authentication required", operation)
-		hint = "Check your credentials with 'f5xcctl configure show'"
+		hint = "Check your credentials with 'xcsh configure show'"
 	case 403:
 		message = fmt.Sprintf("%s failed: permission denied", operation)
 		hint = "You may not have access to this resource"

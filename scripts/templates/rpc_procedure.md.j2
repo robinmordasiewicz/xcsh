@@ -18,7 +18,7 @@ related_procedures:
 {% endif %}
 ---
 
-# f5xcctl request rpc {{ full_procedure_name }}
+# xcsh request rpc {{ full_procedure_name }}
 
 > {{ command.short }}
 
@@ -57,13 +57,13 @@ related_procedures:
 ### Invoke with input file
 
 ```bash
-f5xcctl request rpc {{ full_procedure_name }} -i request.yaml
+xcsh request rpc {{ full_procedure_name }} -i request.yaml
 ```
 
 ### Invoke with inline JSON data
 
 ```bash
-f5xcctl request rpc {{ full_procedure_name }} --json-data '{"key": "value"}'
+xcsh request rpc {{ full_procedure_name }} --json-data '{"key": "value"}'
 ```
 
 {% endif %}
@@ -82,6 +82,6 @@ Other procedures in the {{ service }} service:
 ## See Also
 
 - [{{ service | to_human_readable }} Service](index.md) - All {{ service }} procedures
-- [f5xcctl request rpc](../index.md) - All RPC commands
-- [f5xcctl request](../../index.md) - Request commands
+- [xcsh request rpc](../index.md) - All RPC commands
+- [xcsh request](../../index.md) - Request commands
 - [Command Reference](../../../index.md)

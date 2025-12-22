@@ -15,14 +15,14 @@ aliases:
 {% endif %}
 ---
 
-# f5xcctl cloudstatus {{ name }}
+# xcsh cloudstatus {{ name }}
 
 > {{ command.short | normalize_acronyms }}
 
 ## Synopsis
 
 ```bash
-f5xcctl cloudstatus {{ name }} <command> [flags]
+xcsh cloudstatus {{ name }} <command> [flags]
 ```
 
 {% if command.long and command.long != command.short %}
@@ -37,7 +37,7 @@ f5xcctl cloudstatus {{ name }} <command> [flags]
 This command can also be invoked as:
 
 {% for alias in command.aliases %}
-- `f5xcctl cloudstatus {{ alias }}`
+- `xcsh cloudstatus {{ alias }}`
 {% endfor %}
 
 {% endif %}
@@ -71,5 +71,5 @@ This command can also be invoked as:
 
 - [Cloud Status Overview](../index.md)
 {% for sub in subcommands[:5] %}
-- [f5xcctl cloudstatus {{ name }} {{ sub.path[-1] }}]({{ sub.path[-1] }}.md)
+- [xcsh cloudstatus {{ name }} {{ sub.path[-1] }}]({{ sub.path[-1] }}.md)
 {% endfor %}

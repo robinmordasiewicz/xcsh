@@ -15,14 +15,14 @@ aliases:
 {% endif %}
 ---
 
-# f5xcctl {{ command.name }}
+# xcsh {{ command.name }}
 
 > {{ command.short }}
 
 ## Synopsis
 
 ```bash
-f5xcctl {{ command.name }} <command> [flags]
+xcsh {{ command.name }} <command> [flags]
 ```
 
 {% if command.long and command.long != command.short %}
@@ -37,7 +37,7 @@ f5xcctl {{ command.name }} <command> [flags]
 This command can also be invoked as:
 
 {% for alias in command.aliases %}
-- `f5xcctl {{ alias }}`
+- `xcsh {{ alias }}`
 {% endfor %}
 
 {% endif %}
@@ -73,7 +73,7 @@ This command can also be invoked as:
 
 - [Command Reference](../index.md)
 {% for sub in subcommands[:5] %}
-{% if flat_links %}- [f5xcctl {{ command.name }} {{ sub.name }}]({{ sub.name }}.md)
-{% else %}- [f5xcctl {{ command.name }} {{ sub.name }}]({{ sub.name }}/index.md)
+{% if flat_links %}- [xcsh {{ command.name }} {{ sub.name }}]({{ sub.name }}.md)
+{% else %}- [xcsh {{ command.name }} {{ sub.name }}]({{ sub.name }}/index.md)
 {% endif %}
 {% endfor %}

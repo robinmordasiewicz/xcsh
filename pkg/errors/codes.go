@@ -1,9 +1,9 @@
-// Package errors provides standardized exit codes and error types for f5xcctl.
+// Package errors provides standardized exit codes and error types for xcsh.
 // These codes enable AI agents and automation scripts to programmatically
 // determine the nature of errors and take appropriate action.
 package errors
 
-// Exit codes for f5xcctl CLI
+// Exit codes for xcsh CLI
 // These codes follow a hierarchical scheme where higher codes indicate more specific errors.
 const (
 	// ExitSuccess indicates the command completed successfully

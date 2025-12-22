@@ -9,7 +9,7 @@ command_group: "{{ front_matter.command_group }}"
 rpc_service: "{{ front_matter.rpc_service }}"
 ---
 
-# f5xcctl request rpc {{ service }}
+# xcsh request rpc {{ service }}
 
 > {{ service | to_human_readable }} service RPC procedures
 
@@ -30,23 +30,23 @@ The `{{ service }}` service provides {{ procedures | length }} RPC procedures fo
 ### Invoke an RPC procedure
 
 ```bash
-f5xcctl request rpc {{ service }}.CustomAPI.<procedure> [flags]
+xcsh request rpc {{ service }}.CustomAPI.<procedure> [flags]
 ```
 
 ### Invoke with input file
 
 ```bash
-f5xcctl request rpc {{ service }}.CustomAPI.<procedure> -i request.yaml
+xcsh request rpc {{ service }}.CustomAPI.<procedure> -i request.yaml
 ```
 
 ### Invoke with inline JSON
 
 ```bash
-f5xcctl request rpc {{ service }}.CustomAPI.<procedure> --json-data '{"key": "value"}'
+xcsh request rpc {{ service }}.CustomAPI.<procedure> --json-data '{"key": "value"}'
 ```
 
 ## See Also
 
-- [f5xcctl request rpc](../index.md) - All RPC commands
-- [f5xcctl request](../../index.md) - Request commands
+- [xcsh request rpc](../index.md) - All RPC commands
+- [xcsh request](../../index.md) - Request commands
 - [Command Reference](../../../index.md)

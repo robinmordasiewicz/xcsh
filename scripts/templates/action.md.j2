@@ -16,14 +16,14 @@ aliases:
 {% endif %}
 ---
 
-# f5xcctl {{ group }} {{ action }}
+# xcsh {{ group }} {{ action }}
 
 > {{ command.short }}
 
 ## Synopsis
 
 ```bash
-f5xcctl {{ group }} {{ action }} <resource-type> [name] [flags]
+xcsh {{ group }} {{ action }} <resource-type> [name] [flags]
 ```
 
 {% if command.long and command.long != command.short %}
@@ -66,78 +66,78 @@ f5xcctl {{ group }} {{ action }} <resource-type> [name] [flags]
 ### List all resources in default namespace
 
 ```bash
-f5xcctl {{ group }} {{ action }} <resource-type>
+xcsh {{ group }} {{ action }} <resource-type>
 ```
 
 ### List resources in a specific namespace
 
 ```bash
-f5xcctl {{ group }} {{ action }} <resource-type> -n example-namespace
+xcsh {{ group }} {{ action }} <resource-type> -n example-namespace
 ```
 
 ### List with JSON output
 
 ```bash
-f5xcctl {{ group }} {{ action }} <resource-type> --output-format json
+xcsh {{ group }} {{ action }} <resource-type> --output-format json
 ```
 {% elif action == 'get' %}
 ### Get resource details
 
 ```bash
-f5xcctl {{ group }} {{ action }} <resource-type> <name>
+xcsh {{ group }} {{ action }} <resource-type> <name>
 ```
 
 ### Get with YAML output
 
 ```bash
-f5xcctl {{ group }} {{ action }} <resource-type> <name> --output-format yaml
+xcsh {{ group }} {{ action }} <resource-type> <name> --output-format yaml
 ```
 
 ### Get resource in specific namespace
 
 ```bash
-f5xcctl {{ group }} {{ action }} <resource-type> <name> -n example-namespace
+xcsh {{ group }} {{ action }} <resource-type> <name> -n example-namespace
 ```
 {% elif action == 'create' %}
 ### Create from YAML file
 
 ```bash
-f5xcctl {{ group }} {{ action }} <resource-type> -i resource.yaml
+xcsh {{ group }} {{ action }} <resource-type> -i resource.yaml
 ```
 
 ### Create in specific namespace
 
 ```bash
-f5xcctl {{ group }} {{ action }} <resource-type> -i resource.yaml -n example-namespace
+xcsh {{ group }} {{ action }} <resource-type> -i resource.yaml -n example-namespace
 ```
 {% elif action == 'delete' %}
 ### Delete a resource
 
 ```bash
-f5xcctl {{ group }} {{ action }} <resource-type> <name>
+xcsh {{ group }} {{ action }} <resource-type> <name>
 ```
 
 ### Delete with confirmation bypass
 
 ```bash
-f5xcctl {{ group }} {{ action }} <resource-type> <name> --yes
+xcsh {{ group }} {{ action }} <resource-type> <name> --yes
 ```
 
 ### Delete from specific namespace
 
 ```bash
-f5xcctl {{ group }} {{ action }} <resource-type> <name> -n example-namespace
+xcsh {{ group }} {{ action }} <resource-type> <name> -n example-namespace
 ```
 {% elif action == 'replace' %}
 ### Replace from file
 
 ```bash
-f5xcctl {{ group }} {{ action }} <resource-type> -i resource.yaml
+xcsh {{ group }} {{ action }} <resource-type> -i resource.yaml
 ```
 {% elif action == 'apply' %}
 ### Apply (create or replace) from file
 
 ```bash
-f5xcctl {{ group }} {{ action }} <resource-type> -i resource.yaml
+xcsh {{ group }} {{ action }} <resource-type> -i resource.yaml
 ```
 {% endif %}

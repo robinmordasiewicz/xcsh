@@ -211,10 +211,10 @@ detect_os() {
   https://github.com/${GITHUB_REPO}/releases/latest
 
 For Windows (amd64):
-  Download f5xcctl_VERSION_windows_amd64.zip
+  Download xcsh_VERSION_windows_amd64.zip
 
 For Windows (arm64):
-  Download f5xcctl_VERSION_windows_arm64.zip"
+  Download xcsh_VERSION_windows_arm64.zip"
             ;;
         FreeBSD*)
             error "FreeBSD is not currently supported. Pre-built binaries are available for:
@@ -399,9 +399,9 @@ add_path_to_rc() {
 
     # Add appropriate export statement
     if [ "$CURRENT_SHELL" = "fish" ]; then
-        printf '\n# Added by f5xcctl installer\nfish_add_path %s\n' "$DIR_TO_ADD" >> "$RC_FILE"
+        printf '\n# Added by xcsh installer\nfish_add_path %s\n' "$DIR_TO_ADD" >> "$RC_FILE"
     else
-        printf '\n# Added by f5xcctl installer\nexport PATH="%s:$PATH"\n' "$DIR_TO_ADD" >> "$RC_FILE"
+        printf '\n# Added by xcsh installer\nexport PATH="%s:$PATH"\n' "$DIR_TO_ADD" >> "$RC_FILE"
     fi
 
     success "Updated $RC_FILE"
@@ -431,7 +431,7 @@ add_zsh_completion_config() {
 
     # Add the completion configuration
     {
-        printf '\n# f5xcctl shell completions\n'
+        printf '\n# xcsh shell completions\n'
         printf 'fpath=(%s $fpath)\n' "$COMPLETION_DIR"
         if [ "$HAS_COMPINIT" = "false" ]; then
             printf 'autoload -Uz compinit && compinit\n'
@@ -448,7 +448,7 @@ add_bash_completion_config() {
     RC_FILE=$(get_shell_rc_file)
 
     # Check if already configured
-    if line_exists_in_file "$RC_FILE" "f5xcctl"; then
+    if line_exists_in_file "$RC_FILE" "xcsh"; then
         # Check if it's specifically our completion file
         if line_exists_in_file "$RC_FILE" "$COMPLETION_FILE"; then
             return 0
@@ -466,7 +466,7 @@ add_bash_completion_config() {
         status "Adding bash completion configuration to $RC_FILE..."
 
         {
-            printf '\n# f5xcctl shell completions\n'
+            printf '\n# xcsh shell completions\n'
             printf '[ -f "%s" ] && source "%s"\n' "$COMPLETION_FILE" "$COMPLETION_FILE"
         } >> "$RC_FILE"
 
@@ -500,7 +500,7 @@ configure_path() {
     if [ "$RC_MODIFIED" = "true" ]; then
         RC_FILE=$(get_shell_rc_file)
         printf "\n"
-        info "To use f5xcctl immediately, run:"
+        info "To use xcsh immediately, run:"
         printf "  ${CYAN}source %s${NC}\n" "$RC_FILE"
         printf "\n"
         info "Or start a new terminal session."
@@ -624,13 +624,13 @@ download_and_install() {
     OS_DISPLAY=$(get_os_display_name "$OS")
     ARCH_DISPLAY=$(get_arch_display_name "$ARCH")
 
-    status "Downloading f5xcctl v${VERSION}..."
+    status "Downloading xcsh v${VERSION}..."
     info "Platform: ${OS_DISPLAY} ${ARCH_DISPLAY}"
     info "URL: ${DOWNLOAD_URL}"
 
     # Download archive
     if ! http_download "$DOWNLOAD_URL" "${TEMP_DIR}/${ARCHIVE_NAME}"; then
-        error "Failed to download f5xcctl.
+        error "Failed to download xcsh.
 
 URL: $DOWNLOAD_URL
 
@@ -672,7 +672,7 @@ Please report this at: https://github.com/${GITHUB_REPO}/issues"
     $SUDO_CMD mv "${TEMP_DIR}/${BINARY_NAME}" "${INSTALL_DIR}/${BINARY_NAME}" || error "Failed to install binary"
     $SUDO_CMD chmod +x "${INSTALL_DIR}/${BINARY_NAME}" || error "Failed to set executable permissions"
 
-    success "Installed f5xcctl to ${INSTALL_DIR}/${BINARY_NAME}"
+    success "Installed xcsh to ${INSTALL_DIR}/${BINARY_NAME}"
 }
 
 # ============================================
@@ -686,7 +686,7 @@ setup_completion() {
     VESCTL_BIN="${INSTALL_DIR}/${BINARY_NAME}"
 
     if [ ! -x "$VESCTL_BIN" ]; then
-        warning "Cannot set up shell completion: f5xcctl binary not found"
+        warning "Cannot set up shell completion: xcsh binary not found"
         return
     fi
 
@@ -704,7 +704,7 @@ setup_completion() {
             setup_fish_completion "$VESCTL_BIN" "$SUDO_CMD"
             ;;
         *)
-            info "Shell completion available: f5xcctl completion --help"
+            info "Shell completion available: xcsh completion --help"
             ;;
     esac
 }
@@ -716,8 +716,8 @@ setup_bash_completion() {
     # Try system-wide location first
     if [ -d "/etc/bash_completion.d" ] && { [ -w "/etc/bash_completion.d" ] || [ -n "$SUDO_CMD" ]; }; then
         status "Setting up bash completion (system-wide)..."
-        if $SUDO_CMD sh -c "\"$VESCTL_BIN\" completion bash > /etc/bash_completion.d/f5xcctl" 2>/dev/null; then
-            success "Bash completion installed to /etc/bash_completion.d/f5xcctl"
+        if $SUDO_CMD sh -c "\"$VESCTL_BIN\" completion bash > /etc/bash_completion.d/xcsh" 2>/dev/null; then
+            success "Bash completion installed to /etc/bash_completion.d/xcsh"
             return
         fi
     fi
@@ -726,10 +726,10 @@ setup_bash_completion() {
     BASH_COMPLETION_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion/completions"
     if mkdir -p "$BASH_COMPLETION_DIR" 2>/dev/null; then
         status "Setting up bash completion (user)..."
-        if "$VESCTL_BIN" completion bash > "${BASH_COMPLETION_DIR}/f5xcctl" 2>/dev/null; then
-            success "Bash completion installed to ${BASH_COMPLETION_DIR}/f5xcctl"
+        if "$VESCTL_BIN" completion bash > "${BASH_COMPLETION_DIR}/xcsh" 2>/dev/null; then
+            success "Bash completion installed to ${BASH_COMPLETION_DIR}/xcsh"
             # Automatically configure RC file if needed
-            add_bash_completion_config "${BASH_COMPLETION_DIR}/f5xcctl" || true
+            add_bash_completion_config "${BASH_COMPLETION_DIR}/xcsh" || true
             return 0
         fi
     fi
@@ -743,8 +743,8 @@ setup_zsh_completion() {
     ZSH_COMPLETION_DIR="${ZDOTDIR:-$HOME}/.zsh/completions"
     if mkdir -p "$ZSH_COMPLETION_DIR" 2>/dev/null; then
         status "Setting up zsh completion..."
-        if "$VESCTL_BIN" completion zsh > "${ZSH_COMPLETION_DIR}/_f5xcctl" 2>/dev/null; then
-            success "Zsh completion installed to ${ZSH_COMPLETION_DIR}/_f5xcctl"
+        if "$VESCTL_BIN" completion zsh > "${ZSH_COMPLETION_DIR}/_xcsh" 2>/dev/null; then
+            success "Zsh completion installed to ${ZSH_COMPLETION_DIR}/_xcsh"
             # Automatically configure RC file
             add_zsh_completion_config "$ZSH_COMPLETION_DIR" || true
             # Clear zsh completion cache to ensure new completions are loaded
@@ -761,8 +761,8 @@ setup_fish_completion() {
     FISH_COMPLETION_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/fish/completions"
     if mkdir -p "$FISH_COMPLETION_DIR" 2>/dev/null; then
         status "Setting up fish completion..."
-        if "$VESCTL_BIN" completion fish > "${FISH_COMPLETION_DIR}/f5xcctl.fish" 2>/dev/null; then
-            success "Fish completion installed to ${FISH_COMPLETION_DIR}/f5xcctl.fish"
+        if "$VESCTL_BIN" completion fish > "${FISH_COMPLETION_DIR}/xcsh.fish" 2>/dev/null; then
+            success "Fish completion installed to ${FISH_COMPLETION_DIR}/xcsh.fish"
             # Fish auto-loads from this directory, no RC modification needed
             return
         fi
@@ -785,10 +785,10 @@ uninstall() {
         fi
     fi
 
-    status "Uninstalling f5xcctl..."
+    status "Uninstalling xcsh..."
 
     if [ ! -f "$VESCTL_PATH" ]; then
-        error "f5xcctl not found at $VESCTL_PATH"
+        error "xcsh not found at $VESCTL_PATH"
     fi
 
     $SUDO_CMD rm -f "$VESCTL_PATH" || error "Failed to remove $VESCTL_PATH"
@@ -798,27 +798,27 @@ uninstall() {
     status "Cleaning up shell completions..."
 
     # Bash completions
-    if [ -f "/etc/bash_completion.d/f5xcctl" ]; then
-        $SUDO_CMD rm -f "/etc/bash_completion.d/f5xcctl" 2>/dev/null
+    if [ -f "/etc/bash_completion.d/xcsh" ]; then
+        $SUDO_CMD rm -f "/etc/bash_completion.d/xcsh" 2>/dev/null
     fi
-    BASH_COMPLETION_USER="${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion/completions/f5xcctl"
+    BASH_COMPLETION_USER="${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion/completions/xcsh"
     if [ -f "$BASH_COMPLETION_USER" ]; then
         rm -f "$BASH_COMPLETION_USER" 2>/dev/null
     fi
 
     # Zsh completions
-    ZSH_COMPLETION="${ZDOTDIR:-$HOME}/.zsh/completions/_f5xcctl"
+    ZSH_COMPLETION="${ZDOTDIR:-$HOME}/.zsh/completions/_xcsh"
     if [ -f "$ZSH_COMPLETION" ]; then
         rm -f "$ZSH_COMPLETION" 2>/dev/null
     fi
 
     # Fish completions
-    FISH_COMPLETION="${XDG_CONFIG_HOME:-$HOME/.config}/fish/completions/f5xcctl.fish"
+    FISH_COMPLETION="${XDG_CONFIG_HOME:-$HOME/.config}/fish/completions/xcsh.fish"
     if [ -f "$FISH_COMPLETION" ]; then
         rm -f "$FISH_COMPLETION" 2>/dev/null
     fi
 
-    success "f5xcctl has been uninstalled"
+    success "xcsh has been uninstalled"
 }
 
 # ============================================
@@ -827,17 +827,17 @@ uninstall() {
 
 show_help() {
     cat << 'EOF'
-f5xcctl installer
+xcsh installer
 
 Automatically detects your platform and installs the appropriate binary
 from GitHub releases.
 
 USAGE
-    curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
-    wget -qO- https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
+    curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
+    wget -qO- https://robinmordasiewicz.github.io/xcsh/install.sh | sh
 
 OPTIONS
-    --uninstall     Remove f5xcctl and shell completions
+    --uninstall     Remove xcsh and shell completions
     --help, -h      Show this help message
 
 ENVIRONMENT VARIABLES
@@ -853,26 +853,26 @@ SUPPORTED PLATFORMS
 
 EXAMPLES
     # Install latest version
-    curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
+    curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
 
     # Install specific version
-    curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | F5XC_VERSION=1.1.0 sh
+    curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | F5XC_VERSION=1.1.0 sh
 
     # Install to custom directory (no sudo required)
-    curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | F5XC_INSTALL_DIR=$HOME/.local/bin sh
+    curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | F5XC_INSTALL_DIR=$HOME/.local/bin sh
 
     # Install using wget instead of curl
-    wget -qO- https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
+    wget -qO- https://robinmordasiewicz.github.io/xcsh/install.sh | sh
 
     # Uninstall
-    curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh -s -- --uninstall
+    curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh -s -- --uninstall
 
 WINDOWS INSTALLATION
     Download the appropriate zip file from GitHub releases:
-    https://github.com/robinmordasiewicz/f5xcctl/releases/latest
+    https://github.com/robinmordasiewicz/xcsh/releases/latest
 
-    - Windows (Intel/AMD): f5xcctl_VERSION_windows_amd64.zip
-    - Windows (ARM):       f5xcctl_VERSION_windows_arm64.zip
+    - Windows (Intel/AMD): xcsh_VERSION_windows_amd64.zip
+    - Windows (ARM):       xcsh_VERSION_windows_arm64.zip
 
 EOF
 }
@@ -904,7 +904,7 @@ Use --help for usage information."
 
     # Print banner
     printf "\n"
-    printf "${CYAN}f5xcctl installer${NC}\n"
+    printf "${CYAN}xcsh installer${NC}\n"
     printf "${CYAN}=================${NC}\n"
     printf "\n"
 
@@ -968,7 +968,7 @@ On Alpine:        apk add curl"
     if [ -f "${INSTALL_DIR}/${BINARY_NAME}" ]; then
         EXISTING_VERSION=$("${INSTALL_DIR}/${BINARY_NAME}" version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1 || echo "unknown")
         if [ "$EXISTING_VERSION" = "$VERSION" ]; then
-            success "f5xcctl v${VERSION} is already installed"
+            success "xcsh v${VERSION} is already installed"
             printf "\n"
             exit 0
         fi
@@ -991,12 +991,12 @@ On Alpine:        apk add curl"
 
     # Success message
     printf "\n"
-    success "f5xcctl v${VERSION} installed successfully!"
+    success "xcsh v${VERSION} installed successfully!"
     printf "\n"
     printf "%s\n" "Get started:"
-    printf "  ${CYAN}f5xcctl --help${NC}              # Show help\n"
-    printf "  ${CYAN}f5xcctl configure${NC}           # Configure credentials\n"
-    printf "  ${CYAN}f5xcctl version${NC}             # Show version info\n"
+    printf "  ${CYAN}xcsh --help${NC}              # Show help\n"
+    printf "  ${CYAN}xcsh configure${NC}           # Configure credentials\n"
+    printf "  ${CYAN}xcsh version${NC}             # Show version info\n"
     printf "\n"
     printf "%s\n" "Documentation: https://github.com/${GITHUB_REPO}"
     printf "\n"

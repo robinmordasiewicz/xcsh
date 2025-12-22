@@ -15,14 +15,14 @@ aliases:
 {% endif %}
 ---
 
-# f5xcctl cloudstatus
+# xcsh cloudstatus
 
 > {{ command.short | normalize_acronyms }}
 
 ## Synopsis
 
 ```bash
-f5xcctl cloudstatus <command> [flags]
+xcsh cloudstatus <command> [flags]
 ```
 
 {% if command.long and command.long != command.short %}
@@ -37,7 +37,7 @@ f5xcctl cloudstatus <command> [flags]
 This command can also be invoked as:
 
 {% for alias in command.aliases %}
-- `f5xcctl {{ alias }}`
+- `xcsh {{ alias }}`
 {% endfor %}
 
 {% endif %}
@@ -136,7 +136,7 @@ The cloudstatus commands use standard exit codes for CI/CD integration:
 
 - [Command Reference](../index.md)
 {% for cmd in subcommands[:5] %}
-{% if cmd.subcommands %}- [f5xcctl cloudstatus {{ cmd.path[-1] }}]({{ cmd.path[-1] }}/index.md)
-{% else %}- [f5xcctl cloudstatus {{ cmd.path[-1] }}]({{ cmd.path[-1] }}.md)
+{% if cmd.subcommands %}- [xcsh cloudstatus {{ cmd.path[-1] }}]({{ cmd.path[-1] }}/index.md)
+{% else %}- [xcsh cloudstatus {{ cmd.path[-1] }}]({{ cmd.path[-1] }}.md)
 {% endif %}
 {% endfor %}

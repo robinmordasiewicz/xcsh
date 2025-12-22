@@ -9,7 +9,7 @@ rpc_service: "{{ service }}"
 procedure_count: {{ procedures | length }}
 ---
 
-# f5xcctl request rpc {{ service }}
+# xcsh request rpc {{ service }}
 
 > {{ service | to_human_readable }} service RPC procedures
 
@@ -22,7 +22,7 @@ procedure_count: {{ procedures | length }}
 ### Synopsis
 
 ```bash
-f5xcctl request rpc {{ proc.full_name }} [flags]
+xcsh request rpc {{ proc.full_name }} [flags]
 ```
 
 {% if proc.command.long and proc.command.long != proc.command.short %}
@@ -50,13 +50,13 @@ f5xcctl request rpc {{ proc.full_name }} [flags]
 {% else %}
 ```bash
 # Call {{ proc.procedure_name }} procedure
-f5xcctl request rpc {{ proc.full_name }}
+xcsh request rpc {{ proc.full_name }}
 
 # Call with input file
-f5xcctl request rpc {{ proc.full_name }} -i request.yaml
+xcsh request rpc {{ proc.full_name }} -i request.yaml
 
 # Call with JSON output
-f5xcctl request rpc {{ proc.full_name }} --output-format json
+xcsh request rpc {{ proc.full_name }} --output-format json
 ```
 {% endif %}
 

@@ -14,7 +14,7 @@ api_docs_url: "{{ api_docs_url }}"
 {% endif %}
 ---
 
-# f5xcctl {{ group }} {{ action }} {{ resource }}
+# xcsh {{ group }} {{ action }} {{ resource }}
 
 > {{ command.short }}
 
@@ -54,85 +54,85 @@ api_docs_url: "{{ api_docs_url }}"
 ### List all {{ resource | to_human_readable }} resources
 
 ```bash
-f5xcctl {{ group }} {{ action }} {{ resource }}
+xcsh {{ group }} {{ action }} {{ resource }}
 ```
 
 ### List in specific namespace
 
 ```bash
-f5xcctl {{ group }} {{ action }} {{ resource }} -n example-namespace
+xcsh {{ group }} {{ action }} {{ resource }} -n example-namespace
 ```
 
 ### List with JSON output
 
 ```bash
-f5xcctl {{ group }} {{ action }} {{ resource }} --output-format json
+xcsh {{ group }} {{ action }} {{ resource }} --output-format json
 ```
 {% elif action == 'get' %}
 ### Get {{ resource | to_human_readable }} details
 
 ```bash
-f5xcctl {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }}
+xcsh {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }}
 ```
 
 ### Get with YAML output
 
 ```bash
-f5xcctl {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }} --output-format yaml
+xcsh {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }} --output-format yaml
 ```
 {% elif action == 'create' %}
 ### Create {{ resource | to_human_readable }} from file
 
 ```bash
-f5xcctl {{ group }} {{ action }} {{ resource }} -i {{ resource }}.yaml
+xcsh {{ group }} {{ action }} {{ resource }} -i {{ resource }}.yaml
 ```
 {% elif action == 'delete' %}
 ### Delete {{ resource | to_human_readable }}
 
 ```bash
-f5xcctl {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }}
+xcsh {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }}
 ```
 
 ### Delete with confirmation bypass
 
 ```bash
-f5xcctl {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }} --yes
+xcsh {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }} --yes
 ```
 {% elif action == 'replace' %}
 ### Replace {{ resource | to_human_readable }} from file
 
 ```bash
-f5xcctl {{ group }} {{ action }} {{ resource }} -i {{ resource }}.yaml
+xcsh {{ group }} {{ action }} {{ resource }} -i {{ resource }}.yaml
 ```
 {% elif action == 'apply' %}
 ### Apply {{ resource | to_human_readable }} from file
 
 ```bash
-f5xcctl {{ group }} {{ action }} {{ resource }} -i {{ resource }}.yaml
+xcsh {{ group }} {{ action }} {{ resource }} -i {{ resource }}.yaml
 ```
 {% elif action == 'status' %}
 ### Get {{ resource | to_human_readable }} status
 
 ```bash
-f5xcctl {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }}
+xcsh {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }}
 ```
 {% elif action == 'patch' %}
 ### Patch {{ resource | to_human_readable }}
 
 ```bash
-f5xcctl {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }} -i patch.yaml
+xcsh {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }} -i patch.yaml
 ```
 {% elif action == 'add-labels' %}
 ### Add labels to {{ resource | to_human_readable }}
 
 ```bash
-f5xcctl {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }} --label-key app --label-value web
+xcsh {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }} --label-key app --label-value web
 ```
 {% elif action == 'remove-labels' %}
 ### Remove labels from {{ resource | to_human_readable }}
 
 ```bash
-f5xcctl {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }} --label-key app
+xcsh {{ group }} {{ action }} {{ resource }} example-{{ resource | replace('_', '-') }} --label-key app
 ```
 {% else %}
 ```bash

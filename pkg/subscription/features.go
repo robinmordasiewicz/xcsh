@@ -408,11 +408,11 @@ func GenerateFeatureTierMapSpec() FeatureTierMapSpec {
 		Resources: resources,
 		AIGuidance: []string{
 			"Check subscription_context.current_tier before recommending tier-restricted features",
-			"Use 'f5xcctl subscription validate --feature <name>' to verify feature availability before deployment",
+			"Use 'xcsh subscription validate --feature <name>' to verify feature availability before deployment",
 			"Bot Defense has two tiers: bot-defense-standard (Standard subscription) and bot-defense-advanced (Advanced subscription)",
 			"Resources marked with [Requires Advanced] will fail to deploy on Standard tier subscriptions",
-			"Use 'f5xcctl subscription show --output-format json' to discover current tenant capabilities",
-			"Pre-validate resource creation with 'f5xcctl subscription validate --resource-type <type>'",
+			"Use 'xcsh subscription show --output-format json' to discover current tenant capabilities",
+			"Pre-validate resource creation with 'xcsh subscription validate --resource-type <type>'",
 		},
 	}
 }

@@ -22,7 +22,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Generate install script docs with real output"
     )
-    parser.add_argument("--version", help="f5xcctl version for examples")
+    parser.add_argument("--version", help="xcsh version for examples")
     parser.add_argument("--install-output", help="Captured installation output")
     parser.add_argument(
         "--output",

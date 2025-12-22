@@ -9,22 +9,22 @@ import (
 	"testing"
 )
 
-// getBinaryPath returns the path to the f5xcctl binary
+// getBinaryPath returns the path to the xcsh binary
 func getBinaryPath(t *testing.T) string {
 	// Try current directory first
 	cwd, _ := os.Getwd()
-	binary := filepath.Join(cwd, "..", "..", "f5xcctl")
+	binary := filepath.Join(cwd, "..", "..", "xcsh")
 	if _, err := os.Stat(binary); err == nil {
 		return binary
 	}
 
 	// Try relative to project root
-	binary = "./f5xcctl"
+	binary = "./xcsh"
 	if _, err := os.Stat(binary); err == nil {
 		return binary
 	}
 
-	t.Skip("f5xcctl binary not found - run 'go build' first")
+	t.Skip("xcsh binary not found - run 'go build' first")
 	return ""
 }
 
@@ -43,9 +43,9 @@ func TestCLI_Version(t *testing.T) {
 	}
 
 	output := stdout.String()
-	// Version output format: "f5xcctl version <version>\n  commit: <sha>\n  built: <date>\n  go: <version>\n  platform: <os/arch>"
-	if !strings.Contains(output, "f5xcctl version") || !strings.Contains(output, "commit:") {
-		t.Errorf("Expected version output with f5xcctl version and commit, got: %s", output)
+	// Version output format: "xcsh version <version>\n  commit: <sha>\n  built: <date>\n  go: <version>\n  platform: <os/arch>"
+	if !strings.Contains(output, "xcsh version") || !strings.Contains(output, "commit:") {
+		t.Errorf("Expected version output with xcsh version and commit, got: %s", output)
 	}
 
 	t.Logf("Version output: %s", output)
@@ -69,7 +69,7 @@ func TestCLI_Help(t *testing.T) {
 
 	// Check for expected content in help
 	expectedStrings := []string{
-		"f5xcctl",
+		"xcsh",
 		"Available Commands",
 		"--help",
 	}
