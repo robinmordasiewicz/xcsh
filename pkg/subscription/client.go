@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/client"
+	"github.com/robinmordasiewicz/xcsh/pkg/client"
 )
 
 // Client provides methods to interact with F5 XC subscription APIs

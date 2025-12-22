@@ -11,9 +11,9 @@ import (
 
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/output"
-	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
-	"github.com/robinmordasiewicz/f5xcctl/pkg/types"
+	"github.com/robinmordasiewicz/xcsh/pkg/output"
+	"github.com/robinmordasiewicz/xcsh/pkg/subscription"
+	"github.com/robinmordasiewicz/xcsh/pkg/types"
 )
 
 // configurationFlags holds flags for configuration commands

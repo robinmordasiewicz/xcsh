@@ -1,4 +1,4 @@
-module github.com/robinmordasiewicz/f5xcctl
+module github.com/robinmordasiewicz/xcsh
 
 go 1.25.0
 

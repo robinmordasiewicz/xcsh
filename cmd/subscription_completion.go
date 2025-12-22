@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
+	"github.com/robinmordasiewicz/xcsh/pkg/subscription"
 )
 
 // Completion client with caching for subscription completions

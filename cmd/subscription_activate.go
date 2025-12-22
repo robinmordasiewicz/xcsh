@@ -9,8 +9,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	xerrors "github.com/robinmordasiewicz/f5xcctl/pkg/errors"
-	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
+	xerrors "github.com/robinmordasiewicz/xcsh/pkg/errors"
+	"github.com/robinmordasiewicz/xcsh/pkg/subscription"
 )
 
 var (

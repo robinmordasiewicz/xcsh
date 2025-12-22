@@ -11,9 +11,9 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/client"
-	"github.com/robinmordasiewicz/f5xcctl/pkg/output"
-	"github.com/robinmordasiewicz/f5xcctl/pkg/types"
+	"github.com/robinmordasiewicz/xcsh/pkg/client"
+	"github.com/robinmordasiewicz/xcsh/pkg/output"
+	"github.com/robinmordasiewicz/xcsh/pkg/types"
 )
 
 var cmdSeqFlags struct {

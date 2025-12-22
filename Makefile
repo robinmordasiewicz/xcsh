@@ -1,7 +1,7 @@
-# f5xcctl CLI Makefile
+# CLI Makefile
 #
 # Usage:
-#   make build        - Build the f5xcctl binary for current platform
+#   make build        - Build the CLI binary for current platform
 #   make build-all    - Build binaries for all platforms (linux/darwin/windows)
 #   make test         - Run all tests
 #   make test-unit    - Run unit tests only
@@ -12,8 +12,12 @@
 #   make install      - Install binary to GOPATH/bin
 #   make release-dry  - Test GoReleaser without publishing
 
-BINARY_NAME=f5xcctl
-MODULE=github.com/robinmordasiewicz/f5xcctl
+# Include branding configuration (single source of truth)
+include branding.mk
+
+# Use branding variables
+BINARY_NAME=$(CLI_NAME)
+MODULE=$(MODULE_PATH)
 VERSION?=$(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 GIT_COMMIT?=$(shell git rev-parse HEAD 2>/dev/null || echo "unknown")
 BUILD_TIME=$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
@@ -446,7 +450,7 @@ version:
 
 # Show help
 help:
-	@echo "f5xcctl CLI Makefile"
+	@echo "$(CLI_NAME) CLI Makefile"
 	@echo ""
 	@echo "=== CI/CD Consistency Targets (RECOMMENDED) ==="
 	@echo "  make ci             - Run full CI pipeline locally (mirrors GitHub Actions)"

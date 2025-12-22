@@ -9,9 +9,10 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/client"
-	"github.com/robinmordasiewicz/f5xcctl/pkg/config"
-	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
+	"github.com/robinmordasiewicz/xcsh/pkg/branding"
+	"github.com/robinmordasiewicz/xcsh/pkg/client"
+	"github.com/robinmordasiewicz/xcsh/pkg/config"
+	"github.com/robinmordasiewicz/xcsh/pkg/subscription"
 )
 
 var (
@@ -48,10 +49,10 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:     "f5xcctl",
+	Use:     branding.CLIName,
 	Version: Version, // Enables --version and -v flags
-	Short:   "Command-line interface for F5 Distributed Cloud services.",
-	Long:    `Command-line interface for F5 Distributed Cloud services.`,
+	Short:   branding.CLIShortDescription,
+	Long:    branding.CLIDescription,
 	// Run handles the root command when no subcommand is specified
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Handle --spec flag for root command
@@ -70,7 +71,7 @@ var rootCmd = &cobra.Command{
 			"__complete":       true, // Cobra's shell completion handler
 			"__completeNoDesc": true, // Cobra's shell completion handler (no descriptions)
 			"help":             true,
-			"f5xcctl":          true, // Root command itself
+			branding.CLIName:   true, // Root command itself
 		}
 		if skipCommands[cmd.Name()] {
 			return nil
@@ -82,9 +83,10 @@ var rootCmd = &cobra.Command{
 				"Please set the API URL using one of the following methods:\n" +
 				"  1. Environment variable: export F5XC_API_URL=\"https://tenant.console.ves.volterra.io\"\n" +
 				"  2. Command-line flag:    --server-url \"https://tenant.console.ves.volterra.io\"\n" +
-				"  3. Configuration file:   Add 'server_url' to ~/.f5xcconfig\n\n" +
+				"  3. Configuration file:   Add 'server_url' to ~/%s\n\n" +
 				"Replace 'tenant' with your actual F5 XC tenant name.\n" +
-				"For staging environment, use: https://tenant.staging.volterra.us")
+				"For staging environment, use: https://tenant.staging.volterra.us",
+				branding.ConfigFileName)
 		}
 
 		// Initialize the API client

@@ -7,7 +7,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// Config represents the f5xcctl configuration file structure
+// Config represents the CLI configuration file structure
 type Config struct {
 	// ServerURL is the API server endpoint
 	ServerURL string `yaml:"server-url"`
@@ -34,7 +34,7 @@ type rawConfig struct {
 	APIToken  bool   `yaml:"api-token"`
 }
 
-// Load reads and parses a f5xcctl config file
+// Load reads and parses a CLI config file
 func Load(path string) (*Config, error) {
 	if path == "" {
 		return nil, fmt.Errorf("config path is empty")

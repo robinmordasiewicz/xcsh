@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/client"
+	"github.com/robinmordasiewicz/xcsh/pkg/client"
 )
 
 // TestResource_ListHTTPLoadBalancers tests listing HTTP load balancers

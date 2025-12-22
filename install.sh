@@ -1,6 +1,6 @@
 #!/bin/sh
-# f5xcctl install script
-# Usage: curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
+# xcsh install script
+# Usage: curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
 #
 # Environment variables:
 #   F5XC_VERSION      - Specific version to install (default: latest)
@@ -12,12 +12,12 @@
 set -eu
 
 # Configuration
-GITHUB_REPO="robinmordasiewicz/f5xcctl"
+GITHUB_REPO="robinmordasiewicz/xcsh"
 GITHUB_API="https://api.github.com/repos/${GITHUB_REPO}/releases/latest"
 GITHUB_RELEASES="https://github.com/${GITHUB_REPO}/releases/download"
 DEFAULT_INSTALL_DIR="/usr/local/bin"
 USER_INSTALL_DIR="$HOME/.local/bin"
-BINARY_NAME="f5xcctl"
+BINARY_NAME="xcsh"
 
 # Colors for output (check if terminal supports colors)
 if [ -t 1 ] && [ -n "$(tput colors 2>/dev/null)" ] && [ "$(tput colors)" -ge 8 ]; then

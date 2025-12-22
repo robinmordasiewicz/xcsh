@@ -6,6 +6,8 @@ import (
 	runtimedebug "runtime/debug"
 
 	"github.com/spf13/cobra"
+
+	"github.com/robinmordasiewicz/xcsh/pkg/branding"
 )
 
 // Build-time version variables: set via ldflags during release, or auto-detected from VCS info
@@ -44,8 +46,8 @@ func init() {
 var versionCmd = &cobra.Command{
 	Use:    "version",
 	Hidden: true, // Hide from help - users should use --version or -v flag
-	Short:  "Display f5xcctl version and build information.",
-	Long: `Display f5xcctl version and build information.
+	Short:  fmt.Sprintf("Display %s version and build information.", branding.CLIName),
+	Long: fmt.Sprintf(`Display %s version and build information.
 
 Shows the current version, git commit hash, build date, Go version,
 and platform information. Useful for debugging, support requests,
@@ -56,9 +58,9 @@ OUTPUT FIELDS:
   commit    Git commit hash (7-character short form)
   built     Build timestamp (ISO 8601 format)
   go        Go runtime version used to compile
-  platform  Operating system and architecture (e.g., darwin/arm64)`,
-	Example: `  # Show version information
-  f5xcctl version`,
+  platform  Operating system and architecture (e.g., darwin/arm64)`, branding.CLIName),
+	Example: fmt.Sprintf(`  # Show version information
+  %s version`, branding.CLIName),
 	Run: func(cmd *cobra.Command, args []string) {
 		// Short commit hash (7 chars like GitHub)
 		commit := GitCommit
@@ -66,7 +68,7 @@ OUTPUT FIELDS:
 			commit = commit[:7]
 		}
 
-		fmt.Printf("f5xcctl version %s\n", Version)
+		fmt.Printf("%s version %s\n", branding.CLIName, Version)
 		fmt.Printf("  commit:   %s\n", commit)
 		fmt.Printf("  built:    %s\n", BuildDate)
 		fmt.Printf("  go:       %s\n", runtime.Version())

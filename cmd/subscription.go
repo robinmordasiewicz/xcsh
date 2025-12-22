@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
+	"github.com/robinmordasiewicz/xcsh/pkg/subscription"
 )
 
 // subscriptionClient is the shared subscription client for all subscription subcommands

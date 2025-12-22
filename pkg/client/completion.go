@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/types"
+	"github.com/robinmordasiewicz/xcsh/pkg/types"
 )
 
 // NamespaceListResult holds the response from listing namespaces

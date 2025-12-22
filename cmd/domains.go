@@ -6,8 +6,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/naming"
-	"github.com/robinmordasiewicz/f5xcctl/pkg/types"
+	"github.com/robinmordasiewicz/xcsh/pkg/naming"
+	"github.com/robinmordasiewicz/xcsh/pkg/types"
 )
 
 // init registers all domain commands dynamically

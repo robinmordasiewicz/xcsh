@@ -9,7 +9,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/output"
+	"github.com/robinmordasiewicz/xcsh/pkg/output"
 )
 
 // API-endpoint flags matching original f5xcctl

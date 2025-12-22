@@ -14,8 +14,8 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/openapi"
-	"github.com/robinmordasiewicz/f5xcctl/pkg/types"
+	"github.com/robinmordasiewicz/xcsh/pkg/openapi"
+	"github.com/robinmordasiewicz/xcsh/pkg/types"
 )
 
 var (

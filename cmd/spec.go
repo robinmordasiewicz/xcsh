@@ -11,9 +11,9 @@ import (
 	"github.com/spf13/pflag"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/errors"
-	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
-	"github.com/robinmordasiewicz/f5xcctl/pkg/types"
+	"github.com/robinmordasiewicz/xcsh/pkg/errors"
+	"github.com/robinmordasiewicz/xcsh/pkg/subscription"
+	"github.com/robinmordasiewicz/xcsh/pkg/types"
 )
 
 // specFlag controls whether to output machine-readable spec

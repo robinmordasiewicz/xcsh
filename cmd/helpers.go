@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/cloudstatus"
-	"github.com/robinmordasiewicz/f5xcctl/pkg/output"
-	"github.com/robinmordasiewicz/f5xcctl/pkg/subscription"
+	"github.com/robinmordasiewicz/xcsh/pkg/cloudstatus"
+	"github.com/robinmordasiewicz/xcsh/pkg/output"
+	"github.com/robinmordasiewicz/xcsh/pkg/subscription"
 )
 
 // requireSubscriptionClient returns the subscription client or an error if not initialized.

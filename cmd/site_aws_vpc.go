@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/output"
+	"github.com/robinmordasiewicz/xcsh/pkg/output"
 )
 
 var awsVPCFlags struct {

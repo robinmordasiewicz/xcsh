@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/cobra"
 	"gopkg.in/yaml.v3"
 
-	"github.com/robinmordasiewicz/f5xcctl/pkg/cloudstatus"
+	"github.com/robinmordasiewicz/xcsh/pkg/cloudstatus"
 )
 
 // Incident filtering flags
