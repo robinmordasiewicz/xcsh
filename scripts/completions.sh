@@ -14,11 +14,11 @@ mkdir -p completions
 
 # Build binary first to ensure it exists
 # go run . can have issues in CI environments
-echo "Building f5xcctl for completion generation..."
-go build -o ./f5xcctl-completions .
+echo "Building xcsh for completion generation..."
+go build -o ./xcsh-completions .
 
-if [ ! -f "./f5xcctl-completions" ]; then
-    echo "ERROR: Failed to build f5xcctl-completions binary"
+if [ ! -f "./xcsh-completions" ]; then
+    echo "ERROR: Failed to build xcsh-completions binary"
     exit 1
 fi
 
@@ -27,16 +27,16 @@ echo "Binary built successfully"
 # Generate completions for all supported shells using built binary
 for sh in bash zsh fish; do
     echo "Generating ${sh} completions..."
-    ./f5xcctl-completions completion "${sh}" > "completions/f5xcctl.${sh}"
+    ./xcsh-completions completion "${sh}" > "completions/xcsh.${sh}"
 
-    if [ ! -s "completions/f5xcctl.${sh}" ]; then
+    if [ ! -s "completions/xcsh.${sh}" ]; then
         echo "ERROR: Failed to generate ${sh} completions (file empty or missing)"
         exit 1
     fi
 done
 
 # Cleanup temp binary
-rm -f ./f5xcctl-completions
+rm -f ./xcsh-completions
 
 echo "=== Completion generation finished ==="
 echo "Generated files:"
@@ -44,11 +44,11 @@ ls -la completions/
 
 # Verify files exist and have content
 for sh in bash zsh fish; do
-    if [ ! -s "completions/f5xcctl.${sh}" ]; then
-        echo "ERROR: completions/f5xcctl.${sh} is missing or empty"
+    if [ ! -s "completions/xcsh.${sh}" ]; then
+        echo "ERROR: completions/xcsh.${sh} is missing or empty"
         exit 1
     fi
-    echo "  completions/f5xcctl.${sh}: $(wc -c < completions/f5xcctl.${sh}) bytes"
+    echo "  completions/xcsh.${sh}: $(wc -c < completions/xcsh.${sh}) bytes"
 done
 
 echo "All completions generated successfully"
