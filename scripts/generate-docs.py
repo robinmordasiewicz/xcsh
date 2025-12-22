@@ -1334,12 +1334,15 @@ f5xcctl {group} {action} {resource}
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Generate f5xcctl CLI documentation"
+        description="Generate CLI documentation"
     )
     parser.add_argument(
-        "--f5xcctl",
-        default="./f5xcctl",
-        help="Path to f5xcctl binary (default: ./f5xcctl)",
+        "--cli-binary",
+        "--f5xcctl",  # Keep as alias for backward compatibility
+        "--xcsh",     # New alias
+        dest="cli_binary",
+        default="./xcsh",
+        help="Path to CLI binary (default: ./xcsh)",
     )
     parser.add_argument(
         "--output",
@@ -1370,7 +1373,7 @@ def main():
     args = parser.parse_args()
 
     generator = VesctlDocsGenerator(
-        f5xcctl_path=args.f5xcctl,
+        f5xcctl_path=args.cli_binary,
         output_dir=args.output,
         template_dir=args.templates,
     )
