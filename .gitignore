@@ -1,5 +1,5 @@
 # Binaries
-f5xcctl
+xcsh
 *.exe
 *.exe~
 *.dll
@@ -60,12 +60,12 @@ site/
 .venv/
 __pycache__/
 *.pyc
-f5xcctl.darwin-arm64
+xcsh.darwin-arm64
 
 # Platform-specific binaries
-f5xcctl.darwin-*
-f5xcctl.linux-*
-f5xcctl.windows-*
+xcsh.darwin-*
+xcsh.linux-*
+xcsh.windows-*
 *.darwin-*
 *.linux-*
 *.windows-*
