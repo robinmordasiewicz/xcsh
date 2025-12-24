@@ -188,6 +188,13 @@ if ! unzip -t "$SPECS_DIR/specs.zip" > /dev/null 2>&1; then
 fi
 log_success "ZIP file verified"
 
+# Clean up old domain specs to prevent stale files from accumulating
+# when upstream reorganizes or removes domains
+if [ -d "$SPECS_DIR/domains" ]; then
+    log_info "Cleaning up old domain specs..."
+    rm -rf "$SPECS_DIR/domains"
+fi
+
 # Extract domain specs
 log_info "Extracting domain specifications..."
 unzip -q -o "$SPECS_DIR/specs.zip" -d "$SPECS_DIR"
