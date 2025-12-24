@@ -252,9 +252,9 @@ jobs:
 
           # Define required files matching mkdocs.yml navigation
           REQUIRED_FILES=(
-            "docs/commands/cloudstatus/status/index.md"
-            "docs/commands/cloudstatus/summary/index.md"
-            "docs/commands/cloudstatus/watch/index.md"
+            "docs/commands/cloudstatus/status.md"
+            "docs/commands/cloudstatus/summary.md"
+            "docs/commands/cloudstatus/watch.md"
             "docs/commands/cloudstatus/components/index.md"
             "docs/commands/cloudstatus/incidents/index.md"
             "docs/commands/cloudstatus/maintenance/index.md"

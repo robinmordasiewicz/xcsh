@@ -1,23 +1,24 @@
 # Homebrew (macOS/Linux)
 
-Install f5xcctl on macOS or Linux using Homebrew:
+Install xcsh on macOS or Linux using Homebrew:
 
 ```bash
 brew tap robinmordasiewicz/tap
-brew install --cask f5xcctl
+brew install --cask xcsh
 ```
+
 
 **Upgrade to latest version:**
 
 ```bash
 brew update
-brew upgrade --cask f5xcctl
+brew upgrade --cask xcsh
 ```
 
 **Uninstall:**
 
 ```bash
-brew uninstall --cask f5xcctl
+brew uninstall --cask xcsh
 ```
 
 ## Shell Completions
@@ -38,7 +39,7 @@ The Homebrew cask includes shell completions for bash, zsh, and fish. These are 
     autoload -Uz compinit && compinit
     ```
 
-    Restart your terminal and test with `f5xcctl <TAB>`.
+    Restart your terminal and test with `xcsh <TAB>`.
 
 === "Bash"
 
@@ -55,35 +56,35 @@ The Homebrew cask includes shell completions for bash, zsh, and fish. These are 
       . "$(brew --prefix)/etc/profile.d/bash_completion.sh"
     ```
 
-    Restart your terminal and test with `f5xcctl <TAB>`.
+    Restart your terminal and test with `xcsh <TAB>`.
 
 === "Fish"
 
     Completions work automatically if fish was installed via Homebrew.
 
-    Test with `f5xcctl <TAB>`.
+    Test with `xcsh <TAB>`.
 
 !!! tip "Troubleshooting Completions"
     If completions don't work after setup:
 
     1. Ensure you've restarted your terminal
     2. For zsh, try running `rm -f ~/.zcompdump*` then restart
-    3. Verify completions are installed: `ls $(brew --prefix)/share/zsh/site-functions/_f5xcctl`
+    3. Verify completions are installed: `ls $(brew --prefix)/share/zsh/site-functions/_xcsh`
 
 ## Verify Installation
 
-After installation, verify f5xcctl is working:
+After installation, verify xcsh is working:
 
 ```bash
-f5xcctl version
+xcsh version
 ```
 
 Expected output:
 
 ```text
-f5xcctl version 5.5.0
-  commit:   07f81eb
-  built:    2025-12-21T11:26:06Z
+xcsh version 5.20.0
+  commit:   4b7d694
+  built:    2025-12-24T23:26:49Z
   go:       go1.25.5
   platform: darwin/arm64 [Possible values: linux/amd64,linux/arm64,darwin/amd64,darwin/arm64]
 ```

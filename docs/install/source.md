@@ -1,6 +1,6 @@
 # Build from Source
 
-Build f5xcctl directly from source code.
+Build xcsh directly from source code.
 
 ## Prerequisites
 
@@ -11,23 +11,26 @@ Building from source requires:
 | Go | go1.25.5 | `go version` |
 | Git | any | `git --version` |
 
+
 ## Clone Repository
 
 ```bash
-git clone https://github.com/robinmordasiewicz/f5xcctl.git
-cd f5xcctl
+git clone https://github.com/robinmordasiewicz/xcsh.git
+cd xcsh
 ```
+
 
 ## Build
 
 ```bash
-go build -o f5xcctl .
+go build -o xcsh .
 ```
+
 
 ## Verify Build
 
 ```bash
-./f5xcctl version
+./xcsh version
 ```
 
 Expected output shows version, commit hash, build timestamp, Go version, and platform.
@@ -40,13 +43,13 @@ Move the binary to your PATH:
 
     ```bash
     mkdir -p ~/.local/bin
-    mv f5xcctl ~/.local/bin/
+    mv xcsh ~/.local/bin/
     ```
 
 === "System Install"
 
     ```bash
-    sudo mv f5xcctl /usr/local/bin/
+    sudo mv xcsh /usr/local/bin/
     ```
 
 ## Build with Version Info
@@ -54,8 +57,9 @@ Move the binary to your PATH:
 For release-quality builds with embedded version information:
 
 ```bash
-go build -ldflags="-X github.com/robinmordasiewicz/f5xcctl/cmd.Version=dev \
-  -X github.com/robinmordasiewicz/f5xcctl/cmd.GitCommit=$(git rev-parse --short HEAD) \
-  -X github.com/robinmordasiewicz/f5xcctl/cmd.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-  -o f5xcctl .
+go build -ldflags="-X github.com/robinmordasiewicz/xcsh/cmd.Version=dev \
+  -X github.com/robinmordasiewicz/xcsh/cmd.GitCommit=$(git rev-parse --short HEAD) \
+  -X github.com/robinmordasiewicz/xcsh/cmd.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+  -o xcsh .
 ```
+
