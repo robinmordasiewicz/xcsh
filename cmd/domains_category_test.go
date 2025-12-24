@@ -132,8 +132,8 @@ func TestAllDomainsInCategories(t *testing.T) {
 		}
 	}
 
-	// Should have all 42 domains
-	assert.Equal(t, 42, totalDomains, "Should have all 42 domains across categories")
+	// Should have all 41 domains
+	assert.Equal(t, 41, totalDomains, "Should have all 41 domains across categories")
 
 	// All registry domains should be categorized
 	for domainName := range types.DomainRegistry {
@@ -167,7 +167,7 @@ func TestCategoryDomainCount(t *testing.T) {
 		"Infrastructure": 4,
 		"Networking":     5,
 		"Operations":     5,
-		"Other":          11,
+		"Other":          10,
 		"Platform":       7,
 		"Security":       9,
 	}
@@ -300,7 +300,7 @@ func TestCategoryDistribution(t *testing.T) {
 	for _, cd := range distribution {
 		totalCount += cd.Count
 	}
-	assert.Equal(t, 42, totalCount, "Total domains should be 42")
+	assert.Equal(t, 41, totalCount, "Total domains should be 41")
 }
 
 // TestMultipleCategoryFilter verifies filtering by multiple categories

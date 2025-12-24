@@ -83,13 +83,13 @@ func TestCompleteOutputFormat(t *testing.T) {
 
 func TestCompleteDomainResourceType(t *testing.T) {
 	// Test with a domain that has resources
-	completionFunc := completeDomainResourceType("load_balancer")
+	completionFunc := completeDomainResourceType("cdn")
 	completions, directive := completionFunc(nil, []string{}, "")
 
-	assert.NotEmpty(t, completions, "Should return resource types for load_balancer domain")
+	assert.NotEmpty(t, completions, "Should return resource types for cdn domain")
 	assert.Equal(t, cobra.ShellCompDirectiveNoFileComp, directive)
 
-	// Verify http_loadbalancer is present (should be in load_balancer domain)
+	// Verify http_loadbalancer is present (should be in cdn domain)
 	found := false
 	for _, comp := range completions {
 		if len(comp) > len("http_loadbalancer") && comp[:len("http_loadbalancer")] == "http_loadbalancer" {
@@ -97,15 +97,15 @@ func TestCompleteDomainResourceType(t *testing.T) {
 			break
 		}
 	}
-	assert.True(t, found, "http_loadbalancer should be in load_balancer domain completions")
+	assert.True(t, found, "http_loadbalancer should be in cdn domain completions")
 }
 
 func TestCompleteDomainResourceTypeMultipleDomains(t *testing.T) {
 	// Test that different domains return their respective resources
-	completionFunc := completeDomainResourceType("load_balancer")
+	completionFunc := completeDomainResourceType("cdn")
 	completions, _ := completionFunc(nil, []string{}, "")
 
-	// Load balancer domain should have http_loadbalancer
+	// CDN domain should have http_loadbalancer
 	found := false
 	for _, comp := range completions {
 		if len(comp) > len("http_loadbalancer") && comp[:len("http_loadbalancer")] == "http_loadbalancer" {
@@ -113,7 +113,7 @@ func TestCompleteDomainResourceTypeMultipleDomains(t *testing.T) {
 			break
 		}
 	}
-	assert.True(t, found, "http_loadbalancer should be in load_balancer domain completions")
+	assert.True(t, found, "http_loadbalancer should be in cdn domain completions")
 
 	// Another domain should have different resources
 	completionFunc2 := completeDomainResourceType("identity")
@@ -123,7 +123,7 @@ func TestCompleteDomainResourceTypeMultipleDomains(t *testing.T) {
 	if len(completions) > 0 && len(completions2) > 0 {
 		// They shouldn't be exactly the same since they're different domains
 		// (Though technically some resources can appear in multiple domains)
-		assert.NotNil(t, completions, "load_balancer should have completions")
+		assert.NotNil(t, completions, "cdn should have completions")
 		assert.NotNil(t, completions2, "identity should have completions")
 	}
 }

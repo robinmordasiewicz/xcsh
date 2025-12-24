@@ -110,7 +110,7 @@ func TestGetDomainsWithUseCases(t *testing.T) {
 func TestGetDomainsWithoutUseCases(t *testing.T) {
 	domains := GetDomainsWithoutUseCases()
 
-	// Should have 11 domains without use cases (42 total - 31 with)
+	// Should have 10 domains without use cases (41 total - 31 with)
 	assert.Greater(t, len(domains), 0)
 
 	// None should have use cases
@@ -125,9 +125,9 @@ func TestCalculateUseCaseStatistics(t *testing.T) {
 	stats := CalculateUseCaseStatistics()
 
 	// Verify totals
-	assert.Equal(t, 42, stats.TotalDomains)
+	assert.Equal(t, 41, stats.TotalDomains)
 	assert.Equal(t, 31, stats.DomainsWithUseCases, "Should have 31 domains with use cases")
-	assert.Equal(t, 11, stats.DomainsWithoutUseCases, "Should have 11 domains without use cases")
+	assert.Equal(t, 10, stats.DomainsWithoutUseCases, "Should have 10 domains without use cases")
 
 	// Verify percentages are reasonable
 	assert.Greater(t, stats.CoveragePercentage, 70.0, "Coverage should be over 70%")
@@ -244,8 +244,8 @@ func TestUseCaseCoverageRatio(t *testing.T) {
 	totalUncovered := len(without)
 
 	assert.Equal(t, 31, totalCovered, "Should have 31 domains with use cases")
-	assert.Equal(t, 11, totalUncovered, "Should have 11 domains without use cases")
-	assert.Equal(t, 42, totalCovered+totalUncovered, "Total should be 42 domains")
+	assert.Equal(t, 10, totalUncovered, "Should have 10 domains without use cases")
+	assert.Equal(t, 41, totalCovered+totalUncovered, "Total should be 41 domains")
 }
 
 // TestSpecificDomainUseCases verifies known domains have expected use cases

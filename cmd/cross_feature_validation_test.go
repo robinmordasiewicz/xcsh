@@ -13,7 +13,7 @@ import (
 // TestTierEscalationStandard verifies Standard tier access limitations
 func TestTierEscalationStandard(t *testing.T) {
 	standardDomains := validation.GetDomainsByTier("Standard")
-	assert.Equal(t, 25, len(standardDomains), "Standard tier should have 25 domains")
+	assert.Equal(t, 24, len(standardDomains), "Standard tier should have 24 domains")
 
 	// Verify Standard tier domains are accessible
 	for _, domain := range standardDomains {
@@ -44,7 +44,7 @@ func TestTierEscalationProfessional(t *testing.T) {
 	standardDomains := validation.GetDomainsByTier("Standard")
 	proDomains := validation.GetDomainsByTier("Professional")
 
-	assert.Equal(t, 36, len(proDomains), "Professional tier should have 36 domains")
+	assert.Equal(t, 35, len(proDomains), "Professional tier should have 35 domains")
 
 	// Verify all Standard domains are in Professional
 	for _, stdDomain := range standardDomains {
@@ -62,9 +62,9 @@ func TestTierEscalationProfessional(t *testing.T) {
 // TestTierEscalationEnterprise verifies Enterprise has all domains
 func TestTierEscalationEnterprise(t *testing.T) {
 	entDomains := validation.GetDomainsByTier("Enterprise")
-	assert.Equal(t, 42, len(entDomains), "Enterprise tier should have 42 domains")
+	assert.Equal(t, 41, len(entDomains), "Enterprise tier should have 41 domains")
 
-	// Verify all 42 domains are accessible
+	// Verify all 41 domains are accessible
 	for domainName := range types.DomainRegistry {
 		found := false
 		for _, entDomain := range entDomains {

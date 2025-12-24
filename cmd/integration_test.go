@@ -246,7 +246,7 @@ func TestCompletionHelperIntegration(t *testing.T) {
 	for domainName := range types.DomainRegistry {
 		allDomainNames = append(allDomainNames, domainName)
 	}
-	assert.Equal(t, len(allDomainNames), 42, "Should have 42 domains")
+	assert.Equal(t, len(allDomainNames), 41, "Should have 41 domains")
 
 	// Test category-based completion works
 	categoryDomains := validation.GetDomainsByCategory("Security")
@@ -364,9 +364,9 @@ func TestDomainWorkflowConsistency(t *testing.T) {
 	}
 }
 
-// TestAllDomainsAccessible verifies all 42 domains are accessible and complete
+// TestAllDomainsAccessible verifies all 41 domains are accessible and complete
 func TestAllDomainsAccessible(t *testing.T) {
-	assert.Equal(t, len(types.DomainRegistry), 42, "Should have exactly 42 domains")
+	assert.Equal(t, len(types.DomainRegistry), 41, "Should have exactly 41 domains")
 
 	accessibleCount := 0
 	completeCount := 0
@@ -387,6 +387,6 @@ func TestAllDomainsAccessible(t *testing.T) {
 		completeCount++
 	}
 
-	assert.Equal(t, accessibleCount, 42, "All 42 domains should be accessible")
-	assert.Equal(t, completeCount, 42, "All 42 domains should be complete")
+	assert.Equal(t, accessibleCount, 41, "All 41 domains should be accessible")
+	assert.Equal(t, completeCount, 41, "All 41 domains should be complete")
 }
