@@ -178,7 +178,6 @@ func completeLabelKey(cmd *cobra.Command, args []string, toComplete string) ([]s
 	}, cobra.ShellCompDirectiveNoFileComp
 }
 
-
 // Helper functions
 
 // fetchNamespaces retrieves namespace list from API

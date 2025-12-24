@@ -48,21 +48,25 @@ go build -o xcsh
 ### First Steps
 
 1. **View help**:
+
    ```bash
    xcsh help
    ```
 
 2. **List all domains**:
+
    ```bash
    xcsh domains list
    ```
 
 3. **Get help for a specific domain**:
+
    ```bash
    xcsh api --help
    ```
 
 4. **View your configuration**:
+
    ```bash
    xcsh configure show
    ```
@@ -88,6 +92,7 @@ xcsh organizes all 42 API domains into 7 categories to help you find and underst
 ### Why Categories Matter
 
 Categories help you:
+
 1. **Discover related features** - Domains in the same category often work together
 2. **Understand scope** - Quickly grasp what a domain controls
 3. **Plan workflows** - Build multi-domain solutions logically
@@ -143,6 +148,7 @@ xcsh kubernetes --help
 ```
 
 This displays:
+
 - Domain description
 - Category and complexity level
 - Use cases (practical examples)
@@ -159,17 +165,20 @@ xcsh respects your F5 Distributed Cloud subscription tier. Different tiers unloc
 ### Tier Levels
 
 **Standard Tier** (Base subscription)
+
 - Access to 25 core domains
 - Essential API management and security features
 - No advanced infrastructure features
 
-**Professional Tier**
+#### Professional Tier
+
 - Access to all 42 domains (full feature set)
 - Includes infrastructure management
 - Enables advanced workflows
 - Recommended for most teams
 
-**Enterprise Tier**
+#### Enterprise Tier
+
 - All Professional features
 - Advanced analytics and integrations
 - Premium support features
@@ -202,6 +211,7 @@ Tier: Professional
 ```
 
 Domains show their tier in:
+
 - Domain help text
 - Domain list output
 - Completion suggestions
@@ -233,6 +243,7 @@ $ xcsh [preview-domain] --help
 ### Common Preview Patterns
 
 Preview domains work like standard domains:
+
 - Use normal commands and syntax
 - Include use cases and related domains
 - Subject to tier requirements
@@ -301,6 +312,7 @@ SUGGESTED WORKFLOWS:
 ### Core Commands
 
 #### `xcsh help`
+
 Show general help and list available domains.
 
 ```bash
@@ -308,6 +320,7 @@ xcsh help
 ```
 
 #### `xcsh [domain] --help`
+
 Get detailed help for a specific domain.
 
 ```bash
@@ -317,6 +330,7 @@ xcsh dns --help
 ```
 
 **Help text includes**:
+
 - Domain description
 - Tier requirement
 - Category and complexity
@@ -326,6 +340,7 @@ xcsh dns --help
 - Available operations
 
 #### `xcsh domains list`
+
 List all 42 domains with brief descriptions.
 
 ```bash
@@ -343,6 +358,7 @@ xcsh domains list --category Infrastructure --tier Professional
 ```
 
 #### `xcsh domains completion`
+
 Generate shell completion scripts.
 
 ```bash
@@ -357,6 +373,7 @@ source ~/.bashrc  # or ~/.zshrc
 ```
 
 #### `xcsh configure show`
+
 View current configuration.
 
 ```bash
@@ -364,6 +381,7 @@ xcsh configure show
 ```
 
 Shows:
+
 - API endpoint
 - Authentication status
 - Current subscription tier
@@ -394,6 +412,7 @@ xcsh [domain] add-labels [name] [labels]  # Add labels
 **Goal**: Secure your APIs with firewall and threat detection
 
 **Domains involved**:
+
 - `api` - Define and manage your APIs
 - `application_firewall` - Add security rules
 - `threat_campaign` - Monitor threats
@@ -401,11 +420,13 @@ xcsh [domain] add-labels [name] [labels]  # Add labels
 **Steps**:
 
 1. **View the recommended workflow**:
+
    ```bash
    xcsh api --help | grep -A 5 "API Security Workflow"
    ```
 
 2. **Explore each domain**:
+
    ```bash
    xcsh api --help          # Understand API management
    xcsh application_firewall --help  # Learn firewall options
@@ -413,17 +434,20 @@ xcsh [domain] add-labels [name] [labels]  # Add labels
    ```
 
 3. **Start with API management**:
+
    ```bash
    xcsh api list            # See existing APIs
    xcsh api create api.yaml # Add your API definition
    ```
 
 4. **Add firewall rules**:
+
    ```bash
    xcsh application_firewall create rules.yaml
    ```
 
 5. **Enable threat detection**:
+
    ```bash
    xcsh threat_campaign create campaign.yaml
    ```
@@ -433,6 +457,7 @@ xcsh [domain] add-labels [name] [labels]  # Add labels
 **Goal**: Manage Kubernetes clusters and services
 
 **Domains involved**:
+
 - `kubernetes` - Core Kubernetes management
 - `service_mesh` - Advanced traffic control
 - `observability` - Monitor performance
@@ -440,32 +465,38 @@ xcsh [domain] add-labels [name] [labels]  # Add labels
 **Steps**:
 
 1. **Check prerequisites**:
+
    ```bash
    # Verify you have Professional tier (Kubernetes requires it)
    echo $F5XC_SUBSCRIPTION_TIER
    ```
 
 2. **View the workflow**:
+
    ```bash
    xcsh kubernetes --help | grep -A 5 "Kubernetes Management"
    ```
 
 3. **List existing clusters**:
+
    ```bash
    xcsh kubernetes list
    ```
 
 4. **Deploy your cluster config**:
+
    ```bash
    xcsh kubernetes create cluster.yaml
    ```
 
 5. **Set up service mesh (advanced)**:
+
    ```bash
    xcsh service_mesh create service-mesh.yaml
    ```
 
 6. **Monitor health**:
+
    ```bash
    xcsh observability list
    xcsh observability get [name]
@@ -476,6 +507,7 @@ xcsh [domain] add-labels [name] [labels]  # Add labels
 **Goal**: Distribute traffic across regions
 
 **Domains involved**:
+
 - `dns` - DNS configuration
 - `virtual` - Virtual hosts
 - `cdn` - Content delivery
@@ -483,26 +515,31 @@ xcsh [domain] add-labels [name] [labels]  # Add labels
 **Steps**:
 
 1. **View load balancing workflow**:
+
    ```bash
    xcsh dns --help | grep -A 5 "Load Balancing"
    ```
 
 2. **Check available DNS configurations**:
+
    ```bash
    xcsh dns list
    ```
 
 3. **Create DNS zone**:
+
    ```bash
    xcsh dns create zone.yaml
    ```
 
 4. **Set up virtual hosts**:
+
    ```bash
    xcsh virtual create virtual-host.yaml
    ```
 
 5. **Enable CDN caching**:
+
    ```bash
    xcsh cdn create cdn-config.yaml
    ```
@@ -512,6 +549,7 @@ xcsh [domain] add-labels [name] [labels]  # Add labels
 **Goal**: Control who can access your resources
 
 **Domains involved**:
+
 - `authentication` - Login and auth setup
 - `users` - User management
 - `tenant_and_identity` - Identity governance
@@ -519,26 +557,31 @@ xcsh [domain] add-labels [name] [labels]  # Add labels
 **Steps**:
 
 1. **View access management workflow**:
+
    ```bash
    xcsh authentication --help | grep -A 5 "Access Management"
    ```
 
 2. **Check authentication methods**:
+
    ```bash
    xcsh authentication list
    ```
 
 3. **Configure authentication**:
+
    ```bash
    xcsh authentication create auth.yaml
    ```
 
 4. **Create users**:
+
    ```bash
    xcsh users create users.yaml
    ```
 
 5. **Set up tenant identity**:
+
    ```bash
    xcsh tenant_and_identity apply identity.yaml
    ```
@@ -552,6 +595,7 @@ xcsh [domain] add-labels [name] [labels]  # Add labels
 **Problem**: When running `xcsh [domain] --help`, you get "domain not found"
 
 **Solution**:
+
 1. Check domain name spelling - use `xcsh domains list` to see exact names
 2. Verify tier requirement - some domains need Professional/Enterprise tier
 3. Check if domain is preview - preview domains may need additional setup
@@ -569,6 +613,7 @@ xcsh domains list | grep [domain-name]
 **Problem**: Getting authentication errors
 
 **Solution**:
+
 1. Verify credentials are configured correctly
 2. Check API token validity
 3. Ensure you're using correct API endpoint
@@ -586,6 +631,7 @@ xcsh api list
 **Problem**: Domain requires Professional tier but you have Standard
 
 **Solution**:
+
 1. Check your actual subscription tier
 2. Upgrade your subscription (contact F5 sales)
 3. Or test with domains available at your tier
@@ -603,6 +649,7 @@ xcsh domains list --tier Standard
 **Problem**: Commands are taking longer than expected
 
 **Solution**:
+
 1. Check network connectivity
 2. Verify API endpoint is responsive
 3. Try with a single domain instead of listing all
@@ -620,6 +667,7 @@ ping api.volterra.us
 **Problem**: Tab completion isn't working for domain names
 
 **Solution**:
+
 1. Ensure completion script is installed
 2. Reload shell configuration
 
@@ -638,41 +686,53 @@ source ~/.zshrc
 ## Tips and Best Practices
 
 ### 1. Use Help Frequently
+
 Help text is comprehensive and always current:
+
 ```bash
 xcsh [domain] --help
 ```
 
 ### 2. Explore Related Domains
+
 Every domain shows 5 related domains that work well together:
+
 ```bash
 xcsh api --help
 # Look at "RELATED DOMAINS:" section
 ```
 
 ### 3. Follow Suggested Workflows
+
 Workflows are pre-planned sequences that follow best practices:
+
 ```bash
 xcsh [domain] --help
 # Look at "SUGGESTED WORKFLOWS:" section
 ```
 
 ### 4. Check Use Cases
+
 Use cases show practical examples of what you can accomplish:
+
 ```bash
 xcsh [domain] --help
 # Look at "USE CASES:" section
 ```
 
 ### 5. Organize by Category
+
 Group related work by domain category:
+
 - Security domains for API/network protection
 - Platform domains for user/identity management
 - Infrastructure domains for Kubernetes/cloud
 - Operations domains for monitoring/analytics
 
 ### 6. Start Simple
+
 Begin with one domain, then expand to related domains:
+
 ```bash
 # Start with basic API management
 xcsh api list
@@ -682,7 +742,9 @@ xcsh application_firewall --help
 ```
 
 ### 7. Use Tier Appropriately
+
 Know what your subscription includes and use tier-appropriate domains:
+
 ```bash
 # Standard tier - 25 domains
 # Professional tier - all 42 domains
@@ -693,17 +755,20 @@ Know what your subscription includes and use tier-appropriate domains:
 ## Getting Help and Reporting Issues
 
 ### Documentation
+
 - **User Guide** (this document)
 - **API Reference** - `docs/api_reference.md`
 - **Examples** - `docs/examples/`
 - **Architecture** - `claudedocs/architecture_overview.md`
 
 ### Support
+
 - **Report Issues**: https://github.com/robinmordasiewicz/xcsh/issues
 - **Discussions**: https://github.com/robinmordasiewicz/xcsh/discussions
 - **Documentation**: https://github.com/robinmordasiewicz/xcsh/tree/main/docs
 
 ### Contributing
+
 - **Code contributions**: See CONTRIBUTING.md
 - **Documentation improvements**: Pull requests welcome
 - **Feature requests**: Use GitHub Issues

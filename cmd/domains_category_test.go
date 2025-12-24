@@ -41,24 +41,24 @@ func TestDomainsListByCategory(t *testing.T) {
 		shouldNotContain string
 	}{
 		{
-			name:            "Security category",
-			category:        "Security",
-			expectedDomains: []string{"api", "application_firewall", "certificates"},
-			shouldContain:   "Security",
+			name:             "Security category",
+			category:         "Security",
+			expectedDomains:  []string{"api", "application_firewall", "certificates"},
+			shouldContain:    "Security",
 			shouldNotContain: "Networking",
 		},
 		{
-			name:            "Networking category",
-			category:        "Networking",
-			expectedDomains: []string{"cdn", "dns", "network"},
-			shouldContain:   "Networking",
+			name:             "Networking category",
+			category:         "Networking",
+			expectedDomains:  []string{"cdn", "dns", "network"},
+			shouldContain:    "Networking",
 			shouldNotContain: "Security",
 		},
 		{
-			name:            "AI category",
-			category:        "AI",
-			expectedDomains: []string{"generative_ai"},
-			shouldContain:   "AI",
+			name:             "AI category",
+			category:         "AI",
+			expectedDomains:  []string{"generative_ai"},
+			shouldContain:    "AI",
 			shouldNotContain: "Security",
 		},
 	}

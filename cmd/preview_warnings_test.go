@@ -14,23 +14,23 @@ import (
 // TestCheckAndWarnPreviewDomain verifies preview domain detection
 func TestCheckAndWarnPreviewDomain(t *testing.T) {
 	tests := []struct {
-		name         string
-		domain       string
+		name          string
+		domain        string
 		expectWarning bool
 	}{
 		{
-			name:         "Preview domain",
-			domain:       "generative_ai",
+			name:          "Preview domain",
+			domain:        "generative_ai",
 			expectWarning: true,
 		},
 		{
-			name:         "Stable domain",
-			domain:       "dns",
+			name:          "Stable domain",
+			domain:        "dns",
 			expectWarning: false,
 		},
 		{
-			name:         "Another stable domain",
-			domain:       "kubernetes_and_orchestration",
+			name:          "Another stable domain",
+			domain:        "kubernetes_and_orchestration",
 			expectWarning: false,
 		},
 	}

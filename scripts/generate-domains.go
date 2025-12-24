@@ -23,12 +23,12 @@ type SpecIndex struct {
 
 // SpecIndexEntry represents a single domain in index.json
 type SpecIndexEntry struct {
-	Domain      string                 `json:"domain"`
-	Title       string                 `json:"title"`
-	Description string                 `json:"description"`
-	File        string                 `json:"file"`
-	PathCount   int                    `json:"path_count"`
-	SchemaCount int                    `json:"schema_count"`
+	Domain         string                 `json:"domain"`
+	Title          string                 `json:"title"`
+	Description    string                 `json:"description"`
+	File           string                 `json:"file"`
+	PathCount      int                    `json:"path_count"`
+	SchemaCount    int                    `json:"schema_count"`
 	Complexity     string                 `json:"complexity"`
 	IsPreview      bool                   `json:"is_preview"`
 	RequiresTier   string                 `json:"requires_tier"`
@@ -119,12 +119,12 @@ func main() {
 		}
 
 		domainInfo := &DomainInfo{
-			Name:        spec.Domain,
-			DisplayName: titleCase(spec.Domain),
-			Description: spec.Description,
-			Aliases:     config.Aliases[spec.Domain],
-			Deprecated:  false,
-			MapsTo:      "",
+			Name:           spec.Domain,
+			DisplayName:    titleCase(spec.Domain),
+			Description:    spec.Description,
+			Aliases:        config.Aliases[spec.Domain],
+			Deprecated:     false,
+			MapsTo:         "",
 			Complexity:     spec.Complexity,
 			IsPreview:      spec.IsPreview,
 			RequiresTier:   spec.RequiresTier,

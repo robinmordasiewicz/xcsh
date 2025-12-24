@@ -18,10 +18,10 @@ type WorkflowSuggestion struct {
 
 // DomainRelationship represents how two domains are related
 type DomainRelationship struct {
-	Domain1    string // First domain
-	Domain2    string // Second domain
-	Reason     string // Why they're related (e.g., "Same category", "Complementary use")
-	Strength   int    // 1-5 scale, 5 being strongest relationship
+	Domain1  string // First domain
+	Domain2  string // Second domain
+	Reason   string // Why they're related (e.g., "Same category", "Complementary use")
+	Strength int    // 1-5 scale, 5 being strongest relationship
 }
 
 // GetRelatedDomains returns domains that work well with the given domain
@@ -83,8 +83,8 @@ func GetRelatedDomains(domain string) []*types.DomainInfo {
 
 	// Convert to sorted list
 	type domainScore struct {
-		name   string
-		score  int
+		name  string
+		score int
 	}
 	var scores []domainScore
 	for name, score := range relatedDomainNames {

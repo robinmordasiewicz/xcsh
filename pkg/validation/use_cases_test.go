@@ -251,7 +251,7 @@ func TestUseCaseCoverageRatio(t *testing.T) {
 // TestSpecificDomainUseCases verifies known domains have expected use cases
 func TestSpecificDomainUseCases(t *testing.T) {
 	tests := []struct {
-		domain         string
+		domain          string
 		expectedKeyword string
 	}{
 		{"api", "Discover"},

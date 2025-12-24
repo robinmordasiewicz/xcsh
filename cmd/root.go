@@ -579,7 +579,6 @@ func applyHelpTemplateRecursively(cmd *cobra.Command, template string) {
 	}
 }
 
-
 // ValidateDomainTier checks if the current subscription tier is sufficient for the domain.
 // Returns nil if tier is sufficient, or a TierAccessError if access is denied.
 // Falls back to allowing access if tier cannot be determined (offline mode).
@@ -618,7 +617,7 @@ func ValidateDomainTier(ctx context.Context, domain string) error {
 func GetCurrentTierForDomain(ctx context.Context) string {
 	tier, err := EnsureSubscriptionTier(ctx)
 	if err != nil {
-		return validation.TierStandard  // Default to Standard tier
+		return validation.TierStandard // Default to Standard tier
 	}
 	return tier
 }
@@ -629,12 +628,12 @@ func CheckAndWarnPreviewDomain(domain string) *validation.PreviewWarning {
 	// Get domain info
 	info, found := types.GetDomainInfo(domain)
 	if !found {
-		return nil  // Domain not found, skip preview check
+		return nil // Domain not found, skip preview check
 	}
 
 	// Check if domain is in preview
 	if !info.IsPreview {
-		return nil  // Domain is stable, no warning needed
+		return nil // Domain is stable, no warning needed
 	}
 
 	// Return preview warning

@@ -9,9 +9,9 @@ import (
 
 func TestIsPreview(t *testing.T) {
 	tests := []struct {
-		name     string
+		name      string
 		isPreview bool
-		expected bool
+		expected  bool
 	}{
 		{"Preview domain", true, true},
 		{"Stable domain", false, false},

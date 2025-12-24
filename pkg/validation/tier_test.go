@@ -122,10 +122,10 @@ func TestGetNextTier(t *testing.T) {
 
 func TestGetUpgradePath(t *testing.T) {
 	tests := []struct {
-		name         string
-		currentTier  string
-		requiredTier string
-		expectedPath string
+		name          string
+		currentTier   string
+		requiredTier  string
+		expectedPath  string
 		shouldBeEmpty bool
 	}{
 		// Sufficient tier cases (should return empty)

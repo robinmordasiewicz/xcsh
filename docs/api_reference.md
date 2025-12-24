@@ -26,6 +26,7 @@
 **Location**: `pkg/types/domains_generated.go`
 
 **Signature**:
+
 ```go
 func GetDomainInfo(domainName string) (*DomainInfo, bool)
 ```
@@ -34,13 +35,16 @@ func GetDomainInfo(domainName string) (*DomainInfo, bool)
 Retrieves complete information about a domain from the domain registry.
 
 **Parameters**:
+
 - `domainName` (string) - The name of the domain (e.g., "api", "kubernetes")
 
 **Returns**:
+
 - `*DomainInfo` - Domain information struct (nil if not found)
 - `bool` - True if domain found, false otherwise
 
 **Example**:
+
 ```go
 info, found := types.GetDomainInfo("api")
 if found {
@@ -53,6 +57,7 @@ if found {
 ```
 
 **Error Handling**:
+
 - Returns (nil, false) if domain doesn't exist
 - Always safe to call with any string
 
@@ -65,6 +70,7 @@ if found {
 **Location**: `pkg/validation/tier.go`
 
 **Signature**:
+
 ```go
 func ValidateTierAccess(userTier, requiredTier string) bool
 ```
@@ -73,18 +79,22 @@ func ValidateTierAccess(userTier, requiredTier string) bool
 Validates whether a user's subscription tier meets the requirements to access a domain.
 
 **Parameters**:
+
 - `userTier` (string) - User's subscription tier ("Standard", "Professional", "Enterprise")
 - `requiredTier` (string) - Domain's required tier
 
 **Returns**:
+
 - `bool` - True if user has sufficient tier, false otherwise
 
 **Tier Hierarchy**:
-```
+
+```text
 Standard < Professional < Enterprise
 ```
 
 **Example**:
+
 ```go
 // Professional user accessing Standard domain - allowed
 ok := validation.ValidateTierAccess("Professional", "Standard")  // true
@@ -94,6 +104,7 @@ ok := validation.ValidateTierAccess("Standard", "Professional")  // false
 ```
 
 **Error Handling**:
+
 - Unknown tiers default to compatible (conservative approach)
 - Returns false only when user tier is explicitly lower
 
@@ -104,6 +115,7 @@ ok := validation.ValidateTierAccess("Standard", "Professional")  // false
 **Location**: `pkg/validation/tier.go`
 
 **Signature**:
+
 ```go
 func GetDomainsByTier(tier string) []*types.DomainInfo
 ```
@@ -112,12 +124,15 @@ func GetDomainsByTier(tier string) []*types.DomainInfo
 Returns all domains accessible at a specific subscription tier.
 
 **Parameters**:
+
 - `tier` (string) - Subscription tier ("Standard", "Professional", "Enterprise")
 
 **Returns**:
+
 - `[]*types.DomainInfo` - Slice of accessible domains
 
 **Example**:
+
 ```go
 // Get all Standard tier domains
 standardDomains := validation.GetDomainsByTier("Standard")
@@ -137,6 +152,7 @@ fmt.Printf("Professional tier has %d domains\n", len(proDomains))  // 42
 **Location**: `pkg/validation/preview.go`
 
 **Signature**:
+
 ```go
 func GetPreviewDomains() []*types.DomainInfo
 ```
@@ -145,9 +161,11 @@ func GetPreviewDomains() []*types.DomainInfo
 Returns all domains marked as preview/beta features.
 
 **Returns**:
+
 - `[]*types.DomainInfo` - Slice of preview domains
 
 **Example**:
+
 ```go
 previewDomains := validation.GetPreviewDomains()
 for _, domain := range previewDomains {
@@ -162,6 +180,7 @@ for _, domain := range previewDomains {
 **Location**: `pkg/validation/preview.go`
 
 **Signature**:
+
 ```go
 func IsPreviewDomain(domainName string) bool
 ```
@@ -170,12 +189,15 @@ func IsPreviewDomain(domainName string) bool
 Checks if a specific domain is a preview feature.
 
 **Parameters**:
+
 - `domainName` (string) - Domain name to check
 
 **Returns**:
+
 - `bool` - True if domain is preview, false otherwise
 
 **Example**:
+
 ```go
 if validation.IsPreviewDomain("generative_ai") {
     fmt.Println("This feature is preview/beta")
@@ -191,6 +213,7 @@ if validation.IsPreviewDomain("generative_ai") {
 **Location**: `pkg/validation/categories.go`
 
 **Signature**:
+
 ```go
 func GetDomainsByCategory(category string) []*types.DomainInfo
 ```
@@ -199,12 +222,15 @@ func GetDomainsByCategory(category string) []*types.DomainInfo
 Returns all domains in a specific category.
 
 **Parameters**:
+
 - `category` (string) - Category name ("Security", "Networking", "Platform", "Infrastructure", "Operations", "Other", "AI")
 
 **Returns**:
+
 - `[]*types.DomainInfo` - Slice of domains in that category
 
 **Example**:
+
 ```go
 // Get all Security domains
 securityDomains := validation.GetDomainsByCategory("Security")
@@ -222,6 +248,7 @@ for _, domain := range securityDomains {
 **Location**: `pkg/validation/categories.go`
 
 **Signature**:
+
 ```go
 func GetAllCategories() []string
 ```
@@ -230,9 +257,11 @@ func GetAllCategories() []string
 Returns all available domain categories.
 
 **Returns**:
+
 - `[]string` - Slice of category names (sorted)
 
 **Example**:
+
 ```go
 categories := validation.GetAllCategories()
 for _, cat := range categories {
@@ -257,6 +286,7 @@ for _, cat := range categories {
 **Location**: `pkg/validation/use_cases.go`
 
 **Signature**:
+
 ```go
 func GetDomainUseCases(domain string) (string, error)
 ```
@@ -265,13 +295,16 @@ func GetDomainUseCases(domain string) (string, error)
 Retrieves formatted use cases for a specific domain.
 
 **Parameters**:
+
 - `domain` (string) - Domain name
 
 **Returns**:
+
 - `string` - Formatted use cases with "USE CASES:" header and bullet points
 - `error` - Error if domain not found
 
 **Example**:
+
 ```go
 useCases, err := validation.GetDomainUseCases("api")
 if err != nil {
@@ -295,6 +328,7 @@ fmt.Println(useCases)
 **Location**: `pkg/validation/use_cases.go`
 
 **Signature**:
+
 ```go
 func SearchUseCases(keyword string) []UseCase
 ```
@@ -303,12 +337,15 @@ func SearchUseCases(keyword string) []UseCase
 Searches all use cases across all domains for a keyword.
 
 **Parameters**:
+
 - `keyword` (string) - Search keyword (case-insensitive)
 
 **Returns**:
+
 - `[]UseCase` - Slice of matching use cases
 
 **Example**:
+
 ```go
 results := validation.SearchUseCases("configure")
 fmt.Printf("Found %d use cases with 'configure'\n", len(results))
@@ -320,6 +357,7 @@ for _, uc := range results {
 ```
 
 **Notes**:
+
 - Case-insensitive search
 - Searches use case descriptions only
 - Empty keyword returns all use cases
@@ -331,6 +369,7 @@ for _, uc := range results {
 **Location**: `pkg/validation/use_cases.go`
 
 **Signature**:
+
 ```go
 func GetAllUseCases() []UseCase
 ```
@@ -339,9 +378,11 @@ func GetAllUseCases() []UseCase
 Returns all use cases across all domains.
 
 **Returns**:
+
 - `[]UseCase` - Slice of all use cases (73+ items)
 
 **Example**:
+
 ```go
 allUseCases := validation.GetAllUseCases()
 fmt.Printf("Total use cases: %d\n", len(allUseCases))
@@ -364,6 +405,7 @@ for domain, count := range byDomain {
 **Location**: `pkg/validation/use_cases.go`
 
 **Signature**:
+
 ```go
 func FormatUseCases(useCases []string) string
 ```
@@ -372,12 +414,15 @@ func FormatUseCases(useCases []string) string
 Formats use cases for display with bullet points.
 
 **Parameters**:
+
 - `useCases` ([]string) - Slice of use case descriptions
 
 **Returns**:
+
 - `string` - Formatted string with "USE CASES:" header
 
 **Example**:
+
 ```go
 cases := []string{
     "Configure authentication",
@@ -403,6 +448,7 @@ fmt.Println(formatted)
 **Location**: `pkg/validation/workflows.go`
 
 **Signature**:
+
 ```go
 func GetWorkflowSuggestions(domain string) []WorkflowSuggestion
 ```
@@ -411,12 +457,15 @@ func GetWorkflowSuggestions(domain string) []WorkflowSuggestion
 Returns recommended workflow suggestions for a domain based on its category.
 
 **Parameters**:
+
 - `domain` (string) - Domain name
 
 **Returns**:
+
 - `[]WorkflowSuggestion` - Slice of workflow suggestions
 
 **Example**:
+
 ```go
 workflows := validation.GetWorkflowSuggestions("api")
 
@@ -435,6 +484,7 @@ for _, wf := range workflows {
 **Location**: `pkg/validation/workflows.go`
 
 **Signature**:
+
 ```go
 func GetRelatedDomains(domain string) []*types.DomainInfo
 ```
@@ -443,17 +493,21 @@ func GetRelatedDomains(domain string) []*types.DomainInfo
 Returns domains related to a specific domain using multi-strategy scoring.
 
 **Parameters**:
+
 - `domain` (string) - Domain name
 
 **Returns**:
+
 - `[]*types.DomainInfo` - Slice of up to 5 related domains, sorted by relevance
 
 **Scoring Strategy**:
+
 - Category compatibility: Strength 4 (highest priority)
 - Use case overlap: Strength 3 (complementary)
 - Tier compatibility: Strength 2 (can work together)
 
 **Example**:
+
 ```go
 relatedDomains := validation.GetRelatedDomains("api")
 
@@ -475,6 +529,7 @@ for _, domain := range relatedDomains {
 **Location**: `pkg/validation/workflows.go`
 
 **Signature**:
+
 ```go
 func FormatRelatedDomains(domains []*types.DomainInfo) string
 ```
@@ -483,12 +538,15 @@ func FormatRelatedDomains(domains []*types.DomainInfo) string
 Formats related domains for display with descriptions.
 
 **Parameters**:
+
 - `domains` ([]*types.DomainInfo) - Slice of domains to format
 
 **Returns**:
+
 - `string` - Formatted string with "RELATED DOMAINS:" header
 
 **Example**:
+
 ```go
 domains := validation.GetRelatedDomains("api")
 formatted := validation.FormatRelatedDomains(domains)
@@ -508,6 +566,7 @@ fmt.Println(formatted)
 **Location**: `pkg/validation/workflows.go`
 
 **Signature**:
+
 ```go
 func FormatWorkflowSuggestions(workflows []WorkflowSuggestion) string
 ```
@@ -516,12 +575,15 @@ func FormatWorkflowSuggestions(workflows []WorkflowSuggestion) string
 Formats workflow suggestions for display.
 
 **Parameters**:
+
 - `workflows` ([]WorkflowSuggestion) - Slice of workflows to format
 
 **Returns**:
+
 - `string` - Formatted string with "SUGGESTED WORKFLOWS:" header
 
 **Example**:
+
 ```go
 workflows := validation.GetWorkflowSuggestions("api")
 formatted := validation.FormatWorkflowSuggestions(workflows)
@@ -542,6 +604,7 @@ fmt.Println(formatted)
 **Location**: `pkg/validation/workflows.go`
 
 **Signature**:
+
 ```go
 func GetWorkflowsByCategory(category string) []WorkflowSuggestion
 ```
@@ -550,12 +613,15 @@ func GetWorkflowsByCategory(category string) []WorkflowSuggestion
 Returns all workflow suggestions for a specific category.
 
 **Parameters**:
+
 - `category` (string) - Category name ("Security", "Platform", "Infrastructure", etc.)
 
 **Returns**:
+
 - `[]WorkflowSuggestion` - Slice of workflows for that category
 
 **Example**:
+
 ```go
 securityWorkflows := validation.GetWorkflowsByCategory("Security")
 fmt.Printf("Security category has %d workflows\n", len(securityWorkflows))
@@ -574,6 +640,7 @@ for _, wf := range securityWorkflows {
 **Location**: `pkg/types/domains.go`
 
 **Definition**:
+
 ```go
 type DomainInfo struct {
     Name           string                 // Domain name (e.g., "api")
@@ -591,6 +658,7 @@ type DomainInfo struct {
 ```
 
 **Usage**:
+
 ```go
 info, _ := types.GetDomainInfo("api")
 
@@ -608,6 +676,7 @@ fmt.Println(len(info.UseCases)) // 4
 **Location**: `pkg/validation/workflows.go`
 
 **Definition**:
+
 ```go
 type WorkflowSuggestion struct {
     Name        string   // Workflow name (e.g., "API Security Workflow")
@@ -618,6 +687,7 @@ type WorkflowSuggestion struct {
 ```
 
 **Usage**:
+
 ```go
 workflows := validation.GetWorkflowSuggestions("api")
 
@@ -635,6 +705,7 @@ for _, wf := range workflows {
 **Location**: `pkg/validation/use_cases.go`
 
 **Definition**:
+
 ```go
 type UseCase struct {
     Domain      string // Domain name
@@ -644,6 +715,7 @@ type UseCase struct {
 ```
 
 **Usage**:
+
 ```go
 results := validation.SearchUseCases("configure")
 
@@ -670,20 +742,23 @@ for _, uc := range results {
 
 ### Common Errors
 
-**Domain not found**
-```
+#### Domain not found
+
+```text
 Error: domain not found: "invalid_domain"
 Solution: Use "xcsh domains list" to find valid domain names
 ```
 
-**Tier requirement not met**
-```
+#### Tier requirement not met
+
+```text
 Error: tier requirement not met (requires Professional)
 Solution: Upgrade subscription or use domain available at your tier
 ```
 
-**Authentication failed**
-```
+#### Authentication failed
+
+```text
 Error: authentication failed
 Solution: Check API credentials and token expiration
 ```

@@ -88,12 +88,12 @@ func GetDomainsWithoutUseCases() []*types.DomainInfo {
 
 // UseCaseStatistics provides statistics about use case coverage
 type UseCaseStatistics struct {
-	TotalDomains         int
-	DomainsWithUseCases  int
+	TotalDomains           int
+	DomainsWithUseCases    int
 	DomainsWithoutUseCases int
-	CoveragePercentage   float64
-	TotalUseCases        int
-	AveragePerDomain     float64
+	CoveragePercentage     float64
+	TotalUseCases          int
+	AveragePerDomain       float64
 }
 
 // CalculateUseCaseStatistics returns statistics about use case coverage

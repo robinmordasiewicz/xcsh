@@ -185,6 +185,7 @@ make ci-generate
 ```
 
 The generation pipeline:
+
 1. Downloads latest specs via `scripts/download-specs.sh`
 2. Runs `scripts/generate-domains.go` to create domain registry
 3. Runs `scripts/generate-schemas.go` to create resource schemas

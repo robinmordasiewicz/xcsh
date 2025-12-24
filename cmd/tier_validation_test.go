@@ -101,40 +101,40 @@ func TestTierValidationEnterpriseTierDomains(t *testing.T) {
 // TestTierValidationUpgradePath verifies that upgrade paths are suggested correctly
 func TestTierValidationUpgradePath(t *testing.T) {
 	tests := []struct {
-		currentTier  string
-		requiredTier string
+		currentTier   string
+		requiredTier  string
 		shouldUpgrade bool
-		expectedPath string
+		expectedPath  string
 	}{
 		{
-			currentTier:  validation.TierStandard,
-			requiredTier: validation.TierProfessional,
+			currentTier:   validation.TierStandard,
+			requiredTier:  validation.TierProfessional,
 			shouldUpgrade: true,
-			expectedPath: "Upgrade from Standard to Professional tier",
+			expectedPath:  "Upgrade from Standard to Professional tier",
 		},
 		{
-			currentTier:  validation.TierStandard,
-			requiredTier: validation.TierEnterprise,
+			currentTier:   validation.TierStandard,
+			requiredTier:  validation.TierEnterprise,
 			shouldUpgrade: true,
-			expectedPath: "Upgrade from Standard to Enterprise tier",
+			expectedPath:  "Upgrade from Standard to Enterprise tier",
 		},
 		{
-			currentTier:  validation.TierProfessional,
-			requiredTier: validation.TierEnterprise,
+			currentTier:   validation.TierProfessional,
+			requiredTier:  validation.TierEnterprise,
 			shouldUpgrade: true,
-			expectedPath: "Upgrade from Professional to Enterprise tier",
+			expectedPath:  "Upgrade from Professional to Enterprise tier",
 		},
 		{
-			currentTier:  validation.TierProfessional,
-			requiredTier: validation.TierStandard,
+			currentTier:   validation.TierProfessional,
+			requiredTier:  validation.TierStandard,
 			shouldUpgrade: false,
-			expectedPath: "",
+			expectedPath:  "",
 		},
 		{
-			currentTier:  validation.TierStandard,
-			requiredTier: validation.TierStandard,
+			currentTier:   validation.TierStandard,
+			requiredTier:  validation.TierStandard,
 			shouldUpgrade: false,
-			expectedPath: "",
+			expectedPath:  "",
 		},
 	}
 

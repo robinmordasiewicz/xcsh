@@ -24,7 +24,7 @@ func TierLevel(tier string) int {
 	case TierEnterprise:
 		return 3
 	default:
-		return 0  // Unknown tier, treated as no access
+		return 0 // Unknown tier, treated as no access
 	}
 }
 
@@ -79,9 +79,9 @@ func GetNextTier(currentTier string) string {
 	case TierProfessional:
 		return TierEnterprise
 	case TierEnterprise:
-		return ""  // Already at highest tier
+		return "" // Already at highest tier
 	default:
-		return TierProfessional  // Default next tier
+		return TierProfessional // Default next tier
 	}
 }
 
@@ -102,10 +102,10 @@ func GetUpgradePath(currentTier, requiredTier string) string {
 
 // TierAccessError represents an error when a user lacks sufficient tier for a resource.
 type TierAccessError struct {
-	Domain        string  // The domain being accessed
-	CurrentTier   string  // User's current tier
-	RequiredTier  string  // Required tier for the domain
-	DomainDisplay string  // Human-readable domain name
+	Domain        string // The domain being accessed
+	CurrentTier   string // User's current tier
+	RequiredTier  string // Required tier for the domain
+	DomainDisplay string // Human-readable domain name
 }
 
 // Error implements the error interface and returns a formatted error message.
