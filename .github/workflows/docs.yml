@@ -419,8 +419,8 @@ jobs:
     name: Build Documentation
     runs-on: macos-latest
     needs: [check-spec, generate, build-windows-docs]
-    # Always run unless failed or cancelled - will use cached docs if generate was skipped
-    if: always() && !failure() && !cancelled()
+    # Only run if generate succeeded - no cached docs fallback
+    if: always() && !failure() && !cancelled() && needs.generate.result == 'success'
     steps:
       - name: Checkout
         uses: actions/checkout@v6
