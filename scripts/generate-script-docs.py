@@ -10,30 +10,20 @@ Usage:
 """
 
 import argparse
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
 
-from naming import to_human_readable, normalize_acronyms, to_title_case
+from naming import normalize_acronyms, to_human_readable, to_title_case
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Generate install script docs with real output"
-    )
+    parser = argparse.ArgumentParser(description="Generate install script docs with real output")
     parser.add_argument("--version", help="xcsh version for examples")
     parser.add_argument("--install-output", help="Captured installation output")
-    parser.add_argument(
-        "--output",
-        default="docs/install/script.md",
-        help="Output file path"
-    )
-    parser.add_argument(
-        "--templates",
-        default="scripts/templates",
-        help="Templates directory"
-    )
+    parser.add_argument("--output", default="docs/install/script.md", help="Output file path")
+    parser.add_argument("--templates", default="scripts/templates", help="Templates directory")
 
     args = parser.parse_args()
 
@@ -56,14 +46,15 @@ def main():
     if install_output:
         # Remove common ANSI escape codes
         import re
-        install_output = re.sub(r'\x1b\[[0-9;]*m', '', install_output)
+
+        install_output = re.sub(r"\x1b\[[0-9;]*m", "", install_output)
         # Trim excessive whitespace
         install_output = install_output.strip()
 
     content = template.render(
         version=args.version,
         install_output=install_output,
-        generation_date=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        generation_date=datetime.now(UTC).strftime("%Y-%m-%d"),
     )
 
     output_path = Path(args.output)

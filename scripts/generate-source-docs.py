@@ -15,12 +15,12 @@ Usage:
 
 import argparse
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
 
-from naming import to_human_readable, normalize_acronyms, to_title_case
+from naming import normalize_acronyms, to_human_readable, to_title_case
 
 
 def clean_output(text):
@@ -28,30 +28,20 @@ def clean_output(text):
     if not text:
         return text
     # Remove ANSI escape codes
-    text = re.sub(r'\x1b\[[0-9;]*m', '', text)
+    text = re.sub(r"\x1b\[[0-9;]*m", "", text)
     return text.strip()
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Generate source build docs with real output"
-    )
+    parser = argparse.ArgumentParser(description="Generate source build docs with real output")
     parser.add_argument("--go-version", help="Go version used for build")
     parser.add_argument("--prereq-output", help="Prerequisites check output")
     parser.add_argument("--clone-output", help="Git clone output")
     parser.add_argument("--build-output", help="Go build output")
     parser.add_argument("--version-output", help="xcsh version output")
     parser.add_argument("--ldflags-build-output", help="Build with ldflags output")
-    parser.add_argument(
-        "--output",
-        default="docs/install/source.md",
-        help="Output file path"
-    )
-    parser.add_argument(
-        "--templates",
-        default="scripts/templates",
-        help="Templates directory"
-    )
+    parser.add_argument("--output", default="docs/install/source.md", help="Output file path")
+    parser.add_argument("--templates", default="scripts/templates", help="Templates directory")
 
     args = parser.parse_args()
 
@@ -75,7 +65,7 @@ def main():
         build_output=clean_output(args.build_output),
         version_output=clean_output(args.version_output),
         ldflags_build_output=clean_output(args.ldflags_build_output),
-        generation_date=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        generation_date=datetime.now(UTC).strftime("%Y-%m-%d"),
     )
 
     output_path = Path(args.output)

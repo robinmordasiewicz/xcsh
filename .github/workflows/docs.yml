@@ -156,46 +156,15 @@ jobs:
           echo "Current spec hash: $SPEC_HASH"
           echo "Spec size: $(wc -c < spec.json) bytes"
 
-      - name: Restore previous spec hash
-        if: github.event_name != 'workflow_run' || steps.check-release.outputs.recent_release == 'true'
-        id: cache-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: spec-hash-cached.txt
-          key: xcsh-spec-hash-${{ github.run_number }}
-          restore-keys: |
-            xcsh-spec-hash-
-
-      - name: Compare spec hashes
+      - name: Set generation flag
         if: github.event_name != 'workflow_run' || steps.check-release.outputs.recent_release == 'true'
         id: compare
         run: |
-          FORCE_REGEN="${{ github.event.inputs.force_regenerate }}"
-          NEEDS_GEN="false"
-
-          if [ "$FORCE_REGEN" = "true" ]; then
-            echo "Force regeneration requested"
-            NEEDS_GEN="true"
-          elif [ -f spec-hash-cached.txt ]; then
-            CACHED_HASH=$(cat spec-hash-cached.txt)
-            CURRENT_HASH=${{ steps.spec-hash.outputs.hash }}
-            if [ "$CACHED_HASH" = "$CURRENT_HASH" ]; then
-              echo "Spec unchanged (hash: $CURRENT_HASH)"
-              NEEDS_GEN="false"
-            else
-              echo "Spec changed!"
-              echo "  Previous: $CACHED_HASH"
-              echo "  Current:  $CURRENT_HASH"
-              NEEDS_GEN="true"
-            fi
-          else
-            echo "No cached hash found, will regenerate"
-            NEEDS_GEN="true"
-          fi
-
-          # Always output, even if false (ensures output is set)
-          echo "needs_generation=$NEEDS_GEN" >> $GITHUB_OUTPUT
-          echo "::notice::needs_generation=$NEEDS_GEN"
+          # Always regenerate docs to ensure consistency
+          # Caching was removed to prevent stale documentation
+          echo "Documentation will always be regenerated for consistency"
+          echo "needs_generation=true" >> $GITHUB_OUTPUT
+          echo "::notice::needs_generation=true (always regenerate)"
 
   generate:
     name: Generate Command Docs
@@ -278,16 +247,6 @@ jobs:
           fi
 
           echo "✅ All required cloudstatus documentation files present"
-
-      - name: Save spec hash to cache
-        run: |
-          echo "${{ needs.check-spec.outputs.spec_hash }}" > spec-hash-cached.txt
-
-      - name: Update spec hash cache
-        uses: actions/cache/save@v4
-        with:
-          path: spec-hash-cached.txt
-          key: xcsh-spec-hash-${{ github.run_number }}
 
       - name: Upload generated docs
         uses: actions/upload-artifact@v4
@@ -481,15 +440,6 @@ jobs:
         with:
           name: windows-docs
           path: docs/install/
-
-      - name: Restore cached docs
-        if: needs.generate.result == 'skipped'
-        uses: actions/cache/restore@v4
-        with:
-          path: docs/commands/
-          key: xcsh-docs-${{ needs.check-spec.outputs.spec_hash }}
-          restore-keys: |
-            xcsh-docs-
 
       - name: Install xcsh via Homebrew
         id: homebrew-install
@@ -964,7 +914,9 @@ jobs:
           COMMIT=$(git rev-parse --short HEAD)
           BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
-          go build -ldflags="-X github.com/robinmordasiewicz/xcsh/cmd.Version=dev -X github.com/robinmordasiewicz/xcsh/cmd.GitCommit=$COMMIT -X github.com/robinmordasiewicz/xcsh/cmd.BuildDate=$BUILD_DATE" -o xcsh .
+          go build -ldflags="-X github.com/robinmordasiewicz/xcsh/cmd.Version=dev \
+            -X github.com/robinmordasiewicz/xcsh/cmd.GitCommit=$COMMIT \
+            -X github.com/robinmordasiewicz/xcsh/cmd.BuildDate=$BUILD_DATE" -o xcsh .
 
           LDFLAGS_VERSION_RAW=$(./xcsh version 2>&1)
           LDFLAGS_BUILD_OUTPUT=$(cat <<EOF
@@ -1071,16 +1023,6 @@ jobs:
 
       - name: Copy install script to site
         run: cp install.sh site/install.sh
-
-      - name: Cache generated docs for future builds
-        if: needs.generate.result == 'success'
-        # continue-on-error: cache save can fail if another concurrent workflow already saved this key
-        # This is expected when multiple workflows complete simultaneously (race condition)
-        continue-on-error: true
-        uses: actions/cache/save@v4
-        with:
-          path: docs/commands/
-          key: xcsh-docs-${{ needs.check-spec.outputs.spec_hash }}
 
       - name: Upload pages artifact
         uses: actions/upload-pages-artifact@v4

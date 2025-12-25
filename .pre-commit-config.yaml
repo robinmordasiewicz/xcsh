@@ -58,6 +58,35 @@ repos:
         name: Lint shell scripts
         args: ['--severity=warning']
 
+  # Shell script formatting
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.10.0-1
+    hooks:
+      - id: shfmt
+        name: Format shell scripts
+        args: ['-i', '2', '-ci', '-bn', '-w']
+
+  # Python linting and formatting
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.6
+    hooks:
+      - id: ruff
+        name: Lint Python code
+        args: ['--fix']
+        files: ^scripts/.*\.py$
+      - id: ruff-format
+        name: Format Python code
+        files: ^scripts/.*\.py$
+
+  # YAML linting
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        name: Lint YAML files
+        args: ['--strict']
+        exclude: '^(docs/commands/|\.specs/|mkdocs\.yml)$'
+
   # Markdown linting
   - repo: https://github.com/igorshubovych/markdownlint-cli
     rev: v0.44.0

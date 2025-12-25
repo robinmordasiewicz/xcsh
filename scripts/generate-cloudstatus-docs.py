@@ -11,16 +11,14 @@ Usage:
 
 import argparse
 import json
-import os
 import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any, Optional
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from naming import to_human_readable, normalize_acronyms, to_title_case
+from naming import normalize_acronyms, to_human_readable, to_title_case
 
 
 def load_spec(cli_binary_path: str) -> dict:
@@ -30,7 +28,7 @@ def load_spec(cli_binary_path: str) -> dict:
             [cli_binary_path, "--spec", "--output-format", "json"],
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
         return json.loads(result.stdout)
     except subprocess.CalledProcessError as e:
@@ -48,7 +46,7 @@ def load_cloudstatus_spec(cli_binary_path: str) -> dict:
             [cli_binary_path, "cloudstatus", "--spec", "--output-format", "json"],
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
         return json.loads(result.stdout)
     except subprocess.CalledProcessError as e:
@@ -60,7 +58,7 @@ def load_cloudstatus_spec(cli_binary_path: str) -> dict:
         return {}
 
 
-def find_cloudstatus_command(spec: dict) -> Optional[dict]:
+def find_cloudstatus_command(spec: dict) -> dict | None:
     """Extract the cloudstatus command from the main spec."""
     commands = spec.get("commands", [])
     for cmd in commands:
@@ -149,10 +147,7 @@ def setup_jinja_env(templates_dir: Path) -> Environment:
 
 
 def generate_overview(
-    env: Environment,
-    cloudstatus_cmd: dict,
-    extended_spec: dict,
-    output_dir: Path
+    env: Environment, cloudstatus_cmd: dict, extended_spec: dict, output_dir: Path
 ) -> None:
     """Generate the main cloudstatus/index.md overview page."""
     template = env.get_template("cloudstatus.md.j2")
@@ -181,11 +176,7 @@ def generate_overview(
     print(f"  Generated: {output_file}")
 
 
-def generate_subcommand_group(
-    env: Environment,
-    cmd: dict,
-    output_dir: Path
-) -> None:
+def generate_subcommand_group(env: Environment, cmd: dict, output_dir: Path) -> None:
     """Generate index.md for a subcommand group (e.g., components, incidents)."""
     template = env.get_template("cloudstatus_subcommand.md.j2")
 
@@ -213,11 +204,7 @@ def generate_subcommand_group(
         generate_leaf_command(env, subcmd, subdir)
 
 
-def generate_leaf_command(
-    env: Environment,
-    cmd: dict,
-    output_dir: Path
-) -> None:
+def generate_leaf_command(env: Environment, cmd: dict, output_dir: Path) -> None:
     """Generate documentation for a leaf command."""
     template = env.get_template("cloudstatus_command.md.j2")
 
@@ -241,11 +228,7 @@ def generate_leaf_command(
     print(f"  Generated: {output_file}")
 
 
-def generate_standalone_command(
-    env: Environment,
-    cmd: dict,
-    output_dir: Path
-) -> None:
+def generate_standalone_command(env: Environment, cmd: dict, output_dir: Path) -> None:
     """Generate documentation for a standalone leaf command at cloudstatus level."""
     template = env.get_template("cloudstatus_command.md.j2")
 
@@ -279,12 +262,10 @@ def generate_nav_structure(cloudstatus_cmd: dict) -> list:
 
     # Sort subcommands: leaf commands first (alphabetically), then groups (alphabetically)
     leaf_commands = sorted(
-        [cmd for cmd in subcommands if is_leaf_command(cmd)],
-        key=lambda c: get_command_name(c)
+        [cmd for cmd in subcommands if is_leaf_command(cmd)], key=lambda c: get_command_name(c)
     )
     group_commands = sorted(
-        [cmd for cmd in subcommands if has_subcommands(cmd)],
-        key=lambda c: get_command_name(c)
+        [cmd for cmd in subcommands if has_subcommands(cmd)], key=lambda c: get_command_name(c)
     )
 
     # Add leaf commands
@@ -314,29 +295,23 @@ def main():
         description="Generate cloudstatus documentation from CLI --spec"
     )
     parser.add_argument(
-        "--cli-binary",
-        default="./xcsh",
-        help="Path to CLI binary (default: ./xcsh)"
+        "--cli-binary", default="./xcsh", help="Path to CLI binary (default: ./xcsh)"
     )
     parser.add_argument(
         "--output",
         default="docs/commands/cloudstatus",
-        help="Output directory (default: docs/commands/cloudstatus)"
+        help="Output directory (default: docs/commands/cloudstatus)",
     )
     parser.add_argument(
         "--templates",
         default="scripts/templates",
-        help="Templates directory (default: scripts/templates)"
+        help="Templates directory (default: scripts/templates)",
     )
     parser.add_argument(
-        "--clean",
-        action="store_true",
-        help="Clean output directory before generating"
+        "--clean", action="store_true", help="Clean output directory before generating"
     )
     parser.add_argument(
-        "--print-nav",
-        action="store_true",
-        help="Print navigation structure for mkdocs.yml"
+        "--print-nav", action="store_true", help="Print navigation structure for mkdocs.yml"
     )
 
     args = parser.parse_args()
@@ -370,6 +345,7 @@ def main():
     if args.print_nav:
         nav = generate_nav_structure(cloudstatus_cmd)
         import yaml
+
         print("\n# Navigation structure for mkdocs.yml:")
         print("    - Cloud Status:")
         for item in nav:
@@ -403,7 +379,7 @@ def main():
             # Generate standalone leaf command
             generate_standalone_command(env, cmd, output_dir)
 
-    print(f"\nGenerated documentation for cloudstatus command group")
+    print("\nGenerated documentation for cloudstatus command group")
 
     # Print nav structure hint
     print("\nTo add to mkdocs.yml, run with --print-nav flag")

@@ -35,7 +35,7 @@ PLATFORMS=linux/amd64 linux/arm64 darwin/amd64 darwin/arm64 windows/amd64
 # LLM description generation settings
 LLM_WORKERS?=8
 
-.PHONY: all build build-all test test-unit test-int clean lint fmt install help \
+.PHONY: all build build-all test test-unit test-int clean lint lint-python fmt fmt-python fmt-shell check-shell install help \
         release-dry release-snapshot verify check watch \
         build-linux-amd64 build-linux-arm64 build-darwin-amd64 build-darwin-arm64 build-windows-amd64 \
         docs docs-all docs-nav docs-clean docs-serve docs-check docs-build generate-examples \
@@ -178,6 +178,43 @@ lint: verify-lint-config
 		echo "  brew install golangci-lint"; \
 		echo "  # or"; \
 		echo "  go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest"; \
+	fi
+
+# Python linting (requires ruff)
+lint-python:
+	@echo "Linting Python scripts..."
+	@if command -v ruff > /dev/null; then \
+		ruff check scripts/*.py; \
+	else \
+		echo "ruff not installed. Install with: pip install ruff"; \
+	fi
+
+# Format Python scripts
+fmt-python:
+	@echo "Formatting Python scripts..."
+	@if command -v ruff > /dev/null; then \
+		ruff format scripts/*.py; \
+		ruff check --fix scripts/*.py; \
+	else \
+		echo "ruff not installed. Install with: pip install ruff"; \
+	fi
+
+# Format shell scripts (requires shfmt)
+fmt-shell:
+	@echo "Formatting shell scripts..."
+	@if command -v shfmt > /dev/null; then \
+		shfmt -i 2 -ci -bn -w scripts/*.sh install.sh; \
+	else \
+		echo "shfmt not installed. Install with: brew install shfmt"; \
+	fi
+
+# Check shell script formatting
+check-shell:
+	@echo "Checking shell script formatting..."
+	@if command -v shfmt > /dev/null; then \
+		shfmt -i 2 -ci -bn -d scripts/*.sh install.sh; \
+	else \
+		echo "shfmt not installed. Install with: brew install shfmt"; \
 	fi
 
 # Install binary to GOPATH/bin
