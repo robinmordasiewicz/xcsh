@@ -13,7 +13,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for address_allocatorCreateSpecType\",\"required_fields\":[\"address_allocation_scheme\",\"address_pool\",\"mode\"],\"example_yaml\":\"# Minimal example for address_allocatorCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  address_allocation_scheme: value\\n  address_pool: value\\n  mode: value\",\"example_command\":\"xcsh virtual create address_allocator -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"advertise_policy": {
 		ResourceName:         "advertise_policy",
@@ -22,7 +22,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"port_choice\",\"description\":\"Choose one of: port, port_ranges\",\"choices\":[\"port\",\"port_ranges\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"port_choice\",\"description\":\"Choose one of: port, port_ranges\",\"choices\":{\"port\":{},\"port_ranges\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for advertise_policyCreateSpecType\",\"required_fields\":[\"address\",\"port\",\"port_ranges\",\"protocol\",\"public_ip\",\"skip_xff_append\",\"tls_parameters\",\"where\"],\"example_yaml\":\"# Minimal example for advertise_policyCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  address: value\\n  port: value\\n  port_ranges: value\\n  protocol: value\\n  public_ip: value\",\"example_command\":\"xcsh virtual create advertise_policy -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"alert_policy": {
 		ResourceName:         "alert_policy",
@@ -31,7 +31,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for alert_policyCreateSpecType\",\"required_fields\":[\"notification_parameters\",\"receivers\",\"routes\"],\"example_yaml\":\"# Minimal example for alert_policyCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  notification_parameters: value\\n  receivers: value\\n  routes: value\",\"example_command\":\"xcsh virtual create alert_policy -n default -f example.yaml\",\"domain\":\"statistics\"}"),
 	},
 	"alert_receiver": {
 		ResourceName:         "alert_receiver",
@@ -40,7 +40,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"receiver\",\"description\":\"Choose one of: email, opsgenie, pagerduty, slack, sms, webhook\",\"choices\":[\"email\",\"opsgenie\",\"pagerduty\",\"slack\",\"sms\",\"webhook\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"receiver\",\"description\":\"Choose one of: email, opsgenie, pagerduty, slack, sms, webhook\",\"choices\":{\"email\":{},\"opsgenie\":{},\"pagerduty\":{},\"slack\":{},\"sms\":{},\"webhook\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for alert_receiverCreateSpecType\",\"required_fields\":[\"email\",\"opsgenie\",\"pagerduty\",\"slack\",\"sms\",\"webhook\"],\"example_yaml\":\"# Minimal example for alert_receiverCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  email: value\\n  opsgenie: value\\n  pagerduty: value\\n  slack: value\\n  sms: value\",\"example_command\":\"xcsh virtual create alert_receiver -n default -f example.yaml\",\"domain\":\"statistics\"}"),
 	},
 	"api_credential": {
 		ResourceName:         "api_credential",
@@ -49,7 +49,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for api_credentialCreateRequest\",\"required_fields\":[\"expiration_days\",\"name\",\"namespace\",\"spec\"],\"example_yaml\":\"# Minimal example for api_credentialCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  expiration_days: value\\n  name: value\\n  namespace: value\\n  spec: value\",\"example_command\":\"xcsh virtual create api_credential -n default -f example.yaml\",\"domain\":\"api\"}"),
 	},
 	"api_definition": {
 		ResourceName:         "api_definition",
@@ -58,7 +58,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"schema_updates_strategy\",\"description\":\"Choose one of: mixed_schema_origin, strict_schema_origin\",\"choices\":[\"mixed_schema_origin\",\"strict_schema_origin\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"schema_updates_strategy\",\"description\":\"Choose one of: mixed_schema_origin, strict_schema_origin\",\"choices\":{\"mixed_schema_origin\":{},\"strict_schema_origin\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewsapi_definitionCreateSpecType\",\"required_fields\":[\"api_inventory_exclusion_list\",\"api_inventory_inclusion_list\",\"mixed_schema_origin\",\"non_api_endpoints\",\"strict_schema_origin\",\"swagger_specs\"],\"example_yaml\":\"# Minimal example for viewsapi_definitionCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  api_inventory_exclusion_list: value\\n  api_inventory_inclusion_list: value\\n  mixed_schema_origin: value\\n  non_api_endpoints: value\\n  strict_schema_origin: value\",\"example_command\":\"xcsh virtual create viewsapi_definition -n default -f example.yaml\",\"domain\":\"api\"}"),
 	},
 	"app_api_group": {
 		ResourceName:         "app_api_group",
@@ -67,7 +67,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"scope_choice\",\"description\":\"Choose one of: bigip_virtual_server, cdn_loadbalancer, http_loadbalancer\",\"choices\":[\"bigip_virtual_server\",\"cdn_loadbalancer\",\"http_loadbalancer\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"scope_choice\",\"description\":\"Choose one of: bigip_virtual_server, cdn_loadbalancer, http_loadbalancer\",\"choices\":{\"bigip_virtual_server\":{},\"cdn_loadbalancer\":{},\"http_loadbalancer\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewsapp_api_groupCreateSpecType\",\"required_fields\":[\"bigip_virtual_server\",\"cdn_loadbalancer\",\"elements\",\"http_loadbalancer\"],\"example_yaml\":\"# Minimal example for viewsapp_api_groupCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  bigip_virtual_server: value\\n  cdn_loadbalancer: value\\n  elements: value\\n  http_loadbalancer: value\",\"example_command\":\"xcsh virtual create viewsapp_api_group -n default -f example.yaml\",\"domain\":\"api\"}"),
 	},
 	"app_firewall": {
 		ResourceName:         "app_firewall",
@@ -85,7 +85,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for app_settingCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for app_settingCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create app_setting -n default -f example.yaml\",\"domain\":\"service_mesh\"}"),
 	},
 	"app_type": {
 		ResourceName:         "app_type",
@@ -94,7 +94,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for app_typeCreateSpecType\",\"required_fields\":[\"business_logic_markup_setting\",\"features\"],\"example_yaml\":\"# Minimal example for app_typeCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  business_logic_markup_setting: value\\n  features: value\",\"example_command\":\"xcsh virtual create app_type -n default -f example.yaml\",\"domain\":\"service_mesh\"}"),
 	},
 	"authentication": {
 		ResourceName:         "authentication",
@@ -103,7 +103,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"auth_type_choice\",\"description\":\"Choose one of: oidc_auth\",\"choices\":[\"oidc_auth\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"auth_type_choice\",\"description\":\"Choose one of: oidc_auth\",\"choices\":{\"oidc_auth\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for authenticationCreateSpecType\",\"required_fields\":[\"cookie_params\",\"oidc_auth\"],\"example_yaml\":\"# Minimal example for authenticationCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  cookie_params: value\\n  oidc_auth: value\",\"example_command\":\"xcsh virtual create authentication -n default -f example.yaml\",\"domain\":\"tenant_and_identity\"}"),
 	},
 	"aws_tgw_site": {
 		ResourceName:         "aws_tgw_site",
@@ -112,7 +112,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"blocked_services_choice\",\"description\":\"Choose one of: block_all_services, blocked_services, default_blocked_services\",\"choices\":[\"block_all_services\",\"blocked_services\",\"default_blocked_services\"],\"required\":false},{\"group_name\":\"direct_connect_choice\",\"description\":\"Choose one of: direct_connect_disabled, direct_connect_enabled, private_connectivity\",\"choices\":[\"direct_connect_disabled\",\"direct_connect_enabled\",\"private_connectivity\"],\"required\":false},{\"group_name\":\"logs_receiver_choice\",\"description\":\"Choose one of: log_receiver, logs_streaming_disabled\",\"choices\":[\"log_receiver\",\"logs_streaming_disabled\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"blocked_services_choice\",\"description\":\"Choose one of: block_all_services, blocked_services, default_blocked_services\",\"choices\":{\"block_all_services\":{},\"blocked_services\":{},\"default_blocked_services\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewsaws_tgw_siteCreateSpecType\",\"required_fields\":[\"aws_parameters\",\"block_all_services\",\"blocked_services\",\"coordinates\",\"custom_dns\",\"default_blocked_services\",\"direct_connect_disabled\",\"direct_connect_enabled\",\"kubernetes_upgrade_drain\",\"log_receiver\",\"logs_streaming_disabled\",\"offline_survivability_mode\",\"os\",\"performance_enhancement_mode\",\"private_connectivity\",\"sw\",\"tags\",\"tgw_security\",\"vn_config\",\"vpc_attachments\"],\"example_yaml\":\"# Minimal example for viewsaws_tgw_siteCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  aws_parameters: value\\n  block_all_services: value\\n  blocked_services: value\\n  coordinates: value\\n  custom_dns: value\",\"example_command\":\"xcsh virtual create viewsaws_tgw_site -n default -f example.yaml\",\"domain\":\"site_management\"}"),
 	},
 	"aws_vpc_site": {
 		ResourceName:         "aws_vpc_site",
@@ -121,7 +121,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"blocked_services_choice\",\"description\":\"Choose one of: block_all_services, blocked_services, default_blocked_services\",\"choices\":[\"block_all_services\",\"blocked_services\",\"default_blocked_services\"],\"required\":false},{\"group_name\":\"deployment\",\"description\":\"Choose one of: aws_cred\",\"choices\":[\"aws_cred\"],\"required\":false},{\"group_name\":\"direct_connect_choice\",\"description\":\"Choose one of: direct_connect_disabled, direct_connect_enabled, private_connectivity\",\"choices\":[\"direct_connect_disabled\",\"direct_connect_enabled\",\"private_connectivity\"],\"required\":false},{\"group_name\":\"egress_gateway_choice\",\"description\":\"Choose one of: egress_gateway_default, egress_nat_gw, egress_virtual_private_gateway\",\"choices\":[\"egress_gateway_default\",\"egress_nat_gw\",\"egress_virtual_private_gateway\"],\"required\":false},{\"group_name\":\"internet_vip_choice\",\"description\":\"Choose one of: disable_internet_vip, enable_internet_vip\",\"choices\":[\"disable_internet_vip\",\"enable_internet_vip\"],\"required\":false},{\"group_name\":\"logs_receiver_choice\",\"description\":\"Choose one of: log_receiver, logs_streaming_disabled\",\"choices\":[\"log_receiver\",\"logs_streaming_disabled\"],\"required\":false},{\"group_name\":\"routing_type\",\"description\":\"Choose one of: f5_orchestrated_routing, manual_routing\",\"choices\":[\"f5_orchestrated_routing\",\"manual_routing\"],\"required\":false},{\"group_name\":\"security_group_choice\",\"description\":\"Choose one of: custom_security_group, f5xc_security_group\",\"choices\":[\"custom_security_group\",\"f5xc_security_group\"],\"required\":false},{\"group_name\":\"site_type\",\"description\":\"Choose one of: ingress_egress_gw, ingress_gw, voltstack_cluster\",\"choices\":[\"ingress_egress_gw\",\"ingress_gw\",\"voltstack_cluster\"],\"required\":false},{\"group_name\":\"worker_nodes\",\"description\":\"Choose one of: no_worker_nodes, nodes_per_az, total_nodes\",\"choices\":[\"no_worker_nodes\",\"nodes_per_az\",\"total_nodes\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"blocked_services_choice\",\"description\":\"Choose one of: block_all_services, blocked_services, default_blocked_services\",\"choices\":{\"block_all_services\":{},\"blocked_services\":{},\"default_blocked_services\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewsaws_vpc_siteCreateSpecType\",\"required_fields\":[\"address\",\"admin_password\",\"aws_cred\",\"aws_region\",\"block_all_services\",\"blocked_services\",\"coordinates\",\"custom_dns\",\"custom_security_group\",\"default_blocked_services\",\"direct_connect_disabled\",\"direct_connect_enabled\",\"disable_internet_vip\",\"disk_size\",\"egress_gateway_default\",\"egress_nat_gw\",\"egress_virtual_private_gateway\",\"enable_internet_vip\",\"f5_orchestrated_routing\",\"f5xc_security_group\",\"ingress_egress_gw\",\"ingress_gw\",\"instance_type\",\"kubernetes_upgrade_drain\",\"log_receiver\",\"logs_streaming_disabled\",\"manual_routing\",\"no_worker_nodes\",\"nodes_per_az\",\"offline_survivability_mode\",\"os\",\"private_connectivity\",\"ssh_key\",\"sw\",\"tags\",\"total_nodes\",\"voltstack_cluster\",\"vpc\"],\"example_yaml\":\"# Minimal example for viewsaws_vpc_siteCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  address: value\\n  admin_password: value\\n  aws_cred: value\\n  aws_region: value\\n  block_all_services: value\",\"example_command\":\"xcsh virtual create viewsaws_vpc_site -n default -f example.yaml\",\"domain\":\"site_management\"}"),
 	},
 	"azure_vnet_site": {
 		ResourceName:         "azure_vnet_site",
@@ -130,7 +130,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"blocked_services_choice\",\"description\":\"Choose one of: block_all_services, blocked_services, default_blocked_services\",\"choices\":[\"block_all_services\",\"blocked_services\",\"default_blocked_services\"],\"required\":false},{\"group_name\":\"deployment\",\"description\":\"Choose one of: azure_cred\",\"choices\":[\"azure_cred\"],\"required\":false},{\"group_name\":\"logs_receiver_choice\",\"description\":\"Choose one of: log_receiver, logs_streaming_disabled\",\"choices\":[\"log_receiver\",\"logs_streaming_disabled\"],\"required\":false},{\"group_name\":\"region_choice\",\"description\":\"Choose one of: alternate_region, azure_region\",\"choices\":[\"alternate_region\",\"azure_region\"],\"required\":false},{\"group_name\":\"site_type\",\"description\":\"Choose one of: ingress_egress_gw, ingress_egress_gw_ar, ingress_gw, ingress_gw_ar, voltstack_cluster, voltstack_cluster_ar\",\"choices\":[\"ingress_egress_gw\",\"ingress_egress_gw_ar\",\"ingress_gw\",\"ingress_gw_ar\",\"voltstack_cluster\",\"voltstack_cluster_ar\"],\"required\":false},{\"group_name\":\"worker_nodes\",\"description\":\"Choose one of: no_worker_nodes, nodes_per_az, total_nodes\",\"choices\":[\"no_worker_nodes\",\"nodes_per_az\",\"total_nodes\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"blocked_services_choice\",\"description\":\"Choose one of: block_all_services, blocked_services, default_blocked_services\",\"choices\":{\"block_all_services\":{},\"blocked_services\":{},\"default_blocked_services\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewsazure_vnet_siteCreateSpecType\",\"required_fields\":[\"address\",\"admin_password\",\"alternate_region\",\"azure_cred\",\"azure_region\",\"block_all_services\",\"blocked_services\",\"coordinates\",\"custom_dns\",\"default_blocked_services\",\"disk_size\",\"ingress_egress_gw\",\"ingress_egress_gw_ar\",\"ingress_gw\",\"ingress_gw_ar\",\"kubernetes_upgrade_drain\",\"log_receiver\",\"logs_streaming_disabled\",\"machine_type\",\"no_worker_nodes\",\"nodes_per_az\",\"offline_survivability_mode\",\"os\",\"resource_group\",\"ssh_key\",\"sw\",\"tags\",\"total_nodes\",\"vnet\",\"voltstack_cluster\",\"voltstack_cluster_ar\"],\"example_yaml\":\"# Minimal example for viewsazure_vnet_siteCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  address: value\\n  admin_password: value\\n  alternate_region: value\\n  azure_cred: value\\n  azure_region: value\",\"example_command\":\"xcsh virtual create viewsazure_vnet_site -n default -f example.yaml\",\"domain\":\"site_management\"}"),
 	},
 	"bgp": {
 		ResourceName:         "bgp",
@@ -139,7 +139,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for bgpCreateSpecType\",\"required_fields\":[\"bgp_parameters\",\"peers\",\"where\"],\"example_yaml\":\"# Minimal example for bgpCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  bgp_parameters: value\\n  peers: value\\n  where: value\",\"example_command\":\"xcsh virtual create bgp -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"bgp_asn_set": {
 		ResourceName:         "bgp_asn_set",
@@ -148,7 +148,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for bgp_asn_setCreateSpecType\",\"required_fields\":[\"as_numbers\"],\"example_yaml\":\"# Minimal example for bgp_asn_setCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  as_numbers: value\",\"example_command\":\"xcsh virtual create bgp_asn_set -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"bgp_routing_policy": {
 		ResourceName:         "bgp_routing_policy",
@@ -157,7 +157,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for bgp_routing_policyCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for bgp_routing_policyCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create bgp_routing_policy -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"bigip_irule": {
 		ResourceName:         "bigip_irule",
@@ -166,7 +166,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for bigip_iruleCreateSpecType\",\"required_fields\":[\"code\",\"irule_name\",\"source\"],\"example_yaml\":\"# Minimal example for bigip_iruleCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  code: value\\n  irule_name: value\\n  source: value\",\"example_command\":\"xcsh virtual create bigip_irule -n default -f example.yaml\",\"domain\":\"bigip\"}"),
 	},
 	"bot_defense_app_infrastructure": {
 		ResourceName:         "bot_defense_app_infrastructure",
@@ -175,7 +175,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"infra_choice\",\"description\":\"Choose one of: cloud_hosted, data_center_hosted\",\"choices\":[\"cloud_hosted\",\"data_center_hosted\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"infra_choice\",\"description\":\"Choose one of: cloud_hosted, data_center_hosted\",\"choices\":{\"cloud_hosted\":{},\"data_center_hosted\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for bot_defense_app_infrastructureCreateSpecType\",\"required_fields\":[\"cloud_hosted\",\"data_center_hosted\",\"environment_type\",\"traffic_type\"],\"example_yaml\":\"# Minimal example for bot_defense_app_infrastructureCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  cloud_hosted: value\\n  data_center_hosted: value\\n  environment_type: value\\n  traffic_type: value\",\"example_command\":\"xcsh virtual create bot_defense_app_infrastructure -n default -f example.yaml\",\"domain\":\"bot_and_threat_defense\"}"),
 	},
 	"cdn_cache_rule": {
 		ResourceName:         "cdn_cache_rule",
@@ -184,7 +184,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for cdn_cache_ruleCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for cdn_cache_ruleCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh cdn create cdn_cache_rule -n default -f example.yaml\",\"domain\":\"cdn\"}"),
 	},
 	"cdn_loadbalancer": {
 		ResourceName:         "cdn_loadbalancer",
@@ -193,7 +193,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"api_definition_choice\",\"description\":\"Choose one of: api_specification, disable_api_definition\",\"choices\":[\"api_specification\",\"disable_api_definition\"],\"required\":false},{\"group_name\":\"api_discovery_choice\",\"description\":\"Choose one of: disable_api_discovery, enable_api_discovery\",\"choices\":[\"disable_api_discovery\",\"enable_api_discovery\"],\"required\":false},{\"group_name\":\"bot_defense_choice\",\"description\":\"Choose one of: bot_defense\",\"choices\":[\"bot_defense\"],\"required\":false},{\"group_name\":\"challenge_type\",\"description\":\"Choose one of: captcha_challenge, enable_challenge, js_challenge, no_challenge, policy_based_challenge\",\"choices\":[\"captcha_challenge\",\"enable_challenge\",\"js_challenge\",\"no_challenge\",\"policy_based_challenge\"],\"required\":false},{\"group_name\":\"client_side_defense_choice\",\"description\":\"Choose one of: client_side_defense, disable_client_side_defense\",\"choices\":[\"client_side_defense\",\"disable_client_side_defense\"],\"required\":false},{\"group_name\":\"ip_reputation_choice\",\"description\":\"Choose one of: disable_ip_reputation, enable_ip_reputation\",\"choices\":[\"disable_ip_reputation\",\"enable_ip_reputation\"],\"required\":false},{\"group_name\":\"l7_ddos_auto_mitigation_action\",\"description\":\"Choose one of: l7_ddos_action_block, l7_ddos_action_default, l7_ddos_action_js_challenge\",\"choices\":[\"l7_ddos_action_block\",\"l7_ddos_action_default\",\"l7_ddos_action_js_challenge\"],\"required\":false},{\"group_name\":\"loadbalancer_type\",\"description\":\"Choose one of: http, https, https_auto_cert\",\"choices\":[\"http\",\"https\",\"https_auto_cert\"],\"required\":false},{\"group_name\":\"malicious_user_detection_choice\",\"description\":\"Choose one of: disable_malicious_user_detection, enable_malicious_user_detection\",\"choices\":[\"disable_malicious_user_detection\",\"enable_malicious_user_detection\"],\"required\":false},{\"group_name\":\"rate_limit_choice\",\"description\":\"Choose one of: api_rate_limit, disable_rate_limit, rate_limit\",\"choices\":[\"api_rate_limit\",\"disable_rate_limit\",\"rate_limit\"],\"required\":false},{\"group_name\":\"sensitive_data_policy_choice\",\"description\":\"Choose one of: default_sensitive_data_policy, sensitive_data_policy\",\"choices\":[\"default_sensitive_data_policy\",\"sensitive_data_policy\"],\"required\":false},{\"group_name\":\"service_policy_choice\",\"description\":\"Choose one of: active_service_policies, no_service_policies, service_policies_from_namespace\",\"choices\":[\"active_service_policies\",\"no_service_policies\",\"service_policies_from_namespace\"],\"required\":false},{\"group_name\":\"slow_ddos_mitigation_choice\",\"description\":\"Choose one of: slow_ddos_mitigation, system_default_timeouts\",\"choices\":[\"slow_ddos_mitigation\",\"system_default_timeouts\"],\"required\":false},{\"group_name\":\"threat_mesh_choice\",\"description\":\"Choose one of: disable_threat_mesh, enable_threat_mesh\",\"choices\":[\"disable_threat_mesh\",\"enable_threat_mesh\"],\"required\":false},{\"group_name\":\"user_id_choice\",\"description\":\"Choose one of: user_id_client_ip, user_identification\",\"choices\":[\"user_id_client_ip\",\"user_identification\"],\"required\":false},{\"group_name\":\"waf_choice\",\"description\":\"Choose one of: app_firewall, disable_waf\",\"choices\":[\"app_firewall\",\"disable_waf\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"api_definition_choice\",\"description\":\"Choose one of: api_specification, disable_api_definition\",\"choices\":{\"api_specification\":{},\"disable_api_definition\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewscdn_loadbalancerCreateSpecType\",\"required_fields\":[\"active_service_policies\",\"api_rate_limit\",\"api_specification\",\"app_firewall\",\"blocked_clients\",\"bot_defense\",\"captcha_challenge\",\"client_side_defense\",\"cors_policy\",\"csrf_policy\",\"custom_cache_rule\",\"data_guard_rules\",\"ddos_mitigation_rules\",\"default_cache_action\",\"default_sensitive_data_policy\",\"disable_api_definition\",\"disable_api_discovery\",\"disable_client_side_defense\",\"disable_ip_reputation\",\"disable_malicious_user_detection\",\"disable_rate_limit\",\"disable_threat_mesh\",\"disable_waf\",\"domains\",\"enable_api_discovery\",\"enable_challenge\",\"enable_ip_reputation\",\"enable_malicious_user_detection\",\"enable_threat_mesh\",\"graphql_rules\",\"http\",\"https\",\"https_auto_cert\",\"js_challenge\",\"jwt_validation\",\"l7_ddos_action_block\",\"l7_ddos_action_default\",\"l7_ddos_action_js_challenge\",\"no_challenge\",\"no_service_policies\",\"origin_pool\",\"other_settings\",\"policy_based_challenge\",\"protected_cookies\",\"rate_limit\",\"sensitive_data_policy\",\"service_policies_from_namespace\",\"slow_ddos_mitigation\",\"system_default_timeouts\",\"trusted_clients\",\"user_id_client_ip\",\"user_identification\",\"waf_exclusion\"],\"example_yaml\":\"# Minimal example for viewscdn_loadbalancerCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  active_service_policies: value\\n  api_rate_limit: value\\n  api_specification: value\\n  app_firewall: value\\n  blocked_clients: value\",\"example_command\":\"xcsh cdn create viewscdn_loadbalancer -n default -f example.yaml\",\"domain\":\"cdn\"}"),
 	},
 	"certificate": {
 		ResourceName:         "certificate",
@@ -202,7 +202,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"ocsp_stapling_choice\",\"description\":\"Choose one of: custom_hash_algorithms, disable_ocsp_stapling, use_system_defaults\",\"choices\":[\"custom_hash_algorithms\",\"disable_ocsp_stapling\",\"use_system_defaults\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"ocsp_stapling_choice\",\"description\":\"Choose one of: custom_hash_algorithms, disable_ocsp_stapling, use_system_defaults\",\"choices\":{\"custom_hash_algorithms\":{},\"disable_ocsp_stapling\":{},\"use_system_defaults\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for certificateCreateSpecType\",\"required_fields\":[\"certificate_chain\",\"certificate_url\",\"custom_hash_algorithms\",\"disable_ocsp_stapling\",\"private_key\",\"use_system_defaults\"],\"example_yaml\":\"# Minimal example for certificateCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  certificate_chain: value\\n  certificate_url: value\\n  custom_hash_algorithms: value\\n  disable_ocsp_stapling: value\\n  private_key: value\",\"example_command\":\"xcsh virtual create certificate -n default -f example.yaml\",\"domain\":\"certificates\"}"),
 	},
 	"certificate_chain": {
 		ResourceName:         "certificate_chain",
@@ -211,7 +211,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for certificate_chainCreateSpecType\",\"required_fields\":[\"certificate_url\"],\"example_yaml\":\"# Minimal example for certificate_chainCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  certificate_url: value\",\"example_command\":\"xcsh virtual create certificate_chain -n default -f example.yaml\",\"domain\":\"certificates\"}"),
 	},
 	"cloud_connect": {
 		ResourceName:         "cloud_connect",
@@ -220,7 +220,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for cloud_connectCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for cloud_connectCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create cloud_connect -n default -f example.yaml\",\"domain\":\"cloud_infrastructure\"}"),
 	},
 	"cloud_credentials": {
 		ResourceName:         "cloud_credentials",
@@ -229,7 +229,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"cloud\",\"description\":\"Choose one of: aws_assume_role, aws_secret_key, azure_client_secret, azure_pfx_certificate, gcp_cred_file\",\"choices\":[\"aws_assume_role\",\"aws_secret_key\",\"azure_client_secret\",\"azure_pfx_certificate\",\"gcp_cred_file\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"cloud\",\"description\":\"Choose one of: aws_assume_role, aws_secret_key, azure_client_secret, azure_pfx_certificate, gcp_cred_file\",\"choices\":{\"aws_assume_role\":{},\"aws_secret_key\":{},\"azure_client_secret\":{},\"azure_pfx_certificate\":{},\"gcp_cred_file\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for cloud_credentialsCreateSpecType\",\"required_fields\":[\"aws_assume_role\",\"aws_secret_key\",\"azure_client_secret\",\"azure_pfx_certificate\",\"gcp_cred_file\"],\"example_yaml\":\"# Minimal example for cloud_credentialsCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  aws_assume_role: value\\n  aws_secret_key: value\\n  azure_client_secret: value\\n  azure_pfx_certificate: value\\n  gcp_cred_file: value\",\"example_command\":\"xcsh virtual create cloud_credentials -n default -f example.yaml\",\"domain\":\"cloud_infrastructure\"}"),
 	},
 	"cloud_elastic_ip": {
 		ResourceName:         "cloud_elastic_ip",
@@ -238,7 +238,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for cloud_elastic_ipCreateSpecType\",\"required_fields\":[\"count\",\"site_ref\"],\"example_yaml\":\"# Minimal example for cloud_elastic_ipCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  count: value\\n  site_ref: value\",\"example_command\":\"xcsh virtual create cloud_elastic_ip -n default -f example.yaml\",\"domain\":\"cloud_infrastructure\"}"),
 	},
 	"cloud_link": {
 		ResourceName:         "cloud_link",
@@ -247,7 +247,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for cloud_linkCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for cloud_linkCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create cloud_link -n default -f example.yaml\",\"domain\":\"cloud_infrastructure\"}"),
 	},
 	"cluster": {
 		ResourceName:         "cluster",
@@ -256,7 +256,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"http_protocol_type\",\"description\":\"Choose one of: auto_http_config, http1_config, http2_options\",\"choices\":[\"auto_http_config\",\"http1_config\",\"http2_options\"],\"required\":false},{\"group_name\":\"panic_threshold_type\",\"description\":\"Choose one of: no_panic_threshold, panic_threshold\",\"choices\":[\"no_panic_threshold\",\"panic_threshold\"],\"required\":false},{\"group_name\":\"proxy_protocol_type\",\"description\":\"Choose one of: disable_proxy_protocol, proxy_protocol_v1, proxy_protocol_v2\",\"choices\":[\"disable_proxy_protocol\",\"proxy_protocol_v1\",\"proxy_protocol_v2\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"http_protocol_type\",\"description\":\"Choose one of: auto_http_config, http1_config, http2_options\",\"choices\":{\"auto_http_config\":{},\"http1_config\":{},\"http2_options\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for clusterCreateSpecType\",\"required_fields\":[\"auto_http_config\",\"circuit_breaker\",\"connection_timeout\",\"default_subset\",\"disable_proxy_protocol\",\"endpoint_selection\",\"endpoint_subsets\",\"endpoints\",\"fallback_policy\",\"health_checks\",\"http1_config\",\"http2_options\",\"http_idle_timeout\",\"loadbalancer_algorithm\",\"no_panic_threshold\",\"outlier_detection\",\"panic_threshold\",\"proxy_protocol_v1\",\"proxy_protocol_v2\",\"tls_parameters\",\"upstream_conn_pool_reuse_type\"],\"example_yaml\":\"# Minimal example for clusterCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  auto_http_config: value\\n  circuit_breaker: value\\n  connection_timeout: value\\n  default_subset: value\\n  disable_proxy_protocol: value\",\"example_command\":\"xcsh virtual create cluster -n default -f example.yaml\",\"domain\":\"other\"}"),
 	},
 	"cminstance": {
 		ResourceName:         "cminstance",
@@ -265,7 +265,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for cminstanceCreateSpecType\",\"required_fields\":[\"api_token\",\"ip\",\"password\",\"port\",\"username\"],\"example_yaml\":\"# Minimal example for cminstanceCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  api_token: value\\n  ip: value\\n  password: value\\n  port: value\\n  username: value\",\"example_command\":\"xcsh virtual create cminstance -n default -f example.yaml\",\"domain\":\"marketplace\"}"),
 	},
 	"contact": {
 		ResourceName:         "contact",
@@ -274,7 +274,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for contactCreateSpecType\",\"required_fields\":[\"address1\",\"address2\",\"city\",\"contact_type\",\"country\",\"county\",\"phone_number\",\"state\",\"state_code\",\"zip_code\"],\"example_yaml\":\"# Minimal example for contactCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  address1: value\\n  address2: value\\n  city: value\\n  contact_type: value\\n  country: value\",\"example_command\":\"xcsh virtual create contact -n default -f example.yaml\",\"domain\":\"tenant_and_identity\"}"),
 	},
 	"container_registry": {
 		ResourceName:         "container_registry",
@@ -283,7 +283,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for container_registryCreateSpecType\",\"required_fields\":[\"email\",\"password\",\"registry\",\"user_name\"],\"example_yaml\":\"# Minimal example for container_registryCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  email: value\\n  password: value\\n  registry: value\\n  user_name: value\",\"example_command\":\"xcsh virtual create container_registry -n default -f example.yaml\",\"domain\":\"kubernetes_and_orchestration\"}"),
 	},
 	"crl": {
 		ResourceName:         "crl",
@@ -292,7 +292,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"access_info_choice\",\"description\":\"Choose one of: http_access\",\"choices\":[\"http_access\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"access_info_choice\",\"description\":\"Choose one of: http_access\",\"choices\":{\"http_access\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for crlCreateSpecType\",\"required_fields\":[\"http_access\",\"refresh_interval\",\"server_address\",\"server_port\",\"timeout\"],\"example_yaml\":\"# Minimal example for crlCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  http_access: value\\n  refresh_interval: value\\n  server_address: value\\n  server_port: value\\n  timeout: value\",\"example_command\":\"xcsh virtual create crl -n default -f example.yaml\",\"domain\":\"certificates\"}"),
 	},
 	"customer_support": {
 		ResourceName:         "customer_support",
@@ -301,7 +301,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for customer_supportCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for customer_supportCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create customer_support -n default -f example.yaml\",\"domain\":\"support\"}"),
 	},
 	"data_type": {
 		ResourceName:         "data_type",
@@ -310,7 +310,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for data_typeCreateSpecType\",\"required_fields\":[\"compliances\",\"is_pii\",\"is_sensitive_data\",\"rules\"],\"example_yaml\":\"# Minimal example for data_typeCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  compliances: value\\n  is_pii: value\\n  is_sensitive_data: value\\n  rules: value\",\"example_command\":\"xcsh virtual create data_type -n default -f example.yaml\",\"domain\":\"data_and_privacy_security\"}"),
 	},
 	"dc_cluster_group": {
 		ResourceName:         "dc_cluster_group",
@@ -319,7 +319,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for dc_cluster_groupCreateSpecType\",\"required_fields\":[\"type\"],\"example_yaml\":\"# Minimal example for dc_cluster_groupCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  type: value\",\"example_command\":\"xcsh virtual create dc_cluster_group -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"discovery": {
 		ResourceName:         "discovery",
@@ -328,7 +328,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"cluster_identifier_choice\",\"description\":\"Choose one of: cluster_id, no_cluster_id\",\"choices\":[\"cluster_id\",\"no_cluster_id\"],\"required\":false},{\"group_name\":\"discovery_choice\",\"description\":\"Choose one of: discovery_consul, discovery_k8s\",\"choices\":[\"discovery_consul\",\"discovery_k8s\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"cluster_identifier_choice\",\"description\":\"Choose one of: cluster_id, no_cluster_id\",\"choices\":{\"cluster_id\":{},\"no_cluster_id\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for discoveryCreateSpecType\",\"required_fields\":[\"cluster_id\",\"discovery_consul\",\"discovery_k8s\",\"no_cluster_id\",\"where\"],\"example_yaml\":\"# Minimal example for discoveryCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  cluster_id: value\\n  discovery_consul: value\\n  discovery_k8s: value\\n  no_cluster_id: value\\n  where: value\",\"example_command\":\"xcsh virtual create discovery -n default -f example.yaml\",\"domain\":\"service_mesh\"}"),
 	},
 	"dns_compliance_checks": {
 		ResourceName:         "dns_compliance_checks",
@@ -337,7 +337,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for dns_compliance_checksCreateSpecType\",\"required_fields\":[\"disallowed_query_type_list\",\"disallowed_resource_record_type_list\",\"domain_denylist\"],\"example_yaml\":\"# Minimal example for dns_compliance_checksCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  disallowed_query_type_list: value\\n  disallowed_resource_record_type_list: value\\n  domain_denylist: value\",\"example_command\":\"xcsh virtual create dns_compliance_checks -n default -f example.yaml\",\"domain\":\"dns\"}"),
 	},
 	"dns_domain": {
 		ResourceName:         "dns_domain",
@@ -346,7 +346,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"domain_choice\",\"description\":\"Choose one of: volterra_managed\",\"choices\":[\"volterra_managed\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"domain_choice\",\"description\":\"Choose one of: volterra_managed\",\"choices\":{\"volterra_managed\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for dns_domainCreateSpecType\",\"required_fields\":[\"dnssec_mode\",\"volterra_managed\"],\"example_yaml\":\"# Minimal example for dns_domainCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  dnssec_mode: value\\n  volterra_managed: value\",\"example_command\":\"xcsh virtual create dns_domain -n default -f example.yaml\",\"domain\":\"dns\"}"),
 	},
 	"dns_lb_health_check": {
 		ResourceName:         "dns_lb_health_check",
@@ -355,7 +355,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"health_check\",\"description\":\"Choose one of: http_health_check, https_health_check, icmp_health_check, tcp_health_check, tcp_hex_health_check, udp_health_check\",\"choices\":[\"http_health_check\",\"https_health_check\",\"icmp_health_check\",\"tcp_health_check\",\"tcp_hex_health_check\",\"udp_health_check\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"health_check\",\"description\":\"Choose one of: http_health_check, https_health_check, icmp_health_check, tcp_health_check, tcp_hex_health_check, udp_health_check\",\"choices\":{\"http_health_check\":{},\"https_health_check\":{},\"icmp_health_check\":{},\"tcp_health_check\":{},\"tcp_hex_health_check\":{},\"udp_health_check\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for dns_lb_health_checkCreateSpecType\",\"required_fields\":[\"http_health_check\",\"https_health_check\",\"icmp_health_check\",\"tcp_health_check\",\"tcp_hex_health_check\",\"udp_health_check\"],\"example_yaml\":\"# Minimal example for dns_lb_health_checkCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  http_health_check: value\\n  https_health_check: value\\n  icmp_health_check: value\\n  tcp_health_check: value\\n  tcp_hex_health_check: value\",\"example_command\":\"xcsh virtual create dns_lb_health_check -n default -f example.yaml\",\"domain\":\"dns\"}"),
 	},
 	"dns_lb_pool": {
 		ResourceName:         "dns_lb_pool",
@@ -364,7 +364,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"pool_type_choice\",\"description\":\"Choose one of: a_pool, aaaa_pool, cname_pool, mx_pool, srv_pool\",\"choices\":[\"a_pool\",\"aaaa_pool\",\"cname_pool\",\"mx_pool\",\"srv_pool\"],\"required\":false},{\"group_name\":\"ttl_choice\",\"description\":\"Choose one of: ttl, use_rrset_ttl\",\"choices\":[\"ttl\",\"use_rrset_ttl\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"pool_type_choice\",\"description\":\"Choose one of: a_pool, aaaa_pool, cname_pool, mx_pool, srv_pool\",\"choices\":{\"a_pool\":{},\"aaaa_pool\":{},\"cname_pool\":{},\"mx_pool\":{},\"srv_pool\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for dns_lb_poolCreateSpecType\",\"required_fields\":[\"a_pool\",\"aaaa_pool\",\"cname_pool\",\"load_balancing_mode\",\"mx_pool\",\"srv_pool\",\"ttl\",\"use_rrset_ttl\"],\"example_yaml\":\"# Minimal example for dns_lb_poolCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  a_pool: value\\n  aaaa_pool: value\\n  cname_pool: value\\n  load_balancing_mode: value\\n  mx_pool: value\",\"example_command\":\"xcsh virtual create dns_lb_pool -n default -f example.yaml\",\"domain\":\"dns\"}"),
 	},
 	"dns_load_balancer": {
 		ResourceName:         "dns_load_balancer",
@@ -373,7 +373,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for dns_load_balancerCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for dns_load_balancerCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create dns_load_balancer -n default -f example.yaml\",\"domain\":\"dns\"}"),
 	},
 	"dns_zone": {
 		ResourceName:         "dns_zone",
@@ -382,7 +382,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"dns_type\",\"description\":\"Choose one of: primary, secondary\",\"choices\":[\"primary\",\"secondary\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"dns_type\",\"description\":\"Choose one of: primary, secondary\",\"choices\":{\"primary\":{},\"secondary\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for dns_zoneCreateSpecType\",\"required_fields\":[\"primary\",\"secondary\"],\"example_yaml\":\"# Minimal example for dns_zoneCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  primary: value\\n  secondary: value\",\"example_command\":\"xcsh virtual create dns_zone -n default -f example.yaml\",\"domain\":\"dns\"}"),
 	},
 	"endpoint": {
 		ResourceName:         "endpoint",
@@ -391,7 +391,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for endpointCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for endpointCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create endpoint -n default -f example.yaml\",\"domain\":\"service_mesh\"}"),
 	},
 	"enhanced_firewall_policy": {
 		ResourceName:         "enhanced_firewall_policy",
@@ -400,7 +400,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for enhanced_firewall_policyCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for enhanced_firewall_policyCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh waf create enhanced_firewall_policy -n default -f example.yaml\",\"domain\":\"waf\"}"),
 	},
 	"external_connector": {
 		ResourceName:         "external_connector",
@@ -409,7 +409,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"connection_type\",\"description\":\"Choose one of: ipsec\",\"choices\":[\"ipsec\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"connection_type\",\"description\":\"Choose one of: ipsec\",\"choices\":{\"ipsec\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for external_connectorCreateSpecType\",\"required_fields\":[\"ce_site_reference\",\"ipsec\"],\"example_yaml\":\"# Minimal example for external_connectorCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  ce_site_reference: value\\n  ipsec: value\",\"example_command\":\"xcsh virtual create external_connector -n default -f example.yaml\",\"domain\":\"other\"}"),
 	},
 	"fast_acl": {
 		ResourceName:         "fast_acl",
@@ -418,7 +418,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for fast_aclCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for fast_aclCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create fast_acl -n default -f example.yaml\",\"domain\":\"network_security\"}"),
 	},
 	"fast_acl_rule": {
 		ResourceName:         "fast_acl_rule",
@@ -427,7 +427,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"source\",\"description\":\"Choose one of: ip_prefix_set, prefix\",\"choices\":[\"ip_prefix_set\",\"prefix\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"source\",\"description\":\"Choose one of: ip_prefix_set, prefix\",\"choices\":{\"ip_prefix_set\":{},\"prefix\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for fast_acl_ruleCreateSpecType\",\"required_fields\":[\"action\",\"ip_prefix_set\",\"port\",\"prefix\"],\"example_yaml\":\"# Minimal example for fast_acl_ruleCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  action: value\\n  ip_prefix_set: value\\n  port: value\\n  prefix: value\",\"example_command\":\"xcsh virtual create fast_acl_rule -n default -f example.yaml\",\"domain\":\"network_security\"}"),
 	},
 	"filter_set": {
 		ResourceName:         "filter_set",
@@ -436,7 +436,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for filter_setCreateSpecType\",\"required_fields\":[\"context_key\",\"filter_fields\"],\"example_yaml\":\"# Minimal example for filter_setCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  context_key: value\\n  filter_fields: value\",\"example_command\":\"xcsh virtual create filter_set -n default -f example.yaml\",\"domain\":\"network_security\"}"),
 	},
 	"fleet": {
 		ResourceName:         "fleet",
@@ -445,7 +445,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for fleetCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for fleetCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create fleet -n default -f example.yaml\",\"domain\":\"service_mesh\"}"),
 	},
 	"forward_proxy_policy": {
 		ResourceName:         "forward_proxy_policy",
@@ -454,7 +454,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"proxy_choice\",\"description\":\"Choose one of: any_proxy, drp_http_connect, network_connector, proxy_label_selector\",\"choices\":[\"any_proxy\",\"drp_http_connect\",\"network_connector\",\"proxy_label_selector\"],\"required\":false},{\"group_name\":\"rule_choice\",\"description\":\"Choose one of: allow_all, allow_list, deny_list, rule_list\",\"choices\":[\"allow_all\",\"allow_list\",\"deny_list\",\"rule_list\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"proxy_choice\",\"description\":\"Choose one of: any_proxy, drp_http_connect, network_connector, proxy_label_selector\",\"choices\":{\"any_proxy\":{},\"drp_http_connect\":{},\"network_connector\":{},\"proxy_label_selector\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewsforward_proxy_policyCreateSpecType\",\"required_fields\":[\"allow_all\",\"allow_list\",\"any_proxy\",\"deny_list\",\"drp_http_connect\",\"network_connector\",\"proxy_label_selector\",\"rule_list\"],\"example_yaml\":\"# Minimal example for viewsforward_proxy_policyCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  allow_all: value\\n  allow_list: value\\n  any_proxy: value\\n  deny_list: value\\n  drp_http_connect: value\",\"example_command\":\"xcsh virtual create viewsforward_proxy_policy -n default -f example.yaml\",\"domain\":\"network_security\"}"),
 	},
 	"forwarding_class": {
 		ResourceName:         "forwarding_class",
@@ -463,7 +463,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"marking_choice\",\"description\":\"Choose one of: dscp, no_marking, tos_value\",\"choices\":[\"dscp\",\"no_marking\",\"tos_value\"],\"required\":false},{\"group_name\":\"policer_choice\",\"description\":\"Choose one of: no_policer, policer\",\"choices\":[\"no_policer\",\"policer\"],\"required\":false},{\"group_name\":\"queueing_choice\",\"description\":\"Choose one of: dscp_based_queue, queue_id_to_use\",\"choices\":[\"dscp_based_queue\",\"queue_id_to_use\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"marking_choice\",\"description\":\"Choose one of: dscp, no_marking, tos_value\",\"choices\":{\"dscp\":{},\"no_marking\":{},\"tos_value\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for forwarding_classCreateSpecType\",\"required_fields\":[\"dscp\",\"dscp_based_queue\",\"interface_group\",\"no_marking\",\"no_policer\",\"policer\",\"queue_id_to_use\",\"tos_value\"],\"example_yaml\":\"# Minimal example for forwarding_classCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  dscp: value\\n  dscp_based_queue: value\\n  interface_group: value\\n  no_marking: value\\n  no_policer: value\",\"example_command\":\"xcsh virtual create forwarding_class -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"gcp_vpc_site": {
 		ResourceName:         "gcp_vpc_site",
@@ -472,7 +472,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"blocked_services_choice\",\"description\":\"Choose one of: block_all_services, blocked_services, default_blocked_services\",\"choices\":[\"block_all_services\",\"blocked_services\",\"default_blocked_services\"],\"required\":false},{\"group_name\":\"deployment\",\"description\":\"Choose one of: cloud_credentials\",\"choices\":[\"cloud_credentials\"],\"required\":false},{\"group_name\":\"logs_receiver_choice\",\"description\":\"Choose one of: log_receiver, logs_streaming_disabled\",\"choices\":[\"log_receiver\",\"logs_streaming_disabled\"],\"required\":false},{\"group_name\":\"private_connectivity_choice\",\"description\":\"Choose one of: private_connect_disabled, private_connectivity\",\"choices\":[\"private_connect_disabled\",\"private_connectivity\"],\"required\":false},{\"group_name\":\"site_type\",\"description\":\"Choose one of: ingress_egress_gw, ingress_gw, voltstack_cluster\",\"choices\":[\"ingress_egress_gw\",\"ingress_gw\",\"voltstack_cluster\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"blocked_services_choice\",\"description\":\"Choose one of: block_all_services, blocked_services, default_blocked_services\",\"choices\":{\"block_all_services\":{},\"blocked_services\":{},\"default_blocked_services\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewsgcp_vpc_siteCreateSpecType\",\"required_fields\":[\"address\",\"admin_password\",\"block_all_services\",\"blocked_services\",\"cloud_credentials\",\"coordinates\",\"custom_dns\",\"default_blocked_services\",\"disk_size\",\"gcp_labels\",\"gcp_region\",\"ingress_egress_gw\",\"ingress_gw\",\"instance_type\",\"kubernetes_upgrade_drain\",\"log_receiver\",\"logs_streaming_disabled\",\"offline_survivability_mode\",\"os\",\"private_connect_disabled\",\"private_connectivity\",\"ssh_key\",\"sw\",\"voltstack_cluster\"],\"example_yaml\":\"# Minimal example for viewsgcp_vpc_siteCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  address: value\\n  admin_password: value\\n  block_all_services: value\\n  blocked_services: value\\n  cloud_credentials: value\",\"example_command\":\"xcsh virtual create viewsgcp_vpc_site -n default -f example.yaml\",\"domain\":\"site_management\"}"),
 	},
 	"geo_location_set": {
 		ResourceName:         "geo_location_set",
@@ -481,7 +481,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"location_choice\",\"description\":\"Choose one of: custom_geo_location_selector, global\",\"choices\":[\"custom_geo_location_selector\",\"global\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"location_choice\",\"description\":\"Choose one of: custom_geo_location_selector, global\",\"choices\":{\"custom_geo_location_selector\":{},\"global\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for geo_location_setCreateSpecType\",\"required_fields\":[\"custom_geo_location_selector\",\"global\"],\"example_yaml\":\"# Minimal example for geo_location_setCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  custom_geo_location_selector: value\\n  global: value\",\"example_command\":\"xcsh virtual create geo_location_set -n default -f example.yaml\",\"domain\":\"virtual\"}"),
 	},
 	"global_log_receiver": {
 		ResourceName:         "global_log_receiver",
@@ -490,7 +490,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"filter_choice\",\"description\":\"Choose one of: ns_all, ns_current, ns_list\",\"choices\":[\"ns_all\",\"ns_current\",\"ns_list\"],\"required\":false},{\"group_name\":\"log_type\",\"description\":\"Choose one of: audit_logs, dns_logs, request_logs, security_events\",\"choices\":[\"audit_logs\",\"dns_logs\",\"request_logs\",\"security_events\"],\"required\":false},{\"group_name\":\"receiver\",\"description\":\"Choose one of: aws_cloud_watch_receiver, azure_event_hubs_receiver, azure_receiver, datadog_receiver, gcp_bucket_receiver, http_receiver, kafka_receiver, new_relic_receiver, qradar_receiver, s3_receiver, splunk_receiver, sumo_logic_receiver\",\"choices\":[\"aws_cloud_watch_receiver\",\"azure_event_hubs_receiver\",\"azure_receiver\",\"datadog_receiver\",\"gcp_bucket_receiver\",\"http_receiver\",\"kafka_receiver\",\"new_relic_receiver\",\"qradar_receiver\",\"s3_receiver\",\"splunk_receiver\",\"sumo_logic_receiver\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"filter_choice\",\"description\":\"Choose one of: ns_all, ns_current, ns_list\",\"choices\":{\"ns_all\":{},\"ns_current\":{},\"ns_list\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for global_log_receiverCreateSpecType\",\"required_fields\":[\"audit_logs\",\"aws_cloud_watch_receiver\",\"azure_event_hubs_receiver\",\"azure_receiver\",\"datadog_receiver\",\"dns_logs\",\"gcp_bucket_receiver\",\"http_receiver\",\"kafka_receiver\",\"new_relic_receiver\",\"ns_all\",\"ns_current\",\"ns_list\",\"qradar_receiver\",\"request_logs\",\"s3_receiver\",\"security_events\",\"splunk_receiver\",\"sumo_logic_receiver\"],\"example_yaml\":\"# Minimal example for global_log_receiverCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  audit_logs: value\\n  aws_cloud_watch_receiver: value\\n  azure_event_hubs_receiver: value\\n  azure_receiver: value\\n  datadog_receiver: value\",\"example_command\":\"xcsh virtual create global_log_receiver -n default -f example.yaml\",\"domain\":\"statistics\"}"),
 	},
 	"healthcheck": {
 		ResourceName:         "healthcheck",
@@ -517,7 +517,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for ike1CreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for ike1CreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create ike1 -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"ike2": {
 		ResourceName:         "ike2",
@@ -526,7 +526,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for ike2CreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for ike2CreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create ike2 -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"ike_phase1_profile": {
 		ResourceName:         "ike_phase1_profile",
@@ -535,7 +535,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"ike_key_lifetime\",\"description\":\"Choose one of: ike_keylifetime_hours, ike_keylifetime_minutes, use_default_keylifetime\",\"choices\":[\"ike_keylifetime_hours\",\"ike_keylifetime_minutes\",\"use_default_keylifetime\"],\"required\":false},{\"group_name\":\"ike_reauth_timeout\",\"description\":\"Choose one of: reauth_disabled, reauth_timeout_days, reauth_timeout_hours\",\"choices\":[\"reauth_disabled\",\"reauth_timeout_days\",\"reauth_timeout_hours\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"ike_key_lifetime\",\"description\":\"Choose one of: ike_keylifetime_hours, ike_keylifetime_minutes, use_default_keylifetime\",\"choices\":{\"ike_keylifetime_hours\":{},\"ike_keylifetime_minutes\":{},\"use_default_keylifetime\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for ike_phase1_profileCreateSpecType\",\"required_fields\":[\"authentication_algos\",\"dh_group\",\"encryption_algos\",\"ike_keylifetime_hours\",\"ike_keylifetime_minutes\",\"prf\",\"reauth_disabled\",\"reauth_timeout_days\",\"reauth_timeout_hours\",\"use_default_keylifetime\"],\"example_yaml\":\"# Minimal example for ike_phase1_profileCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  authentication_algos: value\\n  dh_group: value\\n  encryption_algos: value\\n  ike_keylifetime_hours: value\\n  ike_keylifetime_minutes: value\",\"example_command\":\"xcsh virtual create ike_phase1_profile -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"ike_phase2_profile": {
 		ResourceName:         "ike_phase2_profile",
@@ -544,7 +544,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"ike_key_lifetime\",\"description\":\"Choose one of: ike_keylifetime_hours, ike_keylifetime_minutes, use_default_keylifetime\",\"choices\":[\"ike_keylifetime_hours\",\"ike_keylifetime_minutes\",\"use_default_keylifetime\"],\"required\":false},{\"group_name\":\"pfs_mode\",\"description\":\"Choose one of: dh_group_set, disable_pfs\",\"choices\":[\"dh_group_set\",\"disable_pfs\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"ike_key_lifetime\",\"description\":\"Choose one of: ike_keylifetime_hours, ike_keylifetime_minutes, use_default_keylifetime\",\"choices\":{\"ike_keylifetime_hours\":{},\"ike_keylifetime_minutes\":{},\"use_default_keylifetime\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewsike_phase2_profileCreateSpecType\",\"required_fields\":[\"authentication_algos\",\"dh_group_set\",\"disable_pfs\",\"encryption_algos\",\"ike_keylifetime_hours\",\"ike_keylifetime_minutes\",\"use_default_keylifetime\"],\"example_yaml\":\"# Minimal example for viewsike_phase2_profileCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  authentication_algos: value\\n  dh_group_set: value\\n  disable_pfs: value\\n  encryption_algos: value\\n  ike_keylifetime_hours: value\",\"example_command\":\"xcsh virtual create viewsike_phase2_profile -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"infraprotect_asn": {
 		ResourceName:         "infraprotect_asn",
@@ -553,7 +553,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"bgp_session\",\"description\":\"Choose one of: bgp_session_disabled, bgp_session_enabled\",\"choices\":[\"bgp_session_disabled\",\"bgp_session_enabled\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"bgp_session\",\"description\":\"Choose one of: bgp_session_disabled, bgp_session_enabled\",\"choices\":{\"bgp_session_disabled\":{},\"bgp_session_enabled\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for infraprotect_asnCreateSpecType\",\"required_fields\":[\"asn\",\"bgp_session_disabled\",\"bgp_session_enabled\"],\"example_yaml\":\"# Minimal example for infraprotect_asnCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  asn: value\\n  bgp_session_disabled: value\\n  bgp_session_enabled: value\",\"example_command\":\"xcsh virtual create infraprotect_asn -n default -f example.yaml\",\"domain\":\"ddos\"}"),
 	},
 	"infraprotect_asn_prefix": {
 		ResourceName:         "infraprotect_asn_prefix",
@@ -562,7 +562,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for infraprotect_asn_prefixCreateSpecType\",\"required_fields\":[\"asn\",\"prefix\"],\"example_yaml\":\"# Minimal example for infraprotect_asn_prefixCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  asn: value\\n  prefix: value\",\"example_command\":\"xcsh virtual create infraprotect_asn_prefix -n default -f example.yaml\",\"domain\":\"ddos\"}"),
 	},
 	"infraprotect_deny_list_rule": {
 		ResourceName:         "infraprotect_deny_list_rule",
@@ -571,7 +571,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"expiration\",\"description\":\"Choose one of: expiration_never, expiration_timestamp, one_day, one_hour, one_month, one_year\",\"choices\":[\"expiration_never\",\"expiration_timestamp\",\"one_day\",\"one_hour\",\"one_month\",\"one_year\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"expiration\",\"description\":\"Choose one of: expiration_never, expiration_timestamp, one_day, one_hour, one_month, one_year\",\"choices\":{\"expiration_never\":{},\"expiration_timestamp\":{},\"one_day\":{},\"one_hour\":{},\"one_month\":{},\"one_year\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for infraprotect_deny_list_ruleCreateSpecType\",\"required_fields\":[\"expiration_never\",\"expiration_timestamp\",\"one_day\",\"one_hour\",\"one_month\",\"one_year\",\"prefix\"],\"example_yaml\":\"# Minimal example for infraprotect_deny_list_ruleCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  expiration_never: value\\n  expiration_timestamp: value\\n  one_day: value\\n  one_hour: value\\n  one_month: value\",\"example_command\":\"xcsh virtual create infraprotect_deny_list_rule -n default -f example.yaml\",\"domain\":\"ddos\"}"),
 	},
 	"infraprotect_firewall_rule": {
 		ResourceName:         "infraprotect_firewall_rule",
@@ -580,7 +580,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"action\",\"description\":\"Choose one of: action_allow, action_deny\",\"choices\":[\"action_allow\",\"action_deny\"],\"required\":false},{\"group_name\":\"destination_prefix\",\"description\":\"Choose one of: destination_prefix_all, destination_prefix_single\",\"choices\":[\"destination_prefix_all\",\"destination_prefix_single\"],\"required\":false},{\"group_name\":\"fragments\",\"description\":\"Choose one of: fragments_allow, fragments_deny\",\"choices\":[\"fragments_allow\",\"fragments_deny\"],\"required\":false},{\"group_name\":\"protocol\",\"description\":\"Choose one of: protocol_ah, protocol_all, protocol_esp, protocol_gre, protocol_icmp, protocol_icmp6, protocol_ipv6, protocol_tcp, protocol_udp\",\"choices\":[\"protocol_ah\",\"protocol_all\",\"protocol_esp\",\"protocol_gre\",\"protocol_icmp\",\"protocol_icmp6\",\"protocol_ipv6\",\"protocol_tcp\",\"protocol_udp\"],\"required\":false},{\"group_name\":\"source_prefix\",\"description\":\"Choose one of: source_prefix_all, source_prefix_single\",\"choices\":[\"source_prefix_all\",\"source_prefix_single\"],\"required\":false},{\"group_name\":\"state\",\"description\":\"Choose one of: state_off, state_on\",\"choices\":[\"state_off\",\"state_on\"],\"required\":false},{\"group_name\":\"version\",\"description\":\"Choose one of: version_ipv4, version_ipv6\",\"choices\":[\"version_ipv4\",\"version_ipv6\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"action\",\"description\":\"Choose one of: action_allow, action_deny\",\"choices\":{\"action_allow\":{},\"action_deny\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for infraprotect_firewall_ruleCreateSpecType\",\"required_fields\":[\"action_allow\",\"action_deny\",\"destination_prefix_all\",\"destination_prefix_single\",\"fragments_allow\",\"fragments_deny\",\"protocol_ah\",\"protocol_all\",\"protocol_esp\",\"protocol_gre\",\"protocol_icmp\",\"protocol_icmp6\",\"protocol_ipv6\",\"protocol_tcp\",\"protocol_udp\",\"source_prefix_all\",\"source_prefix_single\",\"state_off\",\"state_on\",\"version_ipv4\",\"version_ipv6\"],\"example_yaml\":\"# Minimal example for infraprotect_firewall_ruleCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  action_allow: value\\n  action_deny: value\\n  destination_prefix_all: value\\n  destination_prefix_single: value\\n  fragments_allow: value\",\"example_command\":\"xcsh waf create infraprotect_firewall_rule -n default -f example.yaml\",\"domain\":\"ddos\"}"),
 	},
 	"infraprotect_firewall_rule_group": {
 		ResourceName:         "infraprotect_firewall_rule_group",
@@ -589,7 +589,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for infraprotect_firewall_rule_groupCreateSpecType\",\"required_fields\":[\"firewall_rule_group_name\"],\"example_yaml\":\"# Minimal example for infraprotect_firewall_rule_groupCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  firewall_rule_group_name: value\",\"example_command\":\"xcsh waf create infraprotect_firewall_rule_group -n default -f example.yaml\",\"domain\":\"ddos\"}"),
 	},
 	"infraprotect_internet_prefix_advertisement": {
 		ResourceName:         "infraprotect_internet_prefix_advertisement",
@@ -598,7 +598,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"activation_selection\",\"description\":\"Choose one of: activation_announce, activation_withdraw\",\"choices\":[\"activation_announce\",\"activation_withdraw\"],\"required\":false},{\"group_name\":\"expiration\",\"description\":\"Choose one of: expiration_never, expiration_timestamp\",\"choices\":[\"expiration_never\",\"expiration_timestamp\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"activation_selection\",\"description\":\"Choose one of: activation_announce, activation_withdraw\",\"choices\":{\"activation_announce\":{},\"activation_withdraw\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for infraprotect_internet_prefix_advertisementCreateSpecType\",\"required_fields\":[\"activation_announce\",\"activation_withdraw\",\"expiration_never\",\"expiration_timestamp\",\"prefix\"],\"example_yaml\":\"# Minimal example for infraprotect_internet_prefix_advertisementCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  activation_announce: value\\n  activation_withdraw: value\\n  expiration_never: value\\n  expiration_timestamp: value\\n  prefix: value\",\"example_command\":\"xcsh virtual create infraprotect_internet_prefix_advertisement -n default -f example.yaml\",\"domain\":\"ddos\"}"),
 	},
 	"infraprotect_tunnel": {
 		ResourceName:         "infraprotect_tunnel",
@@ -607,7 +607,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"tunnel_type\",\"description\":\"Choose one of: gre_ipv4, gre_ipv6, ip_in_ip, ipv6_to_ipv6\",\"choices\":[\"gre_ipv4\",\"gre_ipv6\",\"ip_in_ip\",\"ipv6_to_ipv6\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"tunnel_type\",\"description\":\"Choose one of: gre_ipv4, gre_ipv6, ip_in_ip, ipv6_to_ipv6\",\"choices\":{\"gre_ipv4\":{},\"gre_ipv6\":{},\"ip_in_ip\":{},\"ipv6_to_ipv6\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for infraprotect_tunnelCreateSpecType\",\"required_fields\":[\"bandwidth\",\"bgp_information\",\"firewall_rule_group\",\"gre_ipv4\",\"gre_ipv6\",\"ip_in_ip\",\"ipv6_to_ipv6\",\"tunnel_location\"],\"example_yaml\":\"# Minimal example for infraprotect_tunnelCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  bandwidth: value\\n  bgp_information: value\\n  firewall_rule_group: value\\n  gre_ipv4: value\\n  gre_ipv6: value\",\"example_command\":\"xcsh virtual create infraprotect_tunnel -n default -f example.yaml\",\"domain\":\"ddos\"}"),
 	},
 	"ip_prefix_set": {
 		ResourceName:         "ip_prefix_set",
@@ -616,7 +616,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for ip_prefix_setCreateSpecType\",\"required_fields\":[\"ipv4_prefixes\"],\"example_yaml\":\"# Minimal example for ip_prefix_setCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  ipv4_prefixes: value\",\"example_command\":\"xcsh virtual create ip_prefix_set -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"k8s_cluster": {
 		ResourceName:         "k8s_cluster",
@@ -625,7 +625,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"apps_choice\",\"description\":\"Choose one of: cluster_wide_app_list, no_cluster_wide_apps\",\"choices\":[\"cluster_wide_app_list\",\"no_cluster_wide_apps\"],\"required\":false},{\"group_name\":\"cluster_role_bindings_choice\",\"description\":\"Choose one of: use_custom_cluster_role_bindings, use_default_cluster_role_bindings\",\"choices\":[\"use_custom_cluster_role_bindings\",\"use_default_cluster_role_bindings\"],\"required\":false},{\"group_name\":\"cluster_role_choice\",\"description\":\"Choose one of: use_custom_cluster_role_list, use_default_cluster_roles\",\"choices\":[\"use_custom_cluster_role_list\",\"use_default_cluster_roles\"],\"required\":false},{\"group_name\":\"cluster_scoped_resource_access_choice\",\"description\":\"Choose one of: cluster_scoped_access_deny, cluster_scoped_access_permit\",\"choices\":[\"cluster_scoped_access_deny\",\"cluster_scoped_access_permit\"],\"required\":false},{\"group_name\":\"global_access_choice\",\"description\":\"Choose one of: global_access_enable, no_global_access\",\"choices\":[\"global_access_enable\",\"no_global_access\"],\"required\":false},{\"group_name\":\"insecure_registries_choice\",\"description\":\"Choose one of: insecure_registry_list, no_insecure_registries\",\"choices\":[\"insecure_registry_list\",\"no_insecure_registries\"],\"required\":false},{\"group_name\":\"local_access_choice\",\"description\":\"Choose one of: local_access_config, no_local_access\",\"choices\":[\"local_access_config\",\"no_local_access\"],\"required\":false},{\"group_name\":\"pod_security_admission_choice\",\"description\":\"Choose one of: use_custom_pod_security_admission, use_default_pod_security_admission\",\"choices\":[\"use_custom_pod_security_admission\",\"use_default_pod_security_admission\"],\"required\":false},{\"group_name\":\"pod_security_policy_choice\",\"description\":\"Choose one of: use_custom_psp_list, use_default_psp\",\"choices\":[\"use_custom_psp_list\",\"use_default_psp\"],\"required\":false},{\"group_name\":\"vk8s_namespace_access_choice\",\"description\":\"Choose one of: vk8s_namespace_access_deny, vk8s_namespace_access_permit\",\"choices\":[\"vk8s_namespace_access_deny\",\"vk8s_namespace_access_permit\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"apps_choice\",\"description\":\"Choose one of: cluster_wide_app_list, no_cluster_wide_apps\",\"choices\":{\"cluster_wide_app_list\":{},\"no_cluster_wide_apps\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for k8s_clusterCreateSpecType\",\"required_fields\":[\"cluster_scoped_access_deny\",\"cluster_scoped_access_permit\",\"cluster_wide_app_list\",\"global_access_enable\",\"insecure_registry_list\",\"local_access_config\",\"no_cluster_wide_apps\",\"no_global_access\",\"no_insecure_registries\",\"no_local_access\",\"use_custom_cluster_role_bindings\",\"use_custom_cluster_role_list\",\"use_custom_pod_security_admission\",\"use_custom_psp_list\",\"use_default_cluster_role_bindings\",\"use_default_cluster_roles\",\"use_default_pod_security_admission\",\"use_default_psp\",\"vk8s_namespace_access_deny\",\"vk8s_namespace_access_permit\"],\"example_yaml\":\"# Minimal example for k8s_clusterCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  cluster_scoped_access_deny: value\\n  cluster_scoped_access_permit: value\\n  cluster_wide_app_list: value\\n  global_access_enable: value\\n  insecure_registry_list: value\",\"example_command\":\"xcsh virtual create k8s_cluster -n default -f example.yaml\",\"domain\":\"site_management\"}"),
 	},
 	"k8s_cluster_role": {
 		ResourceName:         "k8s_cluster_role",
@@ -634,7 +634,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"rule_choice\",\"description\":\"Choose one of: k8s_cluster_role_selector, policy_rule_list, yaml\",\"choices\":[\"k8s_cluster_role_selector\",\"policy_rule_list\",\"yaml\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"rule_choice\",\"description\":\"Choose one of: k8s_cluster_role_selector, policy_rule_list, yaml\",\"choices\":{\"k8s_cluster_role_selector\":{},\"policy_rule_list\":{},\"yaml\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for k8s_cluster_roleCreateSpecType\",\"required_fields\":[\"k8s_cluster_role_selector\",\"policy_rule_list\",\"yaml\"],\"example_yaml\":\"# Minimal example for k8s_cluster_roleCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  k8s_cluster_role_selector: value\\n  policy_rule_list: value\\n  yaml: value\",\"example_command\":\"xcsh virtual create k8s_cluster_role -n default -f example.yaml\",\"domain\":\"site_management\"}"),
 	},
 	"k8s_cluster_role_binding": {
 		ResourceName:         "k8s_cluster_role_binding",
@@ -643,7 +643,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for k8s_cluster_role_bindingCreateSpecType\",\"required_fields\":[\"k8s_cluster_role\",\"subjects\"],\"example_yaml\":\"# Minimal example for k8s_cluster_role_bindingCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  k8s_cluster_role: value\\n  subjects: value\",\"example_command\":\"xcsh virtual create k8s_cluster_role_binding -n default -f example.yaml\",\"domain\":\"site_management\"}"),
 	},
 	"k8s_pod_security_admission": {
 		ResourceName:         "k8s_pod_security_admission",
@@ -652,7 +652,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for k8s_pod_security_admissionCreateSpecType\",\"required_fields\":[\"pod_security_admission_specs\"],\"example_yaml\":\"# Minimal example for k8s_pod_security_admissionCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  pod_security_admission_specs: value\",\"example_command\":\"xcsh virtual create k8s_pod_security_admission -n default -f example.yaml\",\"domain\":\"kubernetes_and_orchestration\"}"),
 	},
 	"k8s_pod_security_policy": {
 		ResourceName:         "k8s_pod_security_policy",
@@ -661,7 +661,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"config_method_choice\",\"description\":\"Choose one of: psp_spec, yaml\",\"choices\":[\"psp_spec\",\"yaml\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"config_method_choice\",\"description\":\"Choose one of: psp_spec, yaml\",\"choices\":{\"psp_spec\":{},\"yaml\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for k8s_pod_security_policyCreateSpecType\",\"required_fields\":[\"psp_spec\",\"yaml\"],\"example_yaml\":\"# Minimal example for k8s_pod_security_policyCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  psp_spec: value\\n  yaml: value\",\"example_command\":\"xcsh virtual create k8s_pod_security_policy -n default -f example.yaml\",\"domain\":\"kubernetes_and_orchestration\"}"),
 	},
 	"known_label": {
 		ResourceName:         "known_label",
@@ -670,7 +670,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for known_labelCreateRequest\",\"required_fields\":[\"description\",\"key\",\"namespace\",\"value\"],\"example_yaml\":\"# Minimal example for known_labelCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  description: value\\n  key: value\\n  namespace: value\\n  value: value\",\"example_command\":\"xcsh virtual create known_label -n default -f example.yaml\",\"domain\":\"users\"}"),
 	},
 	"known_label_key": {
 		ResourceName:         "known_label_key",
@@ -679,7 +679,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for known_label_keyCreateRequest\",\"required_fields\":[\"description\",\"key\",\"namespace\"],\"example_yaml\":\"# Minimal example for known_label_keyCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  description: value\\n  key: value\\n  namespace: value\",\"example_command\":\"xcsh virtual create known_label_key -n default -f example.yaml\",\"domain\":\"users\"}"),
 	},
 	"log_receiver": {
 		ResourceName:         "log_receiver",
@@ -688,7 +688,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"log_receiver_choice\",\"description\":\"Choose one of: syslog\",\"choices\":[\"syslog\"],\"required\":false},{\"group_name\":\"where_choice\",\"description\":\"Choose one of: site_local\",\"choices\":[\"site_local\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"log_receiver_choice\",\"description\":\"Choose one of: syslog\",\"choices\":{\"syslog\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for log_receiverCreateSpecType\",\"required_fields\":[\"site_local\",\"syslog\"],\"example_yaml\":\"# Minimal example for log_receiverCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  site_local: value\\n  syslog: value\",\"example_command\":\"xcsh virtual create log_receiver -n default -f example.yaml\",\"domain\":\"statistics\"}"),
 	},
 	"malicious_user_mitigation": {
 		ResourceName:         "malicious_user_mitigation",
@@ -697,7 +697,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for malicious_user_mitigationCreateSpecType\",\"required_fields\":[\"mitigation_type\"],\"example_yaml\":\"# Minimal example for malicious_user_mitigationCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  mitigation_type: value\",\"example_command\":\"xcsh virtual create malicious_user_mitigation -n default -f example.yaml\",\"domain\":\"secops_and_incident_response\"}"),
 	},
 	"namespace": {
 		ResourceName:         "namespace",
@@ -706,7 +706,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for namespaceCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for namespaceCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create namespace -n default -f example.yaml\",\"domain\":\"tenant_and_identity\"}"),
 	},
 	"nat_policy": {
 		ResourceName:         "nat_policy",
@@ -715,7 +715,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"applies_to_choice\",\"description\":\"Choose one of: site\",\"choices\":[\"site\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"applies_to_choice\",\"description\":\"Choose one of: site\",\"choices\":{\"site\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for nat_policyCreateSpecType\",\"required_fields\":[\"rules\",\"site\"],\"example_yaml\":\"# Minimal example for nat_policyCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  rules: value\\n  site: value\",\"example_command\":\"xcsh virtual create nat_policy -n default -f example.yaml\",\"domain\":\"network_security\"}"),
 	},
 	"network_connector": {
 		ResourceName:         "network_connector",
@@ -724,7 +724,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"connector_choice\",\"description\":\"Choose one of: sli_to_global_dr, sli_to_slo_snat, slo_to_global_dr\",\"choices\":[\"sli_to_global_dr\",\"sli_to_slo_snat\",\"slo_to_global_dr\"],\"required\":false},{\"group_name\":\"forward_proxy_choice\",\"description\":\"Choose one of: disable_forward_proxy, enable_forward_proxy\",\"choices\":[\"disable_forward_proxy\",\"enable_forward_proxy\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"connector_choice\",\"description\":\"Choose one of: sli_to_global_dr, sli_to_slo_snat, slo_to_global_dr\",\"choices\":{\"sli_to_global_dr\":{},\"sli_to_slo_snat\":{},\"slo_to_global_dr\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for network_connectorCreateSpecType\",\"required_fields\":[\"disable_forward_proxy\",\"enable_forward_proxy\",\"sli_to_global_dr\",\"sli_to_slo_snat\",\"slo_to_global_dr\"],\"example_yaml\":\"# Minimal example for network_connectorCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  disable_forward_proxy: value\\n  enable_forward_proxy: value\\n  sli_to_global_dr: value\\n  sli_to_slo_snat: value\\n  slo_to_global_dr: value\",\"example_command\":\"xcsh virtual create network_connector -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"network_firewall": {
 		ResourceName:         "network_firewall",
@@ -733,7 +733,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"fast_acl_choice\",\"description\":\"Choose one of: active_fast_acls, disable_fast_acl\",\"choices\":[\"active_fast_acls\",\"disable_fast_acl\"],\"required\":false},{\"group_name\":\"forward_proxy_policy_choice\",\"description\":\"Choose one of: active_forward_proxy_policies, disable_forward_proxy_policy\",\"choices\":[\"active_forward_proxy_policies\",\"disable_forward_proxy_policy\"],\"required\":false},{\"group_name\":\"network_policy_choice\",\"description\":\"Choose one of: active_enhanced_firewall_policies, active_network_policies, disable_network_policy\",\"choices\":[\"active_enhanced_firewall_policies\",\"active_network_policies\",\"disable_network_policy\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"fast_acl_choice\",\"description\":\"Choose one of: active_fast_acls, disable_fast_acl\",\"choices\":{\"active_fast_acls\":{},\"disable_fast_acl\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for network_firewallCreateSpecType\",\"required_fields\":[\"active_enhanced_firewall_policies\",\"active_fast_acls\",\"active_forward_proxy_policies\",\"active_network_policies\",\"disable_fast_acl\",\"disable_forward_proxy_policy\",\"disable_network_policy\"],\"example_yaml\":\"# Minimal example for network_firewallCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  active_enhanced_firewall_policies: value\\n  active_fast_acls: value\\n  active_forward_proxy_policies: value\\n  active_network_policies: value\\n  disable_fast_acl: value\",\"example_command\":\"xcsh waf create network_firewall -n default -f example.yaml\",\"domain\":\"network_security\"}"),
 	},
 	"network_interface": {
 		ResourceName:         "network_interface",
@@ -742,7 +742,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"interface_choice\",\"description\":\"Choose one of: dedicated_interface, dedicated_management_interface, ethernet_interface, layer2_interface, tunnel_interface\",\"choices\":[\"dedicated_interface\",\"dedicated_management_interface\",\"ethernet_interface\",\"layer2_interface\",\"tunnel_interface\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"interface_choice\",\"description\":\"Choose one of: dedicated_interface, dedicated_management_interface, ethernet_interface, layer2_interface, tunnel_interface\",\"choices\":{\"dedicated_interface\":{},\"dedicated_management_interface\":{},\"ethernet_interface\":{},\"layer2_interface\":{},\"tunnel_interface\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for network_interfaceCreateSpecType\",\"required_fields\":[\"dedicated_interface\",\"dedicated_management_interface\",\"ethernet_interface\",\"layer2_interface\",\"tunnel_interface\"],\"example_yaml\":\"# Minimal example for network_interfaceCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  dedicated_interface: value\\n  dedicated_management_interface: value\\n  ethernet_interface: value\\n  layer2_interface: value\\n  tunnel_interface: value\",\"example_command\":\"xcsh virtual create network_interface -n default -f example.yaml\",\"domain\":\"ce_management\"}"),
 	},
 	"network_policy": {
 		ResourceName:         "network_policy",
@@ -751,7 +751,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for network_policyCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for network_policyCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create network_policy -n default -f example.yaml\",\"domain\":\"network_security\"}"),
 	},
 	"network_policy_rule": {
 		ResourceName:         "network_policy_rule",
@@ -760,7 +760,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"remote_endpoint\",\"description\":\"Choose one of: ip_prefix_set, prefix, prefix_selector\",\"choices\":[\"ip_prefix_set\",\"prefix\",\"prefix_selector\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"remote_endpoint\",\"description\":\"Choose one of: ip_prefix_set, prefix, prefix_selector\",\"choices\":{\"ip_prefix_set\":{},\"prefix\":{},\"prefix_selector\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for network_policy_ruleCreateSpecType\",\"required_fields\":[\"action\",\"advanced_action\",\"ip_prefix_set\",\"label_matcher\",\"ports\",\"prefix\",\"prefix_selector\",\"protocol\"],\"example_yaml\":\"# Minimal example for network_policy_ruleCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  action: value\\n  advanced_action: value\\n  ip_prefix_set: value\\n  label_matcher: value\\n  ports: value\",\"example_command\":\"xcsh virtual create network_policy_rule -n default -f example.yaml\",\"domain\":\"network_security\"}"),
 	},
 	"network_policy_view": {
 		ResourceName:         "network_policy_view",
@@ -769,7 +769,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewsnetwork_policy_viewCreateSpecType\",\"required_fields\":[\"egress_rules\",\"endpoint\",\"ingress_rules\"],\"example_yaml\":\"# Minimal example for viewsnetwork_policy_viewCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  egress_rules: value\\n  endpoint: value\\n  ingress_rules: value\",\"example_command\":\"xcsh virtual create viewsnetwork_policy_view -n default -f example.yaml\",\"domain\":\"network_security\"}"),
 	},
 	"nfv_service": {
 		ResourceName:         "nfv_service",
@@ -778,7 +778,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for nfv_serviceCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for nfv_serviceCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create nfv_service -n default -f example.yaml\",\"domain\":\"service_mesh\"}"),
 	},
 	"origin_pool": {
 		ResourceName:         "origin_pool",
@@ -796,7 +796,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for policerCreateSpecType\",\"required_fields\":[\"burst_size\",\"committed_information_rate\",\"policer_mode\",\"policer_type\"],\"example_yaml\":\"# Minimal example for policerCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  burst_size: value\\n  committed_information_rate: value\\n  policer_mode: value\\n  policer_type: value\",\"example_command\":\"xcsh virtual create policer -n default -f example.yaml\",\"domain\":\"rate_limiting\"}"),
 	},
 	"policy_based_routing": {
 		ResourceName:         "policy_based_routing",
@@ -805,7 +805,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"policy_choice\",\"description\":\"Choose one of: forward_proxy_pbr, network_pbr\",\"choices\":[\"forward_proxy_pbr\",\"network_pbr\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"policy_choice\",\"description\":\"Choose one of: forward_proxy_pbr, network_pbr\",\"choices\":{\"forward_proxy_pbr\":{},\"network_pbr\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewspolicy_based_routingCreateSpecType\",\"required_fields\":[\"forward_proxy_pbr\",\"forwarding_class_list\",\"network_pbr\"],\"example_yaml\":\"# Minimal example for viewspolicy_based_routingCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  forward_proxy_pbr: value\\n  forwarding_class_list: value\\n  network_pbr: value\",\"example_command\":\"xcsh virtual create viewspolicy_based_routing -n default -f example.yaml\",\"domain\":\"network_security\"}"),
 	},
 	"protocol_inspection": {
 		ResourceName:         "protocol_inspection",
@@ -814,7 +814,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for protocol_inspectionCreateSpecType\",\"required_fields\":[\"action\",\"enable_disable_compliance_checks\",\"enable_disable_signatures\"],\"example_yaml\":\"# Minimal example for protocol_inspectionCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  action: value\\n  enable_disable_compliance_checks: value\\n  enable_disable_signatures: value\",\"example_command\":\"xcsh virtual create protocol_inspection -n default -f example.yaml\",\"domain\":\"waf\"}"),
 	},
 	"protocol_policer": {
 		ResourceName:         "protocol_policer",
@@ -823,7 +823,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for protocol_policerCreateSpecType\",\"required_fields\":[\"protocol_policer\"],\"example_yaml\":\"# Minimal example for protocol_policerCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  protocol_policer: value\",\"example_command\":\"xcsh virtual create protocol_policer -n default -f example.yaml\",\"domain\":\"rate_limiting\"}"),
 	},
 	"proxy": {
 		ResourceName:         "proxy",
@@ -832,7 +832,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"network_choice\",\"description\":\"Choose one of: site_local_inside_network, site_local_network\",\"choices\":[\"site_local_inside_network\",\"site_local_network\"],\"required\":false},{\"group_name\":\"proxy_choice\",\"description\":\"Choose one of: dynamic_proxy, http_proxy\",\"choices\":[\"dynamic_proxy\",\"http_proxy\"],\"required\":false},{\"group_name\":\"proxy_policy_choice\",\"description\":\"Choose one of: active_forward_proxy_policies, no_forward_proxy_policy\",\"choices\":[\"active_forward_proxy_policies\",\"no_forward_proxy_policy\"],\"required\":false},{\"group_name\":\"site_choice\",\"description\":\"Choose one of: do_not_advertise, site_virtual_sites\",\"choices\":[\"do_not_advertise\",\"site_virtual_sites\"],\"required\":false},{\"group_name\":\"tls_interception_choice\",\"description\":\"Choose one of: no_interception, tls_intercept\",\"choices\":[\"no_interception\",\"tls_intercept\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"network_choice\",\"description\":\"Choose one of: site_local_inside_network, site_local_network\",\"choices\":{\"site_local_inside_network\":{},\"site_local_network\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewsproxyCreateSpecType\",\"required_fields\":[\"active_forward_proxy_policies\",\"connection_timeout\",\"do_not_advertise\",\"dynamic_proxy\",\"http_proxy\",\"no_forward_proxy_policy\",\"no_interception\",\"site_local_inside_network\",\"site_local_network\",\"site_virtual_sites\",\"tls_intercept\"],\"example_yaml\":\"# Minimal example for viewsproxyCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  active_forward_proxy_policies: value\\n  connection_timeout: value\\n  do_not_advertise: value\\n  dynamic_proxy: value\\n  http_proxy: value\",\"example_command\":\"xcsh virtual create viewsproxy -n default -f example.yaml\",\"domain\":\"other\"}"),
 	},
 	"rate_limiter": {
 		ResourceName:         "rate_limiter",
@@ -841,7 +841,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for rate_limiterCreateSpecType\",\"required_fields\":[\"limits\",\"user_identification\"],\"example_yaml\":\"# Minimal example for rate_limiterCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  limits: value\\n  user_identification: value\",\"example_command\":\"xcsh virtual create rate_limiter -n default -f example.yaml\",\"domain\":\"rate_limiting\"}"),
 	},
 	"rate_limiter_policy": {
 		ResourceName:         "rate_limiter_policy",
@@ -850,7 +850,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"server_choice\",\"description\":\"Choose one of: any_server, server_name, server_name_matcher, server_selector\",\"choices\":[\"any_server\",\"server_name\",\"server_name_matcher\",\"server_selector\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"server_choice\",\"description\":\"Choose one of: any_server, server_name, server_name_matcher, server_selector\",\"choices\":{\"any_server\":{},\"server_name\":{},\"server_name_matcher\":{},\"server_selector\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewsrate_limiter_policyCreateSpecType\",\"required_fields\":[\"any_server\",\"rules\",\"server_name\",\"server_name_matcher\",\"server_selector\"],\"example_yaml\":\"# Minimal example for viewsrate_limiter_policyCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  any_server: value\\n  rules: value\\n  server_name: value\\n  server_name_matcher: value\\n  server_selector: value\",\"example_command\":\"xcsh virtual create viewsrate_limiter_policy -n default -f example.yaml\",\"domain\":\"rate_limiting\"}"),
 	},
 	"registration": {
 		ResourceName:         "registration",
@@ -859,7 +859,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for registrationCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for registrationCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create registration -n default -f example.yaml\",\"domain\":\"ce_management\"}"),
 	},
 	"report_config": {
 		ResourceName:         "report_config",
@@ -868,7 +868,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"report_type\",\"description\":\"Choose one of: bot_defense, waap\",\"choices\":[\"bot_defense\",\"waap\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"report_type\",\"description\":\"Choose one of: bot_defense, waap\",\"choices\":{\"bot_defense\":{},\"waap\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for report_configCreateSpecType\",\"required_fields\":[\"report_recipients\",\"waap\"],\"example_yaml\":\"# Minimal example for report_configCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  report_recipients: value\\n  waap: value\",\"example_command\":\"xcsh virtual create report_config -n default -f example.yaml\",\"domain\":\"statistics\"}"),
 	},
 	"role": {
 		ResourceName:         "role",
@@ -877,7 +877,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for roleCreateSpecType\",\"required_fields\":[],\"example_yaml\":\"# Minimal example for roleCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\",\"example_command\":\"xcsh virtual create role -n default -f example.yaml\",\"domain\":\"tenant_and_identity\"}"),
 	},
 	"route": {
 		ResourceName:         "route",
@@ -886,7 +886,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for routeCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for routeCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create route -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"secret_management_access": {
 		ResourceName:         "secret_management_access",
@@ -895,7 +895,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for secret_management_accessCreateSpecType\",\"required_fields\":[\"access_info\",\"provider_name\",\"where\"],\"example_yaml\":\"# Minimal example for secret_management_accessCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  access_info: value\\n  provider_name: value\\n  where: value\",\"example_command\":\"xcsh virtual create secret_management_access -n default -f example.yaml\",\"domain\":\"secops_and_incident_response\"}"),
 	},
 	"secret_policy": {
 		ResourceName:         "secret_policy",
@@ -904,7 +904,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for secret_policyCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for secret_policyCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create secret_policy -n default -f example.yaml\",\"domain\":\"blindfold\"}"),
 	},
 	"secret_policy_rule": {
 		ResourceName:         "secret_policy_rule",
@@ -913,7 +913,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for secret_policy_ruleCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for secret_policy_ruleCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create secret_policy_rule -n default -f example.yaml\",\"domain\":\"blindfold\"}"),
 	},
 	"securemesh_site": {
 		ResourceName:         "securemesh_site",
@@ -922,7 +922,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"blocked_services_choice\",\"description\":\"Choose one of: blocked_services, default_blocked_services\",\"choices\":[\"blocked_services\",\"default_blocked_services\"],\"required\":false},{\"group_name\":\"bond_choice\",\"description\":\"Choose one of: bond_device_list, no_bond_devices\",\"choices\":[\"bond_device_list\",\"no_bond_devices\"],\"required\":false},{\"group_name\":\"logs_receiver_choice\",\"description\":\"Choose one of: log_receiver, logs_streaming_disabled\",\"choices\":[\"log_receiver\",\"logs_streaming_disabled\"],\"required\":false},{\"group_name\":\"network_cfg_choice\",\"description\":\"Choose one of: custom_network_config, default_network_config\",\"choices\":[\"custom_network_config\",\"default_network_config\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"blocked_services_choice\",\"description\":\"Choose one of: blocked_services, default_blocked_services\",\"choices\":{\"blocked_services\":{},\"default_blocked_services\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewssecuremesh_siteCreateSpecType\",\"required_fields\":[\"address\",\"blocked_services\",\"bond_device_list\",\"coordinates\",\"custom_network_config\",\"default_blocked_services\",\"default_network_config\",\"kubernetes_upgrade_drain\",\"log_receiver\",\"logs_streaming_disabled\",\"master_node_configuration\",\"no_bond_devices\",\"offline_survivability_mode\",\"os\",\"performance_enhancement_mode\",\"sw\",\"volterra_certified_hw\",\"worker_nodes\"],\"example_yaml\":\"# Minimal example for viewssecuremesh_siteCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  address: value\\n  blocked_services: value\\n  bond_device_list: value\\n  coordinates: value\\n  custom_network_config: value\",\"example_command\":\"xcsh virtual create viewssecuremesh_site -n default -f example.yaml\",\"domain\":\"site_management\"}"),
 	},
 	"securemesh_site_v2": {
 		ResourceName:         "securemesh_site_v2",
@@ -931,7 +931,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"blocked_services_choice\",\"description\":\"Choose one of: block_all_services, blocked_services\",\"choices\":[\"block_all_services\",\"blocked_services\"],\"required\":false},{\"group_name\":\"enterprise_proxy_choice\",\"description\":\"Choose one of: custom_proxy, f5_proxy\",\"choices\":[\"custom_proxy\",\"f5_proxy\"],\"required\":false},{\"group_name\":\"forward_proxy_choice\",\"description\":\"Choose one of: active_forward_proxy_policies, no_forward_proxy\",\"choices\":[\"active_forward_proxy_policies\",\"no_forward_proxy\"],\"required\":false},{\"group_name\":\"logs_receiver_choice\",\"description\":\"Choose one of: log_receiver, logs_streaming_disabled\",\"choices\":[\"log_receiver\",\"logs_streaming_disabled\"],\"required\":false},{\"group_name\":\"network_policy_choice\",\"description\":\"Choose one of: active_enhanced_firewall_policies, no_network_policy\",\"choices\":[\"active_enhanced_firewall_policies\",\"no_network_policy\"],\"required\":false},{\"group_name\":\"node_ha_choice\",\"description\":\"Choose one of: disable_ha, enable_ha\",\"choices\":[\"disable_ha\",\"enable_ha\"],\"required\":false},{\"group_name\":\"provider_choice\",\"description\":\"Choose one of: aws, azure, baremetal, equinix, gcp, kvm, nutanix, oci, openstack, vmware\",\"choices\":[\"aws\",\"azure\",\"baremetal\",\"equinix\",\"gcp\",\"kvm\",\"nutanix\",\"oci\",\"openstack\",\"vmware\"],\"required\":false},{\"group_name\":\"proxy_bypass_choice\",\"description\":\"Choose one of: custom_proxy_bypass, no_proxy_bypass\",\"choices\":[\"custom_proxy_bypass\",\"no_proxy_bypass\"],\"required\":false},{\"group_name\":\"s2s_connectivity_sli_choice\",\"description\":\"Choose one of: dc_cluster_group_sli, no_s2s_connectivity_sli\",\"choices\":[\"dc_cluster_group_sli\",\"no_s2s_connectivity_sli\"],\"required\":false},{\"group_name\":\"s2s_connectivity_slo_choice\",\"description\":\"Choose one of: dc_cluster_group_slo, no_s2s_connectivity_slo, site_mesh_group_on_slo\",\"choices\":[\"dc_cluster_group_slo\",\"no_s2s_connectivity_slo\",\"site_mesh_group_on_slo\"],\"required\":false},{\"group_name\":\"url_categorization_choice\",\"description\":\"Choose one of: disable_url_categorization, enable_url_categorization\",\"choices\":[\"disable_url_categorization\",\"enable_url_categorization\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"blocked_services_choice\",\"description\":\"Choose one of: block_all_services, blocked_services\",\"choices\":{\"block_all_services\":{},\"blocked_services\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewssecuremesh_site_v2CreateSpecType\",\"required_fields\":[\"active_enhanced_firewall_policies\",\"active_forward_proxy_policies\",\"admin_user_credentials\",\"aws\",\"azure\",\"baremetal\",\"block_all_services\",\"blocked_services\",\"custom_proxy\",\"custom_proxy_bypass\",\"dc_cluster_group_sli\",\"dc_cluster_group_slo\",\"disable_ha\",\"disable_url_categorization\",\"dns_ntp_config\",\"enable_ha\",\"enable_url_categorization\",\"equinix\",\"f5_proxy\",\"gcp\",\"kvm\",\"load_balancing\",\"local_vrf\",\"log_receiver\",\"logs_streaming_disabled\",\"no_forward_proxy\",\"no_network_policy\",\"no_proxy_bypass\",\"no_s2s_connectivity_sli\",\"no_s2s_connectivity_slo\",\"nutanix\",\"oci\",\"offline_survivability_mode\",\"openstack\",\"performance_enhancement_mode\",\"re_select\",\"site_mesh_group_on_slo\",\"software_settings\",\"tunnel_dead_timeout\",\"tunnel_type\",\"upgrade_settings\",\"vmware\"],\"example_yaml\":\"# Minimal example for viewssecuremesh_site_v2CreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  active_enhanced_firewall_policies: value\\n  active_forward_proxy_policies: value\\n  admin_user_credentials: value\\n  aws: value\\n  azure: value\",\"example_command\":\"xcsh virtual create viewssecuremesh_site_v2 -n default -f example.yaml\",\"domain\":\"site_management\"}"),
 	},
 	"segment": {
 		ResourceName:         "segment",
@@ -940,7 +940,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for segmentCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for segmentCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create segment -n default -f example.yaml\",\"domain\":\"network_security\"}"),
 	},
 	"sensitive_data_policy": {
 		ResourceName:         "sensitive_data_policy",
@@ -949,7 +949,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for sensitive_data_policyCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for sensitive_data_policyCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create sensitive_data_policy -n default -f example.yaml\",\"domain\":\"data_and_privacy_security\"}"),
 	},
 	"service_policy": {
 		ResourceName:         "service_policy",
@@ -958,7 +958,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for service_policyCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for service_policyCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create service_policy -n default -f example.yaml\",\"domain\":\"virtual\"}"),
 	},
 	"service_policy_rule": {
 		ResourceName:         "service_policy_rule",
@@ -967,7 +967,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for service_policy_ruleCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for service_policy_ruleCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create service_policy_rule -n default -f example.yaml\",\"domain\":\"virtual\"}"),
 	},
 	"site_mesh_group": {
 		ResourceName:         "site_mesh_group",
@@ -976,7 +976,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for site_mesh_groupCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for site_mesh_groupCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create site_mesh_group -n default -f example.yaml\",\"domain\":\"service_mesh\"}"),
 	},
 	"srv6_network_slice": {
 		ResourceName:         "srv6_network_slice",
@@ -985,7 +985,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for srv6_network_sliceCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for srv6_network_sliceCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create srv6_network_slice -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"subnet": {
 		ResourceName:         "subnet",
@@ -994,7 +994,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for subnetCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for subnetCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create subnet -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"tcp_loadbalancer": {
 		ResourceName:         "tcp_loadbalancer",
@@ -1012,7 +1012,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for tenant_configurationCreateSpecType\",\"required_fields\":[\"basic_configuration\",\"brute_force_detection_settings\",\"password_policy\"],\"example_yaml\":\"# Minimal example for tenant_configurationCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  basic_configuration: value\\n  brute_force_detection_settings: value\\n  password_policy: value\",\"example_command\":\"xcsh virtual create tenant_configuration -n default -f example.yaml\",\"domain\":\"tenant_and_identity\"}"),
 	},
 	"token": {
 		ResourceName:         "token",
@@ -1021,7 +1021,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for tokenCreateSpecType\",\"required_fields\":[],\"example_yaml\":\"# Minimal example for tokenCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\",\"example_command\":\"xcsh virtual create token -n default -f example.yaml\",\"domain\":\"users\"}"),
 	},
 	"tpm_api_key": {
 		ResourceName:         "tpm_api_key",
@@ -1030,7 +1030,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for tpm_api_keyCreateSpecType\",\"required_fields\":[\"category_ref\",\"need_mtls\"],\"example_yaml\":\"# Minimal example for tpm_api_keyCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  category_ref: value\\n  need_mtls: value\",\"example_command\":\"xcsh virtual create tpm_api_key -n default -f example.yaml\",\"domain\":\"marketplace\"}"),
 	},
 	"tpm_category": {
 		ResourceName:         "tpm_category",
@@ -1039,7 +1039,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for tpm_categoryCreateSpecType\",\"required_fields\":[\"tpm_allow_list\",\"tpm_manager_ref\"],\"example_yaml\":\"# Minimal example for tpm_categoryCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  tpm_allow_list: value\\n  tpm_manager_ref: value\",\"example_command\":\"xcsh virtual create tpm_category -n default -f example.yaml\",\"domain\":\"marketplace\"}"),
 	},
 	"tpm_manager": {
 		ResourceName:         "tpm_manager",
@@ -1048,7 +1048,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for tpm_managerCreateSpecType\",\"required_fields\":[],\"example_yaml\":\"# Minimal example for tpm_managerCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\",\"example_command\":\"xcsh virtual create tpm_manager -n default -f example.yaml\",\"domain\":\"marketplace\"}"),
 	},
 	"trusted_ca_list": {
 		ResourceName:         "trusted_ca_list",
@@ -1057,7 +1057,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for trusted_ca_listCreateSpecType\",\"required_fields\":[\"trusted_ca_url\"],\"example_yaml\":\"# Minimal example for trusted_ca_listCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  trusted_ca_url: value\",\"example_command\":\"xcsh virtual create trusted_ca_list -n default -f example.yaml\",\"domain\":\"certificates\"}"),
 	},
 	"tunnel": {
 		ResourceName:         "tunnel",
@@ -1066,7 +1066,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for tunnelCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for tunnelCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create tunnel -n default -f example.yaml\",\"domain\":\"network\"}"),
 	},
 	"udp_loadbalancer": {
 		ResourceName:         "udp_loadbalancer",
@@ -1075,7 +1075,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"advertise_choice\",\"description\":\"Choose one of: advertise_custom, advertise_on_public, advertise_on_public_default_vip, do_not_advertise\",\"choices\":[\"advertise_custom\",\"advertise_on_public\",\"advertise_on_public_default_vip\",\"do_not_advertise\"],\"required\":false},{\"group_name\":\"hash_policy_choice\",\"description\":\"Choose one of: hash_policy_choice_random, hash_policy_choice_round_robin, hash_policy_choice_source_ip_stickiness\",\"choices\":[\"hash_policy_choice_random\",\"hash_policy_choice_round_robin\",\"hash_policy_choice_source_ip_stickiness\"],\"required\":false},{\"group_name\":\"loadbalancer_type\",\"description\":\"Choose one of: udp\",\"choices\":[\"udp\"],\"required\":false},{\"group_name\":\"port_choice\",\"description\":\"Choose one of: listen_port, port_ranges\",\"choices\":[\"listen_port\",\"port_ranges\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"advertise_choice\",\"description\":\"Choose one of: advertise_custom, advertise_on_public, advertise_on_public_default_vip, do_not_advertise\",\"choices\":{\"advertise_custom\":{},\"advertise_on_public\":{},\"advertise_on_public_default_vip\":{},\"do_not_advertise\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewsudp_loadbalancerCreateSpecType\",\"required_fields\":[\"advertise_custom\",\"advertise_on_public\",\"advertise_on_public_default_vip\",\"dns_volterra_managed\",\"do_not_advertise\",\"domains\",\"enable_per_packet_load_balancing\",\"hash_policy_choice_random\",\"hash_policy_choice_round_robin\",\"hash_policy_choice_source_ip_stickiness\",\"idle_timeout\",\"listen_port\",\"origin_pools_weights\",\"port_ranges\",\"udp\"],\"example_yaml\":\"# Minimal example for viewsudp_loadbalancerCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  advertise_custom: value\\n  advertise_on_public: value\\n  advertise_on_public_default_vip: value\\n  dns_volterra_managed: value\\n  do_not_advertise: value\",\"example_command\":\"xcsh virtual create viewsudp_loadbalancer -n default -f example.yaml\",\"domain\":\"other\"}"),
 	},
 	"usb_policy": {
 		ResourceName:         "usb_policy",
@@ -1084,7 +1084,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for usb_policyCreateSpecType\",\"required_fields\":[\"allowed_devices\"],\"example_yaml\":\"# Minimal example for usb_policyCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  allowed_devices: value\",\"example_command\":\"xcsh virtual create usb_policy -n default -f example.yaml\",\"domain\":\"ce_management\"}"),
 	},
 	"user_identification": {
 		ResourceName:         "user_identification",
@@ -1093,7 +1093,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for user_identificationCreateSpecType\",\"required_fields\":[\"rules\"],\"example_yaml\":\"# Minimal example for user_identificationCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  rules: value\",\"example_command\":\"xcsh virtual create user_identification -n default -f example.yaml\",\"domain\":\"tenant_and_identity\"}"),
 	},
 	"virtual_host": {
 		ResourceName:         "virtual_host",
@@ -1102,7 +1102,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for virtual_hostCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for virtual_hostCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create virtual_host -n default -f example.yaml\",\"domain\":\"service_mesh\"}"),
 	},
 	"virtual_k8s": {
 		ResourceName:         "virtual_k8s",
@@ -1111,7 +1111,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"service_isolation_choice\",\"description\":\"Choose one of: disabled, isolated\",\"choices\":[\"disabled\",\"isolated\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"service_isolation_choice\",\"description\":\"Choose one of: disabled, isolated\",\"choices\":{\"disabled\":{},\"isolated\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for virtual_k8sCreateSpecType\",\"required_fields\":[\"default_flavor_ref\",\"disabled\",\"isolated\",\"vsite_refs\"],\"example_yaml\":\"# Minimal example for virtual_k8sCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  default_flavor_ref: value\\n  disabled: value\\n  isolated: value\\n  vsite_refs: value\",\"example_command\":\"xcsh virtual create virtual_k8s -n default -f example.yaml\",\"domain\":\"kubernetes_and_orchestration\"}"),
 	},
 	"virtual_network": {
 		ResourceName:         "virtual_network",
@@ -1120,7 +1120,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"network_choice\",\"description\":\"Choose one of: global_network, legacy_type, site_local_inside_network, site_local_network\",\"choices\":[\"global_network\",\"legacy_type\",\"site_local_inside_network\",\"site_local_network\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"network_choice\",\"description\":\"Choose one of: global_network, legacy_type, site_local_inside_network, site_local_network\",\"choices\":{\"global_network\":{},\"legacy_type\":{},\"site_local_inside_network\":{},\"site_local_network\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for virtual_networkCreateSpecType\",\"required_fields\":[\"global_network\",\"legacy_type\",\"site_local_inside_network\",\"site_local_network\",\"static_routes\"],\"example_yaml\":\"# Minimal example for virtual_networkCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  global_network: value\\n  legacy_type: value\\n  site_local_inside_network: value\\n  site_local_network: value\\n  static_routes: value\",\"example_command\":\"xcsh virtual create virtual_network -n default -f example.yaml\",\"domain\":\"service_mesh\"}"),
 	},
 	"virtual_site": {
 		ResourceName:         "virtual_site",
@@ -1129,7 +1129,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for virtual_siteCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for virtual_siteCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create virtual_site -n default -f example.yaml\",\"domain\":\"site_management\"}"),
 	},
 	"voltshare_admin_policy": {
 		ResourceName:         "voltshare_admin_policy",
@@ -1138,7 +1138,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for voltshare_admin_policyCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for voltshare_admin_policyCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh virtual create voltshare_admin_policy -n default -f example.yaml\",\"domain\":\"marketplace\"}"),
 	},
 	"voltstack_site": {
 		ResourceName:         "voltstack_site",
@@ -1147,7 +1147,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"blocked_services_choice\",\"description\":\"Choose one of: blocked_services, default_blocked_services\",\"choices\":[\"blocked_services\",\"default_blocked_services\"],\"required\":false},{\"group_name\":\"bond_choice\",\"description\":\"Choose one of: bond_device_list, no_bond_devices\",\"choices\":[\"bond_device_list\",\"no_bond_devices\"],\"required\":false},{\"group_name\":\"gpu_choice\",\"description\":\"Choose one of: disable_gpu, enable_gpu, enable_vgpu\",\"choices\":[\"disable_gpu\",\"enable_gpu\",\"enable_vgpu\"],\"required\":false},{\"group_name\":\"k8s_cluster_choice\",\"description\":\"Choose one of: k8s_cluster, no_k8s_cluster\",\"choices\":[\"k8s_cluster\",\"no_k8s_cluster\"],\"required\":false},{\"group_name\":\"local_control_plane_choice\",\"description\":\"Choose one of: local_control_plane, no_local_control_plane\",\"choices\":[\"local_control_plane\",\"no_local_control_plane\"],\"required\":false},{\"group_name\":\"logs_receiver_choice\",\"description\":\"Choose one of: log_receiver, logs_streaming_disabled\",\"choices\":[\"log_receiver\",\"logs_streaming_disabled\"],\"required\":false},{\"group_name\":\"network_cfg_choice\",\"description\":\"Choose one of: custom_network_config, default_network_config\",\"choices\":[\"custom_network_config\",\"default_network_config\"],\"required\":false},{\"group_name\":\"sriov_interface_choice\",\"description\":\"Choose one of: default_sriov_interface, sriov_interfaces\",\"choices\":[\"default_sriov_interface\",\"sriov_interfaces\"],\"required\":false},{\"group_name\":\"storage_cfg_choice\",\"description\":\"Choose one of: custom_storage_config, default_storage_config\",\"choices\":[\"custom_storage_config\",\"default_storage_config\"],\"required\":false},{\"group_name\":\"usb_policy_choice\",\"description\":\"Choose one of: allow_all_usb, deny_all_usb, usb_policy\",\"choices\":[\"allow_all_usb\",\"deny_all_usb\",\"usb_policy\"],\"required\":false},{\"group_name\":\"vm_choice\",\"description\":\"Choose one of: disable_vm, enable_vm\",\"choices\":[\"disable_vm\",\"enable_vm\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"blocked_services_choice\",\"description\":\"Choose one of: blocked_services, default_blocked_services\",\"choices\":{\"blocked_services\":{},\"default_blocked_services\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewsvoltstack_siteCreateSpecType\",\"required_fields\":[\"address\",\"allow_all_usb\",\"blocked_services\",\"bond_device_list\",\"coordinates\",\"custom_dns\",\"custom_network_config\",\"custom_storage_config\",\"default_blocked_services\",\"default_network_config\",\"default_sriov_interface\",\"default_storage_config\",\"deny_all_usb\",\"disable_gpu\",\"disable_vm\",\"enable_gpu\",\"enable_vgpu\",\"enable_vm\",\"k8s_cluster\",\"kubernetes_upgrade_drain\",\"local_control_plane\",\"log_receiver\",\"logs_streaming_disabled\",\"master_node_configuration\",\"no_bond_devices\",\"no_k8s_cluster\",\"no_local_control_plane\",\"offline_survivability_mode\",\"os\",\"sriov_interfaces\",\"sw\",\"usb_policy\",\"volterra_certified_hw\",\"worker_nodes\"],\"example_yaml\":\"# Minimal example for viewsvoltstack_siteCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  address: value\\n  allow_all_usb: value\\n  blocked_services: value\\n  bond_device_list: value\\n  coordinates: value\",\"example_command\":\"xcsh virtual create viewsvoltstack_site -n default -f example.yaml\",\"domain\":\"site_management\"}"),
 	},
 	"waf_exclusion_policy": {
 		ResourceName:         "waf_exclusion_policy",
@@ -1156,7 +1156,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for waf_exclusion_policyCreateRequest\",\"required_fields\":[\"metadata\",\"spec\"],\"example_yaml\":\"# Minimal example for waf_exclusion_policyCreateRequest\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  spec: value\",\"example_command\":\"xcsh waf create waf_exclusion_policy -n default -f example.yaml\",\"domain\":\"waf\"}"),
 	},
 	"workload": {
 		ResourceName:         "workload",
@@ -1165,7 +1165,7 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[{\"group_name\":\"workload_choice\",\"description\":\"Choose one of: job, service, simple_service, stateful_service\",\"choices\":[\"job\",\"service\",\"simple_service\",\"stateful_service\"],\"required\":false}]"),
 		DecisionTree:         unmarshalDecisionTree("{\"field\":\"workload_choice\",\"description\":\"Choose one of: job, service, simple_service, stateful_service\",\"choices\":{\"job\":{},\"service\":{},\"simple_service\":{},\"stateful_service\":{}}}"),
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for viewsworkloadCreateSpecType\",\"required_fields\":[\"job\",\"service\",\"simple_service\",\"stateful_service\"],\"example_yaml\":\"# Minimal example for viewsworkloadCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  job: value\\n  service: value\\n  simple_service: value\\n  stateful_service: value\",\"example_command\":\"xcsh virtual create viewsworkload -n default -f example.yaml\",\"domain\":\"kubernetes_and_orchestration\"}"),
 	},
 	"workload_flavor": {
 		ResourceName:         "workload_flavor",
@@ -1174,6 +1174,6 @@ var ResourceSchemas = map[string]ResourceSchemaInfo{
 		OneOfGroups:          unmarshalOneOfGroups("[]"),
 		DecisionTree:         nil,
 		RequiredFields:       unmarshalStringSlice("null"),
-		MinimumConfiguration: nil,
+		MinimumConfiguration: unmarshalMinimumConfig("{\"description\":\"Minimum configuration for workload_flavorCreateSpecType\",\"required_fields\":[\"ephemeral_storage\",\"memory\",\"vcpus\"],\"example_yaml\":\"# Minimal example for workload_flavorCreateSpecType\\nmetadata:\\n  name: example\\n  namespace: default\\nspec:\\n  ephemeral_storage: value\\n  memory: value\\n  vcpus: value\",\"example_command\":\"xcsh virtual create workload_flavor -n default -f example.yaml\",\"domain\":\"kubernetes_and_orchestration\"}"),
 	},
 }
