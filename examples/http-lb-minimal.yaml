@@ -1,0 +1,32 @@
+# HTTP Load Balancer - Minimum Configuration
+#
+# Required fields:
+#   - metadata.name: Unique name for the load balancer
+#   - metadata.namespace: Target namespace
+#   - spec.domains: List of domain names to serve
+#   - spec.http OR spec.https OR spec.https_auto_cert: Listener configuration
+#
+# Create command:
+#   xcsh cdn create http_loadbalancer -n <namespace> -i http-lb-minimal.yaml
+#
+# List command:
+#   xcsh cdn list http_loadbalancer -n <namespace> --output-format json
+#
+# Get command:
+#   xcsh cdn get http_loadbalancer <name> -n <namespace> --output-format yaml
+#
+# Update command:
+#   xcsh cdn replace http_loadbalancer <name> -n <namespace> -i http-lb-minimal.yaml
+#
+# Delete command:
+#   xcsh cdn delete http_loadbalancer <name> -n <namespace>
+
+metadata:
+  name: example-http-lb
+  namespace: shared
+spec:
+  domains:
+    - example.example.com
+  http:
+    port: 80
+  advertise_on_public_default_vip: {}

@@ -42,6 +42,10 @@ type ResourceSchemaInfo struct {
 	// TierRestrictedFields maps field paths to their subscription tier requirements
 	// AI assistants can use this to determine which fields are available based on tier
 	TierRestrictedFields map[string]TierRequirement `json:"tier_restricted_fields,omitempty"`
+
+	// MinimumConfiguration provides a copy-paste ready minimal configuration example
+	// AI assistants use this to generate working configurations with minimum required fields
+	MinimumConfiguration *MinimumConfigSpec `json:"minimum_configuration,omitempty"`
 }
 
 // TierRequirement defines the subscription requirement for a field
@@ -55,6 +59,25 @@ type TierRequirement struct {
 
 	// Description explains why this tier is required
 	Description string `json:"description,omitempty"`
+}
+
+// MinimumConfigSpec provides the minimum viable configuration for a resource.
+// AI assistants use this to generate copy-paste ready examples.
+type MinimumConfigSpec struct {
+	// Description explains what this minimal configuration achieves
+	Description string `json:"description"`
+
+	// RequiredFields lists the fields that must be provided
+	RequiredFields []string `json:"required_fields"`
+
+	// ExampleYAML contains a complete, minimal YAML configuration
+	ExampleYAML string `json:"example_yaml"`
+
+	// ExampleCommand shows the CLI command to create the resource
+	ExampleCommand string `json:"example_command"`
+
+	// Domain is the xcsh domain for this resource (e.g., "cdn", "virtual")
+	Domain string `json:"domain"`
 }
 
 // FieldInfo contains complete metadata for a single field.

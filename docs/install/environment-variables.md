@@ -1,6 +1,6 @@
 # Environment Variables
 
-f5xcctl can be configured using environment variables. Run `f5xcctl --help` to see all available environment variables.
+xcsh can be configured using environment variables. Run `xcsh --help` to see all available environment variables.
 
 ## Authentication Variables
 
@@ -29,7 +29,7 @@ f5xcctl can be configured using environment variables. Run `f5xcctl --help` to s
 
 | Variable | Description | Related Flag |
 |----------|-------------|--------------|
-| `F5XC_CONFIG` | Path to the f5xcctl <domain> file. | `--config` |
+| `F5XC_CONFIG` | Path to the xcsh <domain> file. | `--config` |
 
 ## Usage Examples
 
@@ -46,7 +46,7 @@ f5xcctl can be configured using environment variables. Run `f5xcctl --help` to s
     export F5XC_P12_PASSWORD="your-password"
 
     # Run command
-    f5xcctl identity list namespace
+    xcsh identity list namespace
     ```
 
 === "Windows"
@@ -60,7 +60,7 @@ f5xcctl can be configured using environment variables. Run `f5xcctl --help` to s
     $env:F5XC_P12_PASSWORD = "your-password"
 
     # Run command
-    f5xcctl identity list namespace
+    xcsh identity list namespace
     ```
 
 ### Certificate Authentication
@@ -72,7 +72,7 @@ f5xcctl can be configured using environment variables. Run `f5xcctl --help` to s
     export F5XC_CERT="/path/to/cert.pem"
     export F5XC_KEY="/path/to/key.pem"
 
-    f5xcctl identity list namespace
+    xcsh identity list namespace
     ```
 
 === "Windows"
@@ -82,7 +82,7 @@ f5xcctl can be configured using environment variables. Run `f5xcctl --help` to s
     $env:F5XC_CERT = "C:\path\to\cert.pem"
     $env:F5XC_KEY = "C:\path\to\key.pem"
 
-    f5xcctl identity list namespace
+    xcsh identity list namespace
     ```
 
 ### JSON Output Default
@@ -93,7 +93,7 @@ f5xcctl can be configured using environment variables. Run `f5xcctl --help` to s
     export F5XC_OUTPUT="json"
 
     # All commands now output JSON by default
-    f5xcctl identity list namespace
+    xcsh identity list namespace
     ```
 
 === "Windows"
@@ -102,7 +102,7 @@ f5xcctl can be configured using environment variables. Run `f5xcctl --help` to s
     $env:F5XC_OUTPUT = "json"
 
     # All commands now output JSON by default
-    f5xcctl identity list namespace
+    xcsh identity list namespace
     ```
 
 ## Shell Configuration

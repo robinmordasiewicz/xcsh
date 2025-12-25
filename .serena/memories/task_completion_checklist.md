@@ -1,4 +1,4 @@
-# Task Completion Checklist for f5xcctl
+# Task Completion Checklist for xcsh
 
 ## Before Committing Code
 
@@ -33,8 +33,8 @@ make check              # Runs fmt, verify, and test-unit
 
 ```bash
 make build              # Build the binary
-./f5xcctl --help         # Verify CLI works
-./f5xcctl version        # Check version info
+./xcsh --help         # Verify CLI works
+./xcsh version        # Check version info
 ```
 
 ### Run Pre-commit Hooks

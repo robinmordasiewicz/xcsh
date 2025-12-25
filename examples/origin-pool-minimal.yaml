@@ -1,0 +1,23 @@
+# Origin Pool - Minimum Configuration
+#
+# Required fields:
+#   - metadata.name: Unique name for the origin pool
+#   - metadata.namespace: Target namespace
+#   - spec.origin_servers: List of backend servers
+#   - spec.port: Backend port
+#
+# Create command:
+#   xcsh cdn create origin_pool -n <namespace> -i origin-pool-minimal.yaml
+#
+# List command:
+#   xcsh cdn list origin_pool -n <namespace> --output-format json
+
+metadata:
+  name: example-origin-pool
+  namespace: shared
+spec:
+  origin_servers:
+    - public_ip:
+        ip: 192.168.1.100
+  port: 8080
+  loadbalancer_algorithm: ROUND_ROBIN

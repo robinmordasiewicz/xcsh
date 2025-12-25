@@ -1,6 +1,70 @@
 # Load Balancer Examples
 
-Examples for configuring HTTP and TCP load balancers.
+Examples for configuring HTTP and TCP load balancers with xcsh.
+
+## Minimum Configuration Requirements
+
+### HTTP Load Balancer - Required Fields
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `metadata.name` | ✅ | Unique name for the load balancer |
+| `metadata.namespace` | ✅ | Target namespace |
+| `spec.domains` | ✅ | List of domain names to serve |
+| `spec.http` OR `spec.https` OR `spec.https_auto_cert` | ✅ | Listener type (choose one) |
+| `spec.advertise_on_public_default_vip` | ✅ | Required for public internet access |
+
+### Minimal HTTP Load Balancer Example
+
+```yaml
+metadata:
+  name: my-http-lb
+  namespace: shared
+spec:
+  domains:
+    - myapp.example.com
+  http:
+    port: 80
+  advertise_on_public_default_vip: {}
+```
+
+**Create command:**
+
+```bash
+xcsh cdn create http_loadbalancer -n shared -i http-lb.yaml
+```
+
+## CRUD Quick Reference
+
+### Create
+
+```bash
+xcsh cdn create http_loadbalancer -n <namespace> -i <file.yaml>
+```
+
+### Read (List)
+
+```bash
+xcsh cdn list http_loadbalancer -n <namespace> --output-format json
+```
+
+### Read (Get)
+
+```bash
+xcsh cdn get http_loadbalancer <name> -n <namespace> --output-format yaml
+```
+
+### Update (Replace)
+
+```bash
+xcsh cdn replace http_loadbalancer <name> -n <namespace> -i <file.yaml>
+```
+
+### Delete
+
+```bash
+xcsh cdn delete http_loadbalancer <name> -n <namespace>
+```
 
 ## HTTP Load Balancer
 
@@ -33,6 +97,7 @@ spec:
     - example.com
   http:
     port: 80
+  advertise_on_public_default_vip: {}
   default_route_pools:
     - pool:
         name: example-origin-pool
@@ -43,18 +108,18 @@ spec:
 
 ```bash
 # Create origin pool
-f5xcctl load_balancer create origin_pool -i origin-pool.yaml
+xcsh cdn create origin_pool -n example-namespace -i origin-pool.yaml
 
 # Create load balancer
-f5xcctl load_balancer create http_loadbalancer -i http-lb.yaml
+xcsh cdn create http_loadbalancer -n example-namespace -i http-lb.yaml
 
 # Verify
-f5xcctl load_balancer get http_loadbalancer example-http-lb -n example-namespace
+xcsh cdn get http_loadbalancer example-http-lb -n example-namespace
 ```
 
 ### HTTPS Load Balancer
 
-Add TLS termination to your load balancer.
+Add TLS termination to your load balancer with automatic certificate management.
 
 **https-lb.yaml:**
 
@@ -68,6 +133,7 @@ spec:
   https_auto_cert:
     http_redirect: true
     add_hsts: true
+  advertise_on_public_default_vip: {}
   default_route_pools:
     - pool:
         name: example-origin-pool
@@ -89,6 +155,7 @@ spec:
     - example.com
   https_auto_cert:
     http_redirect: true
+  advertise_on_public_default_vip: {}
   default_route_pools:
     - pool:
         name: example-origin-pool
@@ -119,7 +186,7 @@ spec:
 **Deploy:**
 
 ```bash
-f5xcctl <domain> create tcp_loadbalancer -i tcp-lb.yaml
+xcsh virtual create tcp_loadbalancer -n example-namespace -i tcp-lb.yaml
 ```
 
 ## Health Checks
@@ -201,43 +268,43 @@ spec:
 
 ```bash
 # List all HTTP load balancers
-f5xcctl load_balancer list http_loadbalancer -n example-namespace
+xcsh cdn list http_loadbalancer -n example-namespace
 
 # List all TCP load balancers
-f5xcctl <domain> list tcp_loadbalancer -n example-namespace
+xcsh virtual list tcp_loadbalancer -n example-namespace
+
+# Output as JSON
+xcsh cdn list http_loadbalancer -n example-namespace --output-format json
 ```
 
 ### Get Details
 
 ```bash
-# Get as table
-f5xcctl load_balancer get http_loadbalancer example-lb -n example-namespace
+# Get as table (default)
+xcsh cdn get http_loadbalancer example-lb -n example-namespace
 
 # Get as YAML
-f5xcctl load_balancer get http_loadbalancer example-lb -n example-namespace --outfmt yaml
+xcsh cdn get http_loadbalancer example-lb -n example-namespace --output-format yaml
 
 # Get as JSON
-f5xcctl load_balancer get http_loadbalancer example-lb -n example-namespace --outfmt json
+xcsh cdn get http_loadbalancer example-lb -n example-namespace --output-format json
 ```
 
 ### Update Load Balancer
 
 ```bash
 # Export current config
-f5xcctl load_balancer get http_loadbalancer example-lb -n example-namespace --outfmt yaml > lb.yaml
+xcsh cdn get http_loadbalancer example-lb -n example-namespace --output-format yaml > lb.yaml
 
 # Edit lb.yaml...
 
-# Apply changes
-f5xcctl load_balancer replace http_loadbalancer -i lb.yaml
+# Apply changes (requires confirmation)
+xcsh cdn replace http_loadbalancer example-lb -n example-namespace -i lb.yaml
 ```
 
 ### Delete Load Balancer
 
 ```bash
-# With confirmation
-f5xcctl load_balancer delete http_loadbalancer example-lb -n example-namespace
-
-# Skip confirmation
-f5xcctl load_balancer delete http_loadbalancer example-lb -n example-namespace --yes
+# With confirmation prompt
+xcsh cdn delete http_loadbalancer example-lb -n example-namespace
 ```

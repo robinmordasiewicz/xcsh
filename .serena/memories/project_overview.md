@@ -1,8 +1,8 @@
-# f5xcctl Project Overview
+# xcsh Project Overview
 
 ## Purpose
 
-f5xcctl is an open-source command-line interface for managing F5 Distributed Cloud
+xcsh is an open-source command-line interface for managing F5 Distributed Cloud
 (formerly Volterra) resources. It follows Azure CLI-style command patterns for
 intuitive resource management.
 

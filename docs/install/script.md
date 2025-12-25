@@ -1,11 +1,11 @@
 # Install Script
 
-Install f5xcctl on Linux or macOS using the universal install script.
+Install xcsh on Linux or macOS using the universal install script.
 
 ## Quick Install
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
+curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
 ```
 
 ## What the Script Does
@@ -21,12 +21,12 @@ curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
 
 ### With Administrator Access
 
-- Binary: `/usr/local/bin/f5xcctl`
+- Binary: `/usr/local/bin/xcsh`
 - Completions: System-wide locations
 
 ### Without Administrator Access
 
-- Binary: `~/.local/bin/f5xcctl`
+- Binary: `~/.local/bin/xcsh`
 - Completions: User directories (`~/.zsh/completions/`, `~/.local/share/bash-completion/`)
 
 ## Environment Variables
@@ -42,13 +42,13 @@ Customize the installation with these environment variables:
 ### Example: User-Local Installation
 
 ```bash
-F5XC_NO_SUDO=1 curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
+F5XC_NO_SUDO=1 curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
 ```
 
 ### Example: Specific Version
 
 ```bash
-F5XC_VERSION=4.39.0 curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
+F5XC_VERSION=4.39.0 curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
 ```
 
 ## Post-Installation
@@ -62,7 +62,7 @@ source ~/.zshrc  # or ~/.bashrc
 Verify the installation:
 
 ```bash
-f5xcctl version
+xcsh version
 ```
 
 ## Uninstall
@@ -71,10 +71,10 @@ To uninstall, remove the binary and completions:
 
 ```bash
 # Remove binary
-rm -f ~/.local/bin/f5xcctl  # or /usr/local/bin/f5xcctl
+rm -f ~/.local/bin/xcsh  # or /usr/local/bin/xcsh
 
 # Remove completions
-rm -f ~/.zsh/completions/_f5xcctl
-rm -f ~/.local/share/bash-completion/completions/f5xcctl
-rm -f ~/.config/fish/completions/f5xcctl.fish
+rm -f ~/.zsh/completions/_xcsh
+rm -f ~/.local/share/bash-completion/completions/xcsh
+rm -f ~/.config/fish/completions/xcsh.fish
 ```

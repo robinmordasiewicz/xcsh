@@ -1,6 +1,6 @@
 # Authentication
 
-f5xcctl supports multiple authentication methods to connect to the F5 Distributed Cloud API.
+xcsh supports multiple authentication methods to connect to the F5 Distributed Cloud API.
 
 ## P12 Bundle (Recommended)
 
@@ -59,7 +59,7 @@ key: /path/to/key.pem
 **Using command-line flags:**
 
 ```bash
-f5xcctl --cert /path/to/cert.pem --key /path/to/key.pem configuration list namespace
+xcsh --cert /path/to/cert.pem --key /path/to/key.pem configuration list namespace
 ```
 
 ## API Token
@@ -82,7 +82,7 @@ Use an API token for authentication without managing certificate files. Ideal fo
 export F5XC_API_TOKEN="your-api-token"
 export F5XC_API_URL="https://your-tenant.console.ves.volterra.io"  # Optional, overrides config
 
-f5xcctl identity list namespace
+xcsh identity list namespace
 ```
 
 **Using configuration file (~/.f5xcconfig):**
@@ -95,21 +95,21 @@ api-token: true  # Token value from F5XC_API_TOKEN environment variable
 **Using interactive configuration:**
 
 ```bash
-f5xcctl configure
+xcsh configure
 # Select option 3: API Token
 ```
 
 **Using command-line flag:**
 
 ```bash
-f5xcctl --api-token configuration list namespace
+xcsh --api-token configuration list namespace
 ```
 
 **Using login command:**
 
 ```bash
 export F5XC_API_TOKEN='your-api-token'
-f5xcctl login --tenant example-tenant --api-token
+xcsh login --tenant example-tenant --api-token
 ```
 
 ## Configuration File
@@ -141,7 +141,7 @@ p12-bundle: /path/to/api-creds.p12
 Specify a custom configuration file:
 
 ```bash
-f5xcctl --config /path/to/custom-config.yaml configuration list namespace
+xcsh --config /path/to/custom-config.yaml configuration list namespace
 ```
 
 ## Environment Variables
@@ -165,15 +165,15 @@ export F5XC_API_URL="https://your-tenant.console.ves.volterra.io/api"
 export F5XC_P12_FILE="/path/to/api-creds.p12"
 export F5XC_P12_PASSWORD="your-password"
 
-f5xcctl identity list namespace
+xcsh identity list namespace
 ```
 
 ## Interactive Configuration
 
-Use `f5xcctl configure` for interactive setup:
+Use `xcsh configure` for interactive setup:
 
 ```bash
-f5xcctl configure
+xcsh configure
 ```
 
 This will prompt for:
@@ -189,8 +189,8 @@ Test your configuration:
 
 ```bash
 # List namespaces to verify connection
-f5xcctl identity list namespace
+xcsh identity list namespace
 
 # Check with verbose output for troubleshooting
-f5xcctl --verbose configuration list namespace
+xcsh --verbose configuration list namespace
 ```

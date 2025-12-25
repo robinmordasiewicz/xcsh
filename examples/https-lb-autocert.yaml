@@ -1,0 +1,23 @@
+# HTTPS Load Balancer with Auto Certificate - Minimum Configuration
+#
+# Required fields:
+#   - metadata.name: Unique name for the load balancer
+#   - metadata.namespace: Target namespace
+#   - spec.domains: List of domain names to serve
+#   - spec.https_auto_cert: HTTPS with automatic Let's Encrypt certificate
+#
+# Create command:
+#   xcsh cdn create http_loadbalancer -n <namespace> -i https-lb-autocert.yaml
+#
+# Note: Auto-cert requires the domain to be resolvable and pointing to F5 XC
+
+metadata:
+  name: example-https-lb
+  namespace: shared
+spec:
+  domains:
+    - secure.example.com
+  https_auto_cert:
+    http_redirect: true
+    add_hsts: true
+  advertise_on_public_default_vip: {}

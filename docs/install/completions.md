@@ -1,6 +1,6 @@
 # Shell Completion
 
-Enable comprehensive tab completion for all f5xcctl commands, including domain names, operations, resource types, namespaces, and resource names.
+Enable comprehensive tab completion for all xcsh commands, including domain names, operations, resource types, namespaces, and resource names.
 
 ## Features
 
@@ -16,13 +16,13 @@ Enable comprehensive tab completion for all f5xcctl commands, including domain n
 
 ```bash
 # Current session
-source <(f5xcctl completion bash)
+source <(xcsh completion bash)
 
 # Permanent (Linux)
-f5xcctl completion bash > /etc/bash_completion.d/f5xcctl
+xcsh completion bash > /etc/bash_completion.d/xcsh
 
 # Permanent (macOS with Homebrew)
-f5xcctl completion bash > $(brew --prefix)/etc/bash_completion.d/f5xcctl
+xcsh completion bash > $(brew --prefix)/etc/bash_completion.d/xcsh
 ```
 
 ## Zsh
@@ -32,19 +32,19 @@ f5xcctl completion bash > $(brew --prefix)/etc/bash_completion.d/f5xcctl
 echo "autoload -U compinit; compinit" >> ~/.zshrc
 
 # Install completion
-f5xcctl completion zsh > "${fpath[1]}/_f5xcctl"
+xcsh completion zsh > "${fpath[1]}/_xcsh"
 ```
 
 ## Fish
 
 ```bash
-f5xcctl completion fish > ~/.config/fish/completions/f5xcctl.fish
+xcsh completion fish > ~/.config/fish/completions/xcsh.fish
 ```
 
 ## PowerShell
 
 ```powershell
-f5xcctl completion powershell | Out-String | Invoke-Expression
+xcsh completion powershell | Out-String | Invoke-Expression
 ```
 
 ## Usage Examples
@@ -55,20 +55,20 @@ Once completion is installed, use `<TAB>` to complete commands:
 
 ```bash
 # Complete domain names
-f5xcctl l<TAB>              # Completes to: load_balancer
-f5xcctl lb<TAB>             # Completes to: load_balancer (alias)
-f5xcctl in<TAB>             # Completes to: infrastructure
-f5xcctl sec<TAB>            # Completes to: security
+xcsh l<TAB>              # Completes to: load_balancer
+xcsh lb<TAB>             # Completes to: load_balancer (alias)
+xcsh in<TAB>             # Completes to: infrastructure
+xcsh sec<TAB>            # Completes to: security
 ```
 
 ### Operation Completion
 
 ```bash
 # Complete operations
-f5xcctl load_balancer <TAB>
+xcsh load_balancer <TAB>
 # Suggests: list, get, create, delete, replace, apply, status, patch, add-labels, remove-labels
 
-f5xcctl infrastructure <TAB>
+xcsh infrastructure <TAB>
 # Shows available operations
 ```
 
@@ -76,10 +76,10 @@ f5xcctl infrastructure <TAB>
 
 ```bash
 # Complete resource types
-f5xcctl load_balancer list <TAB>
+xcsh load_balancer list <TAB>
 # Completes to: http_loadbalancer, origin_pool, tcp_loadbalancer, udp_loadbalancer, etc.
 
-f5xcctl infrastructure get <TAB>
+xcsh infrastructure get <TAB>
 # Shows infrastructure resource types
 ```
 
@@ -87,10 +87,10 @@ f5xcctl infrastructure get <TAB>
 
 ```bash
 # Complete namespaces (requires API access)
-f5xcctl load_balancer list http_loadbalancer -n <TAB>
+xcsh load_balancer list http_loadbalancer -n <TAB>
 # Suggests: default, production, staging, etc. (from your F5 XC tenant)
 
-f5xcctl lb get origin_pool example-pool -n <TAB>
+xcsh lb get origin_pool example-pool -n <TAB>
 # Dynamic namespace completion for your specific namespace
 ```
 
@@ -98,10 +98,10 @@ f5xcctl lb get origin_pool example-pool -n <TAB>
 
 ```bash
 # Complete resource names (requires API access)
-f5xcctl load_balancer get http_loadbalancer <TAB>
+xcsh load_balancer get http_loadbalancer <TAB>
 # Suggests: example-lb-1, prod-lb, staging-lb, etc. (from your namespace)
 
-f5xcctl infrastructure delete origin_pool <TAB>
+xcsh infrastructure delete origin_pool <TAB>
 # Shows available origin pools to delete
 ```
 
@@ -109,10 +109,10 @@ f5xcctl infrastructure delete origin_pool <TAB>
 
 ```bash
 # Complete label keys
-f5xcctl load_balancer add-labels http_loadbalancer example-lb --label-key <TAB>
+xcsh load_balancer add-labels http_loadbalancer example-lb --label-key <TAB>
 # Suggests: environment, application, owner, cost-center, tier, version
 
-f5xcctl lb add-labels http_loadbalancer example-lb -n production --label-key <TAB>
+xcsh lb add-labels http_loadbalancer example-lb -n production --label-key <TAB>
 # Common F5 XC label keys
 ```
 
@@ -126,15 +126,15 @@ export F5XC_API_URL="https://your-tenant.console.ves.volterra.io"
 export F5XC_API_TOKEN="your-api-token"
 
 # Now namespace and resource name completion will work
-f5xcctl lb list http_loadbalancer -n <TAB>  # Shows your namespaces
-f5xcctl lb get http_loadbalancer <TAB>      # Shows your resources
+xcsh lb list http_loadbalancer -n <TAB>  # Shows your namespaces
+xcsh lb get http_loadbalancer <TAB>      # Shows your resources
 ```
 
 ## Troubleshooting
 
 ### Completions not working after upgrade
 
-Zsh caches completion functions in `~/.zcompdump*` files. After upgrading f5xcctl, the stale cache may prevent new completions from loading.
+Zsh caches completion functions in `~/.zcompdump*` files. After upgrading xcsh, the stale cache may prevent new completions from loading.
 
 **Fix:** Clear the cache and restart your shell:
 

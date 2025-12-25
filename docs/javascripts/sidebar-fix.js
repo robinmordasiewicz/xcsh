@@ -13,7 +13,7 @@ if (!window.__navigationFixInitialized) {
   window.__navigationFixInitialized = true;
 
   function isHomePage(path) {
-    return path.endsWith('/f5xcctl/') || path.endsWith('/f5xcctl/index.html') || path === '/';
+    return path.endsWith('/xcsh/') || path.endsWith('/xcsh/index.html') || path === '/';
   }
 
   function fixSidebar() {
@@ -50,7 +50,7 @@ if (!window.__navigationFixInitialized) {
       // Check if this tab matches the current path
       // Match if the current path starts with the tab path (for section matching)
       // But not for home page (exact match only)
-      var isHome = tabPath === '/f5xcctl/' || tabPath.endsWith('/f5xcctl/');
+      var isHome = tabPath === '/xcsh/' || tabPath.endsWith('/xcsh/');
       var pathMatches = isHome
         ? isHomePage(path)
         : path.startsWith(tabPath) && !isHomePage(path);

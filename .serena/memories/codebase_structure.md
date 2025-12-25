@@ -1,11 +1,11 @@
-# f5xcctl Codebase Structure
+# xcsh Codebase Structure
 
 ## Root Directory
 
 ```text
-f5xcctl/
+xcsh/
 ├── main.go              # Entry point - calls cmd.Execute()
-├── go.mod               # Go module definition (github.com/robinmordasiewicz/f5xcctl)
+├── go.mod               # Go module definition (github.com/robinmordasiewicz/xcsh)
 ├── go.sum               # Dependency checksums
 ├── Makefile             # Build, test, lint commands
 ├── .goreleaser.yaml     # GoReleaser configuration

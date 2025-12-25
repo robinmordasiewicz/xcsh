@@ -1,4 +1,4 @@
-# Code Style and Conventions for f5xcctl
+# Code Style and Conventions for xcsh
 
 ## Go Code Style
 

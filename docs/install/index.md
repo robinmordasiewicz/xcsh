@@ -1,4 +1,4 @@
-# Installing f5xcctl
+# Installing xcsh
 
 Get up and running with the F5 Distributed Cloud CLI in minutes.
 
@@ -51,14 +51,14 @@ Get up and running with the F5 Distributed Cloud CLI in minutes.
 The fastest way to get started on macOS:
 
 ```bash
-brew tap robinmordasiewicz/f5xcctl
-brew install --cask f5xcctl
+brew tap robinmordasiewicz/xcsh
+brew install --cask xcsh
 ```
 
 Or use the universal install script on any platform:
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
+curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
 ```
 
 ## Post-Installation Setup
@@ -91,16 +91,16 @@ curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
       </div>
       <h3>Environment Variables</h3>
     </div>
-    <p>Configure f5xcctl behavior through environment variables.</p>
+    <p>Configure xcsh behavior through environment variables.</p>
   </a>
 </div>
 
 ## Verify Installation
 
-After installing, verify that f5xcctl is working:
+After installing, verify that xcsh is working:
 
 ```bash
-f5xcctl version
+xcsh version
 ```
 
 ## Next Steps

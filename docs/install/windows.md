@@ -1,11 +1,11 @@
 # Windows
 
-Install f5xcctl on Windows by downloading the binary directly.
+Install xcsh on Windows by downloading the binary directly.
 
 ## Download
 
-1. Go to the [GitHub Releases](https://github.com/robinmordasiewicz/f5xcctl/releases) page
-2. Download `f5xcctl_windows_amd64.zip` (or `f5xcctl_windows_arm64.zip` for ARM)
+1. Go to the [GitHub Releases](https://github.com/robinmordasiewicz/xcsh/releases) page
+2. Download `xcsh_windows_amd64.zip` (or `xcsh_windows_arm64.zip` for ARM)
 3. Extract the archive
 
 ## Installation
@@ -18,7 +18,7 @@ Install f5xcctl on Windows by downloading the binary directly.
    mkdir $env:USERPROFILE\bin
    ```
 
-2. Move the extracted `f5xcctl.exe` to this directory
+2. Move the extracted `xcsh.exe` to this directory
 
 3. Add to your PATH:
 
@@ -29,12 +29,12 @@ Install f5xcctl on Windows by downloading the binary directly.
 
 ### Option 2: System-Wide Installation
 
-Move `f5xcctl.exe` to a directory already in your system PATH, such as `C:\Windows\System32`.
+Move `xcsh.exe` to a directory already in your system PATH, such as `C:\Windows\System32`.
 
 ## Verify Installation
 
 ```powershell
-f5xcctl version
+xcsh version
 ```
 
 ## PowerShell Completions
@@ -42,7 +42,7 @@ f5xcctl version
 Enable tab completion in PowerShell:
 
 ```powershell
-f5xcctl completion powershell | Out-String | Invoke-Expression
+xcsh completion powershell | Out-String | Invoke-Expression
 ```
 
 To make completions permanent, add the above command to your PowerShell profile:
@@ -52,7 +52,7 @@ To make completions permanent, add the above command to your PowerShell profile:
 notepad $PROFILE
 
 # Add this line:
-f5xcctl completion powershell | Out-String | Invoke-Expression
+xcsh completion powershell | Out-String | Invoke-Expression
 ```
 
 ## WSL Alternative
@@ -60,14 +60,14 @@ f5xcctl completion powershell | Out-String | Invoke-Expression
 If you prefer a Unix-like environment, you can use Windows Subsystem for Linux (WSL) and follow the [Script](script.md) installation method:
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/f5xcctl/install.sh | sh
+curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
 ```
 
 ## Troubleshooting
 
 ### Command Not Found
 
-Ensure the directory containing `f5xcctl.exe` is in your PATH:
+Ensure the directory containing `xcsh.exe` is in your PATH:
 
 ```powershell
 echo $env:PATH
