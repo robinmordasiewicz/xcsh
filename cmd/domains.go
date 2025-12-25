@@ -102,6 +102,9 @@ Run 'xcsh %s --help' for more information.`, info.DisplayName, info.Description,
 		Aliases: info.Aliases,
 		Short:   shortDesc,
 		Long:    longDesc,
+		Annotations: map[string]string{
+			"help-level": string(LevelDomain),
+		},
 	}
 
 	// Wrap the RunE with tier validation and preview warnings
@@ -162,6 +165,9 @@ func buildDomainListCmd(domain string) *cobra.Command {
 
 Returns a list of configurations with names, namespaces, and metadata.
 Use --namespace to filter by namespace, or --output-format to control output format.`, domainInfo.DisplayName, domainInfo.Description),
+		Annotations: map[string]string{
+			"help-level": string(LevelAction),
+		},
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
@@ -223,6 +229,9 @@ func buildDomainGetCmd(domain string) *cobra.Command {
 
 Returns the full configuration including metadata and spec.
 Use --response-format replace-request to get output suitable for editing and replacing.`, domainInfo.DisplayName, domainInfo.Description),
+		Annotations: map[string]string{
+			"help-level": string(LevelAction),
+		},
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
@@ -288,6 +297,9 @@ func buildDomainCreateCmd(domain string) *cobra.Command {
 %s
 
 Provide a YAML or JSON file with the resource configuration using --input-file.`, domainInfo.DisplayName, domainInfo.Description),
+		Annotations: map[string]string{
+			"help-level": string(LevelAction),
+		},
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
@@ -352,6 +364,9 @@ func buildDomainDeleteCmd(domain string) *cobra.Command {
 %s
 
 Requires confirmation unless --yes is specified.`, domainInfo.DisplayName, domainInfo.Description),
+		Annotations: map[string]string{
+			"help-level": string(LevelAction),
+		},
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
@@ -419,6 +434,9 @@ func buildDomainReplaceCmd(domain string) *cobra.Command {
 
 This performs a complete replacement of the resource with the provided configuration.
 Use apply for create-or-update semantics.`, domainInfo.DisplayName, domainInfo.Description),
+		Annotations: map[string]string{
+			"help-level": string(LevelAction),
+		},
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
@@ -481,6 +499,9 @@ func buildDomainStatusCmd(domain string) *cobra.Command {
 %s
 
 Returns the current operational state and any relevant status information.`, domainInfo.DisplayName, domainInfo.Description),
+		Annotations: map[string]string{
+			"help-level": string(LevelAction),
+		},
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
@@ -542,6 +563,9 @@ func buildDomainApplyCmd(domain string) *cobra.Command {
 %s
 
 If the resource exists, it will be updated. If it doesn't exist, it will be created.`, domainInfo.DisplayName, domainInfo.Description),
+		Annotations: map[string]string{
+			"help-level": string(LevelAction),
+		},
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
@@ -602,6 +626,9 @@ func buildDomainPatchCmd(domain string) *cobra.Command {
 %s
 
 Only specified fields will be updated. Other fields remain unchanged.`, domainInfo.DisplayName, domainInfo.Description),
+		Annotations: map[string]string{
+			"help-level": string(LevelAction),
+		},
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
@@ -665,6 +692,9 @@ func buildDomainAddLabelsCmd(domain string) *cobra.Command {
 %s
 
 Specify label key-value pairs using --label-key and --label-value flags.`, domainInfo.DisplayName, domainInfo.Description),
+		Annotations: map[string]string{
+			"help-level": string(LevelAction),
+		},
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
@@ -726,6 +756,9 @@ func buildDomainRemoveLabelsCmd(domain string) *cobra.Command {
 %s
 
 Specify the label keys to remove using --label-key flags.`, domainInfo.DisplayName, domainInfo.Description),
+		Annotations: map[string]string{
+			"help-level": string(LevelAction),
+		},
 	}
 
 	cmd.PersistentFlags().StringVarP(&flags.namespace, "namespace", "n", "default", "Target namespace for the operation.")
