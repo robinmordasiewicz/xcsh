@@ -535,8 +535,14 @@ func initHelpSystem() {
 	// Apply custom usage template that properly filters hidden commands
 	applyUsageTemplateRecursively(rootCmd, usageTemplateWithHiddenFilter())
 
-	// Apply custom help template to all commands recursively
-	applyHelpTemplateRecursively(rootCmd, helpTemplateWithEnvVars())
+	// Apply contextual help templates based on command level
+	// Root command gets the full verbose template with env vars
+	rootCmd.SetHelpTemplate(helpTemplateWithEnvVars())
+
+	// Apply contextual templates to all subcommands
+	for _, subCmd := range rootCmd.Commands() {
+		applyContextualHelpSystem(subCmd)
+	}
 }
 
 // usageTemplateWithHiddenFilter returns a usage template that properly filters hidden commands
@@ -572,16 +578,6 @@ func applyUsageTemplateRecursively(cmd *cobra.Command, template string) {
 	cmd.SetUsageTemplate(template)
 	for _, subCmd := range cmd.Commands() {
 		applyUsageTemplateRecursively(subCmd, template)
-	}
-}
-
-// applyHelpTemplateRecursively applies custom help template to all commands
-// in the command tree. This ensures consistent help formatting with environment
-// variables section across all subcommands.
-func applyHelpTemplateRecursively(cmd *cobra.Command, template string) {
-	cmd.SetHelpTemplate(template)
-	for _, subCmd := range cmd.Commands() {
-		applyHelpTemplateRecursively(subCmd, template)
 	}
 }
 
