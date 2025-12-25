@@ -11,7 +11,6 @@ Building from source requires:
 | Go | go1.25.5 | `go version` |
 | Git | any | `git --version` |
 
-
 ## Clone Repository
 
 ```bash
@@ -19,13 +18,11 @@ git clone https://github.com/robinmordasiewicz/xcsh.git
 cd xcsh
 ```
 
-
 ## Build
 
 ```bash
 go build -o xcsh .
 ```
-
 
 ## Verify Build
 
@@ -62,4 +59,3 @@ go build -ldflags="-X github.com/robinmordasiewicz/xcsh/cmd.Version=dev \
   -X github.com/robinmordasiewicz/xcsh/cmd.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
   -o xcsh .
 ```
-

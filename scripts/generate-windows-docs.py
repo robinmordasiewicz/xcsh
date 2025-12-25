@@ -14,34 +14,24 @@ Usage:
 
 import argparse
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
 
-from naming import to_human_readable, normalize_acronyms, to_title_case
+from naming import normalize_acronyms, to_human_readable, to_title_case
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Generate Windows docs with real version info"
-    )
+    parser = argparse.ArgumentParser(description="Generate Windows docs with real version info")
     parser.add_argument("--version", help="xcsh version")
     parser.add_argument("--commit", help="Git commit hash")
     parser.add_argument("--built", help="Build timestamp")
     parser.add_argument("--go-version", help="Go version used for build")
     parser.add_argument("--platform", help="Target platform (os/arch)")
     parser.add_argument("--install-output", help="Captured Windows installation output")
-    parser.add_argument(
-        "--output",
-        default="docs/install/windows.md",
-        help="Output file path"
-    )
-    parser.add_argument(
-        "--templates",
-        default="scripts/templates",
-        help="Templates directory"
-    )
+    parser.add_argument("--output", default="docs/install/windows.md", help="Output file path")
+    parser.add_argument("--templates", default="scripts/templates", help="Templates directory")
 
     args = parser.parse_args()
 
@@ -63,9 +53,9 @@ def main():
     install_output = args.install_output
     if install_output:
         # Remove ANSI escape codes
-        install_output = re.sub(r'\x1b\[[0-9;]*m', '', install_output)
+        install_output = re.sub(r"\x1b\[[0-9;]*m", "", install_output)
         # Remove Windows-specific escape sequences
-        install_output = re.sub(r'\x1b\[[0-9;]*[A-Za-z]', '', install_output)
+        install_output = re.sub(r"\x1b\[[0-9;]*[A-Za-z]", "", install_output)
         install_output = install_output.strip()
 
     content = template.render(
@@ -75,7 +65,7 @@ def main():
         go_version=args.go_version,
         platform=args.platform,
         install_output=install_output,
-        generation_date=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        generation_date=datetime.now(UTC).strftime("%Y-%m-%d"),
     )
 
     output_path = Path(args.output)

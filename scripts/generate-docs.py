@@ -11,25 +11,30 @@ Usage:
 
 import argparse
 import json
-import os
 import re
 import shutil
 import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Optional
 
 import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from naming import to_human_readable, normalize_acronyms, to_title_case
-
+from naming import normalize_acronyms, to_human_readable, to_title_case
 
 # Canonical action order for consistent display
 ACTION_ORDER = [
-    'list', 'get', 'create', 'delete', 'replace',
-    'apply', 'patch', 'status', 'add-labels', 'remove-labels'
+    "list",
+    "get",
+    "create",
+    "delete",
+    "replace",
+    "apply",
+    "patch",
+    "status",
+    "add-labels",
+    "remove-labels",
 ]
 
 
@@ -57,7 +62,6 @@ class CategoryMapper:
         "healthcheck": "Load Balancing",
         "route": "Load Balancing",
         "virtual_host": "Load Balancing",
-
         # Sites & Infrastructure
         "views.aws_vpc_site": "Sites",
         "views.azure_vnet_site": "Sites",
@@ -67,7 +71,6 @@ class CategoryMapper:
         "views.securemesh_site_v2": "Sites",
         "views.aws_tgw_site": "Sites",
         "fleet": "Sites",
-
         # Bot Defense & Shape Services
         "shape.bot_defense": "Bot Defense",
         "shape.client_side_defense": "Client-Side Defense",
@@ -80,20 +83,16 @@ class CategoryMapper:
         "shape.safe": "Shape Services",
         "shape.safeap": "Shape Services",
         "shape": "Shape Services",  # Catch-all for shape.*
-
         # API Security
         "api_sec": "API Security",
         "views.api_definition": "API Security",
         "views.app_api_group": "API Security",
-
         # Infrastructure Protection
         "infraprotect": "Infrastructure Protection",
-
         # BIG-IP Integration
         "bigip": "BIG-IP Integration",
         "bigcne": "BIG-IP Integration",
         "views.bigip_virtual_server": "BIG-IP Integration",
-
         # Networking
         "network": "Networking",
         "virtual_network": "Networking",
@@ -103,22 +102,18 @@ class CategoryMapper:
         "views.network_policy_view": "Networking",
         "views.forward_proxy_policy": "Networking",
         "views.policy_based_routing": "Networking",
-
         # DNS
         "dns": "DNS",
-
         # Certificates
         "certificate": "Certificates",
         "trusted_ca": "Certificates",
         "crl": "Certificates",
-
         # Monitoring & Observability
         "alert": "Monitoring",
         "log": "Monitoring",
         "apm": "Monitoring",
         "synthetic_monitor": "Monitoring",
         "report": "Monitoring",
-
         # Organization & Administration
         "tenant": "Organization",
         "namespace": "Organization",
@@ -126,23 +121,19 @@ class CategoryMapper:
         "role": "Organization",
         "rbac": "Organization",
         "contact": "Organization",
-
         # Subscriptions & Billing
         "subscription": "Subscriptions",
         "billing": "Subscriptions",
         "addon": "Subscriptions",
-
         # Kubernetes
         "k8s": "Kubernetes",
         "virtual_k8s": "Kubernetes",
         "views.workload": "Kubernetes",
-
         # Authentication & Credentials
         "token": "Authentication",
         "credential": "Authentication",
         "secret": "Authentication",
         "discovery": "Authentication",
-
         # Security Policies
         "service_policy": "Security",
         "malicious_user": "Security",
@@ -150,7 +141,6 @@ class CategoryMapper:
         "views.rate_limiter_policy": "Security",
         "waf": "Security",
         "app_firewall": "Security",
-
         # Views (various)
         "views.external_connector": "Integrations",
         "views.proxy": "Networking",
@@ -159,7 +149,6 @@ class CategoryMapper:
         "views.tenant_configuration": "Organization",
         "views.ike_phase1_profile": "VPN",
         "views.ike_phase2_profile": "VPN",
-
         # AI/ML
         "ai": "AI/ML",
     }
@@ -218,7 +207,7 @@ class CategoryMapper:
             # Check from most specific to least specific
             for prefix, category in sorted(
                 self.PROTO_PREFIX_MAP.items(),
-                key=lambda x: -len(x[0])  # Longer prefixes first
+                key=lambda x: -len(x[0]),  # Longer prefixes first
             ):
                 if path.startswith(prefix) or f".{prefix}" in path or path == prefix:
                     return category
@@ -241,8 +230,7 @@ def sort_actions(actions: list) -> list:
     """Sort actions by canonical order."""
     action_priority = {action: i for i, action in enumerate(ACTION_ORDER)}
     return sorted(
-        actions,
-        key=lambda c: action_priority.get(c.path[1] if len(c.path) > 1 else '', 999)
+        actions, key=lambda c: action_priority.get(c.path[1] if len(c.path) > 1 else "", 999)
     )
 
 
@@ -252,12 +240,13 @@ def sanitize_path(value: str) -> str:
         return value
     # Replace any home directory path pattern with $HOME placeholder
     # Handles /Users/username, /home/username, /root, C:\Users\username
-    return re.sub(r'(/Users/[^/]+|/home/[^/]+|/root|C:\\Users\\[^\\]+)', '$HOME', value)
+    return re.sub(r"(/Users/[^/]+|/home/[^/]+|/root|C:\\Users\\[^\\]+)", "$HOME", value)
 
 
 @dataclass
 class Flag:
     """Represents a CLI flag."""
+
     name: str
     type: str
     description: str
@@ -278,6 +267,7 @@ class Flag:
 @dataclass
 class Command:
     """Represents a CLI command."""
+
     path: list[str]
     use: str
     short: str
@@ -319,8 +309,9 @@ class Command:
 @dataclass
 class CommandTree:
     """Hierarchical tree of commands."""
+
     name: str
-    command: Optional[Command] = None
+    command: Command | None = None
     children: dict[str, "CommandTree"] = field(default_factory=dict)
 
     def add_command(self, cmd: Command) -> None:
@@ -388,7 +379,6 @@ class VesctlDocsGenerator:
             # Pattern: docs-cloud-f5-com.XXXX.public.ves.io.schema.[path].ves-swagger.json
             parts = spec_file.stem.split(".")
             if "schema" in parts:
-                schema_idx = parts.index("schema")
                 # Get the last part before "ves-swagger" as resource name
                 resource_name = parts[-2] if len(parts) >= 2 else ""
 
@@ -401,7 +391,9 @@ class VesctlDocsGenerator:
                         proto_package = spec_data.get("x-ves-proto-package", "")
 
                         # Derive category from proto package
-                        derived_category = category_mapper.get_category(resource_name, proto_package)
+                        derived_category = category_mapper.get_category(
+                            resource_name, proto_package
+                        )
 
                         # Store spec with resource name as key
                         # If resource already exists, keep the first one (they should be the same)
@@ -415,19 +407,21 @@ class VesctlDocsGenerator:
                             spec_count += 1
 
                             # Track category counts
-                            category_counts[derived_category] = category_counts.get(derived_category, 0) + 1
-                    except (json.JSONDecodeError, IOError) as e:
+                            category_counts[derived_category] = (
+                                category_counts.get(derived_category, 0) + 1
+                            )
+                    except (OSError, json.JSONDecodeError) as e:
                         print(f"  Warning: Failed to load {spec_file}: {e}")
 
         print(f"  Loaded {spec_count} API specs, {len(self.resource_api_map)} unique resources")
 
         # Print category distribution
         if category_counts:
-            print(f"  Category distribution:")
+            print("  Category distribution:")
             for cat in sorted(category_counts.keys()):
                 print(f"    {cat}: {category_counts[cat]}")
 
-    def get_api_docs_url(self, resource: str, action: str) -> Optional[str]:
+    def get_api_docs_url(self, resource: str, action: str) -> str | None:
         """Get API documentation URL for a resource+action combination."""
         if resource not in self.resource_api_map:
             return None
@@ -453,8 +447,8 @@ class VesctlDocsGenerator:
             return None
 
         # Search paths for matching operation with .API. service type
-        for path, methods in spec.get("paths", {}).items():
-            for method, details in methods.items():
+        for _path, methods in spec.get("paths", {}).items():
+            for _method, details in methods.items():
                 if isinstance(details, dict):
                     proto_rpc = details.get("x-ves-proto-rpc", "")
                     # Match operations that end with .API.<OpName>
@@ -486,9 +480,7 @@ class VesctlDocsGenerator:
             sys.exit(1)
 
         # Parse global flags
-        self.global_flags = [
-            Flag.from_dict(f) for f in self.spec.get("global_flags", [])
-        ]
+        self.global_flags = [Flag.from_dict(f) for f in self.spec.get("global_flags", [])]
 
         # Build command tree
         for cmd_dict in self.spec.get("commands", []):
@@ -521,7 +513,7 @@ class VesctlDocsGenerator:
         self,
         title: str,
         description: str,
-        command: Optional[Command] = None,
+        command: Command | None = None,
         **extra,
     ) -> dict:
         """Generate front matter for a documentation page."""
@@ -556,14 +548,14 @@ class VesctlDocsGenerator:
 
         # Get top-level commands
         top_level = []
-        for name, child in sorted(self.tree.children.items()):
+        for _name, child in sorted(self.tree.children.items()):
             if child.command:
                 top_level.append(child.command)
 
         # Sanitize version to remove commit-specific suffix for idempotent generation
         # e.g., "v4.15.2-3-g3a4e3ba" -> "v4.15.2"
         raw_version = self.spec.get("version", "dev")
-        version = re.sub(r'-\d+-g[a-f0-9]+(-dirty)?$', '', raw_version)
+        version = re.sub(r"-\d+-g[a-f0-9]+(-dirty)?$", "", raw_version)
 
         content = template.render(
             title="Command Reference",
@@ -595,17 +587,17 @@ class VesctlDocsGenerator:
             for resource_name in sorted(resources.keys()):
                 actions = resources[resource_name]
                 if actions:
-                    # Use first action's command as template but adjust for display
-                    first_action = actions[0]
-                    subcommands.append(Command(
-                        path=[name, resource_name],
-                        use=resource_name,
-                        short=f"Manage {to_human_readable(resource_name)} resources",
-                    ))
+                    subcommands.append(
+                        Command(
+                            path=[name, resource_name],
+                            use=resource_name,
+                            short=f"Manage {to_human_readable(resource_name)} resources",
+                        )
+                    )
         else:
             # Standard action-first listing
             subcommands = []
-            for child_name, child in sorted(node.children.items()):
+            for _child_name, child in sorted(node.children.items()):
                 if child.command:
                     subcommands.append(child.command)
 
@@ -645,9 +637,7 @@ class VesctlDocsGenerator:
                 if child.command:
                     self.generate_action(name, child_name, child)
 
-    def generate_action(
-        self, group: str, action: str, node: CommandTree
-    ) -> None:
+    def generate_action(self, group: str, action: str, node: CommandTree) -> None:
         """Generate documentation for an action."""
         if not node.command:
             return
@@ -668,11 +658,13 @@ class VesctlDocsGenerator:
             for service_name in sorted(services.keys()):
                 procedures = services[service_name]
                 if procedures:
-                    resources.append(Command(
-                        path=[group, action, service_name],
-                        use=service_name,
-                        short=f"{to_human_readable(service_name)} service ({len(procedures)} procedures)",
-                    ))
+                    resources.append(
+                        Command(
+                            path=[group, action, service_name],
+                            use=service_name,
+                            short=f"{to_human_readable(service_name)} service ({len(procedures)} procedures)",
+                        )
+                    )
 
             fm = self.generate_front_matter(
                 title=f"xcsh {group} {action}",
@@ -708,7 +700,7 @@ class VesctlDocsGenerator:
 
         # Get resource types (subcommands)
         resources = []
-        for child_name, child in sorted(node.children.items()):
+        for _child_name, child in sorted(node.children.items()):
             if child.command:
                 resources.append(child.command)
 
@@ -777,35 +769,31 @@ class VesctlDocsGenerator:
         resource_path = self.output_dir / group / action / f"{resource}.md"
         self.write_file(resource_path, content)
 
-    def find_related_commands(
-        self, group: str, resource: str
-    ) -> list[Command]:
+    def find_related_commands(self, group: str, resource: str) -> list[Command]:
         """Find commands for the same resource in different actions."""
         related = []
         group_node = self.tree.children.get(group)
         if not group_node:
             return related
 
-        for action_name, action_node in group_node.children.items():
+        for _action_name, action_node in group_node.children.items():
             resource_node = action_node.children.get(resource)
             if resource_node and resource_node.command:
                 related.append(resource_node.command)
 
         return sorted(related, key=lambda c: c.path[1] if len(c.path) > 1 else "")
 
-    def find_actions_for_resource(
-        self, group: str, resource: str
-    ) -> list[Command]:
+    def find_actions_for_resource(self, group: str, resource: str) -> list[Command]:
         """Find all actions available for a specific resource type."""
         return self.find_related_commands(group, resource)
 
     def generate_action_examples(self, group: str, action: str, resource: str) -> str:
         """Generate example bash commands for an action."""
         resource_display = to_human_readable(resource)
-        resource_kebab = resource.replace('_', '-')
+        resource_kebab = resource.replace("_", "-")
 
         examples = {
-            'list': f'''```bash
+            "list": f"""```bash
 # List all {resource_display} resources
 xcsh {group} {action} {resource}
 
@@ -814,61 +802,62 @@ xcsh {group} {action} {resource} -n example-namespace
 
 # List with JSON output
 xcsh {group} {action} {resource} --output-format json
-```''',
-            'get': f'''```bash
+```""",
+            "get": f"""```bash
 # Get {resource_display} details
 xcsh {group} {action} {resource} example-{resource_kebab}
 
 # Get with YAML output
 xcsh {group} {action} {resource} example-{resource_kebab} --output-format yaml
-```''',
-            'create': f'''```bash
+```""",
+            "create": f"""```bash
 # Create {resource_display} from file
 xcsh {group} {action} {resource} -i {resource}.yaml
-```''',
-            'delete': f'''```bash
+```""",
+            "delete": f"""```bash
 # Delete {resource_display}
 xcsh {group} {action} {resource} example-{resource_kebab}
 
 # Delete with confirmation bypass
 xcsh {group} {action} {resource} example-{resource_kebab} --yes
-```''',
-            'replace': f'''```bash
+```""",
+            "replace": f"""```bash
 # Replace {resource_display} from file
 xcsh {group} {action} {resource} -i {resource}.yaml
-```''',
-            'apply': f'''```bash
+```""",
+            "apply": f"""```bash
 # Apply {resource_display} from file
 xcsh {group} {action} {resource} -i {resource}.yaml
-```''',
-            'patch': f'''```bash
+```""",
+            "patch": f"""```bash
 # Patch {resource_display}
 xcsh {group} {action} {resource} example-{resource_kebab} -i patch.yaml
-```''',
-            'status': f'''```bash
+```""",
+            "status": f"""```bash
 # Get {resource_display} status
 xcsh {group} {action} {resource} example-{resource_kebab}
-```''',
-            'add-labels': f'''```bash
+```""",
+            "add-labels": f"""```bash
 # Add labels to {resource_display}
 xcsh {group} {action} {resource} example-{resource_kebab} --label-key app --label-value web
-```''',
-            'remove-labels': f'''```bash
+```""",
+            "remove-labels": f"""```bash
 # Remove labels from {resource_display}
 xcsh {group} {action} {resource} example-{resource_kebab} --label-key app
-```''',
+```""",
         }
-        return examples.get(action, f'''```bash
+        return examples.get(
+            action,
+            f"""```bash
 xcsh {group} {action} {resource}
-```''')
+```""",
+        )
 
-    def collect_resources_across_actions(
-        self, group_node: CommandTree
-    ) -> dict[str, list[Command]]:
+    def collect_resources_across_actions(self, group_node: CommandTree) -> dict[str, list[Command]]:
         """Collect all resources and their available actions for a group."""
         resources: dict[str, list[Command]] = {}
 
-        for action_name, action_node in group_node.children.items():
+        for _action_name, action_node in group_node.children.items():
             for resource_name, resource_node in action_node.children.items():
                 if resource_node.command:
                     if resource_name not in resources:
@@ -878,15 +867,12 @@ xcsh {group} {action} {resource}
         # Sort actions for each resource
         for resource_name in resources:
             resources[resource_name] = sorted(
-                resources[resource_name],
-                key=lambda c: c.path[1] if len(c.path) > 1 else ""
+                resources[resource_name], key=lambda c: c.path[1] if len(c.path) > 1 else ""
             )
 
         return resources
 
-    def generate_configuration_resource_first(
-        self, group: str, node: CommandTree
-    ) -> None:
+    def generate_configuration_resource_first(self, group: str, node: CommandTree) -> None:
         """Generate configuration docs with resource-first layout."""
         # Collect all resources across all actions
         resources = self.collect_resources_across_actions(node)
@@ -904,9 +890,7 @@ xcsh {group} {action} {resource}
         # Fall back to pattern matching if not in API map
         return category_mapper.get_category(resource)
 
-    def generate_resource_group(
-        self, group: str, resource: str, actions: list[Command]
-    ) -> None:
+    def generate_resource_group(self, group: str, resource: str, actions: list[Command]) -> None:
         """Generate unified documentation for a resource type with all actions."""
         template = self.env.get_template("resource_unified.md.j2")
 
@@ -927,12 +911,16 @@ xcsh {group} {action} {resource}
             if api_url:
                 api_docs_urls[action_name] = api_url
 
-            action_data.append({
-                'action_name': action_name,
-                'command': action_cmd,
-                'api_docs_url': api_url,
-                'generated_examples': self.generate_action_examples(group, action_name, resource),
-            })
+            action_data.append(
+                {
+                    "action_name": action_name,
+                    "command": action_cmd,
+                    "api_docs_url": api_url,
+                    "generated_examples": self.generate_action_examples(
+                        group, action_name, resource
+                    ),
+                }
+            )
 
         fm = self.generate_front_matter(
             title=f"xcsh {group} {resource}",
@@ -963,7 +951,7 @@ xcsh {group} {action} {resource}
 
         Example: 'alert.CustomAPI.Alerts' -> 'alert'
         """
-        parts = procedure_name.split('.')
+        parts = procedure_name.split(".")
         return parts[0] if parts else procedure_name
 
     def extract_rpc_procedure_name(self, full_name: str) -> str:
@@ -971,12 +959,10 @@ xcsh {group} {action} {resource}
 
         Example: 'alert.CustomAPI.Alerts' -> 'Alerts'
         """
-        parts = full_name.split('.')
+        parts = full_name.split(".")
         return parts[-1] if parts else full_name
 
-    def collect_rpc_services(
-        self, rpc_node: CommandTree
-    ) -> dict[str, list[dict]]:
+    def collect_rpc_services(self, rpc_node: CommandTree) -> dict[str, list[dict]]:
         """Collect all RPC procedures grouped by service.
 
         Returns dict mapping service name to list of procedure info dicts.
@@ -989,10 +975,10 @@ xcsh {group} {action} {resource}
                 procedure_name = self.extract_rpc_procedure_name(proc_name)
 
                 proc_info = {
-                    'full_name': proc_name,
-                    'procedure_name': procedure_name,
-                    'service': service,
-                    'command': proc_node.command,
+                    "full_name": proc_name,
+                    "procedure_name": procedure_name,
+                    "service": service,
+                    "command": proc_node.command,
                 }
 
                 if service not in services:
@@ -1001,16 +987,11 @@ xcsh {group} {action} {resource}
 
         # Sort procedures within each service
         for service in services:
-            services[service] = sorted(
-                services[service],
-                key=lambda p: p['procedure_name']
-            )
+            services[service] = sorted(services[service], key=lambda p: p["procedure_name"])
 
         return services
 
-    def generate_rpc_service_grouped(
-        self, group: str, action: str, node: CommandTree
-    ) -> None:
+    def generate_rpc_service_grouped(self, group: str, action: str, node: CommandTree) -> None:
         """Generate RPC docs with unified service pages."""
         services = self.collect_rpc_services(node)
 
@@ -1047,9 +1028,7 @@ xcsh {group} {action} {resource}
         service_path = self.output_dir / group / action / f"{service}.md"
         self.write_file(service_path, content)
 
-    def build_rpc_service_nav(
-        self, group: str, action: str, node: CommandTree
-    ) -> list[dict]:
+    def build_rpc_service_nav(self, group: str, action: str, node: CommandTree) -> list[dict]:
         """Build flat service navigation for RPC commands."""
         nav_items = []
 
@@ -1058,15 +1037,11 @@ xcsh {group} {action} {resource}
         # Build flat navigation - one entry per service
         for service_name in sorted(services.keys()):
             service_display = to_human_readable(service_name)
-            nav_items.append({
-                service_display: f"commands/{group}/{action}/{service_name}.md"
-            })
+            nav_items.append({service_display: f"commands/{group}/{action}/{service_name}.md"})
 
         return nav_items
 
-    def generate_meta_yml(
-        self, directory: Path, description: str, tags: list[str]
-    ) -> None:
+    def generate_meta_yml(self, directory: Path, description: str, tags: list[str]) -> None:
         """Generate .meta.yml for a directory."""
         meta = {
             "description": description,
@@ -1121,9 +1096,7 @@ xcsh {group} {action} {resource}
 
         return {display_name: children}
 
-    def build_resource_first_nav(
-        self, group: str, node: CommandTree
-    ) -> list[dict]:
+    def build_resource_first_nav(self, group: str, node: CommandTree) -> list[dict]:
         """Build categorized resource navigation for configuration command.
 
         Groups resources by category derived from OpenAPI specs.
@@ -1136,14 +1109,14 @@ xcsh {group} {action} {resource}
 
         # Group resources by category
         categorized: dict[str, list[str]] = defaultdict(list)
-        for resource_name in resources.keys():
+        for resource_name in resources:
             category = self.get_resource_category(resource_name)
             categorized[category].append(resource_name)
 
         # Sort categories: alphabetically, but "General" last
         sorted_categories = sorted(
             categorized.keys(),
-            key=lambda c: (c == "General", c)  # General sorts last
+            key=lambda c: (c == "General", c),  # General sorts last
         )
 
         # Build nested navigation
@@ -1156,18 +1129,14 @@ xcsh {group} {action} {resource}
             category_items = []
             for resource_name in category_resources:
                 resource_display = to_human_readable(resource_name)
-                category_items.append({
-                    resource_display: f"commands/{group}/{resource_name}.md"
-                })
+                category_items.append({resource_display: f"commands/{group}/{resource_name}.md"})
 
             # Add category with its resources
             nav_items.append({category: category_items})
 
         return nav_items
 
-    def build_child_nav(
-        self, parent_path: str, name: str, node: CommandTree
-    ) -> dict:
+    def build_child_nav(self, parent_path: str, name: str, node: CommandTree) -> dict:
         """Build navigation for child nodes."""
         display_name = to_human_readable(name)
         path = f"{parent_path}/{name}"
@@ -1224,7 +1193,9 @@ xcsh {group} {action} {resource}
             output_path = Path("docs/commands/_nav.yml")
 
         nav_content = {"nav": nav}
-        self.write_file(output_path, yaml.dump(nav_content, default_flow_style=False, sort_keys=False))
+        self.write_file(
+            output_path, yaml.dump(nav_content, default_flow_style=False, sort_keys=False)
+        )
 
     def update_mkdocs_yml(self, nav: list, mkdocs_path: Path = None) -> None:
         """Update mkdocs.yml with generated Commands navigation.
@@ -1259,13 +1230,12 @@ xcsh {group} {action} {resource}
 
         # Indent the commands section properly (2 spaces for nav items)
         indented_commands = "\n".join(
-            "  " + line if line.strip() else line
-            for line in commands_yaml.strip().split("\n")
+            "  " + line if line.strip() else line for line in commands_yaml.strip().split("\n")
         )
 
         # Find and replace the Commands section in nav
         # Pattern: find "  - Commands:" and everything until the next "  - " at same level or end of nav
-        pattern = r'(  - Commands:.*?)(?=\n  - [A-Z]|\ntheme:|\nextra:|\n[a-z_]+:|\Z)'
+        pattern = r"(  - Commands:.*?)(?=\n  - [A-Z]|\ntheme:|\nextra:|\n[a-z_]+:|\Z)"
 
         if re.search(pattern, content, re.DOTALL):
             new_content = re.sub(pattern, indented_commands, content, flags=re.DOTALL)
@@ -1324,18 +1294,16 @@ xcsh {group} {action} {resource}
 
         # Summary
         total = self.count_commands()
-        print(f"\nGeneration complete!")
+        print("\nGeneration complete!")
         print(f"  Total commands documented: {total}")
         print(f"  Files generated: {len(self.generated_files)}")
-        print(f"  Navigation saved to: docs/commands/_nav.yml")
+        print("  Navigation saved to: docs/commands/_nav.yml")
         if update_mkdocs:
-            print(f"  mkdocs.yml updated with Commands navigation")
+            print("  mkdocs.yml updated with Commands navigation")
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Generate CLI documentation"
-    )
+    parser = argparse.ArgumentParser(description="Generate CLI documentation")
     parser.add_argument(
         "--cli-binary",
         default="./xcsh",

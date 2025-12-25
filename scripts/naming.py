@@ -12,45 +12,132 @@ Usage:
 """
 
 import re
-from typing import Dict, Set
 
 # UppercaseAcronyms defines acronyms that should always be uppercase.
 # Based on RFC 4949, IEEE standards, and industry style guides.
-UPPERCASE_ACRONYMS: Set[str] = {
+UPPERCASE_ACRONYMS: set[str] = {
     # Networking protocols
-    "DNS", "HTTP", "HTTPS", "TCP", "UDP",
-    "TLS", "SSL", "SSH", "FTP", "SFTP",
-    "SMTP", "IMAP", "POP", "LDAP", "DHCP",
-    "ARP", "ICMP", "SNMP", "NTP", "SIP",
-    "RTP", "RTSP", "QUIC", "IP", "GRPC",
+    "DNS",
+    "HTTP",
+    "HTTPS",
+    "TCP",
+    "UDP",
+    "TLS",
+    "SSL",
+    "SSH",
+    "FTP",
+    "SFTP",
+    "SMTP",
+    "IMAP",
+    "POP",
+    "LDAP",
+    "DHCP",
+    "ARP",
+    "ICMP",
+    "SNMP",
+    "NTP",
+    "SIP",
+    "RTP",
+    "RTSP",
+    "QUIC",
+    "IP",
+    "GRPC",
     # Web/API
-    "API", "URL", "URI", "REST", "SOAP",
-    "JSON", "XML", "HTML", "CSS", "CORS",
-    "CDN", "WAF", "JWT", "SAML",
+    "API",
+    "URL",
+    "URI",
+    "REST",
+    "SOAP",
+    "JSON",
+    "XML",
+    "HTML",
+    "CSS",
+    "CORS",
+    "CDN",
+    "WAF",
+    "JWT",
+    "SAML",
     # Network infrastructure
-    "VPN", "NAT", "VLAN", "BGP", "OSPF",
-    "QOS", "MTU", "TTL", "ACL", "CIDR",
-    "VIP", "LB", "HA", "DR",
+    "VPN",
+    "NAT",
+    "VLAN",
+    "BGP",
+    "OSPF",
+    "QOS",
+    "MTU",
+    "TTL",
+    "ACL",
+    "CIDR",
+    "VIP",
+    "LB",
+    "HA",
+    "DR",
     # Security
-    "PKI", "CA", "CSR", "CRL", "OCSP",
-    "PEM", "AES", "RSA", "SHA", "MD5",
-    "HMAC", "MFA", "SSO", "RBAC", "IAM",
-    "DDOS", "DOS", "XSS", "CSRF", "SQL",
+    "PKI",
+    "CA",
+    "CSR",
+    "CRL",
+    "OCSP",
+    "PEM",
+    "AES",
+    "RSA",
+    "SHA",
+    "MD5",
+    "HMAC",
+    "MFA",
+    "SSO",
+    "RBAC",
+    "IAM",
+    "DDOS",
+    "DOS",
+    "XSS",
+    "CSRF",
+    "SQL",
     # Cloud/Infrastructure
-    "AWS", "GCP", "CPU", "RAM", "SSD",
-    "HDD", "GPU", "RAID", "VM", "OS",
-    "SLA", "RPO", "RTO", "VPC", "VNET",
-    "TGW", "IKE", "ID", "SLI", "S2S",
-    "RE", "CE", "SPO", "SMG",
-    "APM", "PII", "OIDC", "K8S",
+    "AWS",
+    "GCP",
+    "CPU",
+    "RAM",
+    "SSD",
+    "HDD",
+    "GPU",
+    "RAID",
+    "VM",
+    "OS",
+    "SLA",
+    "RPO",
+    "RTO",
+    "VPC",
+    "VNET",
+    "TGW",
+    "IKE",
+    "ID",
+    "SLI",
+    "S2S",
+    "RE",
+    "CE",
+    "SPO",
+    "SMG",
+    "APM",
+    "PII",
+    "OIDC",
+    "K8S",
     # F5-specific
-    "ASM", "LTM", "GTM", "CNE", "XC",
-    "SSLO", "AFM", "AVR", "ASN", "SEC",
+    "ASM",
+    "LTM",
+    "GTM",
+    "CNE",
+    "XC",
+    "SSLO",
+    "AFM",
+    "AVR",
+    "ASN",
+    "SEC",
     "RPC",
 }
 
 # MixedCaseAcronyms defines acronyms with specific mixed-case conventions.
-MIXED_CASE_ACRONYMS: Dict[str, str] = {
+MIXED_CASE_ACRONYMS: dict[str, str] = {
     "mtls": "mTLS",
     "oauth": "OAuth",
     "graphql": "GraphQL",
@@ -66,7 +153,7 @@ MIXED_CASE_ACRONYMS: Dict[str, str] = {
 }
 
 # CompoundWordsHumanReadable defines compound words for documentation purposes.
-COMPOUND_WORDS_HUMAN_READABLE: Dict[str, str] = {
+COMPOUND_WORDS_HUMAN_READABLE: dict[str, str] = {
     "loadbalancer": "Load Balancer",
     "bigip": "BIG-IP",
     "websocket": "WebSocket",
@@ -80,7 +167,7 @@ COMPOUND_WORDS_HUMAN_READABLE: Dict[str, str] = {
 }
 
 # Pre-compiled regex for word boundary matching
-_WORD_REGEX = re.compile(r'\b([A-Za-z0-9]+)\b')
+_WORD_REGEX = re.compile(r"\b([A-Za-z0-9]+)\b")
 
 
 def to_human_readable(s: str) -> str:
@@ -310,7 +397,11 @@ def get_article(s: str) -> str:
 
 
 # Jinja2 filter aliases for backward compatibility
-underscore_to_space = lambda s: s.replace("_", " ") if s else ""
+def underscore_to_space(s: str) -> str:
+    """Convert underscores to spaces."""
+    return s.replace("_", " ") if s else ""
+
+
 title_case = to_title_case
 
 
