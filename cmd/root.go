@@ -130,6 +130,12 @@ var rootCmd = &cobra.Command{
 func Execute() error {
 	// Configure help system after all commands are registered
 	initHelpSystem()
+
+	// Enter REPL if: no args + terminal stdin + not disabled
+	if shouldEnterREPL() {
+		return StartREPL()
+	}
+
 	return rootCmd.Execute()
 }
 
