@@ -27,6 +27,13 @@ MAX_RETRIES=5
 INITIAL_BACKOFF=2
 MAX_BACKOFF=60
 
+# GitHub authentication (optional, but recommended for CI to avoid rate limits)
+# In GitHub Actions, GITHUB_TOKEN is automatically available
+GITHUB_AUTH_HEADER=""
+if [ -n "$GITHUB_TOKEN" ]; then
+  GITHUB_AUTH_HEADER="Authorization: Bearer $GITHUB_TOKEN"
+fi
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -57,44 +64,113 @@ log_debug() {
 # Determine if an error is transient (worth retrying)
 is_transient_error() {
   local error="$1"
+  local http_code="${2:-}"
+
+  # Empty error with no HTTP code - treat as transient (benefit of doubt)
+  if [ -z "$error" ] && [ -z "$http_code" ]; then
+    return 0
+  fi
+
+  # HTTP status code based detection
+  if [ -n "$http_code" ]; then
+    case "$http_code" in
+      # Rate limiting
+      429)
+        log_debug "Rate limit exceeded (HTTP 429)"
+        return 0
+        ;;
+      # Forbidden - often rate limiting without proper headers
+      403)
+        log_debug "Forbidden (HTTP 403) - possibly rate limited"
+        return 0
+        ;;
+      # Server errors - always transient
+      500 | 502 | 503 | 504)
+        log_debug "Server error (HTTP $http_code)"
+        return 0
+        ;;
+      # Success codes - not an error
+      2*)
+        return 1
+        ;;
+    esac
+  fi
+
   # Network timeouts, connection errors, temporary DNS issues
   if echo "$error" | grep -qiE "(timeout|connection|refused|temporarily|unavailable|timed out|resolving|name or service)"; then
     return 0
   fi
+
+  # Rate limit messages in response body
+  if echo "$error" | grep -qiE "(rate.limit|API rate limit exceeded|abuse detection)"; then
+    return 0
+  fi
+
+  # Empty response (API returned nothing)
+  if echo "$error" | grep -qiE "(empty|no data|unexpected EOF)"; then
+    return 0
+  fi
+
   # curl exit codes for transient errors
-  # 7: connection failed, 28: operation timeout, 35: SSL connect error
+  # 7: connection failed, 28: operation timeout, 35: SSL connect error, 56: recv error
   return 1
 }
 
-# Retry function with exponential backoff
-retry_with_backoff() {
+# Retry function with exponential backoff for API calls
+# Captures HTTP status code for better error classification
+retry_api_with_backoff() {
   local name="$1"
-  shift
+  local url="$2"
   local attempt=1
   local backoff=$INITIAL_BACKOFF
 
   while [ $attempt -le $MAX_RETRIES ]; do
     log_debug "[$name] Attempt $attempt/$MAX_RETRIES"
 
-    # Execute the command and capture output and exit code
-    if output=$("$@" 2>&1); then
-      echo "$output"
+    # Build curl command with optional auth header
+    local curl_opts=(-s -L --max-time 30 --connect-timeout 10 -w "\n%{http_code}")
+    if [ -n "$GITHUB_AUTH_HEADER" ]; then
+      curl_opts+=(-H "$GITHUB_AUTH_HEADER")
+    fi
+
+    # Execute curl and capture response with HTTP code
+    local response
+    response=$(curl "${curl_opts[@]}" "$url" 2>&1)
+    local exit_code=$?
+
+    # Extract HTTP code (last line) and body (everything else)
+    local http_code
+    local body
+    http_code=$(echo "$response" | tail -n1)
+    body=$(echo "$response" | sed '$d')
+
+    # Success case
+    if [ $exit_code -eq 0 ] && [[ "$http_code" =~ ^2[0-9][0-9]$ ]]; then
+      echo "$body"
       return 0
     fi
 
-    local exit_code=$?
-    local error="$output"
-
-    if [ $attempt -eq $MAX_RETRIES ]; then
-      # Last attempt - show full error
-      log_error "[$name] Failed after $MAX_RETRIES attempts"
-      log_error "Exit code: $exit_code"
-      log_error "Error: $error"
-      return $exit_code
+    # Determine error message
+    local error=""
+    if [ $exit_code -ne 0 ]; then
+      error="curl exit code $exit_code"
+    elif [ -n "$body" ]; then
+      # Try to extract error message from JSON response
+      error=$(echo "$body" | grep -o '"message"[[:space:]]*:[[:space:]]*"[^"]*"' | head -1 | cut -d'"' -f4)
+      [ -z "$error" ] && error="HTTP $http_code"
+    else
+      error="Empty response (HTTP $http_code)"
     fi
 
-    # Check if error is transient
-    if is_transient_error "$error"; then
+    if [ $attempt -eq $MAX_RETRIES ]; then
+      log_error "[$name] Failed after $MAX_RETRIES attempts"
+      log_error "HTTP Code: $http_code, Exit Code: $exit_code"
+      log_error "Error: $error"
+      return 1
+    fi
+
+    # Check if error is transient (pass both error message and HTTP code)
+    if is_transient_error "$error" "$http_code"; then
       log_warn "[$name] Transient error (attempt $attempt/$MAX_RETRIES): $error"
       log_warn "[$name] Retrying in ${backoff}s..."
       sleep "$backoff"
@@ -107,6 +183,53 @@ retry_with_backoff() {
     else
       # Permanent error - don't retry
       log_error "[$name] Permanent error (not retrying): $error"
+      return 1
+    fi
+
+    attempt=$((attempt + 1))
+  done
+
+  return 1
+}
+
+# Retry function with exponential backoff for file downloads
+retry_download_with_backoff() {
+  local name="$1"
+  local url="$2"
+  local output_file="$3"
+  local attempt=1
+  local backoff=$INITIAL_BACKOFF
+
+  while [ $attempt -le $MAX_RETRIES ]; do
+    log_debug "[$name] Attempt $attempt/$MAX_RETRIES"
+
+    # Execute curl for file download
+    local error
+    if error=$(curl -f -L --max-time 120 --connect-timeout 10 "$url" -o "$output_file" 2>&1); then
+      return 0
+    fi
+
+    local exit_code=$?
+
+    if [ $attempt -eq $MAX_RETRIES ]; then
+      log_error "[$name] Failed after $MAX_RETRIES attempts"
+      log_error "Exit code: $exit_code"
+      log_error "Error: $error"
+      return $exit_code
+    fi
+
+    # Check if error is transient
+    if is_transient_error "$error"; then
+      log_warn "[$name] Transient error (attempt $attempt/$MAX_RETRIES): $error"
+      log_warn "[$name] Retrying in ${backoff}s..."
+      sleep "$backoff"
+
+      backoff=$((backoff * 2))
+      if [ $backoff -gt $MAX_BACKOFF ]; then
+        backoff=$MAX_BACKOFF
+      fi
+    else
+      log_error "[$name] Permanent error (not retrying): $error"
       return $exit_code
     fi
 
@@ -116,22 +239,24 @@ retry_with_backoff() {
   return 1
 }
 
-# Helper function to fetch with retry
-fetch_with_retry() {
+# Helper function to fetch API with retry (returns JSON body)
+fetch_api_with_retry() {
+  local name="$1"
+  local url="$2"
+  retry_api_with_backoff "$name" "$url"
+}
+
+# Helper function to download file with retry
+fetch_file_with_retry() {
   local name="$1"
   local url="$2"
   local output_file="$3"
-
-  if [ -n "$output_file" ]; then
-    retry_with_backoff "$name" curl -f -L --max-time 30 --connect-timeout 10 "$url" -o "$output_file"
-  else
-    retry_with_backoff "$name" curl -f -sL --max-time 30 --connect-timeout 10 "$url"
-  fi
+  retry_download_with_backoff "$name" "$url" "$output_file"
 }
 
 # Fetch latest release information
 log_info "Fetching latest enriched spec release..."
-RELEASE_JSON=$(fetch_with_retry "GitHub API" "$API_URL")
+RELEASE_JSON=$(fetch_api_with_retry "GitHub API" "$API_URL")
 
 if [ -z "$RELEASE_JSON" ]; then
   log_error "Failed to fetch release information from GitHub API"
@@ -177,7 +302,7 @@ mkdir -p "$SPECS_DIR"
 
 # Download ZIP file with retry logic
 log_info "Downloading specs from: $ZIP_URL"
-fetch_with_retry "ZIP Download" "$ZIP_URL" "$SPECS_DIR/specs.zip"
+fetch_file_with_retry "ZIP Download" "$ZIP_URL" "$SPECS_DIR/specs.zip"
 
 # Verify ZIP file is valid
 log_debug "Verifying ZIP file integrity..."
@@ -203,7 +328,7 @@ rm -f "$SPECS_DIR/specs.zip"
 # Download index if available
 if [ -n "$INDEX_URL" ]; then
   log_info "Downloading index metadata..."
-  fetch_with_retry "Index Download" "$INDEX_URL" "$SPECS_DIR/index.json"
+  fetch_file_with_retry "Index Download" "$INDEX_URL" "$SPECS_DIR/index.json"
 fi
 
 # Record version
