@@ -211,6 +211,29 @@ jobs:
           VERSION="${{ needs.goreleaser.outputs.version }}"
           echo "Signing version: $VERSION"
 
+          # Retry function with exponential backoff
+          retry_with_backoff() {
+            local max_attempts=5
+            local base_delay=5
+            local attempt=1
+
+            while [ $attempt -le $max_attempts ]; do
+              if "$@"; then
+                return 0
+              fi
+
+              if [ $attempt -lt $max_attempts ]; then
+                delay=$((base_delay * (2 ** (attempt - 1))))
+                echo "::warning::Attempt $attempt failed, retrying in ${delay}s..."
+                sleep $delay
+              fi
+              attempt=$((attempt + 1))
+            done
+
+            echo "::error::All $max_attempts attempts failed"
+            return 1
+          }
+
           # Unlock keychain for this step
           security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
 
@@ -230,8 +253,8 @@ jobs:
             ASSET_NAME="xcsh_${VERSION}_darwin_${ARCH}.tar.gz"
             echo "Processing $ASSET_NAME..."
 
-            # Download release asset
-            gh release download "v${VERSION}" -p "$ASSET_NAME" -D $RUNNER_TEMP
+            # Download release asset with retry
+            retry_with_backoff gh release download "v${VERSION}" -p "$ASSET_NAME" -D $RUNNER_TEMP
 
             # Extract
             mkdir -p $RUNNER_TEMP/sign_${ARCH}
@@ -291,13 +314,36 @@ jobs:
           VERSION="${{ needs.goreleaser.outputs.version }}"
           echo "Regenerating checksums.txt for version $VERSION..."
 
+          # Retry function with exponential backoff
+          retry_with_backoff() {
+            local max_attempts=5
+            local base_delay=5
+            local attempt=1
+
+            while [ $attempt -le $max_attempts ]; do
+              if "$@"; then
+                return 0
+              fi
+
+              if [ $attempt -lt $max_attempts ]; then
+                delay=$((base_delay * (2 ** (attempt - 1))))
+                echo "::warning::Attempt $attempt failed, retrying in ${delay}s..."
+                sleep $delay
+              fi
+              attempt=$((attempt + 1))
+            done
+
+            echo "::error::All $max_attempts attempts failed"
+            return 1
+          }
+
           # Create working directory
           mkdir -p $RUNNER_TEMP/checksums
           cd $RUNNER_TEMP/checksums
 
-          # Download all release assets
+          # Download all release assets with retry
           echo "Downloading all release assets..."
-          GH_TOKEN="$GITHUB_TOKEN" gh release download "v${VERSION}" --repo "${{ github.repository }}"
+          retry_with_backoff sh -c 'GH_TOKEN="$GITHUB_TOKEN" gh release download "v${VERSION}" --repo "${{ github.repository }}"'
 
           # Generate new checksums.txt
           echo "Computing SHA256 checksums..."
@@ -318,6 +364,29 @@ jobs:
 
           echo "Computing SHA256 hashes for all release assets..."
 
+          # Retry function with exponential backoff
+          retry_with_backoff() {
+            local max_attempts=5
+            local base_delay=5
+            local attempt=1
+
+            while [ $attempt -le $max_attempts ]; do
+              if "$@"; then
+                return 0
+              fi
+
+              if [ $attempt -lt $max_attempts ]; then
+                delay=$((base_delay * (2 ** (attempt - 1))))
+                echo "::warning::Attempt $attempt failed, retrying in ${delay}s..."
+                sleep $delay
+              fi
+              attempt=$((attempt + 1))
+            done
+
+            echo "::error::All $max_attempts attempts failed"
+            return 1
+          }
+
           # Download all release tarballs and compute hashes
           mkdir -p $RUNNER_TEMP/hash_check
           cd $RUNNER_TEMP/hash_check
@@ -326,7 +395,7 @@ jobs:
           for PLATFORM in darwin_amd64 darwin_arm64 linux_amd64 linux_arm64; do
             ASSET="xcsh_${VERSION}_${PLATFORM}.tar.gz"
             echo "Downloading $ASSET..."
-            GH_TOKEN="$GITHUB_TOKEN" gh release download "v${VERSION}" --pattern "$ASSET" --repo "${{ github.repository }}"
+            retry_with_backoff sh -c "GH_TOKEN=\"\$GITHUB_TOKEN\" gh release download \"v${VERSION}\" --pattern \"$ASSET\" --repo \"${{ github.repository }}\""
             HASH=$(shasum -a 256 "$ASSET" | cut -d' ' -f1)
             # Export hash as environment variable for later use
             export "HASH_${PLATFORM}=${HASH}"
