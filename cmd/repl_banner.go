@@ -3,69 +3,142 @@ package cmd
 import (
 	"fmt"
 	"strings"
-	"unicode/utf8"
 
+	"github.com/mattn/go-runewidth"
 	"github.com/robinmordasiewicz/xcsh/pkg/branding"
 	"github.com/robinmordasiewicz/xcsh/pkg/client"
 )
 
-// logoDisplayWidth is the visual width of the F5 logo in terminal columns
-// The circular logo is 21 characters wide
-const logoDisplayWidth = 21
-
-// renderWelcomeBanner creates the modern CLI welcome banner with F5 logo
+// renderWelcomeBanner creates the modern CLI welcome banner with F5 logo in a dark red frame
+// Vertical layout: logo centered on top, info text below
 func renderWelcomeBanner() string {
 	var sb strings.Builder
+	const frameWidth = 80
+	const innerWidth = frameWidth - 2 // Account for left and right borders
 
 	// Add leading newline for visual separation
 	sb.WriteString("\n")
 
+	// Build title for top border (title in bold white)
+	title := fmt.Sprintf(" %s v%s ", branding.CLIFullName, Version)
+	titleLen := len(title)
+	dashesAfterTitle := frameWidth - 5 - titleLen
+
+	// Top border: ╭─── Title ───...─╮ with title in bold white
+	sb.WriteString(branding.ColorDarkRed + "╭───" + branding.ColorReset)
+	sb.WriteString(branding.ColorBoldWhite + title + branding.ColorReset)
+	sb.WriteString(branding.ColorDarkRed + strings.Repeat("─", dashesAfterTitle) + "╮" + branding.ColorReset + "\n")
+
 	// Get logo lines
 	logoLines := strings.Split(branding.F5Logo, "\n")
 
-	// Build info lines to display next to logo
+	// Render logo lines using embedded spacing from branding.go
+	for _, line := range logoLines {
+		coloredLine := colorizeLogoLine(line)
+		lineWidth := runeWidth(line)
+
+		// Use logo's embedded spacing, only right-pad to fill frame
+		rightPad := innerWidth - lineWidth
+		if rightPad < 0 {
+			rightPad = 0
+		}
+
+		sb.WriteString(branding.ColorDarkRed + "│" + branding.ColorReset)
+		sb.WriteString(coloredLine)
+		sb.WriteString(strings.Repeat(" ", rightPad))
+		sb.WriteString(branding.ColorDarkRed + "│" + branding.ColorReset + "\n")
+	}
+
+	// Add separator line
+	sb.WriteString(branding.ColorDarkRed + "├" + strings.Repeat("─", innerWidth) + "┤" + branding.ColorReset + "\n")
+
+	// Info content below logo
 	infoLines := []string{
-		fmt.Sprintf("%s v%s", branding.CLIFullName, Version),
+		"Type 'help' for commands, 'exit' or Ctrl+D to quit. Tab completion available.",
 		buildConnectionInfo(),
-		"",
-		"Type 'help' for commands, 'exit' or Ctrl+D to quit.",
-		"Tab completion available.",
-		"",
-		"",
 	}
 
-	// Combine logo and info side by side with colors
-	for i := 0; i < maxInt(len(logoLines), len(infoLines)); i++ {
-		logoLine := ""
-		if i < len(logoLines) {
-			logoLine = logoLines[i]
+	for _, line := range infoLines {
+		lineWidth := runeWidth(line)
+		// Center info text
+		leftPad := (innerWidth - lineWidth) / 2
+		rightPad := innerWidth - lineWidth - leftPad
+		if leftPad < 0 {
+			leftPad = 0
+		}
+		if rightPad < 0 {
+			rightPad = 0
 		}
 
-		infoLine := ""
-		if i < len(infoLines) {
-			infoLine = infoLines[i]
-		}
-
-		// Pad logo line to consistent visual width
-		// Use rune count for proper Unicode handling
-		runeCount := utf8.RuneCountInString(logoLine)
-		padding := logoDisplayWidth - runeCount
-		if padding < 0 {
-			padding = 0
-		}
-		paddedLogo := logoLine + strings.Repeat(" ", padding)
-
-		// Apply colors: red for logo, bold white for info
-		coloredLogo := branding.ColorRed + paddedLogo + branding.ColorReset
-		coloredInfo := branding.ColorBoldWhite + infoLine + branding.ColorReset
-
-		sb.WriteString(fmt.Sprintf("%s   %s\n", coloredLogo, coloredInfo))
+		sb.WriteString(branding.ColorDarkRed + "│" + branding.ColorReset)
+		sb.WriteString(strings.Repeat(" ", leftPad))
+		sb.WriteString(branding.ColorBoldWhite + line + branding.ColorReset)
+		sb.WriteString(strings.Repeat(" ", rightPad))
+		sb.WriteString(branding.ColorDarkRed + "│" + branding.ColorReset + "\n")
 	}
 
-	// Add separator line in red
-	sb.WriteString(branding.ColorRed + strings.Repeat("─", 80) + branding.ColorReset + "\n")
+	// Bottom border: ╰───...───╯
+	bottomBorder := "╰" + strings.Repeat("─", innerWidth) + "╯"
+	sb.WriteString(branding.ColorDarkRed + bottomBorder + branding.ColorReset + "\n")
 
 	return sb.String()
+}
+
+// colorizeLogoLine applies red color to circle background and white color to F5 text
+// The logo uses:
+// - ▓ for the red circle background
+// - █ and ▒ for the white F5 text
+// - (, ), |, and _ for the circle outline (rendered in red)
+func colorizeLogoLine(line string) string {
+	var result strings.Builder
+	inRed := false
+	inWhite := false
+
+	for _, r := range line {
+		switch r {
+		case '▓', '▒', '(', ')', '|', '_':
+			// Red for circle background and outline
+			if !inRed {
+				if inWhite {
+					result.WriteString(branding.ColorReset)
+					inWhite = false
+				}
+				result.WriteString(branding.ColorRed)
+				inRed = true
+			}
+			if r == '▓' {
+				result.WriteRune('█') // Render as solid block
+			} else {
+				result.WriteRune(r) // Keep ▒, (, ) as-is
+			}
+		case '█':
+			// White for F5 text elements
+			if !inWhite {
+				if inRed {
+					result.WriteString(branding.ColorReset)
+					inRed = false
+				}
+				result.WriteString(branding.ColorBoldWhite)
+				inWhite = true
+			}
+			result.WriteRune(r)
+		default:
+			// Reset for spaces and other characters
+			if inRed || inWhite {
+				result.WriteString(branding.ColorReset)
+				inRed = false
+				inWhite = false
+			}
+			result.WriteRune(r)
+		}
+	}
+
+	// Final reset if we ended in a color
+	if inRed || inWhite {
+		result.WriteString(branding.ColorReset)
+	}
+
+	return result.String()
 }
 
 // buildConnectionInfo returns tenant and API info string
@@ -91,10 +164,8 @@ func extractDomain(url string) string {
 	return url
 }
 
-// maxInt returns the larger of two integers
-func maxInt(a, b int) int {
-	if a > b {
-		return a
-	}
-	return b
+// runeWidth returns the display width of a string in terminal columns
+// Uses default runewidth mode where block elements (▓, ▒, █) are single-width
+func runeWidth(s string) int {
+	return runewidth.StringWidth(s)
 }

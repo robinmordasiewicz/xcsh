@@ -7,26 +7,35 @@ const (
 	// CLIName is the current name of the CLI tool
 	CLIName = "xcsh"
 
-	// F5Logo is the ASCII art logo with circular frame
-	// Used in the interactive REPL welcome banner
-	// Designed to evoke the F5 red circle logo
-	F5Logo = `       ●●●●●●●●
-     ●●        ●●
-   ●●            ●●
-  ●    ███  ███    ●
-  ●    █    █      ●
- ●     ██   ███     ●
- ●     █       █    ●
-  ●    █    ███    ●
-  ●                ●
-   ●●            ●●
-     ●●        ●●
-       ●●●●●●●●`
+	// F5Logo is a compact circular logo with F5 text
+	// - ▓ characters represent the red circle background
+	// - █ and ▒ characters represent the white F5 text
+	// - (, ), |, and _ are the circle outline (rendered in red)
+	// - Spacing pre-calculated for 78-char frame width (17 spaces offset)
+	F5Logo = `                   ________
+              (▒▒▒▒▓▓▓▓▓▓▓▓▒▒▒▒)
+         (▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒)
+      (▒▒▓▓▓███████▓▓▓▓▓▓▓██████████████)
+    (▒▓▓▓▓▓████▓▓███▓▓▓▓███████████████▓▒)
+   (▒▓▓▓▓▓█████▓▓▓▓▓▓▓▓▓▓██▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒)
+  (▒▓▓▓▓███████▓▓▓▓▓▓▓▓▓██▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒)
+ (▒▓▓▓▓████████▓▓▓▓▓▓▓▓▓██▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒)
+(▒▓▓▓██████████████▓▓▓▓████████████▓▓▓▓▓▓▓▓▒)
+|▒▓▓▓▓▓▓██████▓▓▓▓▓▓▓▓▓▓██████████████████▓▓▒|
+|▒▓▓▓▓▓▓███████▓▓▓▓▓▓▓▓▓▓▓▓▓▓██████████████▓▒|
+(▒▓▓▓▓▓▓███████▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓███████▓▓▒)
+ (▒▓▓▓▓▓▓██████▓▓▓▓▓▓▓▓▓█▓▓▓▓▓▓▓▓▓▓▓████▓▓▓▒)
+  (▒▓▓▓▓▓██████▓▓▓▓▓▓▓▓███▓▓▓▓▓▓▓▓▓▓██▓▓▓▓▒)
+   (▒▓▓▓▓██████▓▓▓▓▓▓▓▓▓███▓▓▓▓▓▓▓▓███▓▓▓▒)
+    (▒█████████████▓▓▓▓▓▓▓███████████▓▓▓▒)
+      (▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒)
+         (▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒)`
 
 	// ANSI color codes for terminal output
-	ColorRed       = "\033[91m"   // Bright red (like GitHub diff removed)
-	ColorBoldWhite = "\033[1;97m" // Bold bright white
-	ColorReset     = "\033[0m"    // Reset to default
+	ColorRed       = "\033[38;2;228;0;43m" // F5 Brand Red (#E4002B)
+	ColorDarkRed   = "\033[38;2;139;0;0m"  // Dark Red (#8B0000) for frame
+	ColorBoldWhite = "\033[1;97m"          // Bold bright white
+	ColorReset     = "\033[0m"             // Reset to default
 
 	// CLIFullName is the full descriptive name
 	CLIFullName = "F5 Distributed Cloud Shell"
