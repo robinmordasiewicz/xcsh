@@ -75,8 +75,7 @@ func buildListCommand(rt *types.ResourceType) *cobra.Command {
 	}
 
 	if rt.SupportsNamespace {
-		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", "", "Namespace (required)")
-		_ = cmd.MarkFlagRequired("namespace")
+		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", GetDefaultNamespace(), "Namespace")
 	}
 
 	return cmd
@@ -104,8 +103,7 @@ func buildShowCommand(rt *types.ResourceType) *cobra.Command {
 	}
 
 	if rt.SupportsNamespace {
-		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", "", "Namespace (required)")
-		_ = cmd.MarkFlagRequired("namespace")
+		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", GetDefaultNamespace(), "Namespace")
 	}
 
 	return cmd
@@ -134,7 +132,7 @@ func buildCreateCommand(rt *types.ResourceType) *cobra.Command {
 	_ = cmd.MarkFlagRequired("file")
 
 	if rt.SupportsNamespace {
-		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", "", "Namespace (overrides file)")
+		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", GetDefaultNamespace(), "Namespace (overrides file)")
 	}
 
 	return cmd
@@ -164,7 +162,7 @@ func buildUpdateCommand(rt *types.ResourceType) *cobra.Command {
 	_ = cmd.MarkFlagRequired("file")
 
 	if rt.SupportsNamespace {
-		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", "", "Namespace (overrides file)")
+		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", GetDefaultNamespace(), "Namespace (overrides file)")
 	}
 
 	return cmd
@@ -192,8 +190,7 @@ func buildDeleteCommand(rt *types.ResourceType) *cobra.Command {
 	}
 
 	if rt.SupportsNamespace {
-		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", "", "Namespace (required)")
-		_ = cmd.MarkFlagRequired("namespace")
+		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", GetDefaultNamespace(), "Namespace")
 	}
 
 	cmd.Flags().BoolVarP(&flags.yes, "yes", "y", false, "Skip confirmation prompt")
@@ -221,8 +218,7 @@ func buildStatusCommand(rt *types.ResourceType) *cobra.Command {
 	}
 
 	if rt.SupportsNamespace {
-		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", "", "Namespace (required)")
-		_ = cmd.MarkFlagRequired("namespace")
+		cmd.Flags().StringVarP(&flags.namespace, "namespace", "n", GetDefaultNamespace(), "Namespace")
 	}
 
 	return cmd

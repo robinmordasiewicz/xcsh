@@ -209,6 +209,13 @@ func runLogin(cmd *cobra.Command, args []string) error {
 	output.PrintInfo(fmt.Sprintf("Successfully logged in to %s", tenant))
 	output.PrintInfo(fmt.Sprintf("Configuration saved to %s", configPath))
 
+	// Warm the namespace completion cache in background for faster first completion
+	go func() {
+		warmCtx, warmCancel := context.WithTimeout(context.Background(), 3*time.Second)
+		defer warmCancel()
+		_, _ = client.ListNamespaces(warmCtx)
+	}()
+
 	return nil
 }
 

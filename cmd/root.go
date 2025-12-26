@@ -180,6 +180,8 @@ func init() {
 	_ = viper.BindEnv("p12-bundle", "F5XC_P12_FILE")
 	_ = viper.BindEnv("output-format", "F5XC_OUTPUT")
 	_ = viper.BindEnv("server-url", "F5XC_API_URL")
+	_ = viper.BindEnv("default-namespace", "F5XC_DEFAULT_NAMESPACE")
+	viper.SetDefault("default-namespace", "default")
 
 	// Register --spec flag for machine-readable CLI specification
 	RegisterSpecFlag(rootCmd)
@@ -360,6 +362,23 @@ func expandPath(path string) string {
 // GetClient returns the initialized API client
 func GetClient() *client.Client {
 	return apiClient
+}
+
+// GetDefaultNamespace returns the default namespace with priority:
+// 1. F5XC_DEFAULT_NAMESPACE environment variable
+// 2. Config file default-namespace setting
+// 3. Fallback to "default"
+func GetDefaultNamespace() string {
+	// Check environment variable first (highest priority)
+	if ns := os.Getenv("F5XC_DEFAULT_NAMESPACE"); ns != "" {
+		return ns
+	}
+	// Check viper (config file)
+	if ns := viper.GetString("default-namespace"); ns != "" {
+		return ns
+	}
+	// Fallback to "default"
+	return "default"
 }
 
 // GetOutputFormat returns the current output format (defaults to table for list operations)

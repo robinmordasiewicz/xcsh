@@ -40,31 +40,59 @@ func (c *CobraCompleter) Complete(d prompt.Document) []prompt.Suggest {
 		return c.getContextualSuggestions()
 	}
 
+	// Check for "/" prefix - escape to root context for completions
+	isEscapedToRoot := false
+	if len(args) > 0 && strings.HasPrefix(args[0], "/") {
+		isEscapedToRoot = true
+		// Strip the "/" prefix from first arg
+		args[0] = strings.TrimPrefix(args[0], "/")
+		if args[0] == "" {
+			// Just "/" typed - show all root commands
+			return c.getRootContextSuggestions()
+		}
+	}
+
 	// Check if we're completing a flag value or flag name
 	currentWord := d.GetWordBeforeCursor()
 
 	// If current word starts with -, complete flags
 	if strings.HasPrefix(currentWord, "-") {
-		// Build context-aware args for flag completion
-		contextArgs := c.prependContextToArgs(args)
+		// Build context-aware args for flag completion (skip context if escaped)
+		var contextArgs []string
+		if isEscapedToRoot {
+			contextArgs = args
+		} else {
+			contextArgs = c.prependContextToArgs(args)
+		}
 		cmd, _, _ := c.rootCmd.Find(contextArgs)
 		if cmd != nil {
 			return c.getFlagCompletions(cmd, currentWord)
 		}
 	}
 
-	// Build context-aware args for command finding
-	contextArgs := c.prependContextToArgs(args)
+	// Build context-aware args for command finding (skip context if escaped)
+	var contextArgs []string
+	if isEscapedToRoot {
+		contextArgs = args
+	} else {
+		contextArgs = c.prependContextToArgs(args)
+	}
 
 	// Find the command being completed
 	cmd, remainingArgs, err := c.rootCmd.Find(contextArgs)
 	if err != nil || cmd == nil {
-		// Could be partial command - filter by prefix from contextual suggestions
+		// Could be partial command - filter by prefix
+		if isEscapedToRoot {
+			return prompt.FilterHasPrefix(c.getRootContextSuggestions(), args[0], true)
+		}
 		return prompt.FilterHasPrefix(c.getContextualSuggestions(), args[0], true)
 	}
 
 	// If we found the root command and have args, filter subcommands
 	if cmd == c.rootCmd && len(args) > 0 {
+		if isEscapedToRoot {
+			return prompt.FilterHasPrefix(c.getRootContextSuggestions(), args[0], true)
+		}
 		return prompt.FilterHasPrefix(c.getContextualSuggestions(), args[0], true)
 	}
 

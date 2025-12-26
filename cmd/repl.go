@@ -41,14 +41,14 @@ func StartREPL() error {
 	// This ensures viper has loaded config file and environment variables
 	initConfig()
 
-	// Display welcome banner
-	printWelcomeBanner()
-
-	// Initialize session
+	// Initialize session first (this sets up apiClient)
 	session, err := initREPLSession()
 	if err != nil {
 		return fmt.Errorf("failed to initialize REPL: %w", err)
 	}
+
+	// Display welcome banner after session init so we have apiClient for user info
+	printWelcomeBanner()
 
 	// Create prompt
 	p := prompt.New(
@@ -62,10 +62,6 @@ func StartREPL() error {
 		prompt.OptionSelectedSuggestionBGColor(prompt.LightGray),
 		prompt.OptionSuggestionBGColor(prompt.DarkGray),
 		prompt.OptionMaxSuggestion(10),
-		prompt.OptionAddKeyBind(prompt.KeyBind{
-			Key: prompt.ControlD,
-			Fn:  func(*prompt.Buffer) { handleExit(session) },
-		}),
 		prompt.OptionAddKeyBind(prompt.KeyBind{
 			Key: prompt.ControlC,
 			Fn:  func(*prompt.Buffer) { handleCtrlC(session) },

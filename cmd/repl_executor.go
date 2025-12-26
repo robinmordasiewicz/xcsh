@@ -144,6 +144,17 @@ func (s *REPLSession) prependContext(args []string) []string {
 		return args
 	}
 
+	// Check for "/" prefix - escape to root context (bypass context prepending)
+	if strings.HasPrefix(args[0], "/") {
+		// Strip the "/" prefix and return as root-level command
+		args[0] = strings.TrimPrefix(args[0], "/")
+		if args[0] == "" && len(args) > 1 {
+			// Handle case like "/ command" (space after /)
+			return args[1:]
+		}
+		return args
+	}
+
 	ctx := s.GetContextPath()
 
 	// If at root, no context to prepend
@@ -357,9 +368,12 @@ func showContextHelp(s *REPLSession) {
 	}
 }
 
-// cmdClear clears the terminal
+// cmdClear clears the terminal (matches bash/zsh clear behavior)
 func cmdClear(s *REPLSession, args []string) error {
-	fmt.Print("\033[H\033[2J")
+	// \033[H    - Move cursor to home position (top-left)
+	// \033[2J   - Clear entire screen
+	// \033[3J   - Clear scrollback buffer
+	fmt.Print("\033[H\033[2J\033[3J")
 	return nil
 }
 
@@ -371,18 +385,38 @@ func cmdHistory(s *REPLSession, args []string) error {
 	return nil
 }
 
-// cmdNamespace sets the default namespace
+// cmdNamespace sets the default namespace and persists to config
 func cmdNamespace(s *REPLSession, args []string) error {
 	if len(args) == 0 {
 		ns := s.GetNamespace()
+		source := getNamespaceSource()
 		if ns == "" {
 			fmt.Println("No default namespace set")
 		} else {
-			fmt.Printf("Current namespace: %s\n", ns)
+			fmt.Printf("Default namespace: %s\n", ns)
+			fmt.Printf("Source: %s\n", source)
 		}
 		return nil
 	}
-	s.SetNamespace(args[0])
-	fmt.Printf("Default namespace set to: %s\n", args[0])
+
+	newNamespace := args[0]
+
+	// Validate namespace exists before setting
+	if !NamespaceExists(newNamespace) {
+		return fmt.Errorf("namespace '%s' does not exist", newNamespace)
+	}
+
+	// Persist to config file
+	if err := setDefaultNamespace(newNamespace); err != nil {
+		return err
+	}
+
+	// Update session state
+	s.SetNamespace(newNamespace)
+
+	// Clear cache so validation picks up the change
+	ClearNamespaceCache()
+
+	fmt.Printf("Default namespace set to: %s\n", newNamespace)
 	return nil
 }

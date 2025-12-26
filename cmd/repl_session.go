@@ -20,6 +20,7 @@ type REPLSession struct {
 	// Contextual navigation state
 	contextPath *ContextPath      // Current navigation context
 	tenant      string            // Extracted tenant name from API URL
+	username    string            // Logged-in user's name/email
 	validator   *ContextValidator // Domain/action validator
 
 	// Exit handling
@@ -29,7 +30,7 @@ type REPLSession struct {
 // initREPLSession creates a new REPL session with initialized state
 func initREPLSession() (*REPLSession, error) {
 	session := &REPLSession{
-		namespace:   "",
+		namespace:   GetValidatedDefaultNamespace(),
 		contextPath: &ContextPath{},
 	}
 
@@ -85,6 +86,8 @@ func initREPLSession() (*REPLSession, error) {
 		} else {
 			session.client = apiClient
 		}
+		// Fetch username for prompt display
+		session.username = getUserInfo()
 	} else {
 		fmt.Fprintln(os.Stderr, "Warning: No API URL configured.")
 		fmt.Fprintln(os.Stderr, "Run 'configure' or set F5XC_API_URL environment variable.")
@@ -131,6 +134,11 @@ func (s *REPLSession) GetContextPath() *ContextPath {
 // GetTenant returns the current tenant name
 func (s *REPLSession) GetTenant() string {
 	return s.tenant
+}
+
+// GetUsername returns the logged-in user's name/email
+func (s *REPLSession) GetUsername() string {
+	return s.username
 }
 
 // GetValidator returns the context validator

@@ -68,7 +68,8 @@ Available keys:
   - cert: Path to client certificate
   - key: Path to client key
   - api-token: Enable API token auth (true/false)
-  - output: Default output format (json, yaml, table)`,
+  - output: Default output format (json, yaml, table)
+  - default-namespace: Default namespace for CRUD operations`,
 	Example: `  # Set the server URL
   xcsh configure set server-url https://example-tenant.console.ves.volterra.io/api
 
@@ -98,22 +99,24 @@ func init() {
 
 // ConfigFile represents the configuration file structure
 type ConfigFile struct {
-	ServerURL string `yaml:"server-url,omitempty"`
-	P12Bundle string `yaml:"p12-bundle,omitempty"`
-	Cert      string `yaml:"cert,omitempty"`
-	Key       string `yaml:"key,omitempty"`
-	Output    string `yaml:"output,omitempty"`
-	APIToken  bool   `yaml:"api-token,omitempty"`
+	ServerURL        string `yaml:"server-url,omitempty"`
+	P12Bundle        string `yaml:"p12-bundle,omitempty"`
+	Cert             string `yaml:"cert,omitempty"`
+	Key              string `yaml:"key,omitempty"`
+	Output           string `yaml:"output,omitempty"`
+	APIToken         bool   `yaml:"api-token,omitempty"`
+	DefaultNamespace string `yaml:"default-namespace,omitempty"`
 }
 
 // rawConfigFile is used for YAML parsing
 type rawConfigFile struct {
-	ServerURL string `yaml:"server-url"`
-	P12Bundle string `yaml:"p12-bundle"`
-	Cert      string `yaml:"cert"`
-	Key       string `yaml:"key"`
-	Output    string `yaml:"output"`
-	APIToken  bool   `yaml:"api-token"`
+	ServerURL        string `yaml:"server-url"`
+	P12Bundle        string `yaml:"p12-bundle"`
+	Cert             string `yaml:"cert"`
+	Key              string `yaml:"key"`
+	Output           string `yaml:"output"`
+	APIToken         bool   `yaml:"api-token"`
+	DefaultNamespace string `yaml:"default-namespace"`
 }
 
 // parseConfigFile parses a config file
@@ -124,12 +127,13 @@ func parseConfigFile(data []byte) (*ConfigFile, error) {
 	}
 
 	cfg := &ConfigFile{
-		ServerURL: raw.ServerURL,
-		P12Bundle: raw.P12Bundle,
-		Cert:      raw.Cert,
-		Key:       raw.Key,
-		Output:    raw.Output,
-		APIToken:  raw.APIToken,
+		ServerURL:        raw.ServerURL,
+		P12Bundle:        raw.P12Bundle,
+		Cert:             raw.Cert,
+		Key:              raw.Key,
+		Output:           raw.Output,
+		APIToken:         raw.APIToken,
+		DefaultNamespace: raw.DefaultNamespace,
 	}
 
 	return cfg, nil
@@ -281,6 +285,9 @@ func runConfigureShow(cmd *cobra.Command, args []string) error {
 	if config.APIToken {
 		displayConfig["api_token"] = "enabled (token from F5XC_API_TOKEN)"
 	}
+	if config.DefaultNamespace != "" {
+		displayConfig["default_namespace"] = config.DefaultNamespace
+	}
 
 	return output.Print(displayConfig, GetOutputFormat())
 }
@@ -323,6 +330,8 @@ func runConfigureSet(cmd *cobra.Command, args []string) error {
 		} else {
 			config.APIToken = false
 		}
+	case "default-namespace":
+		config.DefaultNamespace = value
 	default:
 		return fmt.Errorf("unknown configuration key: %s", key)
 	}
