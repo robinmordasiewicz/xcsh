@@ -76,9 +76,9 @@ func renderWelcomeBanner() string {
 	dashesAfterTitle := frameWidth - 5 - titleLen
 
 	// Top border: ╭─── Title ───...─╮ with title in bold white
-	sb.WriteString(branding.ColorDarkRed + "╭───" + branding.ColorReset)
+	sb.WriteString(branding.ColorRed + "╭───" + branding.ColorReset)
 	sb.WriteString(branding.ColorBoldWhite + title + branding.ColorReset)
-	sb.WriteString(branding.ColorDarkRed + strings.Repeat("─", dashesAfterTitle) + "╮" + branding.ColorReset + "\n")
+	sb.WriteString(branding.ColorRed + strings.Repeat("─", dashesAfterTitle) + "╮" + branding.ColorReset + "\n")
 
 	// Calculate vertical centering for text within total height
 	textStartRow := (totalRows - len(textLines)) / 2
@@ -86,7 +86,7 @@ func renderWelcomeBanner() string {
 	// Two-column rows: logo on left (with padding), text on right (with padding)
 	for i := 0; i < totalRows; i++ {
 		// Left border (dark red)
-		sb.WriteString(branding.ColorDarkRed + "│" + branding.ColorReset)
+		sb.WriteString(branding.ColorRed + "│" + branding.ColorReset)
 
 		// Logo column: leftPad + content/empty + rightPad
 		sb.WriteString(strings.Repeat(" ", logoPadLeft))
@@ -134,11 +134,11 @@ func renderWelcomeBanner() string {
 		sb.WriteString(strings.Repeat(" ", textPadRight))
 
 		// Right border (dark red)
-		sb.WriteString(branding.ColorDarkRed + "│" + branding.ColorReset + "\n")
+		sb.WriteString(branding.ColorRed + "│" + branding.ColorReset + "\n")
 	}
 
 	// Full-width separator before connection info
-	sb.WriteString(branding.ColorDarkRed + "├" + strings.Repeat("─", innerWidth) + "┤" + branding.ColorReset + "\n")
+	sb.WriteString(branding.ColorRed + "├" + strings.Repeat("─", innerWidth) + "┤" + branding.ColorReset + "\n")
 
 	// Connection info rows (full width, left-aligned with padding)
 	connLines := buildConnectionInfo()
@@ -148,16 +148,16 @@ func renderWelcomeBanner() string {
 		if rightPad < 0 {
 			rightPad = 0
 		}
-		sb.WriteString(branding.ColorDarkRed + "│" + branding.ColorReset)
+		sb.WriteString(branding.ColorRed + "│" + branding.ColorReset)
 		sb.WriteString("  ") // Left padding
 		sb.WriteString(branding.ColorBoldWhite + connLine + branding.ColorReset)
 		sb.WriteString(strings.Repeat(" ", rightPad))
-		sb.WriteString(branding.ColorDarkRed + "│" + branding.ColorReset + "\n")
+		sb.WriteString(branding.ColorRed + "│" + branding.ColorReset + "\n")
 	}
 
 	// Bottom border: ╰───...───╯
 	bottomBorder := "╰" + strings.Repeat("─", innerWidth) + "╯"
-	sb.WriteString(branding.ColorDarkRed + bottomBorder + branding.ColorReset + "\n")
+	sb.WriteString(branding.ColorRed + bottomBorder + branding.ColorReset + "\n")
 
 	return sb.String()
 }

@@ -34,7 +34,6 @@ const (
 
 	// ANSI color codes for terminal output
 	ColorRed       = "\033[38;2;228;0;43m" // F5 Brand Red (#E4002B)
-	ColorDarkRed   = "\033[38;2;139;0;0m"  // Dark Red (#8B0000) for frame
 	ColorBoldWhite = "\033[1;97m"          // Bold bright white
 	ColorReset     = "\033[0m"             // Reset to default
 
