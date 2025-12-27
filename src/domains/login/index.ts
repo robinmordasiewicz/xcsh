@@ -1,5 +1,5 @@
 /**
- * Login Domain - Profile management for F5 XC authentication
+ * Login Domain - Authentication, identity, and session management for F5 XC
  */
 
 import type { DomainDefinition, SubcommandGroup } from "../registry.js";
@@ -8,6 +8,7 @@ import { showCommand } from "./profile/show.js";
 import { createCommand } from "./profile/create.js";
 import { useCommand } from "./profile/use.js";
 import { deleteCommand } from "./profile/delete.js";
+import { contextSubcommands } from "./context/index.js";
 
 /**
  * Profile subcommand group
@@ -29,7 +30,10 @@ const profileSubcommands: SubcommandGroup = {
  */
 export const loginDomain: DomainDefinition = {
 	name: "login",
-	description: "Authentication and profile management",
+	description: "Authentication, identity, and session management",
 	commands: new Map(),
-	subcommands: new Map([["profile", profileSubcommands]]),
+	subcommands: new Map([
+		["profile", profileSubcommands],
+		["context", contextSubcommands],
+	]),
 };

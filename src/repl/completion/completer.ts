@@ -355,23 +355,13 @@ export class Completer {
 				category: "builtin",
 			},
 			{
-				text: "namespace",
-				description: "Set default namespace",
-				category: "builtin",
-			},
-			{
-				text: "ns",
-				description: "Set default namespace (alias)",
-				category: "builtin",
-			},
-			{
 				text: "context",
-				description: "Show current context",
+				description: "Show current navigation context",
 				category: "builtin",
 			},
 			{
 				text: "ctx",
-				description: "Show current context (alias)",
+				description: "Show current navigation context (alias)",
 				category: "builtin",
 			},
 		);
