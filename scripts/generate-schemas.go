@@ -31,6 +31,8 @@ var (
 
 // criticalResources are resources that MUST have schemas generated
 // These are core F5 XC resources that AI assistants commonly work with
+// NOTE: This list can be overridden by x-ves-critical extension in upstream specs
+// When upstream adds x-ves-critical markers, loadCriticalResourcesFromIndex() will use those instead
 var criticalResources = []string{
 	"http_loadbalancer",
 	"tcp_loadbalancer",
@@ -48,6 +50,9 @@ var criticalResources = []string{
 	"azure_vnet_site",
 	"gcp_vpc_site",
 }
+
+// criticalResourcesSource tracks where the critical resources list came from
+var criticalResourcesSource = "hardcoded fallback"
 
 // metadataOnlyResources are resources that intentionally have empty CreateSpecType schemas
 // These resources only require metadata (name, namespace, labels) for creation - no additional spec fields
@@ -114,10 +119,57 @@ func isImmutableField(fieldName string) (bool, string) {
 	return false, ""
 }
 
+// indexSpec represents the structure of .specs/index.json
+type indexSpec struct {
+	Specifications []struct {
+		Domain            string   `json:"domain"`
+		CriticalResources []string `json:"x-ves-critical-resources,omitempty"`
+	} `json:"specifications"`
+	// Future: x-ves-critical-resources at top level for global critical list
+	CriticalResources []string `json:"x-ves-critical-resources,omitempty"`
+}
+
+// loadCriticalResourcesFromIndex attempts to load critical resources from upstream spec index.json
+// Returns true if loaded from index, false if using hardcoded fallback
+func loadCriticalResourcesFromIndex(indexPath string, verbose bool) bool {
+	data, err := os.ReadFile(indexPath)
+	if err != nil {
+		if verbose {
+			fmt.Printf("Note: Could not read index.json (%v), using hardcoded critical resources\n", err)
+		}
+		return false
+	}
+
+	var index indexSpec
+	if err := json.Unmarshal(data, &index); err != nil {
+		if verbose {
+			fmt.Printf("Note: Could not parse index.json (%v), using hardcoded critical resources\n", err)
+		}
+		return false
+	}
+
+	// Check for global x-ves-critical-resources (future upstream enhancement)
+	if len(index.CriticalResources) > 0 {
+		criticalResources = index.CriticalResources
+		criticalResourcesSource = "upstream index.json (x-ves-critical-resources)"
+		return true
+	}
+
+	// Future: Could also aggregate per-domain critical resources
+	// For now, if upstream doesn't have the extension, use hardcoded fallback
+	return false
+}
+
 func main() {
 	flag.Parse()
 
+	// Try to load critical resources from upstream spec metadata
+	// Falls back to hardcoded list if x-ves-critical-resources not present in specs
+	indexPath := filepath.Join(filepath.Dir(*specsDir), "index.json")
+	loadCriticalResourcesFromIndex(indexPath, *verbose)
+
 	if *verbose {
+		fmt.Printf("Critical resources source: %s (%d resources)\n", criticalResourcesSource, len(criticalResources))
 		fmt.Println("Loading OpenAPI specifications...")
 	}
 

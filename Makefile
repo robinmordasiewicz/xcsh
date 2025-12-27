@@ -42,8 +42,9 @@ LLM_WORKERS?=8
         generate-schemas validate-schemas report-schemas generate-schemas-strict \
         generate-llm-descriptions generate-schemas-with-llm maybe-llm-descriptions \
         ci pre-commit pre-push verify-schemas-ci verify-lint-config \
-        download-specs download-specs-force \
-        generate generate-domains generate-resources validate-generated ci-generate clean-generated
+        download-specs download-specs-force check-upstream \
+        generate generate-domains generate-resources validate-generated ci-generate clean-generated \
+        ts ts-build ts-test ts-lint ts-check ts-install ts-check-upstream ts-generate
 
 # Default target
 all: build
@@ -351,6 +352,15 @@ download-specs-force:
 	@rm -rf .specs
 	@./scripts/download-specs.sh
 
+# Check for upstream API specification updates without downloading
+# Useful for CI to detect when specs need updating
+check-upstream:
+	@./scripts/check-upstream.sh
+
+# Check for upstream updates (JSON output for scripting)
+check-upstream-json:
+	@./scripts/check-upstream.sh --json
+
 # Generate examples from OpenAPI specifications
 # This creates pkg/types/examples_generated.go with JSON examples for CLI help
 generate-examples: download-specs
@@ -524,6 +534,56 @@ docs-build: docs-all
 		exit 1; \
 	fi
 
+# ============================================================================
+# TypeScript CLI Build Targets
+# ============================================================================
+
+# Run all TypeScript checks (lint, typecheck, test, build)
+ts: ts-check ts-test ts-build
+	@echo "✅ TypeScript CLI all checks passed"
+
+# Build the TypeScript CLI
+ts-build:
+	@echo "Building TypeScript CLI..."
+	@npm run build
+	@echo "✅ Build complete"
+
+# Run TypeScript unit tests
+ts-test:
+	@echo "Running TypeScript tests..."
+	@npm test -- --run
+	@echo "✅ Tests passed"
+
+# Run TypeScript linting and formatting checks
+ts-lint:
+	@echo "Checking lint and formatting..."
+	@npm run lint && npm run format:check
+	@echo "✅ Lint passed"
+
+# Run all TypeScript validation (typecheck + lint)
+ts-check:
+	@echo "Validating TypeScript..."
+	@npm run typecheck && npm run lint && npm run format:check
+	@echo "✅ Validation passed"
+
+# Install npm dependencies
+ts-install:
+	@echo "Installing npm dependencies..."
+	@npm install
+	@echo "✅ Dependencies installed"
+
+# Generate TypeScript domain registry from specs
+ts-generate:
+	@echo "Generating TypeScript domains from specs..."
+	@npm run generate:domains
+	@echo "✅ Domain generation complete"
+
+# Check if upstream API spec updates are available
+ts-check-upstream: check-upstream
+	@echo "Note: TypeScript CLI uses upstream specs from .specs/"
+
+# ============================================================================
+
 # Show version info
 version:
 	@echo "Version: $(VERSION)"
@@ -579,6 +639,16 @@ help:
 	@echo "=== API Specifications ==="
 	@echo "  make download-specs     - Download latest enriched API specs (auto-cached)"
 	@echo "  make download-specs-force - Force re-download specs (bypass cache)"
+	@echo "  make check-upstream     - Check if upstream specs have updates available"
+	@echo ""
+	@echo "=== TypeScript CLI ==="
+	@echo "  make ts                 - Run all TypeScript checks (lint, test, build)"
+	@echo "  make ts-build           - Build the TypeScript CLI"
+	@echo "  make ts-test            - Run unit tests"
+	@echo "  make ts-lint            - Run linting and format checks"
+	@echo "  make ts-check           - Run validation (typecheck + lint)"
+	@echo "  make ts-install         - Install npm dependencies"
+	@echo "  make ts-generate        - Generate domains from specs"
 	@echo ""
 	@echo "=== Code Generation Commands ==="
 	@echo "  make generate          - Run full idempotent generation pipeline"
