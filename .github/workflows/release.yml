@@ -72,14 +72,25 @@ jobs:
           LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
           echo "Latest tag: $LATEST_TAG"
 
-          # Extract version numbers
-          VERSION=${LATEST_TAG#v}
-          MAJOR=$(echo $VERSION | cut -d. -f1)
-          MINOR=$(echo $VERSION | cut -d. -f2)
+          # Extract version numbers from tag
+          TAG_VERSION=${LATEST_TAG#v}
+          TAG_MAJOR=$(echo $TAG_VERSION | cut -d. -f1)
+          TAG_MINOR=$(echo $TAG_VERSION | cut -d. -f2)
 
-          # Increment minor version
-          NEW_MINOR=$((MINOR + 1))
-          NEW_VERSION="${MAJOR}.${NEW_MINOR}.0"
+          # Read major version from package.json (source of truth for major versions)
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          PKG_MAJOR=$(echo $PKG_VERSION | cut -d. -f1)
+          echo "Package.json version: $PKG_VERSION (major: $PKG_MAJOR)"
+
+          # If package.json major version is higher, use it (major version bump)
+          if [ "$PKG_MAJOR" -gt "$TAG_MAJOR" ]; then
+            echo "Major version bump detected from package.json"
+            NEW_VERSION="${PKG_MAJOR}.0.0"
+          else
+            # Normal minor version increment
+            NEW_MINOR=$((TAG_MINOR + 1))
+            NEW_VERSION="${TAG_MAJOR}.${NEW_MINOR}.0"
+          fi
 
           echo "New version: v$NEW_VERSION"
           echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
