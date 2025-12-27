@@ -33,23 +33,6 @@ repos:
         name: Prevent commits to main/master
         args: ['--branch', 'main', '--branch', 'master']
 
-  # Go linting - matches CI/CD golangci-lint v2
-  - repo: https://github.com/golangci/golangci-lint
-    rev: v2.7.2
-    hooks:
-      - id: golangci-lint
-        name: Run golangci-lint
-        args: ['--timeout=5m']
-
-  # Go formatting
-  - repo: https://github.com/dnephin/pre-commit-golang
-    rev: v0.5.1
-    hooks:
-      - id: go-fmt
-        name: Format Go code
-      - id: go-mod-tidy
-        name: Tidy go.mod
-
   # Shell script linting
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.10.0.1
@@ -102,7 +85,34 @@ repos:
     hooks:
       - id: check-github-workflows
         name: Validate GitHub Workflows
-      - id: check-jsonschema
-        name: Validate GoReleaser config
-        files: ^\.goreleaser\.ya?ml$
-        args: ['--schemafile', 'https://goreleaser.com/static/schema.json']
+
+  # TypeScript/React linting and formatting
+  - repo: local
+    hooks:
+      - id: ts-typecheck
+        name: TypeScript type check
+        entry: bash -c 'npm run typecheck'
+        language: system
+        files: ^src/.*\.(ts|tsx)$
+        pass_filenames: false
+
+      - id: ts-eslint
+        name: ESLint TypeScript/React
+        entry: bash -c 'npx eslint --fix src/'
+        language: system
+        files: ^src/.*\.(ts|tsx)$
+        pass_filenames: false
+
+      - id: ts-prettier
+        name: Prettier TypeScript/React
+        entry: bash -c 'npx prettier --write "src/**/*.{ts,tsx}"'
+        language: system
+        files: ^src/.*\.(ts|tsx)$
+        pass_filenames: false
+
+      - id: ts-security-audit
+        name: npm security audit
+        entry: bash -c 'npm audit --audit-level=high || true'
+        language: system
+        files: ^package(-lock)?\.json$
+        pass_filenames: false
