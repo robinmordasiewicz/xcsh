@@ -435,19 +435,6 @@ export function App(): React.ReactElement {
 				))}
 			</Box>
 
-			{/* Suggestions popup */}
-			{completion.isShowing && completion.suggestions.length > 0 && (
-				<Suggestions
-					suggestions={toUISuggestions(completion.suggestions)}
-					selectedIndex={completion.selectedIndex}
-					onSelect={handleSuggestionSelect}
-					onNavigate={handleSuggestionNavigate}
-					onCancel={completion.hide}
-					maxVisible={10}
-					isActive={false} // Let App handle keyboard
-				/>
-			)}
-
 			{/* Input box */}
 			<InputBox
 				prompt={prompt}
@@ -459,8 +446,20 @@ export function App(): React.ReactElement {
 				inputKey={inputKey}
 			/>
 
-			{/* Status bar */}
-			<StatusBar gitInfo={gitInfo} width={width} hint={statusHint} />
+			{/* Suggestions popup OR Status bar - mutually exclusive to conserve space */}
+			{completion.isShowing && completion.suggestions.length > 0 ? (
+				<Suggestions
+					suggestions={toUISuggestions(completion.suggestions)}
+					selectedIndex={completion.selectedIndex}
+					onSelect={handleSuggestionSelect}
+					onNavigate={handleSuggestionNavigate}
+					onCancel={completion.hide}
+					maxVisible={10}
+					isActive={false} // Let App handle keyboard
+				/>
+			) : (
+				<StatusBar gitInfo={gitInfo} width={width} hint={statusHint} />
+			)}
 		</Box>
 	);
 }
