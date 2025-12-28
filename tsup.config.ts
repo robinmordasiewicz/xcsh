@@ -1,17 +1,36 @@
 import { defineConfig } from "tsup";
 import { readFileSync } from "fs";
+import { execSync } from "child_process";
 
 // Read package.json version
 const packageJson = JSON.parse(readFileSync("./package.json", "utf-8"));
 
+// Fetch latest release version from GitHub
+function fetchLatestRelease(): string | null {
+	try {
+		const result = execSync(
+			'curl -s --connect-timeout 3 "https://api.github.com/repos/robinmordasiewicz/xcsh/releases/latest" | grep \'"tag_name":\' | sed -E \'s/.*"v?([^"]+)".*/\\1/\'',
+			{ encoding: "utf-8", timeout: 5000 },
+		).trim();
+		// Validate we got a version-like string (e.g., "6.9.0")
+		if (result && /^\d+\.\d+\.\d+/.test(result)) {
+			return result;
+		}
+		return null;
+	} catch {
+		// Network unavailable or timeout
+		return null;
+	}
+}
+
 // Generate build version
-// Priority: XCSH_VERSION env var > package.json version
+// Priority: XCSH_VERSION env var > latest release + timestamp > DEV + timestamp
 function getBuildVersion(): string {
 	if (process.env.XCSH_VERSION) {
 		return process.env.XCSH_VERSION;
 	}
 
-	// Use package version with build timestamp for dev builds
+	// Generate YYYYMMDDHHMM timestamp for dev builds
 	const now = new Date();
 	const timestamp = [
 		now.getFullYear(),
@@ -21,7 +40,14 @@ function getBuildVersion(): string {
 		String(now.getMinutes()).padStart(2, "0"),
 	].join("");
 
-	return `${packageJson.version}-${timestamp}`;
+	// Try to fetch latest release version
+	const latestRelease = fetchLatestRelease();
+	if (latestRelease) {
+		return `${latestRelease}-${timestamp}`;
+	}
+
+	// Offline fallback
+	return `DEV-${timestamp}`;
 }
 
 export default defineConfig({

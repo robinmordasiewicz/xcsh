@@ -9,11 +9,13 @@
 import { customDomains } from "./registry.js";
 import { loginDomain } from "./login/index.js";
 import { cloudstatusDomain, cloudstatusAliases } from "./cloudstatus/index.js";
+import { completionDomain } from "./completion/index.js";
 
 // Register custom domains
 // Only domains with no upstream API equivalent stay as custom domains
 customDomains.register(loginDomain);
 customDomains.register(cloudstatusDomain);
+customDomains.register(completionDomain);
 
 // Domain alias mapping (alias -> canonical name)
 const domainAliases = new Map<string, string>();
@@ -38,6 +40,7 @@ export { successResult, errorResult } from "./registry.js";
 // Export domain definitions for reference
 export { loginDomain } from "./login/index.js";
 export { cloudstatusDomain } from "./cloudstatus/index.js";
+export { completionDomain } from "./completion/index.js";
 // Note: subscription is now an extension - see src/extensions/subscription/
 
 /**

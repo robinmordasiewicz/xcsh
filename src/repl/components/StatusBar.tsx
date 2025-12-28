@@ -13,6 +13,7 @@ import { CLI_NAME } from "../../branding/index.js";
  */
 export interface GitInfo {
 	inRepo: boolean;
+	repoName: string;
 	branch: string;
 	isDirty: boolean;
 	ahead: number;
@@ -66,26 +67,24 @@ export function StatusBar({
 	width = 80,
 	hint = "Ctrl+C: quit",
 }: StatusBarProps): React.ReactElement {
-	// Left side: CLI name and git info
+	// Left side: repo/branch or CLI name
 	const renderLeft = (): React.ReactElement => {
-		const content = CLI_NAME;
-
 		if (gitInfo?.inRepo) {
 			const icon = getStatusIcon(gitInfo);
 			const color = getStatusColor(gitInfo);
 
 			return (
 				<Text>
-					<Text color="#ffffff">{CLI_NAME} (</Text>
-					<Text color="#ffffff">{gitInfo.branch}</Text>
+					<Text color="#ffffff">{gitInfo.repoName}</Text>
+					<Text color="#666666">/</Text>
+					<Text color={color}>{gitInfo.branch}</Text>
 					<Text> </Text>
 					<Text color={color}>{icon}</Text>
-					<Text color="#ffffff">)</Text>
 				</Text>
 			);
 		}
 
-		return <Text color="#ffffff">{content}</Text>;
+		return <Text color="#ffffff">{CLI_NAME}</Text>;
 	};
 
 	// Right side: keyboard hints
@@ -108,6 +107,7 @@ export function StatusBar({
 export function getGitInfo(): GitInfo {
 	const defaultInfo: GitInfo = {
 		inRepo: false,
+		repoName: "",
 		branch: "",
 		isDirty: false,
 		ahead: 0,
@@ -123,6 +123,18 @@ export function getGitInfo(): GitInfo {
 			});
 		} catch {
 			return defaultInfo;
+		}
+
+		// Get repository name from top-level directory
+		let repoName = "";
+		try {
+			const topLevel = execSync("git rev-parse --show-toplevel", {
+				encoding: "utf-8",
+				stdio: ["pipe", "pipe", "pipe"],
+			}).trim();
+			repoName = topLevel.split("/").pop() ?? "";
+		} catch {
+			repoName = "repo";
 		}
 
 		// Get current branch
@@ -168,6 +180,7 @@ export function getGitInfo(): GitInfo {
 
 		return {
 			inRepo: true,
+			repoName,
 			branch,
 			isDirty,
 			ahead,

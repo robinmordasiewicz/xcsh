@@ -26,7 +26,7 @@ NPX?=npx
 .PHONY: all build build-all test clean lint fmt install help \
         docs docs-all docs-clean docs-serve docs-build \
         download-specs download-specs-force check-upstream \
-        generate generate-domains validate-generated \
+        generate generate-domains generate-completions validate-generated \
         ts ts-build ts-test ts-lint ts-check ts-install ts-generate \
         ci pre-commit pre-push version
 
@@ -214,11 +214,12 @@ check-upstream-json:
 # Code Generation
 # =============================================================================
 
-# Generate domain registry from upstream specs
-generate: download-specs generate-domains validate-generated
+# Generate all code (domains + completions) from upstream specs
+generate: download-specs generate-domains generate-completions validate-generated
 	@echo ""
 	@echo "✅ Code generation complete!"
 	@echo "   Domains: src/types/domains_generated.ts"
+	@echo "   Completions: completions/"
 
 # Generate TypeScript domain registry from specs
 generate-domains: download-specs
@@ -226,10 +227,20 @@ generate-domains: download-specs
 	@$(NPX) tsx scripts/generate-domains.ts
 	@echo "✓ Generated: src/types/domains_generated.ts"
 
+# Generate shell completion scripts
+generate-completions: generate-domains
+	@echo "🔧 Generating shell completions..."
+	@$(NPX) tsx scripts/generate-completions.ts
+	@echo "✓ Generated: completions/"
+
 # Validate generated files are present
 validate-generated:
 	@echo "🔍 Validating generated code..."
 	@test -f src/types/domains_generated.ts || (echo "❌ domains_generated.ts missing" && exit 1)
+	@test -d completions || (echo "❌ completions/ directory missing" && exit 1)
+	@test -f completions/xcsh.bash || (echo "❌ xcsh.bash completion missing" && exit 1)
+	@test -f completions/_xcsh || (echo "❌ _xcsh zsh completion missing" && exit 1)
+	@test -f completions/xcsh.fish || (echo "❌ xcsh.fish completion missing" && exit 1)
 	@echo "✓ All generated files present"
 
 # =============================================================================
@@ -394,9 +405,10 @@ help:
 	@echo "  make check-upstream     - Check if upstream specs have updates"
 	@echo ""
 	@echo "=== Code Generation ==="
-	@echo "  make generate           - Run full generation pipeline"
-	@echo "  make generate-domains   - Generate domain registry from specs"
-	@echo "  make validate-generated - Validate generated files are present"
+	@echo "  make generate             - Run full generation pipeline (domains + completions)"
+	@echo "  make generate-domains     - Generate domain registry from specs"
+	@echo "  make generate-completions - Generate shell completion scripts"
+	@echo "  make validate-generated   - Validate generated files are present"
 	@echo ""
 	@echo "=== Compatibility Aliases ==="
 	@echo "  make ts                 - Run all checks (alias for check + test + build)"
