@@ -12,8 +12,7 @@ on:
   push:
     paths:
       - '.specs/domain_config.yaml'
-      - 'scripts/generate-domains.go'
-      - 'scripts/templates/domains.go.tmpl'
+      - 'scripts/generate-domains.ts'
 
 jobs:
   # Step 1: Check if upstream has new version
@@ -71,25 +70,26 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Go
-        uses: actions/setup-go@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          go-version: '1.23'
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Download latest specs
         run: ./scripts/download-specs.sh
 
       - name: Generate domains
-        run: go run scripts/generate-domains.go
-
-      - name: Generate resources
-        run: go run scripts/generate-schemas.go --update-resources
+        run: npx tsx scripts/generate-domains.ts
 
       - name: Validate generated code
-        run: go build ./...
+        run: npm run build
 
       - name: Run tests
-        run: go test -v ./pkg/...
+        run: npm test
 
       - name: Create validation report
         id: validate
@@ -98,10 +98,10 @@ jobs:
           echo "" >> validation-report.md
           echo "- **Build:** SUCCESS" >> validation-report.md
           echo "- **Tests:** PASSED" >> validation-report.md
-          echo "- **Generated Files:** domains_generated.go, resources_generated.go" >> validation-report.md
+          echo "- **Generated Files:** domains_generated.ts" >> validation-report.md
           echo "" >> validation-report.md
           echo "### Domain Summary" >> validation-report.md
-          DOMAIN_COUNT=$(grep -c '".*": {' pkg/types/domains_generated.go || echo "0")
+          DOMAIN_COUNT=$(grep -c 'name:' src/types/domains_generated.ts || echo "0")
           echo "- **Total Domains:** $DOMAIN_COUNT" >> validation-report.md
           echo "" >> validation-report.md
           echo "### Upstream Version" >> validation-report.md
@@ -119,7 +119,7 @@ jobs:
 
             **Changes:**
             - Updated specs from ${{ needs.check-upstream.outputs.current_version }} to ${{ needs.check-upstream.outputs.new_version }}
-            - Regenerated: domains_generated.go, resources_generated.go
+            - Regenerated: domains_generated.ts
             - Validated: Build ✅ Tests ✅
 
             🤖 Generated with [Claude Code](https://claude.com/claude-code)
@@ -143,14 +143,12 @@ jobs:
             - [x] Domain count matches upstream specs
 
             ### 🔎 Review Guidance
-            1. Check the git diff for `pkg/types/domains_generated.go` to see domain changes
-            2. Review `pkg/types/resources_generated.go` for resource updates
-            3. Verify no manual modifications are needed to `.specs/domain_config.yaml`
-            4. Merge if CI checks pass
+            1. Check the git diff for `src/types/domains_generated.ts` to see domain changes
+            2. Verify no manual modifications are needed to `.specs/domain_config.yaml`
+            3. Merge if CI checks pass
 
             ### 📝 Files Changed
-            - `pkg/types/domains_generated.go` - Auto-generated domain registry
-            - `pkg/types/resources_generated.go` - Auto-generated resource schemas
+            - `src/types/domains_generated.ts` - Auto-generated domain registry
             - `.specs/` - Updated API specifications
             - `.specs/.version` - Updated version tracking
 

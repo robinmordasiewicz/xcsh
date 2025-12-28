@@ -1,6 +1,5 @@
 /**
  * Domain Registry - Extensible custom command domain system
- * Mirrors Go implementation in xcsh-go/cmd/domains.go
  */
 
 import type { REPLSession } from "../repl/session.js";

@@ -4,12 +4,12 @@ Generate source build documentation with real CLI output.
 
 Usage:
     python scripts/generate-source-docs.py \
-        --go-version "go1.23.4" \
+        --node-version "22" \
         --prereq-output "$(cat prereq.txt)" \
         --clone-output "$(cat clone.txt)" \
+        --install-output "$(cat install.txt)" \
         --build-output "$(cat build.txt)" \
         --version-output "$(cat version.txt)" \
-        --ldflags-build-output "$(cat ldflags.txt)" \
         --output docs/install/source.md
 """
 
@@ -34,12 +34,12 @@ def clean_output(text):
 
 def main():
     parser = argparse.ArgumentParser(description="Generate source build docs with real output")
-    parser.add_argument("--go-version", help="Go version used for build")
+    parser.add_argument("--node-version", help="Node.js version used for build")
     parser.add_argument("--prereq-output", help="Prerequisites check output")
     parser.add_argument("--clone-output", help="Git clone output")
-    parser.add_argument("--build-output", help="Go build output")
+    parser.add_argument("--install-output", help="npm install output")
+    parser.add_argument("--build-output", help="npm build output")
     parser.add_argument("--version-output", help="xcsh version output")
-    parser.add_argument("--ldflags-build-output", help="Build with ldflags output")
     parser.add_argument("--output", default="docs/install/source.md", help="Output file path")
     parser.add_argument("--templates", default="scripts/templates", help="Templates directory")
 
@@ -59,12 +59,12 @@ def main():
     template = env.get_template("source.md.j2")
 
     content = template.render(
-        go_version=args.go_version,
+        node_version=args.node_version,
         prereq_output=clean_output(args.prereq_output),
         clone_output=clean_output(args.clone_output),
+        install_output=clean_output(args.install_output),
         build_output=clean_output(args.build_output),
         version_output=clean_output(args.version_output),
-        ldflags_build_output=clean_output(args.ldflags_build_output),
         generation_date=datetime.now(UTC).strftime("%Y-%m-%d"),
     )
 
@@ -73,8 +73,8 @@ def main():
     output_path.write_text(content)
 
     print(f"Generated: {output_path}")
-    if args.go_version:
-        print(f"  Go version: {args.go_version}")
+    if args.node_version:
+        print(f"  Node.js version: {args.node_version}")
     if args.version_output:
         print(f"  Version output: {len(clean_output(args.version_output))} chars")
 

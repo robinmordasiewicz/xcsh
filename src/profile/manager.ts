@@ -1,6 +1,5 @@
 /**
  * ProfileManager - XDG-compliant profile storage and management
- * Mirrors Go implementation in xcsh-go/pkg/profile/manager.go
  */
 
 import { promises as fs } from "fs";

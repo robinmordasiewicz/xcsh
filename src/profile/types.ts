@@ -1,6 +1,5 @@
 /**
  * Profile types for F5 XC authentication and configuration
- * Mirrors Go implementation in xcsh-go/pkg/profile/profile.go
  */
 
 /**

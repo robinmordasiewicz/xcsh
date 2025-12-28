@@ -84,17 +84,13 @@ The Homebrew cask includes shell completions for bash, zsh, and fish. These are 
 After installation, verify xcsh is working:
 
 ```bash
-xcsh version
+xcsh --version
 ```
 
-{% if version and commit and built %}
+{% if version %}
 Expected output:
 
 ```text
-xcsh version {{ version }}
-  commit:   {{ commit }}
-  built:    {{ built }}
-  go:       {{ go_version if go_version else "go1.23.x" }}
-  platform: {{ platform if platform else "darwin/arm64" }} [Possible values: linux/amd64,linux/arm64,darwin/amd64,darwin/arm64]
+{{ version }}
 ```
 {% endif %}

@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       force_regenerate:
-        description: 'Force documentation regeneration (ignore spec hash)'
+        description: 'Force documentation regeneration'
         required: false
         default: false
         type: boolean
@@ -24,7 +24,6 @@ on:
       - 'docs/**'
       - '!docs/commands/**'
       - 'mkdocs.yml'
-      - 'scripts/generate-docs.py'
       - 'scripts/generate-homebrew-docs.py'
       - 'scripts/generate-source-docs.py'
       - 'scripts/templates/**'
@@ -40,7 +39,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  GO_VERSION: '1.25'
+  NODE_VERSION: '22'
   PYTHON_VERSION: '3.13'
 
 jobs:
@@ -72,8 +71,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-  check-spec:
-    name: Check Spec Changes
+  check-release:
+    name: Check Release Status
     runs-on: ubuntu-latest
     needs: [wait-for-release]
     # Skip if:
@@ -89,37 +88,40 @@ jobs:
         github.event_name == 'workflow_dispatch'
       )
     outputs:
-      needs_generation: ${{ steps.compare.outputs.needs_generation }}
-      spec_hash: ${{ steps.spec-hash.outputs.hash }}
       recent_release: ${{ steps.check-release.outputs.recent_release }}
+      version: ${{ steps.check-release.outputs.version }}
     steps:
       - name: Check for recent release
-        if: github.event_name == 'workflow_run'
         id: check-release
         run: |
           # Get the most recent release
           LATEST_RELEASE=$(gh api repos/${{ github.repository }}/releases/latest --jq '.published_at' 2>/dev/null || echo "")
+          LATEST_TAG=$(gh api repos/${{ github.repository }}/releases/latest --jq '.tag_name' 2>/dev/null || echo "")
 
           if [ -n "$LATEST_RELEASE" ]; then
             # Convert ISO 8601 to epoch using GNU date
             RELEASE_TIME=$(date -d "$LATEST_RELEASE" +%s 2>/dev/null || echo "0")
             NOW=$(date +%s)
             DIFF=$((NOW - RELEASE_TIME))
+            VERSION="${LATEST_TAG#v}"
 
-            echo "Latest release: $LATEST_RELEASE"
+            echo "Latest release: $LATEST_RELEASE (v$VERSION)"
             echo "Time since release: ${DIFF}s"
 
             # Check if release was published in the last 10 minutes (600 seconds)
             if [ $DIFF -lt 600 ]; then
               echo "Recent release found (within 10 min), proceeding with docs generation"
               echo "recent_release=true" >> $GITHUB_OUTPUT
+              echo "version=$VERSION" >> $GITHUB_OUTPUT
             else
-              echo "No recent release (older than 10 min), skipping docs generation"
+              echo "No recent release (older than 10 min)"
               echo "recent_release=false" >> $GITHUB_OUTPUT
+              echo "version=$VERSION" >> $GITHUB_OUTPUT
             fi
           else
             echo "No release found"
             echo "recent_release=false" >> $GITHUB_OUTPUT
+            echo "version=" >> $GITHUB_OUTPUT
           fi
         env:
           GH_TOKEN: ${{ github.token }}
@@ -127,142 +129,16 @@ jobs:
       - name: Log if no recent release from workflow_run
         if: github.event_name == 'workflow_run' && steps.check-release.outputs.recent_release != 'true'
         run: |
-          echo "::notice::No recent release detected - will build docs with cached command docs (static changes only)"
-
-      - name: Checkout
-        if: github.event_name != 'workflow_run' || steps.check-release.outputs.recent_release == 'true'
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Set up Go
-        if: github.event_name != 'workflow_run' || steps.check-release.outputs.recent_release == 'true'
-        uses: actions/setup-go@v6
-        with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: Build xcsh
-        if: github.event_name != 'workflow_run' || steps.check-release.outputs.recent_release == 'true'
-        run: go build -o xcsh .
-
-      - name: Generate spec and compute hash
-        if: github.event_name != 'workflow_run' || steps.check-release.outputs.recent_release == 'true'
-        id: spec-hash
-        run: |
-          ./xcsh --spec > spec.json
-          SPEC_HASH=$(sha256sum spec.json | cut -d' ' -f1)
-          echo "hash=$SPEC_HASH" >> $GITHUB_OUTPUT
-          echo "$SPEC_HASH" > spec-hash-current.txt
-          echo "Current spec hash: $SPEC_HASH"
-          echo "Spec size: $(wc -c < spec.json) bytes"
-
-      - name: Set generation flag
-        if: github.event_name != 'workflow_run' || steps.check-release.outputs.recent_release == 'true'
-        id: compare
-        run: |
-          # Always regenerate docs to ensure consistency
-          # Caching was removed to prevent stale documentation
-          echo "Documentation will always be regenerated for consistency"
-          echo "needs_generation=true" >> $GITHUB_OUTPUT
-          echo "::notice::needs_generation=true (always regenerate)"
-
-  generate:
-    name: Generate Command Docs
-    runs-on: ubuntu-latest
-    needs: check-spec
-    # Use always() to evaluate even when check-spec used always()
-    # Regenerate if: spec changed OR workflow_run with recent release (fallback for output propagation issues)
-    if: |
-      always() && !failure() && !cancelled() &&
-      (
-        needs.check-spec.outputs.needs_generation == 'true' ||
-        (github.event_name == 'workflow_run' && needs.check-spec.outputs.recent_release == 'true' && needs.check-spec.outputs.spec_hash != '')
-      )
-    steps:
-      - name: Debug - Log trigger conditions
-        run: |
-          echo "Event: ${{ github.event_name }}"
-          echo "needs_generation: ${{ needs.check-spec.outputs.needs_generation }}"
-          echo "recent_release: ${{ needs.check-spec.outputs.recent_release }}"
-          echo "spec_hash: ${{ needs.check-spec.outputs.spec_hash }}"
-
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Set up Go
-        uses: actions/setup-go@v6
-        with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install Python dependencies
-        run: pip install jinja2 pyyaml
-
-      - name: Build xcsh
-        run: go build -o xcsh .
-
-      - name: Generate command documentation
-        run: |
-          python scripts/generate-docs.py \
-            --cli-binary ./xcsh \
-            --output docs/commands \
-            --clean \
-            --update-mkdocs
-
-      - name: Validate cloudstatus documentation structure
-        run: |
-          echo "=== Validating cloudstatus documentation structure ==="
-
-          # Define required files matching mkdocs.yml navigation
-          REQUIRED_FILES=(
-            "docs/commands/cloudstatus/status/index.md"
-            "docs/commands/cloudstatus/summary/index.md"
-            "docs/commands/cloudstatus/watch/index.md"
-            "docs/commands/cloudstatus/components/index.md"
-            "docs/commands/cloudstatus/incidents/index.md"
-            "docs/commands/cloudstatus/maintenance/index.md"
-            "docs/commands/cloudstatus/pops/index.md"
-          )
-
-          MISSING_FILES=()
-          for file in "${REQUIRED_FILES[@]}"; do
-            if [ ! -f "$file" ]; then
-              MISSING_FILES+=("$file")
-            fi
-          done
-
-          if [ ${#MISSING_FILES[@]} -gt 0 ]; then
-            echo "::error::Missing required cloudstatus documentation files"
-            printf '  ❌ %s\n' "${MISSING_FILES[@]}"
-            echo ""
-            echo "Generated structure:"
-            ls -R docs/commands/cloudstatus/ || echo "Directory not found"
-            exit 1
-          fi
-
-          echo "✅ All required cloudstatus documentation files present"
-
-      - name: Upload generated docs
-        uses: actions/upload-artifact@v6
-        with:
-          name: generated-docs
-          path: docs/
-          retention-days: 7
+          echo "::notice::No recent release detected - will build docs with static content only"
 
   build-windows-docs:
     name: Build Windows Docs
     runs-on: windows-latest
-    needs: check-spec
+    needs: check-release
     # Run when there's a recent release (workflow_run) or on other triggers
     if: |
       always() && !failure() && !cancelled() &&
-      (github.event_name != 'workflow_run' || needs.check-spec.outputs.recent_release == 'true')
+      (github.event_name != 'workflow_run' || needs.check-release.outputs.recent_release == 'true')
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -371,27 +247,24 @@ jobs:
           # Add to PATH
           $env:PATH = "$installDir;$env:PATH"
 
-          # Verify installation
+          # Verify installation - TypeScript version uses --version flag
           $output += ""
           $output += "Verifying installation:"
-          $versionOutput = & "$installDir\xcsh.exe" version 2>&1
-          $output += $versionOutput
+          try {
+            $versionOutput = & "$installDir\xcsh.exe" --version 2>&1
+            $output += "xcsh version $versionOutput"
+            Write-Host "Version output: $versionOutput"
+          } catch {
+            Write-Host "::warning::Failed to get version: $_"
+            $output += "xcsh version $version (version check failed)"
+          }
 
           # Write output to file
           $output | Out-File -FilePath install-output.txt -Encoding utf8
 
-          # Parse version info
-          $versionLine = $versionOutput | Select-String -Pattern "xcsh version"
-          $commitLine = $versionOutput | Select-String -Pattern "commit:"
-          $builtLine = $versionOutput | Select-String -Pattern "built:"
-          $goLine = $versionOutput | Select-String -Pattern "go:"
-          $platformLine = $versionOutput | Select-String -Pattern "platform:"
-
+          # For TypeScript version, we just get the version number
           echo "version=$version" >> $env:GITHUB_OUTPUT
-          if ($commitLine) { echo "commit=$($commitLine -replace '.*commit:\s*', '')" >> $env:GITHUB_OUTPUT }
-          if ($builtLine) { echo "built=$($builtLine -replace '.*built:\s*', '')" >> $env:GITHUB_OUTPUT }
-          if ($goLine) { echo "go_version=$($goLine -replace '.*go:\s*', '')" >> $env:GITHUB_OUTPUT }
-          if ($platformLine) { echo "platform=$($platformLine -replace '.*platform:\s*', '')" >> $env:GITHUB_OUTPUT }
+          echo "node_version=22" >> $env:GITHUB_OUTPUT
 
           Write-Host "Installation output captured:"
           Get-Content install-output.txt
@@ -401,10 +274,7 @@ jobs:
         run: |
           python scripts/generate-windows-docs.py `
             --version "${{ steps.install.outputs.version }}" `
-            --commit "${{ steps.install.outputs.commit }}" `
-            --built "${{ steps.install.outputs.built }}" `
-            --go-version "${{ steps.install.outputs.go_version }}" `
-            --platform "${{ steps.install.outputs.platform }}" `
+            --node-version "${{ steps.install.outputs.node_version }}" `
             --install-output (Get-Content install-output.txt -Raw) `
             --output docs/install/windows.md
 
@@ -418,21 +288,14 @@ jobs:
   build:
     name: Build Documentation
     runs-on: macos-latest
-    needs: [check-spec, generate, build-windows-docs]
-    # Only run if generate succeeded - no cached docs fallback
-    if: always() && !failure() && !cancelled() && needs.generate.result == 'success'
+    needs: [check-release, build-windows-docs]
+    # Run if check-release succeeded
+    if: always() && !failure() && !cancelled() && needs.check-release.result == 'success'
     steps:
       - name: Checkout
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
-      - name: Download generated docs
-        if: needs.generate.result == 'success'
-        uses: actions/download-artifact@v7
-        with:
-          name: generated-docs
-          path: docs/
 
       - name: Download Windows docs
         if: needs.build-windows-docs.result == 'success'
@@ -510,56 +373,49 @@ jobs:
           ls -la /opt/homebrew/bin/xcsh* 2>/dev/null || ls -la /usr/local/bin/xcsh* 2>/dev/null || echo "No xcsh in bin"
 
           # Find xcsh - check multiple locations including Caskroom
-          F5XCCTL_PATH=""
+          XCSH_PATH=""
 
           # 1. Try which (if symlink was created)
-          F5XCCTL_PATH=$(which xcsh 2>/dev/null || true)
+          XCSH_PATH=$(which xcsh 2>/dev/null || true)
 
           # 2. Try common symlink locations
-          if [ -z "$F5XCCTL_PATH" ] || [ ! -x "$F5XCCTL_PATH" ]; then
+          if [ -z "$XCSH_PATH" ] || [ ! -x "$XCSH_PATH" ]; then
             for path in /opt/homebrew/bin/xcsh /usr/local/bin/xcsh; do
               if [ -x "$path" ]; then
-                F5XCCTL_PATH="$path"
+                XCSH_PATH="$path"
                 break
               fi
             done
           fi
 
           # 3. Try Caskroom location directly (ARM Mac)
-          if [ -z "$F5XCCTL_PATH" ] || [ ! -x "$F5XCCTL_PATH" ]; then
-            F5XCCTL_PATH=$(find /opt/homebrew/Caskroom/xcsh -name xcsh -type f 2>/dev/null | head -1 || true)
+          if [ -z "$XCSH_PATH" ] || [ ! -x "$XCSH_PATH" ]; then
+            XCSH_PATH=$(find /opt/homebrew/Caskroom/xcsh -name xcsh -type f 2>/dev/null | head -1 || true)
           fi
 
           # 4. Try Caskroom location directly (Intel Mac)
-          if [ -z "$F5XCCTL_PATH" ] || [ ! -x "$F5XCCTL_PATH" ]; then
-            F5XCCTL_PATH=$(find /usr/local/Caskroom/xcsh -name xcsh -type f 2>/dev/null | head -1 || true)
+          if [ -z "$XCSH_PATH" ] || [ ! -x "$XCSH_PATH" ]; then
+            XCSH_PATH=$(find /usr/local/Caskroom/xcsh -name xcsh -type f 2>/dev/null | head -1 || true)
           fi
 
-          echo "xcsh found at: $F5XCCTL_PATH"
+          echo "xcsh found at: $XCSH_PATH"
 
-          if [ -z "$F5XCCTL_PATH" ] || [ ! -x "$F5XCCTL_PATH" ]; then
+          if [ -z "$XCSH_PATH" ] || [ ! -x "$XCSH_PATH" ]; then
             echo "::error::xcsh binary not found after Homebrew installation"
             exit 1
           fi
 
-          VERSION_OUTPUT=$("$F5XCCTL_PATH" version 2>/dev/null || xcsh version)
-          echo "Full version output:"
-          echo "$VERSION_OUTPUT"
+          # TypeScript version uses --version flag (Commander.js)
+          VERSION_OUTPUT=$("$XCSH_PATH" --version 2>/dev/null || echo "")
+          echo "Version output: $VERSION_OUTPUT"
 
-          # Parse new format: xcsh version X.Y.Z
-          VERSION=$(echo "$VERSION_OUTPUT" | head -1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo "")
-          COMMIT=$(echo "$VERSION_OUTPUT" | grep 'commit:' | awk '{print $2}' || echo "")
-          BUILT=$(echo "$VERSION_OUTPUT" | grep 'built:' | awk '{print $2}' || echo "")
-          GO_VERSION=$(echo "$VERSION_OUTPUT" | grep 'go:' | awk '{print $2}' || echo "")
-          PLATFORM=$(echo "$VERSION_OUTPUT" | grep 'platform:' | awk '{print $2}' || echo "")
+          # Parse version (just the version number)
+          VERSION=$(echo "$VERSION_OUTPUT" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo "")
 
           echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "commit=$COMMIT" >> $GITHUB_OUTPUT
-          echo "built=$BUILT" >> $GITHUB_OUTPUT
-          echo "go_version=$GO_VERSION" >> $GITHUB_OUTPUT
-          echo "platform=$PLATFORM" >> $GITHUB_OUTPUT
+          echo "node_version=22" >> $GITHUB_OUTPUT
 
-          echo "Parsed - Version: $VERSION, Commit: $COMMIT, Built: $BUILT, Go: $GO_VERSION, Platform: $PLATFORM"
+          echo "Parsed - Version: $VERSION"
 
       - name: Fetch release info from GitHub API
         id: release-info
@@ -599,39 +455,27 @@ jobs:
           # Use Homebrew output if available, otherwise use GitHub API data
           if [ "${{ steps.homebrew-install.outputs.homebrew_success }}" == "true" ]; then
             VERSION="${{ steps.xcsh-version.outputs.version }}"
-            COMMIT="${{ steps.xcsh-version.outputs.commit }}"
-            BUILT="${{ steps.xcsh-version.outputs.built }}"
-            GO_VERSION="${{ steps.xcsh-version.outputs.go_version }}"
-            PLATFORM="${{ steps.xcsh-version.outputs.platform }}"
+            NODE_VERSION="${{ steps.xcsh-version.outputs.node_version }}"
           elif [ "${{ steps.release-info.outputs.has_release }}" == "true" ]; then
             VERSION="${{ steps.release-info.outputs.version }}"
-            COMMIT="${{ steps.release-info.outputs.commit }}"
-            BUILT="${{ steps.release-info.outputs.built }}"
-            GO_VERSION=""
-            PLATFORM=""
+            NODE_VERSION="22"
           else
             VERSION=""
-            COMMIT=""
-            BUILT=""
-            GO_VERSION=""
-            PLATFORM=""
+            NODE_VERSION=""
           fi
 
-          echo "Using - Version: $VERSION, Commit: $COMMIT, Built: $BUILT, Go: $GO_VERSION, Platform: $PLATFORM"
+          echo "Using - Version: $VERSION, Node: $NODE_VERSION"
 
           python scripts/generate-homebrew-docs.py \
             --version "$VERSION" \
-            --commit "$COMMIT" \
-            --built "$BUILT" \
-            --go-version "$GO_VERSION" \
-            --platform "$PLATFORM" \
+            --node-version "$NODE_VERSION" \
             --install-output "$(cat homebrew-output.txt 2>/dev/null || echo '')" \
             --output docs/install/homebrew.md
 
       - name: Wait for release assets to be available
         id: wait-assets
         # Only wait for assets on release events or workflow_run with recent release
-        if: github.event_name == 'release' || (github.event_name != 'workflow_run') || needs.check-spec.outputs.recent_release == 'true'
+        if: github.event_name == 'release' || (github.event_name != 'workflow_run') || needs.check-release.outputs.recent_release == 'true'
         run: |
           # Get the latest release version
           LATEST_TAG=$(gh api repos/${{ github.repository }}/releases/latest --jq '.tag_name' 2>/dev/null || echo "")
@@ -723,16 +567,13 @@ jobs:
           fi
 
           # Run install script with retry for checksum verification failures
-          # This handles the race condition where the Release workflow is still signing binaries
-          # and updating checksums.txt while we're trying to install
           INSTALL_MAX_RETRIES=5
           INSTALL_RETRY_COUNT=0
-          INSTALL_BASE_DELAY=30  # Longer delay for signing to complete
+          INSTALL_BASE_DELAY=30
           INSTALL_SUCCESS=false
 
           echo ""
           echo "=== Running install script with checksum retry logic ==="
-          echo "This handles race conditions with the Release signing workflow"
           echo ""
 
           while [ $INSTALL_RETRY_COUNT -lt $INSTALL_MAX_RETRIES ]; do
@@ -744,7 +585,6 @@ jobs:
             rm -f install-output.txt 2>/dev/null || true
 
             # Run the install script and capture output
-            # Pass GITHUB_TOKEN to avoid API rate limits in CI
             GITHUB_TOKEN=${{ github.token }} VES_NO_SUDO=1 VES_INSTALL_DIR=$HOME/.local/bin sh /tmp/install.sh > install-output.txt 2>&1
             INSTALL_EXIT_CODE=$?
 
@@ -757,18 +597,15 @@ jobs:
               break
             fi
 
-            # Check if this is a checksum verification failure (race condition with signing)
+            # Check if this is a checksum verification failure
             if grep -q "Checksum verification failed" install-output.txt; then
               echo ""
               echo "::warning::Checksum verification failed - Release signing may still be in progress"
-              echo "This is a known race condition. The signed binary and checksums.txt may be out of sync."
               echo ""
 
               if [ $INSTALL_RETRY_COUNT -lt $INSTALL_MAX_RETRIES ]; then
-                # Exponential backoff: 30s, 60s, 120s, 240s
                 DELAY=$((INSTALL_BASE_DELAY * (2 ** (INSTALL_RETRY_COUNT - 1))))
-                echo "Waiting ${DELAY}s for Release signing workflow to complete checksums update..."
-                echo "Retry $((INSTALL_RETRY_COUNT + 1)) of $INSTALL_MAX_RETRIES will start after delay."
+                echo "Waiting ${DELAY}s for Release signing workflow to complete..."
                 sleep $DELAY
                 continue
               fi
@@ -778,25 +615,6 @@ jobs:
             if [ $INSTALL_RETRY_COUNT -eq $INSTALL_MAX_RETRIES ]; then
               echo ""
               echo "::error::Install script failed after $INSTALL_MAX_RETRIES attempts"
-              echo "::error::Final exit code: $INSTALL_EXIT_CODE"
-
-              # Output structured error for automation
-              if grep -q "Checksum verification failed" install-output.txt; then
-                echo ""
-                echo "ERROR_JSON<<EOF"
-                cat <<JSONEOF
-          {
-            "error_code": "CHECKSUM_VERIFICATION_FAILED",
-            "error_type": "race_condition",
-            "attempts": $INSTALL_MAX_RETRIES,
-            "cause": "Release signing workflow may not have completed checksums update",
-            "automation_hint": "gh workflow run docs.yml -f force_regenerate=true",
-            "manual_fix": "Wait for Release workflow to fully complete, then re-run Documentation workflow"
-          }
-          JSONEOF
-                echo "EOF"
-              fi
-
               cat install-output.txt
               exit 1
             fi
@@ -833,22 +651,26 @@ jobs:
             --install-output "$(cat install-output.txt)" \
             --output docs/install/script.md
 
-      - name: Set up Go for source build test
-        uses: actions/setup-go@v6
+      - name: Set up Node.js for source build test
+        uses: actions/setup-node@v4
         with:
-          go-version: ${{ env.GO_VERSION }}
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Test source build and capture output
         id: source-build
         run: |
           # Capture prerequisites
           echo "Capturing prerequisites..."
-          GO_VER=$(go version)
+          NODE_VER=$(node --version)
+          NPM_VER=$(npm --version)
           GIT_VER=$(git --version)
 
           PREREQ_OUTPUT=$(cat <<EOF
-          $ go version
-          $GO_VER
+          $ node --version
+          $NODE_VER
+
+          $ npm --version
+          $NPM_VER
 
           $ git --version
           $GIT_VER
@@ -858,9 +680,9 @@ jobs:
           echo "$PREREQ_OUTPUT" >> $GITHUB_OUTPUT
           echo "EOFPREREQ" >> $GITHUB_OUTPUT
 
-          # Extract Go version for template
-          GO_VERSION_SHORT=$(echo "$GO_VER" | grep -oE 'go[0-9]+\.[0-9]+\.[0-9]+')
-          echo "go_version=$GO_VERSION_SHORT" >> $GITHUB_OUTPUT
+          # Extract Node version for template
+          NODE_VERSION_SHORT=$(echo "$NODE_VER" | sed 's/^v//')
+          echo "node_version=$NODE_VERSION_SHORT" >> $GITHUB_OUTPUT
 
           # Create temp directory for clean build test
           TEMP_DIR=$(mktemp -d)
@@ -882,14 +704,26 @@ jobs:
 
           cd xcsh
 
+          # Capture install output
+          echo "Installing dependencies..."
+          INSTALL_OUTPUT_RAW=$(npm ci 2>&1 | tail -20) || true
+          INSTALL_OUTPUT=$(cat <<EOF
+          $ npm ci
+          $INSTALL_OUTPUT_RAW
+          EOF
+          )
+          echo "install_output<<EOFINSTALL" >> $GITHUB_OUTPUT
+          echo "$INSTALL_OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOFINSTALL" >> $GITHUB_OUTPUT
+
           # Capture build output
           echo "Building xcsh..."
-          BUILD_OUTPUT_RAW=$(go build -o xcsh . 2>&1) || true
+          BUILD_OUTPUT_RAW=$(npm run build 2>&1 | tail -20) || true
           if [ -z "$BUILD_OUTPUT_RAW" ]; then
             BUILD_OUTPUT_RAW="(no output - build successful)"
           fi
           BUILD_OUTPUT=$(cat <<EOF
-          $ go build -o xcsh .
+          $ npm run build
           $BUILD_OUTPUT_RAW
           EOF
           )
@@ -899,34 +733,15 @@ jobs:
 
           # Capture version output
           echo "Verifying build..."
-          VERSION_OUTPUT_RAW=$(./xcsh version 2>&1)
+          VERSION_OUTPUT_RAW=$(node dist/index.js --version 2>&1 || echo "version check failed")
           VERSION_OUTPUT=$(cat <<EOF
-          $ ./xcsh version
+          $ node dist/index.js --version
           $VERSION_OUTPUT_RAW
           EOF
           )
           echo "version_output<<EOFVERSION" >> $GITHUB_OUTPUT
           echo "$VERSION_OUTPUT" >> $GITHUB_OUTPUT
           echo "EOFVERSION" >> $GITHUB_OUTPUT
-
-          # Capture ldflags build
-          echo "Building with ldflags..."
-          COMMIT=$(git rev-parse --short HEAD)
-          BUILD_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-
-          go build -ldflags="-X github.com/robinmordasiewicz/xcsh/cmd.Version=dev \
-            -X github.com/robinmordasiewicz/xcsh/cmd.GitCommit=$COMMIT \
-            -X github.com/robinmordasiewicz/xcsh/cmd.BuildDate=$BUILD_DATE" -o xcsh .
-
-          LDFLAGS_VERSION_RAW=$(./xcsh version 2>&1)
-          LDFLAGS_BUILD_OUTPUT=$(cat <<EOF
-          $ ./xcsh version
-          $LDFLAGS_VERSION_RAW
-          EOF
-          )
-          echo "ldflags_build_output<<EOFLDFLAGS" >> $GITHUB_OUTPUT
-          echo "$LDFLAGS_BUILD_OUTPUT" >> $GITHUB_OUTPUT
-          echo "EOFLDFLAGS" >> $GITHUB_OUTPUT
 
           # Cleanup
           cd /
@@ -938,12 +753,12 @@ jobs:
       - name: Generate source docs with real output
         run: |
           python scripts/generate-source-docs.py \
-            --go-version "${{ steps.source-build.outputs.go_version }}" \
+            --node-version "${{ steps.source-build.outputs.node_version }}" \
             --prereq-output "${{ steps.source-build.outputs.prereq_output }}" \
             --clone-output "${{ steps.source-build.outputs.clone_output }}" \
+            --install-output "${{ steps.source-build.outputs.install_output }}" \
             --build-output "${{ steps.source-build.outputs.build_output }}" \
             --version-output "${{ steps.source-build.outputs.version_output }}" \
-            --ldflags-build-output "${{ steps.source-build.outputs.ldflags_build_output }}" \
             --output docs/install/source.md
 
       - name: Validate required documentation files
@@ -975,27 +790,7 @@ jobs:
           echo ""
 
           if [ ${#MISSING_FILES[@]} -gt 0 ]; then
-            # Output structured error for automation
             echo "::error::DOCS_VALIDATION_FAILED: Missing required documentation files"
-
-            # JSON output for programmatic parsing
-            echo "ERROR_JSON<<EOF" >> $GITHUB_OUTPUT
-            cat <<JSONEOF
-          {
-            "error_code": "DOCS_MISSING_FILES",
-            "error_type": "validation",
-            "missing_files": [$(printf '"%s",' "${MISSING_FILES[@]}" | sed 's/,$//')],
-            "existing_files": [$(printf '"%s",' "${EXISTING_FILES[@]}" | sed 's/,$//')],
-            "total_required": ${#REQUIRED_FILES[@]},
-            "total_missing": ${#MISSING_FILES[@]},
-            "workflow_trigger": "${{ github.event_name }}",
-            "recent_release": "${{ needs.check-spec.outputs.recent_release }}",
-            "suggested_action": "Trigger a new release or run workflow_dispatch with force_regenerate=true",
-            "automation_hint": "gh workflow run docs.yml -f force_regenerate=true"
-          }
-          JSONEOF
-            echo "EOF" >> $GITHUB_OUTPUT
-
             echo ""
             echo "Missing files:"
             for file in "${MISSING_FILES[@]}"; do
@@ -1004,7 +799,7 @@ jobs:
             echo ""
             echo "Root cause: Generated docs require release assets which may not be available."
             echo "  - Workflow trigger: ${{ github.event_name }}"
-            echo "  - Recent release:   ${{ needs.check-spec.outputs.recent_release }}"
+            echo "  - Recent release:   ${{ needs.check-release.outputs.recent_release }}"
             echo ""
             echo "To fix this issue:"
             echo "  1. Create a new release to generate fresh documentation, OR"

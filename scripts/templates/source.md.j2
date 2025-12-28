@@ -8,7 +8,8 @@ Building from source requires:
 
 | Requirement | Version | Check Command |
 |-------------|---------|---------------|
-| Go | {{ go_version or '1.23+' }} | `go version` |
+| Node.js | {{ node_version or '18+' }} | `node --version` |
+| npm | any | `npm --version` |
 | Git | any | `git --version` |
 
 {% if prereq_output %}
@@ -34,10 +35,24 @@ cd xcsh
 ```
 {% endif %}
 
+## Install Dependencies
+
+```bash
+npm ci
+```
+
+{% if install_output %}
+**Example output:**
+
+```text
+{{ install_output }}
+```
+{% endif %}
+
 ## Build
 
 ```bash
-go build -o xcsh .
+npm run build
 ```
 
 {% if build_output %}
@@ -51,7 +66,7 @@ go build -o xcsh .
 ## Verify Build
 
 ```bash
-./xcsh version
+node dist/index.js --version
 ```
 
 {% if version_output %}
@@ -63,41 +78,54 @@ go build -o xcsh .
 
 *Built from source on {{ generation_date }}*
 {% else %}
-Expected output shows version, commit hash, build timestamp, Go version, and platform.
+Expected output shows the version number.
 {% endif %}
+
+## Run in Development Mode
+
+For development with hot-reload:
+
+```bash
+npm run dev
+```
 
 ## Install (Optional)
 
-Move the binary to your PATH:
+### Option 1: Link Globally
+
+```bash
+npm link
+```
+
+This creates a global `xcsh` command that points to your local build.
+
+### Option 2: Build Standalone Binary
+
+Build platform-specific standalone binaries:
+
+```bash
+npm run build:binaries
+```
+
+This creates executables in the `binaries/` directory for:
+
+- Linux (x64, arm64)
+- macOS (x64, arm64)
+- Windows (x64, arm64)
+
+Move the appropriate binary to your PATH:
 
 === "User Install"
 
     ```bash
     mkdir -p ~/.local/bin
-    mv xcsh ~/.local/bin/
+    cp binaries/xcsh-macos-arm64 ~/.local/bin/xcsh
+    chmod +x ~/.local/bin/xcsh
     ```
 
 === "System Install"
 
     ```bash
-    sudo mv xcsh /usr/local/bin/
+    sudo cp binaries/xcsh-macos-arm64 /usr/local/bin/xcsh
+    sudo chmod +x /usr/local/bin/xcsh
     ```
-
-## Build with Version Info
-
-For release-quality builds with embedded version information:
-
-```bash
-go build -ldflags="-X github.com/robinmordasiewicz/xcsh/cmd.Version=dev \
-  -X github.com/robinmordasiewicz/xcsh/cmd.GitCommit=$(git rev-parse --short HEAD) \
-  -X github.com/robinmordasiewicz/xcsh/cmd.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-  -o xcsh .
-```
-
-{% if ldflags_build_output %}
-**Example output:**
-
-```text
-{{ ldflags_build_output }}
-```
-{% endif %}

@@ -6,24 +6,25 @@ Install xcsh on Windows using PowerShell.
 
 Download and extract the latest release:
 
-=== "PowerShell (amd64)"
+=== "PowerShell (x64)"
 
     ```powershell
     # Download latest release
     $version = "{{ version or 'X.Y.Z' }}"
-    $url = "https://github.com/robinmordasiewicz/xcsh/releases/download/v$version/xcsh_${version}_windows_amd64.zip"
-    Invoke-WebRequest -Uri $url -OutFile xcsh.zip
+    $url = "https://github.com/robinmordasiewicz/xcsh/releases/download/v$version/xcsh-win-x64.exe"
 
-    # Extract to installation directory
+    # Create installation directory
     $installDir = "$env:LOCALAPPDATA\Programs\xcsh"
     New-Item -ItemType Directory -Force -Path $installDir | Out-Null
-    Expand-Archive -Path xcsh.zip -DestinationPath $installDir -Force
+
+    # Download executable
+    Invoke-WebRequest -Uri $url -OutFile "$installDir\xcsh.exe"
 
     # Add to PATH for current session
     $env:PATH = "$installDir;$env:PATH"
 
     # Verify installation
-    xcsh version
+    xcsh --version
     ```
 
 === "PowerShell (arm64)"
@@ -31,19 +32,20 @@ Download and extract the latest release:
     ```powershell
     # Download latest release
     $version = "{{ version or 'X.Y.Z' }}"
-    $url = "https://github.com/robinmordasiewicz/xcsh/releases/download/v$version/xcsh_${version}_windows_arm64.zip"
-    Invoke-WebRequest -Uri $url -OutFile xcsh.zip
+    $url = "https://github.com/robinmordasiewicz/xcsh/releases/download/v$version/xcsh-win-arm64.exe"
 
-    # Extract to installation directory
+    # Create installation directory
     $installDir = "$env:LOCALAPPDATA\Programs\xcsh"
     New-Item -ItemType Directory -Force -Path $installDir | Out-Null
-    Expand-Archive -Path xcsh.zip -DestinationPath $installDir -Force
+
+    # Download executable
+    Invoke-WebRequest -Uri $url -OutFile "$installDir\xcsh.exe"
 
     # Add to PATH for current session
     $env:PATH = "$installDir;$env:PATH"
 
     # Verify installation
-    xcsh version
+    xcsh --version
     ```
 
 {% if install_output %}
@@ -77,8 +79,8 @@ if ($currentPath -notlike "*$installDir*") {
 Alternatively, download directly from GitHub:
 
 1. Visit [GitHub Releases](https://github.com/robinmordasiewicz/xcsh/releases/latest)
-2. Download `xcsh_{{ version or 'X.Y.Z' }}_windows_amd64.zip` (or `arm64` for ARM processors)
-3. Extract to a directory of your choice
+2. Download `xcsh-win-x64.exe` (or `xcsh-win-arm64.exe` for ARM processors)
+3. Rename to `xcsh.exe` and place in a directory of your choice
 4. Add the directory to your PATH
 
 ## Verify Installation
@@ -86,18 +88,14 @@ Alternatively, download directly from GitHub:
 After installation, verify xcsh is working:
 
 ```powershell
-xcsh version
+xcsh --version
 ```
 
-{% if version and commit and built %}
+{% if version %}
 Expected output:
 
 ```text
-xcsh version {{ version }}
-  commit:   {{ commit }}
-  built:    {{ built }}
-  go:       {{ go_version if go_version else "go1.23.x" }}
-  platform: {{ platform if platform else "windows/amd64" }}
+{{ version }}
 ```
 {% endif %}
 
@@ -124,11 +122,10 @@ xcsh completion powershell >> $PROFILE
 To upgrade to a newer version:
 
 ```powershell
-# Download and extract new version (same as install)
+# Download new version (same as install)
 $version = "NEW_VERSION"
-$url = "https://github.com/robinmordasiewicz/xcsh/releases/download/v$version/xcsh_${version}_windows_amd64.zip"
-Invoke-WebRequest -Uri $url -OutFile xcsh.zip
-Expand-Archive -Path xcsh.zip -DestinationPath "$env:LOCALAPPDATA\Programs\xcsh" -Force
+$url = "https://github.com/robinmordasiewicz/xcsh/releases/download/v$version/xcsh-win-x64.exe"
+Invoke-WebRequest -Uri $url -OutFile "$env:LOCALAPPDATA\Programs\xcsh\xcsh.exe"
 ```
 
 ## Uninstall

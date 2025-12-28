@@ -1,6 +1,5 @@
 # Binaries
 xcsh
-generate-schemas
 *.exe
 *.exe~
 *.dll
@@ -11,19 +10,16 @@ generate-schemas
 dist/
 binaries/
 
-# Test binary, built with `go test -c`
+# Test files
 *.test
 
-# Output of the go coverage tool
+# Coverage reports
+coverage/
 coverage.out
 coverage.html
 
 # Dependency directories
-vendor/
 node_modules/
-
-# Go workspace file
-go.work
 
 # IDE and editor files
 .idea/
@@ -45,8 +41,6 @@ debug
 .env.local
 *.env
 
-# Build artifacts (pkg binaries created during release)
-
 # Temporary files
 tmp/
 temp/
@@ -62,19 +56,12 @@ site/
 .venv/
 __pycache__/
 *.pyc
-xcsh.darwin-arm64
 
 # Platform-specific binaries
-xcsh.darwin-*
-xcsh.linux-*
-xcsh.windows-*
-*.darwin-*
-*.linux-*
-*.windows-*
+xcsh-*
 
 # Generated shell completions (created during release build)
 completions/
-xcsh-go/completions/
 
 # MCP tool state directories
 .playwright-mcp/
@@ -94,7 +81,6 @@ xcsh-go/completions/
 !.specs/.version
 
 # Generated source files are committed (idempotent, needed for reproducibility)
-# Go: xcsh-go/pkg/types/domains_generated.go
 # TypeScript: src/types/domains_generated.ts
 
 # Claude development documentation (internal planning artifacts)
