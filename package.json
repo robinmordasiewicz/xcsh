@@ -1,6 +1,6 @@
 {
   "name": "xcsh",
-  "version": "6.3.0",
+  "version": "6.4.1",
   "description": "F5 Distributed Cloud Shell - Interactive CLI for F5 XC",
   "type": "module",
   "bin": {
