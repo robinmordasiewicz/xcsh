@@ -102,12 +102,12 @@ jobs:
           git tag -a "v${{ steps.bump.outputs.version }}" -m "Release v${{ steps.bump.outputs.version }}"
           git push origin "v${{ steps.bump.outputs.version }}"
 
-  build:
-    name: Build Binaries
+  # Build binaries on native platforms to avoid cross-compilation issues
+  # Bun cross-compilation does not work reliably (especially for macOS)
+  build-linux:
+    name: Build Linux Binaries
     runs-on: ubuntu-latest
     needs: version
-    outputs:
-      version: ${{ needs.version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -134,10 +134,114 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Build standalone binaries
-        run: npm run build:binaries
+      - name: Build Linux binaries
+        run: ./scripts/build-binaries.sh --platform linux
 
-      - name: List built binaries
+      - name: Upload Linux binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-linux
+          path: binaries/
+          retention-days: 1
+
+  build-macos:
+    name: Build macOS Binaries
+    runs-on: macos-latest
+    needs: version
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download enriched API specifications
+        run: ./scripts/download-specs.sh
+
+      - name: Build TypeScript
+        run: XCSH_VERSION=${{ needs.version.outputs.version }} npm run build
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Build macOS binaries
+        run: ./scripts/build-binaries.sh --platform darwin
+
+      - name: Upload macOS binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-macos
+          path: binaries/
+          retention-days: 1
+
+  build-windows:
+    name: Build Windows Binaries
+    runs-on: windows-latest
+    needs: version
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download enriched API specifications
+        shell: bash
+        run: ./scripts/download-specs.sh
+
+      - name: Build TypeScript
+        run: npm run build
+        env:
+          XCSH_VERSION: ${{ needs.version.outputs.version }}
+
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Build Windows binaries
+        shell: bash
+        run: ./scripts/build-binaries.sh --platform windows
+
+      - name: Upload Windows binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-windows
+          path: binaries/
+          retention-days: 1
+
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [version, build-linux, build-macos, build-windows]
+    outputs:
+      version: ${{ needs.version.outputs.version }}
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: binaries
+          merge-multiple: true
+
+      - name: List downloaded binaries
         run: ls -la binaries/
 
       - name: Create release archives
@@ -244,9 +348,6 @@ jobs:
           **Windows (amd64)**
           Download `xcsh_${VERSION}_windows_amd64.zip` and extract to your PATH.
 
-          **Windows (arm64)**
-          Download `xcsh_${VERSION}_windows_arm64.zip` and extract to your PATH.
-
           **npm (requires Node.js)**
           ```bash
           npm install -g xcsh
@@ -265,7 +366,7 @@ jobs:
   sign-macos:
     name: Sign macOS Binaries
     runs-on: macos-latest
-    needs: build
+    needs: create-release
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -327,7 +428,7 @@ jobs:
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
         run: |
-          VERSION="${{ needs.build.outputs.version }}"
+          VERSION="${{ needs.create-release.outputs.version }}"
           echo "Signing version: $VERSION"
 
           # Retry function with exponential backoff
@@ -425,7 +526,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION="${{ needs.build.outputs.version }}"
+          VERSION="${{ needs.create-release.outputs.version }}"
           echo "Regenerating checksums.txt for version $VERSION..."
 
           # Retry function with exponential backoff
@@ -474,7 +575,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
         run: |
-          VERSION="${{ needs.build.outputs.version }}"
+          VERSION="${{ needs.create-release.outputs.version }}"
 
           echo "Computing SHA256 hashes for all release assets..."
 
