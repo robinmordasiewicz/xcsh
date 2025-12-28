@@ -8,6 +8,54 @@ import { homedir } from "node:os";
 import { join, dirname } from "node:path";
 
 /**
+ * Patterns for sensitive data that should be redacted from history
+ * Each pattern captures the flag/prefix AND separator, then replaces the sensitive value
+ */
+const SENSITIVE_PATTERNS: Array<{ pattern: RegExp; replacement: string }> = [
+	// Flag-based patterns: --flag value or --flag=value (capture flag and separator separately)
+	{
+		pattern:
+			/(--(?:token|api-token|password|secret|certificate|cert|private-key|api-key|auth))([=\s])(\S+)/gi,
+		replacement: "$1$2******",
+	},
+	// Short flags: -t value, -p value (common for token/password)
+	{
+		pattern: /(-[tp])(\s)(\S+)/g,
+		replacement: "$1$2******",
+	},
+	// Authorization headers in curl commands (preserve everything up to the token value, stop at quote)
+	{
+		pattern: /(Authorization:\s*(?:Bearer|APIToken|Basic)\s)([^'"\s]+)/gi,
+		replacement: "$1******",
+	},
+	// F5 XC specific: APIToken value (without Authorization prefix)
+	{
+		pattern: /(APIToken\s)(['"]?)([^'">\s]+)\2/gi,
+		replacement: "$1******",
+	},
+	// Environment variable assignments with sensitive names
+	{
+		pattern:
+			/((?:API_TOKEN|API_KEY|PASSWORD|SECRET|PRIVATE_KEY|F5XC_API_TOKEN)=)(\S+)/gi,
+		replacement: "$1******",
+	},
+];
+
+/**
+ * Redact sensitive values from a command string
+ * Replaces sensitive data with ****** while preserving the flag/prefix
+ */
+export function redactSensitive(cmd: string): string {
+	let redacted = cmd;
+	for (const { pattern, replacement } of SENSITIVE_PATTERNS) {
+		// Reset lastIndex for global patterns
+		pattern.lastIndex = 0;
+		redacted = redacted.replace(pattern, replacement);
+	}
+	return redacted;
+}
+
+/**
  * Get the default history file path
  */
 export function getHistoryFilePath(): string {
@@ -94,6 +142,7 @@ export class HistoryManager {
 
 	/**
 	 * Add a command to history
+	 * Sensitive data (tokens, passwords, certificates) is automatically redacted
 	 */
 	add(cmd: string): void {
 		// Don't add empty commands
@@ -101,15 +150,18 @@ export class HistoryManager {
 			return;
 		}
 
+		// Redact sensitive information before storing
+		const redacted = redactSensitive(cmd);
+
 		// Don't add duplicates of the last command
 		if (
 			this.history.length > 0 &&
-			this.history[this.history.length - 1] === cmd
+			this.history[this.history.length - 1] === redacted
 		) {
 			return;
 		}
 
-		this.history.push(cmd);
+		this.history.push(redacted);
 
 		// Trim if necessary
 		if (this.history.length > this.maxSize) {

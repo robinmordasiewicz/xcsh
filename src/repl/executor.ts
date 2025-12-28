@@ -19,8 +19,10 @@ import {
 	getDomainAliases,
 } from "../domains/index.js";
 import { extensionRegistry } from "../extensions/index.js";
+import { getWhoamiInfo, formatWhoami } from "../domains/login/whoami/index.js";
 import { APIError } from "../api/index.js";
 import { formatOutput, formatAPIError } from "../output/index.js";
+import { CLI_NAME, CLI_VERSION } from "../branding/index.js";
 
 /**
  * Command execution result
@@ -148,12 +150,13 @@ export function parseCommand(input: string): ParsedCommand {
 
 /**
  * Execute a built-in command
+ * Returns ExecutionResult or Promise<ExecutionResult> for async commands like whoami
  */
 function executeBuiltin(
 	cmd: ParsedCommand,
 	session: REPLSession,
 	ctx: ContextPath,
-): ExecutionResult {
+): ExecutionResult | Promise<ExecutionResult> {
 	const command = cmd.raw.toLowerCase();
 
 	// Clear screen
@@ -260,7 +263,7 @@ function executeBuiltin(
 	// Show version
 	if (command === "version") {
 		return {
-			output: ["xcsh version 0.1.0 (Ink rewrite)"],
+			output: [`${CLI_NAME} version ${CLI_VERSION}`],
 			shouldExit: false,
 			shouldClear: false,
 			contextChanged: false,
@@ -282,37 +285,58 @@ function executeBuiltin(
 	}
 
 	// Show current user and connection info
-	if (command === "whoami") {
-		const lines: string[] = [];
-		const profile = session.getActiveProfile();
-		const profileName = session.getActiveProfileName();
+	if (command === "whoami" || command.startsWith("whoami ")) {
+		// Parse flags from command
+		const parts = command.split(/\s+/).slice(1); // Skip "whoami"
+		const options: {
+			includeQuotas?: boolean;
+			includeAddons?: boolean;
+			verbose?: boolean;
+			json?: boolean;
+		} = {};
 
-		if (profileName && profile) {
-			lines.push(`Profile: ${profileName}`);
-			lines.push(`Server:  ${session.getServerUrl()}`);
-			lines.push(`Tenant:  ${session.getTenant()}`);
-
-			const username = session.getUsername();
-			if (username) {
-				lines.push(`User:    ${username}`);
+		for (const arg of parts) {
+			const lowerArg = arg.toLowerCase();
+			switch (lowerArg) {
+				case "--quota":
+				case "--quotas":
+				case "-q":
+					options.includeQuotas = true;
+					break;
+				case "--addons":
+				case "--addon":
+				case "-a":
+					options.includeAddons = true;
+					break;
+				case "--verbose":
+				case "-v":
+					options.verbose = true;
+					break;
+				case "--json":
+				case "-j":
+					options.json = true;
+					break;
 			}
-
-			lines.push(`Namespace: ${session.getNamespace()}`);
-			lines.push(
-				`Authenticated: ${session.isAuthenticated() ? "Yes" : "No"}`,
-			);
-		} else {
-			lines.push("Not connected to any profile.");
-			lines.push("");
-			lines.push("Use 'login profile use <name>' to connect.");
 		}
 
-		return {
-			output: lines,
-			shouldExit: false,
-			shouldClear: false,
-			contextChanged: false,
-		};
+		// getWhoamiInfo is async, but executeBuiltin is sync
+		// Return a promise-based result that will be handled by the caller
+		return getWhoamiInfo(session, options)
+			.then((info) => ({
+				output: formatWhoami(info, options),
+				shouldExit: false,
+				shouldClear: false,
+				contextChanged: false,
+			}))
+			.catch((error: unknown) => ({
+				output: [
+					`Failed to get whoami info: ${error instanceof Error ? error.message : "Unknown error"}`,
+				],
+				shouldExit: false,
+				shouldClear: false,
+				contextChanged: false,
+				error: "whoami failed",
+			}));
 	}
 
 	// Help command
@@ -333,7 +357,7 @@ function executeBuiltin(
 				"  quit            Exit the shell",
 				"  history         Show command history",
 				"  domains         List available domains",
-				"  whoami          Show current user and connection",
+				"  whoami          Show current user and connection (-q/--quota, -a/--addons, -v/--verbose, --json)",
 				"  version         Show version info",
 				"",
 				"Keyboard shortcuts:",

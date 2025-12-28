@@ -13,7 +13,7 @@ import {
 	Suggestions,
 } from "./components/index.js";
 import type { Suggestion } from "./components/Suggestions.js";
-import type { GitInfo } from "./components/StatusBar.js";
+import { getGitInfo, type GitInfo } from "./components/StatusBar.js";
 import { REPLSession } from "./session.js";
 import { buildPlainPrompt } from "./prompt.js";
 import { useDoubleCtrlC } from "./hooks/useDoubleCtrlC.js";
@@ -72,7 +72,7 @@ export function App(): React.ReactElement {
 	const [showBanner, setShowBanner] = useState(true);
 	const [prompt, setPrompt] = useState("<xc> ");
 	const [width, setWidth] = useState(stdout?.columns ?? 80);
-	const [gitInfo] = useState<GitInfo | undefined>(undefined);
+	const [gitInfo, setGitInfo] = useState<GitInfo | undefined>(undefined);
 	const [statusHint, setStatusHint] = useState("Ctrl+C twice to exit");
 	const [historyArray, setHistoryArray] = useState<string[]>([]);
 	const [inputKey, setInputKey] = useState(0); // Key to reset cursor position
@@ -112,6 +112,8 @@ export function App(): React.ReactElement {
 				setHistoryArray(histMgr.getHistory());
 			}
 			setIsInitialized(true);
+			// Get git repository info
+			setGitInfo(getGitInfo());
 		};
 		init();
 	}, [session]);
@@ -414,7 +416,7 @@ export function App(): React.ReactElement {
 	const connectionInfo = {
 		tenant: session.getTenant() || undefined,
 		username: session.getUsername() || undefined,
-		tier: undefined, // Subscription tier fetched on-demand via /subscription commands
+		tier: session.getTier() || undefined,
 		namespace: session.getNamespace(),
 		isConnected: session.isConnected(),
 	};

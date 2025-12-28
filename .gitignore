@@ -64,8 +64,8 @@ __pycache__/
 # Platform-specific binaries
 xcsh-*
 
-# Generated shell completions (created during release build)
-completions/
+# Generated shell completions are committed (idempotent, needed for reproducibility)
+# TypeScript: completions/xcsh.bash, completions/_xcsh, completions/xcsh.fish
 
 # MCP tool state directories
 .playwright-mcp/

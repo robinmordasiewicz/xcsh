@@ -9,6 +9,7 @@ import { createCommand } from "./profile/create.js";
 import { useCommand } from "./profile/use.js";
 import { deleteCommand } from "./profile/delete.js";
 import { contextSubcommands } from "./context/index.js";
+import { whoamiCommand } from "./whoami/index.js";
 
 /**
  * Profile subcommand group
@@ -31,7 +32,7 @@ const profileSubcommands: SubcommandGroup = {
 export const loginDomain: DomainDefinition = {
 	name: "login",
 	description: "Authentication, identity, and session management",
-	commands: new Map(),
+	commands: new Map([["show", whoamiCommand]]),
 	subcommands: new Map([
 		["profile", profileSubcommands],
 		["context", contextSubcommands],

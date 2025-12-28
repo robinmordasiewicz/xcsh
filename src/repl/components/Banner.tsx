@@ -7,6 +7,7 @@ import React from "react";
 import { Box, Text } from "ink";
 import stringWidth from "string-width";
 import { F5_LOGO, CLI_FULL_NAME } from "../../branding/index.js";
+import { toDisplayTier } from "../../domains/login/whoami/types.js";
 
 interface ConnectionInfo {
 	tenant?: string | undefined;
@@ -172,7 +173,10 @@ export function Banner({
 			connectionLines.push(`User: ${connectionInfo.username}`);
 		}
 		if (connectionInfo.tier) {
-			connectionLines.push(`Tier: ${connectionInfo.tier}`);
+			const displayTier = toDisplayTier(connectionInfo.tier);
+			if (displayTier) {
+				connectionLines.push(`Tier: ${displayTier}`);
+			}
 		}
 	}
 	connectionLines.push(`Namespace: ${connectionInfo.namespace}`);

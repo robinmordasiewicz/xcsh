@@ -12,6 +12,7 @@ import {
 	type ProfileManager,
 } from "../profile/index.js";
 import { APIClient } from "../api/index.js";
+import { SubscriptionClient } from "../subscription/client.js";
 import type { OutputFormat } from "../output/index.js";
 
 /**
@@ -44,6 +45,7 @@ export class REPLSession {
 	private _profileManager: ProfileManager;
 	private _activeProfile: Profile | null = null;
 	private _activeProfileName: string | null = null;
+	private _tier: string = "";
 
 	constructor(config: SessionConfig = {}) {
 		this._namespace = config.namespace ?? this.getDefaultNamespace();
@@ -94,6 +96,21 @@ export class REPLSession {
 		// Fetch user info if connected and authenticated
 		if (this._apiClient?.isAuthenticated()) {
 			await this.fetchUserInfo();
+			await this.fetchTier();
+		}
+	}
+
+	/**
+	 * Fetch subscription tier from the API
+	 */
+	private async fetchTier(): Promise<void> {
+		if (!this._apiClient) return;
+
+		try {
+			const subscriptionClient = new SubscriptionClient(this._apiClient);
+			this._tier = await subscriptionClient.getTierFromCurrentPlan();
+		} catch {
+			// Ignore tier fetch errors - not critical for session
 		}
 	}
 
@@ -241,6 +258,13 @@ export class REPLSession {
 	 */
 	setUsername(username: string): void {
 		this._username = username;
+	}
+
+	/**
+	 * Get the subscription tier (Standard/Advanced)
+	 */
+	getTier(): string {
+		return this._tier;
 	}
 
 	/**
