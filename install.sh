@@ -773,9 +773,57 @@ setup_fish_completion() {
 # Uninstall
 # ============================================
 
+# Find where xcsh is installed
+# Returns the directory path or empty string if not found
+find_xcsh_installation() {
+  USER_DIR="$HOME/.local/bin"
+  SYSTEM_DIR="$DEFAULT_INSTALL_DIR"
+
+  # If explicit install dir is set, only check there
+  if [ -n "${F5XC_INSTALL_DIR:-}" ]; then
+    if [ -f "${F5XC_INSTALL_DIR}/${BINARY_NAME}" ]; then
+      echo "$F5XC_INSTALL_DIR"
+      return
+    fi
+    echo ""
+    return
+  fi
+
+  # Check user directory first (more specific)
+  if [ -f "${USER_DIR}/${BINARY_NAME}" ]; then
+    echo "$USER_DIR"
+    return
+  fi
+
+  # Check system directory
+  if [ -f "${SYSTEM_DIR}/${BINARY_NAME}" ]; then
+    echo "$SYSTEM_DIR"
+    return
+  fi
+
+  echo ""
+}
+
 uninstall() {
-  INSTALL_DIR="${F5XC_INSTALL_DIR:-$DEFAULT_INSTALL_DIR}"
+  status "Uninstalling xcsh..."
+
+  # Auto-detect installation location
+  INSTALL_DIR=$(find_xcsh_installation)
+
+  if [ -z "$INSTALL_DIR" ]; then
+    USER_DIR="$HOME/.local/bin"
+    if [ -n "${F5XC_INSTALL_DIR:-}" ]; then
+      error "xcsh not found at ${F5XC_INSTALL_DIR}/${BINARY_NAME}"
+    else
+      error "xcsh not found in $USER_DIR or $DEFAULT_INSTALL_DIR
+
+If installed elsewhere, set F5XC_INSTALL_DIR:
+  F5XC_INSTALL_DIR=/path/to/dir sh install.sh --uninstall"
+    fi
+  fi
+
   VESCTL_PATH="${INSTALL_DIR}/${BINARY_NAME}"
+  info "Found xcsh at $VESCTL_PATH"
 
   # Determine if sudo is needed for uninstall
   SUDO_CMD=""
@@ -784,8 +832,6 @@ uninstall() {
       SUDO_CMD="sudo"
     fi
   fi
-
-  status "Uninstalling xcsh..."
 
   if [ ! -f "$VESCTL_PATH" ]; then
     error "xcsh not found at $VESCTL_PATH"
