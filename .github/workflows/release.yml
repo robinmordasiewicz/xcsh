@@ -361,7 +361,12 @@ jobs:
 
           **npm (requires Node.js)**
           ```bash
-          npm install -g xcsh
+          npm install -g @robinmordasiewicz/xcsh
+          ```
+
+          **npx (no installation)**
+          ```bash
+          npx @robinmordasiewicz/xcsh
           ```
           RELEASE_EOF
 
@@ -373,6 +378,41 @@ jobs:
             --title "xcsh v${VERSION}" \
             --notes-file release-notes.md \
             release-archives/*
+
+  publish-npm:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    needs: create-release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download enriched API specifications
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./scripts/download-specs.sh
+
+      - name: Build
+        run: npm run build
+        env:
+          XCSH_VERSION: ${{ needs.create-release.outputs.version }}
+
+      - name: Set package version
+        run: npm version ${{ needs.create-release.outputs.version }} --no-git-tag-version
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   sign-macos:
     name: Sign macOS Binaries
