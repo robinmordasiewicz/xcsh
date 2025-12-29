@@ -456,7 +456,11 @@ function formatSummaryYaml(summary: SummaryResponse): string {
  */
 export const cloudstatusDomain: DomainDefinition = {
 	name: "cloudstatus",
-	description: "Monitor F5 Distributed Cloud service status and incidents",
+	description:
+		"Monitor F5 Distributed Cloud service status and incidents. Check overall status indicators, view component health, track active incidents and their updates, and monitor scheduled maintenance windows.",
+	descriptionShort: "F5 XC service status and incidents",
+	descriptionMedium:
+		"Monitor F5 Distributed Cloud service health, active incidents, component status, and scheduled maintenance windows.",
 	commands: new Map([
 		["status", statusCommand],
 		["summary", summaryCommand],

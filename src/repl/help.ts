@@ -329,11 +329,14 @@ export function formatDomainsHelp(): string[] {
 		)) {
 			const aliases =
 				domain.aliases.length > 0
-					? ` (${domain.aliases.join(", ")})`
+					? colorDim(` (${domain.aliases.join(", ")})`)
 					: "";
 			output.push(
-				`    ${domain.name.padEnd(24)} ${domain.displayName}${aliases}`,
+				`    ${domain.name.padEnd(24)} ${domain.descriptionShort}`,
 			);
+			if (aliases) {
+				output.push(`    ${"".padEnd(24)} Aliases:${aliases}`);
+			}
 		}
 		output.push("");
 	}
@@ -418,7 +421,7 @@ export function formatDomainsSection(): string[] {
 
 	for (const domain of domains) {
 		const padding = " ".repeat(maxNameLen - domain.name.length + 2);
-		output.push(`  ${domain.name}${padding}${domain.description}`);
+		output.push(`  ${domain.name}${padding}${domain.descriptionShort}`);
 	}
 
 	return output;

@@ -15,7 +15,9 @@ import {
 export interface DomainInfo {
 	name: string; // Canonical: "load_balancer"
 	displayName: string; // Human: "Load Balancer"
-	description: string; // Functional description
+	description: string; // Long description (~500 chars) for detailed help
+	descriptionShort: string; // Short description (~60 chars) for completions, badges
+	descriptionMedium: string; // Medium description (~150 chars) for tooltips, summaries
 	aliases: string[]; // Short forms: ["lb"]
 
 	// Fields from upstream specs

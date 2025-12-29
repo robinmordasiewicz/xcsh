@@ -44,7 +44,7 @@ export type CompletionHandler = (
 export interface CommandDefinition {
 	/** Command name (e.g., "list", "show", "create") */
 	name: string;
-	/** Short description for help/completion */
+	/** Short description for help/completion (~60 chars) */
 	description: string;
 	/** Usage pattern (e.g., "<name> [options]") */
 	usage?: string;
@@ -74,8 +74,12 @@ export interface SubcommandGroup {
 export interface DomainDefinition {
 	/** Domain name (e.g., "login") */
 	name: string;
-	/** Short description */
+	/** Long description (~500 chars) for detailed help */
 	description: string;
+	/** Short description (~60 chars) for completions, badges */
+	descriptionShort: string;
+	/** Medium description (~150 chars) for tooltips, summaries */
+	descriptionMedium: string;
 	/** Direct commands at domain level (e.g., "login" itself) */
 	commands: Map<string, CommandDefinition>;
 	/** Subcommand groups (e.g., "login profile") */

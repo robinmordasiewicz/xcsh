@@ -75,7 +75,11 @@ const fishCommand: CommandDefinition = {
  */
 export const completionDomain: DomainDefinition = {
 	name: "completion",
-	description: "Generate shell completion scripts for bash, zsh, and fish",
+	description:
+		"Generate shell completion scripts for bash, zsh, and fish shells. Enables tab-completion for xcsh commands, domains, actions, and flags in your preferred shell environment.",
+	descriptionShort: "Shell completion script generation",
+	descriptionMedium:
+		"Generate tab-completion scripts for bash, zsh, and fish shells to enhance the xcsh command-line experience.",
 	commands: new Map([
 		["bash", bashCommand],
 		["zsh", zshCommand],

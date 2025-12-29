@@ -1,6 +1,6 @@
 /**
  * AUTO-GENERATED FILE - DO NOT EDIT
- * Generated from .specs/index.json v1.0.62
+ * Generated from .specs/index.json v1.0.63
  * Run: npx tsx scripts/generate-domains.ts
  */
 
@@ -9,7 +9,7 @@ import type { DomainInfo } from "./domains.js";
 /**
  * Spec version used for generation
  */
-export const SPEC_VERSION = "1.0.62";
+export const SPEC_VERSION = "1.0.63";
 
 /**
  * Generated domain data from upstream API specifications
@@ -21,7 +21,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "admin_console_and_ui",
 			displayName: "Admin Console And Ui",
 			description:
-				"F5 Distributed Cloud Admin Console And Ui API specifications",
+				"Provides management capabilities for static components used in the F5 XC admin console and user interface. Enables operations to deploy, retrieve, update, and list static UI assets within namespace boundaries. Supports configuration of console interface elements, component metadata management, and asset lifecycle operations. Use this domain to manage custom UI components, static resources, and interface configurations that extend or customize the admin console experience.",
+			descriptionShort:
+				"Static UI component and console asset management",
+			descriptionMedium:
+				"Manage static components for the admin console interface. Deploy, retrieve, and list UI assets and configuration elements within namespaces.",
 			aliases: [],
 			complexity: "simple" as const,
 			isPreview: false,
@@ -36,7 +40,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "api",
 			displayName: "Api",
-			description: "F5 Distributed Cloud Api API specifications",
+			description:
+				"Comprehensive API lifecycle management including automatic discovery and cataloging of APIs across your infrastructure, security testing to identify vulnerabilities and validate behavior, credential management for secure API access, and policy-driven API grouping. Define testing policies to continuously validate API security posture, organize APIs into logical groups for governance, and integrate with WAF and network security controls. Supports marking endpoints as non-API traffic and...",
+			descriptionShort:
+				"API discovery, security testing, and credential management",
+			descriptionMedium:
+				"Discover and catalog APIs, test security behavior, manage credentials, and define API groups with testing policies for comprehensive API lifecycle...",
 			aliases: ["apisec", "api-discovery"],
 			complexity: "advanced" as const,
 			isPreview: false,
@@ -115,6 +124,9 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			displayName: "Authentication",
 			description:
 				"F5 Distributed Cloud Authentication API specifications",
+			descriptionShort: "Authentication API",
+			descriptionMedium:
+				"F5 Distributed Cloud Authentication API specifications",
 			aliases: ["authn", "oidc", "sso"],
 			complexity: "simple" as const,
 			isPreview: false,
@@ -135,7 +147,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "bigip",
 			displayName: "Bigip",
-			description: "F5 Distributed Cloud Bigip API specifications",
+			description:
+				"Configure and manage BigIP F5 appliance integration with Distributed Cloud infrastructure. Create and deploy iRule scripts for advanced traffic manipulation, manage data groups for dynamic configuration, configure Access Policy Manager (APM) settings for authentication and access control, and define BigIP virtual servers. Provides metrics collection for APM performance monitoring and enables seamless hybrid deployments combining traditional BigIP infrastructure with cloud-native services...",
+			descriptionShort:
+				"BigIP appliance management, iRules, and data groups",
+			descriptionMedium:
+				"Manage BigIP F5 appliances including iRule script configuration, data groups, APM policies, and virtual server integration with Distributed Cloud.",
 			aliases: ["f5-bigip", "irule", "ltm"],
 			complexity: "moderate" as const,
 			isPreview: false,
@@ -156,7 +173,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "billing_and_usage",
 			displayName: "Billing And Usage",
 			description:
-				"F5 Distributed Cloud Billing And Usage API specifications",
+				"Comprehensive billing and usage management for F5 XC tenants. Handle subscription plan transitions between tiers, configure primary and secondary payment methods, and download invoice PDFs. Monitor resource quota limits and current usage across namespaces. Supports custom invoice listing, quota configuration per namespace, and contact management for billing communications. Essential for financial operations, capacity planning, and subscription lifecycle management.",
+			descriptionShort:
+				"Subscription billing, payment methods, and usage tracking",
+			descriptionMedium:
+				"Manage subscription plans, payment methods, invoices, and resource quotas. Track usage limits and billing transitions across namespaces.",
 			aliases: [],
 			complexity: "moderate" as const,
 			isPreview: false,
@@ -171,7 +192,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "blindfold",
 			displayName: "Blindfold",
-			description: "F5 Distributed Cloud Blindfold API specifications",
+			description:
+				"Configure and manage cryptographic secret protection with policy-based access controls. Create secret policies and policy rules that govern how sensitive data is encrypted, shared, and accessed across namespaces. Retrieve public keys for encryption operations, process policy information for secret sharing workflows, and decrypt secrets with proper authorization. Monitor secret access through comprehensive audit logs with aggregation and scrolling capabilities. Enforce data protection...",
+			descriptionShort:
+				"Secret encryption and policy-based data protection",
+			descriptionMedium:
+				"Manage encryption keys, secret policies, and sensitive data protection. Configure policy rules for secure secret sharing with audit logging.",
 			aliases: ["bf", "encrypt", "secrets"],
 			complexity: "moderate" as const,
 			isPreview: false,
@@ -191,7 +217,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "bot_and_threat_defense",
 			displayName: "Bot And Threat Defense",
 			description:
-				"F5 Distributed Cloud Bot And Threat Defense API specifications",
+				"Manage comprehensive bot and threat defense capabilities including Shape bot defense instance configuration, threat protection manager (TPM) categories for threat classification, and API key provisioning for automated defense systems. Create and manage TPM categories to organize threats by type, configure bot defense instances per namespace, and handle TPM manager lifecycle operations. Supports preauthorization and provisioning workflows for integrating threat intelligence services with...",
+			descriptionShort:
+				"Bot detection, threat categorization, and defense management",
+			descriptionMedium:
+				"Configure bot defense instances, manage threat categories, and provision TPM API keys for automated threat detection and mitigation.",
 			aliases: [],
 			complexity: "moderate" as const,
 			isPreview: false,
@@ -206,7 +236,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "cdn",
 			displayName: "Cdn",
-			description: "F5 Distributed Cloud Cdn API specifications",
+			description:
+				"Content Delivery Network services for global content distribution and edge caching. Configure CDN load balancers with custom caching rules based on paths, headers, cookies, and query parameters. Define cache TTL policies, eligibility options, and cache-control behaviors. Monitor CDN performance through access logs and metrics aggregation. Perform cache purge operations for content invalidation. Manage addon subscriptions and track service operation status for CDN deployments.",
+			descriptionShort:
+				"CDN load balancing, caching rules, and content delivery",
+			descriptionMedium:
+				"Configure CDN load balancers and caching rules for content delivery. Manage cache policies, purge operations, and access logs for optimized...",
 			aliases: ["cache", "content"],
 			complexity: "advanced" as const,
 			isPreview: false,
@@ -227,7 +262,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "ce_management",
 			displayName: "Ce Management",
 			description:
-				"F5 Distributed Cloud Ce Management API specifications",
+				"Configure and manage Customer Edge (CE) site infrastructure across distributed deployments. Define network interfaces with DHCP, IPv6, and dedicated management settings. Organize sites into fleets for coordinated management. Handle site registration workflows including token-based registration, image downloads, and suggested configuration values. Monitor and execute site upgrades with pre-upgrade checks and status tracking. Supports both dedicated and Ethernet interface types with...",
+			descriptionShort:
+				"Customer Edge site lifecycle and network configuration",
+			descriptionMedium:
+				"Manage Customer Edge sites including network interfaces, fleet configurations, site upgrades, and registration workflows for distributed deployments.",
 			aliases: [],
 			complexity: "advanced" as const,
 			isPreview: false,
@@ -242,7 +281,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "certificates",
 			displayName: "Certificates",
-			description: "F5 Distributed Cloud Certificates API specifications",
+			description:
+				"Comprehensive certificate lifecycle management for securing application communications. Configure SSL/TLS certificates and certificate chains for endpoints, manage trusted Certificate Authority (CA) lists for client verification, and maintain Certificate Revocation Lists (CRLs) to invalidate compromised certificates. Supports certificate manifests for organized deployment across namespaces, enabling mTLS authentication, HTTPS termination, and secure service-to-service communication patterns.",
+			descriptionShort: "SSL/TLS certificate and trusted CA management",
+			descriptionMedium:
+				"Manage SSL/TLS certificates, certificate chains, trusted CA lists, and certificate revocation lists for secure communications.",
 			aliases: ["cert", "certs", "ssl", "tls"],
 			complexity: "moderate" as const,
 			isPreview: false,
@@ -263,7 +306,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "cloud_infrastructure",
 			displayName: "Cloud Infrastructure",
 			description:
-				"F5 Distributed Cloud Cloud Infrastructure API specifications",
+				"Establish and manage connectivity to major cloud providers including AWS, Azure, and GCP. Configure cloud credentials and authentication for secure provider access. Create and manage VPC attachments, transit gateways, and route tables for cross-cloud networking. Support elastic provisioning with automatic resource discovery and reapplication workflows. Monitor cloud connection metrics and segment performance. Integrate with Customer Edge sites for hybrid cloud deployments across multiple...",
+			descriptionShort:
+				"Multi-cloud provider connectivity and credential management",
+			descriptionMedium:
+				"Connect to AWS, Azure, and GCP cloud providers. Manage cloud credentials, VPC attachments, transit gateways, and cross-cloud networking with...",
 			aliases: ["cloud", "infra", "provider"],
 			complexity: "moderate" as const,
 			isPreview: false,
@@ -284,7 +331,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "container_services",
 			displayName: "Container Services",
 			description:
-				"F5 Distributed Cloud Container Services API specifications",
+				"Container Services (XCCS) enables deployment and management of containerized applications across distributed edge sites without requiring full Kubernetes complexity. Create virtual Kubernetes clusters for isolated multi-tenant environments, define workload flavors for resource allocation, and deploy container workloads with simplified orchestration. Monitor workload usage and PVC metrics, manage namespace isolation, and integrate with site infrastructure for edge-native container...",
+			descriptionShort:
+				"Edge container workloads and virtual Kubernetes management",
+			descriptionMedium:
+				"Deploy and manage containerized workloads at the edge with simplified orchestration. Configure virtual Kubernetes clusters, workload flavors, and...",
 			aliases: ["vk8s", "containers", "workloads"],
 			complexity: "moderate" as const,
 			isPreview: false,
@@ -305,7 +356,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "data_and_privacy_security",
 			displayName: "Data And Privacy Security",
 			description:
-				"F5 Distributed Cloud Data And Privacy Security API specifications",
+				"Manage comprehensive data privacy and security controls including sensitive data detection policies, custom data type definitions, and log management analytics (LMA) region configurations. Define patterns for identifying PII, financial data, and other sensitive information with configurable actions for masking, alerting, or blocking. Configure LMA regions with Elasticsearch, Kafka, or ClickHouse backends for centralized security logging and compliance auditing. Integrate geo-configurations...",
+			descriptionShort:
+				"Sensitive data detection, classification, and privacy...",
+			descriptionMedium:
+				"Configure data types, sensitive data policies, and LMA regions for detecting, classifying, and protecting personally identifiable information and...",
 			aliases: [],
 			complexity: "simple" as const,
 			isPreview: false,
@@ -321,6 +376,9 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "data_intelligence",
 			displayName: "Data Intelligence",
 			description:
+				"F5 Distributed Cloud Data Intelligence API specifications",
+			descriptionShort: "Data Intelligence API",
+			descriptionMedium:
 				"F5 Distributed Cloud Data Intelligence API specifications",
 			aliases: ["di", "intelligence", "insights"],
 			complexity: "moderate" as const,
@@ -340,7 +398,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "ddos",
 			displayName: "Ddos",
-			description: "F5 Distributed Cloud Ddos API specifications",
+			description:
+				"Comprehensive DDoS protection and infrastructure security management. Configure deny list rules to block malicious traffic sources, create firewall rule groups for granular traffic filtering, and manage protection tunnels for secure infrastructure connectivity. The infraprotect APIs enable proactive threat mitigation through customizable security policies, real-time tunnel status monitoring, and namespace-scoped rule management. Integrates with network security and virtual load balancing for...",
+			descriptionShort:
+				"DDoS protection and infrastructure security policies",
+			descriptionMedium:
+				"Configure DDoS protection policies, deny lists, and firewall rules. Monitor infrastructure threats and manage protection tunnels for network security.",
 			aliases: ["dos", "ddos-protect"],
 			complexity: "advanced" as const,
 			isPreview: false,
@@ -359,7 +422,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "dns",
 			displayName: "Dns",
-			description: "F5 Distributed Cloud Dns API specifications",
+			description:
+				"Comprehensive DNS management for zones, domains, and resource records. Configure DNS load balancing with health checks for high availability. Import and export zone files via BIND format or AXFR transfers. Manage resource record sets including A, AAAA, CNAME, CAA, CERT, AFSDB, and DLV records. Monitor DNS performance through metrics and request logs. Clone zones from existing domains and enforce DNS compliance policies across namespaces.",
+			descriptionShort:
+				"DNS zone management, load balancing, and record...",
+			descriptionMedium:
+				"Manage DNS zones, configure DNS load balancing with health checks, and control resource record sets. Supports zone imports, BIND file handling,...",
 			aliases: ["dns-zone", "zones"],
 			complexity: "advanced" as const,
 			isPreview: false,
@@ -438,7 +506,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "generative_ai",
 			displayName: "Generative Ai",
 			description:
-				"F5 Distributed Cloud Generative Ai API specifications",
+				"Generative AI services providing intelligent automation and analysis capabilities. Configure AI assistant policies and submit queries with feedback tracking for continuous improvement. Enable flow anomaly detection powered by machine learning. Manage AI data collection through the BFDP subsystem including feature enablement, token management, and subscription controls. Supports IP allocation for GIA services. Integrates dashboard visualization with customizable displays, filters, and link...",
+			descriptionShort:
+				"AI-powered features, assistants, and data collection",
+			descriptionMedium:
+				"Access generative AI capabilities including AI assistant queries, flow anomaly detection, and AI data collection with feedback mechanisms.",
 			aliases: ["ai", "genai", "assistant"],
 			complexity: "simple" as const,
 			isPreview: true,
@@ -459,7 +531,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "managed_kubernetes",
 			displayName: "Managed Kubernetes",
 			description:
-				"F5 Distributed Cloud Managed Kubernetes API specifications",
+				"Configure and manage Managed Kubernetes (XCKS) security and access controls. Define cluster roles with fine-grained permissions for API resources and non-resource URLs. Create role bindings to associate users and groups with cluster-wide permissions. Enforce pod security standards through admission controllers with configurable enforcement levels. Manage private container registries for secure image distribution. Integrates with external Kubernetes clusters including EKS, AKS, and GKE for...",
+			descriptionShort:
+				"Kubernetes RBAC, pod security, and container registries",
+			descriptionMedium:
+				"Manage Kubernetes cluster roles, RBAC bindings, pod security admission policies, and container registries for enterprise deployments.",
 			aliases: ["mk8s", "appstack", "k8s-mgmt"],
 			complexity: "moderate" as const,
 			isPreview: false,
@@ -479,7 +555,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "marketplace",
 			displayName: "Marketplace",
-			description: "F5 Distributed Cloud Marketplace API specifications",
+			description:
+				"Access and manage the marketplace ecosystem including third-party integrations, add-on services, and external connectors. Configure connection types for direct, GRE tunnel, and IPSec connectivity with customizable IKE parameters and DPD keepalive settings. Manage navigation tiles for custom UI extensions, activate and monitor add-on service status across namespaces, and integrate with external platforms like Terraform. Supports TPM policy management and configuration management instances for...",
+			descriptionShort:
+				"Third-party integrations, add-ons, and extensions",
+			descriptionMedium:
+				"Manage marketplace extensions, external connectors, and third-party add-on services. Configure Terraform integrations and TPM policies.",
 			aliases: ["market", "addons", "extensions"],
 			complexity: "moderate" as const,
 			isPreview: false,
@@ -499,7 +580,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "network",
 			displayName: "Network",
-			description: "F5 Distributed Cloud Network API specifications",
+			description:
+				"Comprehensive network infrastructure management including BGP routing with ASN configuration and peering policies, IPsec tunnel establishment with full IKE phase 1 and phase 2 parameter control, and network connector configuration for hybrid cloud connectivity. Supports SRv6 segment routing, subnet management, DC cluster groups for data center integration, static and dynamic route definitions, and IP prefix set policies. Enables secure site-to-site VPN connections, multi-cloud network...",
+			descriptionShort:
+				"BGP routing, IPsec tunnels, and network connectivity",
+			descriptionMedium:
+				"Configure BGP routing policies, IPsec tunnels with IKE phases, network connectors, SRv6, and IP prefix sets for secure site-to-site connectivity.",
 			aliases: ["net", "routing", "bgp"],
 			complexity: "advanced" as const,
 			isPreview: false,
@@ -522,7 +608,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "network_security",
 			displayName: "Network Security",
 			description:
-				"F5 Distributed Cloud Network Security API specifications",
+				"Network security controls for protecting traffic at the network layer. Configure network firewalls with stateful inspection and ACL rules. Define NAT policies for address translation, port forwarding, and dynamic pool management. Create network policy sets for segmentation and micro-segmentation between workloads. Implement policy-based routing to direct traffic based on source, destination, or application criteria. Manage segment connections for multi-site network isolation. Configure...",
+			descriptionShort:
+				"Network firewall, NAT, ACL, and policy-based routing",
+			descriptionMedium:
+				"Configure network firewalls, NAT policies, ACLs, and policy-based routing. Manage network segmentation, port forwarding, and forward proxy policies.",
 			aliases: ["netsec", "nfw"],
 			complexity: "advanced" as const,
 			isPreview: false,
@@ -543,7 +633,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "nginx_one",
 			displayName: "Nginx One",
-			description: "F5 Distributed Cloud Nginx One API specifications",
+			description:
+				"Integrate and manage NGINX One platform capabilities including subscription lifecycle management, NGINX Plus instance provisioning, and server configuration. Configure dataplane servers, manage nginx instances with WAF and API discovery specifications, and enable service discovery integrations. Supports NGINX Configuration Sync Gateway (CSG) configurations for centralized management workflows. Typical operations include subscribing to NGINX One services, retrieving server status and...",
+			descriptionShort:
+				"NGINX One platform integration and instance management",
+			descriptionMedium:
+				"Manage NGINX One platform subscriptions, configure NGINX Plus instances and servers, and integrate service discovery with centralized...",
 			aliases: ["nginx", "nms", "nginx-plus"],
 			complexity: "simple" as const,
 			isPreview: false,
@@ -563,7 +658,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "object_storage",
 			displayName: "Object Storage",
 			description:
-				"F5 Distributed Cloud Object Storage API specifications",
+				"Manage versioned object storage for mobile application components and platform integrations. Upload and retrieve mobile app shield configurations, SDK integrations, and custom artifacts organized by namespace and object type. Support for multiple versions of each object enables rollback and version-specific deployments. Presigned URLs provide secure, time-limited access for direct object downloads. Object types include mobile-app-shield for application protection, mobile-integrator for...",
+			descriptionShort:
+				"Object storage for mobile SDK artifacts and integrations",
+			descriptionMedium:
+				"Store and retrieve versioned objects including mobile app shields, SDK integrations, and custom artifacts with presigned URL access.",
 			aliases: ["storage", "s3", "buckets"],
 			complexity: "simple" as const,
 			isPreview: false,
@@ -583,7 +682,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "observability",
 			displayName: "Observability",
 			description:
-				"F5 Distributed Cloud Observability API specifications",
+				"Comprehensive synthetic monitoring and observability capabilities for proactive infrastructure health assessment. Configure DNS monitors to validate resolution across AWS regions, set up HTTP monitors for endpoint availability testing, and track SSL/TLS certificate expiration status. Access real-time health summaries at global and namespace levels, review historical monitoring data, and generate detailed reports for DNS and HTTP monitors. Integrate with dashboards to visualize monitoring...",
+			descriptionShort:
+				"Synthetic monitoring, health checks, and observability...",
+			descriptionMedium:
+				"Configure synthetic monitoring with DNS and HTTP health checks. Track certificate status, monitor global health summaries, and analyze monitoring...",
 			aliases: ["obs", "monitoring", "synth"],
 			complexity: "advanced" as const,
 			isPreview: false,
@@ -603,7 +706,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "rate_limiting",
 			displayName: "Rate Limiting",
 			description:
-				"F5 Distributed Cloud Rate Limiting API specifications",
+				"Manage rate limiting policies to protect applications from traffic surges and abuse. Configure rate limiters with customizable thresholds, time periods, and enforcement actions including blocking or throttling. Implement policers using leaky bucket algorithms for smooth traffic shaping. Define protocol-specific policers for granular control over different traffic types. Integrate with virtual hosts and load balancers to enforce rate limits at the edge, preventing resource exhaustion and...",
+			descriptionShort:
+				"Traffic rate limiting, policers, and throttling controls",
+			descriptionMedium:
+				"Configure rate limiters and policers to control traffic flow. Define request thresholds, leaky bucket algorithms, and enforcement actions for API...",
 			aliases: ["ratelimit", "throttle", "policer"],
 			complexity: "simple" as const,
 			isPreview: false,
@@ -623,7 +730,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "secops_and_incident_response",
 			displayName: "Secops And Incident Response",
 			description:
-				"F5 Distributed Cloud Secops And Incident Response API specifications",
+				"Security operations and incident response capabilities for detecting and mitigating malicious user activity. Create mitigation policies that define automated responses based on user threat levels, including blocking, challenging, or rate limiting suspicious users. Configure rules that match specific malicious user types and threat severity levels to appropriate mitigation actions. Supports namespace-scoped configurations for managing security policies across different application...",
+			descriptionShort:
+				"Malicious user detection and automated threat mitigation",
+			descriptionMedium:
+				"Configure automated responses to malicious user behavior. Define mitigation rules based on threat levels and apply actions like blocking or rate...",
 			aliases: [],
 			complexity: "simple" as const,
 			isPreview: false,
@@ -638,7 +749,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "service_mesh",
 			displayName: "Service Mesh",
-			description: "F5 Distributed Cloud Service Mesh API specifications",
+			description:
+				"Manage service mesh infrastructure including endpoint discovery and intelligent routing between distributed services. Define application types with learned API schemas, security risk classifications, and authentication configurations. Configure NFV (Network Function Virtualization) services with lifecycle management including force-delete operations. Leverage machine learning capabilities for automatic API endpoint detection, schema learning, and traffic pattern analysis. Integrate with...",
+			descriptionShort:
+				"Service mesh connectivity, discovery, and NFV management",
+			descriptionMedium:
+				"Configure service mesh networking with endpoint discovery, application type definitions, API endpoint learning, and NFV service lifecycle management.",
 			aliases: ["mesh", "svc-mesh"],
 			complexity: "advanced" as const,
 			isPreview: false,
@@ -662,7 +778,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "shape",
 			displayName: "Shape",
-			description: "F5 Distributed Cloud Shape API specifications",
+			description:
+				"Shape Security integration for advanced bot defense and threat prevention capabilities. Configure bot infrastructure deployments with policy management, deployment history tracking, and status monitoring. Manage mobile SDK attributes for application shielding and integrator configurations. Subscribe to bot defense add-ons and client-side defense services. Includes SafeAP policy configuration, threat recognition rules, and automated bot mitigation across namespaces with comprehensive...",
+			descriptionShort:
+				"Bot defense and threat prevention with Shape Security",
+			descriptionMedium:
+				"Configure Shape Security policies for bot defense, threat recognition, and mobile SDK protection. Manage bot infrastructure deployments and SafeAP...",
 			aliases: ["shape-sec", "safeap"],
 			complexity: "advanced" as const,
 			isPreview: false,
@@ -682,7 +803,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "sites",
 			displayName: "Sites",
-			description: "F5 Distributed Cloud Sites API specifications",
+			description:
+				"Comprehensive site infrastructure management for deploying F5 XC across multiple cloud providers and edge locations. Configure AWS Transit Gateway sites with VPN tunnels, VPC IP prefixes, and security settings. Manage virtual sites for logical grouping and policy application. Deploy Secure Mesh sites for networking-focused edge deployments, integrate external Kubernetes clusters as Customer Edge nodes, and configure cloud-specific resources including AWS VPC, Azure VNet, and GCP VPC sites....",
+			descriptionShort:
+				"Multi-cloud site deployment and edge infrastructure",
+			descriptionMedium:
+				"Deploy and manage F5 XC sites across AWS, Azure, and GCP. Configure AWS TGW sites, virtual sites, managed Kubernetes, and Customer Edge integrations.",
 			aliases: ["site", "deployment"],
 			complexity: "advanced" as const,
 			isPreview: false,
@@ -769,7 +895,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "statistics",
 			displayName: "Statistics",
-			description: "F5 Distributed Cloud Statistics API specifications",
+			description:
+				"Comprehensive operational analytics and monitoring capabilities for distributed cloud infrastructure. Configure alert policies with custom matchers and grouping rules to detect anomalies across namespaces. Manage alert receivers with confirmation, testing, and verification workflows for reliable notification delivery. Access flow statistics, view historical alerts, generate reports and graphs for capacity planning, track service topology and discovery patterns, and monitor real-time status...",
+			descriptionShort:
+				"Flow statistics, alerts, logs, and operational analytics",
+			descriptionMedium:
+				"Access flow statistics and analytics, configure alert policies and receivers, view logs, generate reports and graphs, and monitor site status.",
 			aliases: ["stats", "metrics", "logs"],
 			complexity: "advanced" as const,
 			isPreview: false,
@@ -791,7 +922,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "support",
 			displayName: "Support",
-			description: "F5 Distributed Cloud Support API specifications",
+			description:
+				"Manage the complete customer support ticket lifecycle including creation, commenting, priority adjustment, escalation, and closure. Submit specialized requests such as tax exemption verification. Access site-level diagnostic capabilities including TCP dump capture, listing, and management for network troubleshooting. Integrates with operational workflows to enable support teams to gather diagnostic data directly from distributed sites while maintaining ticket-based tracking of all customer...",
+			descriptionShort:
+				"Customer support ticket lifecycle and site diagnostics",
+			descriptionMedium:
+				"Create, track, and manage support tickets with escalation workflows. Includes site diagnostic tools for packet capture and troubleshooting.",
 			aliases: ["tickets", "help-desk"],
 			complexity: "moderate" as const,
 			isPreview: false,
@@ -812,6 +948,9 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			displayName: "Telemetry And Insights",
 			description:
 				"F5 Distributed Cloud Telemetry And Insights API specifications",
+			descriptionShort: "Telemetry And Insights API",
+			descriptionMedium:
+				"F5 Distributed Cloud Telemetry And Insights API specifications",
 			aliases: ["telemetry", "ti"],
 			complexity: "moderate" as const,
 			isPreview: false,
@@ -831,7 +970,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "tenant_and_identity",
 			displayName: "Tenant And Identity",
 			description:
-				"F5 Distributed Cloud Tenant And Identity API specifications",
+				"Comprehensive user and tenant identity management for F5 Distributed Cloud. Configure user settings including profile images, notification preferences (admin and combined), and view preferences. Manage user sessions with listing and control capabilities. Handle OTP (one-time password) administration including admin resets. Support identity management (IDM) enable/disable operations. Process initial access requests for new users. Manage customer support ticket attachments and interactions for...",
+			descriptionShort:
+				"User settings, notifications, sessions, and identity...",
+			descriptionMedium:
+				"Manage user profiles, notification preferences, session controls, OTP settings, and customer support interactions. Configure identity management...",
 			aliases: [],
 			complexity: "advanced" as const,
 			isPreview: false,
@@ -847,6 +990,9 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			name: "threat_campaign",
 			displayName: "Threat Campaign",
 			description:
+				"F5 Distributed Cloud Threat Campaign API specifications",
+			descriptionShort: "Threat Campaign API",
+			descriptionMedium:
 				"F5 Distributed Cloud Threat Campaign API specifications",
 			aliases: ["threats", "campaigns", "threat-intel"],
 			complexity: "moderate" as const,
@@ -866,7 +1012,11 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "users",
 			displayName: "Users",
-			description: "F5 Distributed Cloud Users API specifications",
+			description:
+				"Comprehensive user and identity management for the F5 XC platform. Create and manage registration tokens for site and node onboarding, including cloud-init configuration retrieval. Define known label keys and values to establish consistent resource tagging taxonomies across namespaces. Configure implicit labels for automatic resource classification. Supports full lifecycle management of user-related configuration objects with metadata tracking, state management, and condition monitoring for...",
+			descriptionShort: "User accounts, tokens, and label management",
+			descriptionMedium:
+				"Manage user accounts, registration tokens, and label systems. Configure known and implicit labels for resource organization and user identification.",
 			aliases: ["user", "accounts", "iam"],
 			complexity: "simple" as const,
 			isPreview: false,
@@ -886,7 +1036,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "virtual",
 			displayName: "Virtual",
-			description: "F5 Distributed Cloud Virtual API specifications",
+			description:
+				"Comprehensive application delivery and traffic management capabilities including HTTP/HTTPS/TCP/UDP load balancers, origin pool configuration, virtual host management, and advanced routing rules. Supports rate limiting policies, service policy enforcement, geo-location-based routing, and proxy forwarding configurations. Integrates with security features including malware protection, threat campaign detection, and WAF policy attachment. Provides health check configuration, endpoint...",
+			descriptionShort:
+				"HTTP/HTTPS load balancing and traffic management",
+			descriptionMedium:
+				"Configure HTTP, TCP, and UDP load balancers with origin pools, virtual hosts, routing rules, rate limiting, and service policies for application...",
 			aliases: ["lb", "loadbalancer", "vhost"],
 			complexity: "advanced" as const,
 			isPreview: false,
@@ -974,6 +1129,9 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 			displayName: "Vpm And Node Management",
 			description:
 				"F5 Distributed Cloud Vpm And Node Management API specifications",
+			descriptionShort: "Vpm And Node Management API",
+			descriptionMedium:
+				"F5 Distributed Cloud Vpm And Node Management API specifications",
 			aliases: ["vpm", "nodes", "node-mgmt"],
 			complexity: "simple" as const,
 			isPreview: false,
@@ -992,7 +1150,12 @@ export const generatedDomains: Map<string, DomainInfo> = new Map([
 		{
 			name: "waf",
 			displayName: "Waf",
-			description: "F5 Distributed Cloud Waf API specifications",
+			description:
+				"Web Application Firewall (WAF) configuration and management for protecting applications against common attacks and vulnerabilities. Define application firewall policies with attack type detection, bot protection settings, and custom blocking pages. Manage WAF exclusion policies for legitimate traffic patterns, configure signature staging and release workflows, and monitor security events with detailed rule hit metrics. Supports AI-powered risk-based blocking, anonymization settings for...",
+			descriptionShort:
+				"Web application firewall rules and security policies",
+			descriptionMedium:
+				"Configure web application firewall rules, manage security policies, and enable attack detection with customizable blocking actions and signature...",
 			aliases: ["firewall", "appfw"],
 			complexity: "advanced" as const,
 			isPreview: false,

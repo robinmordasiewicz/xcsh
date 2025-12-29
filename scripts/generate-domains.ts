@@ -15,6 +15,8 @@ interface SpecIndexEntry {
 	domain: string;
 	title: string;
 	description: string;
+	description_short: string; // ~60 chars for completions, badges
+	description_medium: string; // ~150 chars for tooltips, summaries
 	file: string;
 	path_count: number;
 	schema_count: number;
@@ -51,6 +53,8 @@ interface DomainInfo {
 	name: string;
 	displayName: string;
 	description: string;
+	descriptionShort: string;
+	descriptionMedium: string;
 	aliases: string[];
 	complexity: string;
 	isPreview: boolean;
@@ -103,6 +107,8 @@ function generateDomainEntry(domain: DomainInfo): string {
 	code += `\t\tname: "${domain.name}",\n`;
 	code += `\t\tdisplayName: "${escapeString(domain.displayName)}",\n`;
 	code += `\t\tdescription: "${escapeString(domain.description)}",\n`;
+	code += `\t\tdescriptionShort: "${escapeString(domain.descriptionShort)}",\n`;
+	code += `\t\tdescriptionMedium: "${escapeString(domain.descriptionMedium)}",\n`;
 	code += `\t\taliases: [${aliasArray}],\n`;
 	code += `\t\tcomplexity: "${domain.complexity}" as const,\n`;
 	code += `\t\tisPreview: ${domain.isPreview},\n`;
@@ -188,6 +194,8 @@ async function main(): Promise<void> {
 			name: spec.domain,
 			displayName: titleCase(spec.domain),
 			description: spec.description,
+			descriptionShort: spec.description_short,
+			descriptionMedium: spec.description_medium,
 			aliases,
 			complexity: spec.complexity || "moderate",
 			isPreview: spec.is_preview || false,

@@ -31,7 +31,11 @@ const profileSubcommands: SubcommandGroup = {
  */
 export const loginDomain: DomainDefinition = {
 	name: "login",
-	description: "Authentication, identity, and session management",
+	description:
+		"Authentication, identity, and session management for F5 XC. Manage connection profiles to save and switch between tenants, handle context for namespace targeting, and verify current authentication status with whoami.",
+	descriptionShort: "Authentication and session management",
+	descriptionMedium:
+		"Manage connection profiles, authentication contexts, and session identity for F5 Distributed Cloud.",
 	commands: new Map([["show", whoamiCommand]]),
 	subcommands: new Map([
 		["profile", profileSubcommands],

@@ -30,7 +30,7 @@ function getAllDomains(): Array<{
 	for (const domain of customDomains.all()) {
 		domains.push({
 			name: domain.name,
-			description: domain.description,
+			description: domain.descriptionShort,
 			aliases: [],
 		});
 		seen.add(domain.name);
@@ -57,7 +57,7 @@ function getAllDomains(): Array<{
 		if (seen.has(name)) continue;
 		domains.push({
 			name,
-			description: info.description,
+			description: info.descriptionShort,
 			aliases: info.aliases,
 		});
 		seen.add(name);

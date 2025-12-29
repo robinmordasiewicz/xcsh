@@ -546,7 +546,7 @@ export class Completer {
 
 			suggestions.push({
 				text: domain,
-				description: meta.description,
+				description: meta.descriptionShort,
 				category: "domain",
 			});
 			addedDomains.add(domain);
