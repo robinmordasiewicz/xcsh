@@ -511,7 +511,8 @@ export function App({ initialSession }: AppProps = {}): React.ReactElement {
 			</Static>
 
 			{/* Conditionally render active UI or loading state */}
-			{isInitialized ? (
+			{/* Hide entire active UI when writing raw stdout to prevent it appearing in scrollback */}
+			{isInitialized && !hideStatusBar ? (
 				<>
 					{/* Input box */}
 					<InputBox
@@ -525,32 +526,30 @@ export function App({ initialSession }: AppProps = {}): React.ReactElement {
 					/>
 
 					{/* Suggestions popup OR Status bar - mutually exclusive to conserve space */}
-					{/* Hide status bar when writing raw stdout to prevent it appearing in scrollback */}
-					{!hideStatusBar &&
-						(completion.isShowing &&
-						completion.suggestions.length > 0 ? (
-							<Suggestions
-								suggestions={toUISuggestions(
-									completion.suggestions,
-								)}
-								selectedIndex={completion.selectedIndex}
-								onSelect={handleSuggestionSelect}
-								onNavigate={handleSuggestionNavigate}
-								onCancel={completion.hide}
-								maxVisible={20}
-								isActive={false} // Let App handle keyboard
-							/>
-						) : (
-							<StatusBar
-								gitInfo={gitInfo}
-								width={width}
-								hint={statusHint}
-							/>
-						))}
+					{completion.isShowing &&
+					completion.suggestions.length > 0 ? (
+						<Suggestions
+							suggestions={toUISuggestions(
+								completion.suggestions,
+							)}
+							selectedIndex={completion.selectedIndex}
+							onSelect={handleSuggestionSelect}
+							onNavigate={handleSuggestionNavigate}
+							onCancel={completion.hide}
+							maxVisible={20}
+							isActive={false} // Let App handle keyboard
+						/>
+					) : (
+						<StatusBar
+							gitInfo={gitInfo}
+							width={width}
+							hint={statusHint}
+						/>
+					)}
 				</>
-			) : (
+			) : !isInitialized ? (
 				<Text>Initializing...</Text>
-			)}
+			) : null}
 		</Box>
 	);
 }
