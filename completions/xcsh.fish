@@ -152,6 +152,7 @@ complete -c xcsh -n "__fish_use_subcommand" -a "appfw" -d 'Alias for waf'
 
 # Custom domain subcommands
 complete -c xcsh -n "__fish_seen_subcommand_from login" -a "show" -d 'Command'
+complete -c xcsh -n "__fish_seen_subcommand_from login" -a "banner" -d 'Command'
 complete -c xcsh -n "__fish_seen_subcommand_from login" -a "profile" -d 'Subcommand group'
 complete -c xcsh -n "__fish_seen_subcommand_from login; and __fish_seen_subcommand_from profile" -a "list" -d 'Command'
 complete -c xcsh -n "__fish_seen_subcommand_from login; and __fish_seen_subcommand_from profile" -a "show" -d 'Command'

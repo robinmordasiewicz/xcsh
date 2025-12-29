@@ -38,7 +38,8 @@
     "validate": "npm run typecheck && npm run lint && npm run format:check",
     "generate:domains": "tsx scripts/generate-domains.ts",
     "generate:completions": "tsx scripts/generate-completions.ts",
-    "generate": "npm run generate:domains && npm run generate:completions",
+    "generate:logo": "tsx scripts/generate-logo-asset.ts",
+    "generate": "npm run generate:domains && npm run generate:completions && npm run generate:logo",
     "prebuild": "npm run generate"
   },
   "keywords": [
@@ -78,6 +79,7 @@
     "lint-staged": "^16.2.7",
     "msw": "^2.7.0",
     "prettier": "^3.4.2",
+    "sharp": "^0.33.5",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",

@@ -9,6 +9,7 @@ import { createCommand } from "./profile/create.js";
 import { useCommand } from "./profile/use.js";
 import { deleteCommand } from "./profile/delete.js";
 import { contextSubcommands } from "./context/index.js";
+import { bannerCommand } from "./banner/index.js";
 import { whoamiCommand } from "./whoami/index.js";
 
 /**
@@ -36,7 +37,10 @@ export const loginDomain: DomainDefinition = {
 	descriptionShort: "Authentication and session management",
 	descriptionMedium:
 		"Manage connection profiles, authentication contexts, and session identity for F5 Distributed Cloud.",
-	commands: new Map([["show", whoamiCommand]]),
+	commands: new Map([
+		["show", whoamiCommand],
+		["banner", bannerCommand],
+	]),
 	subcommands: new Map([
 		["profile", profileSubcommands],
 		["context", contextSubcommands],

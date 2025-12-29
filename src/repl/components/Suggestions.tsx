@@ -62,7 +62,7 @@ function SuggestionItem({
 	return (
 		<Box>
 			{/* Selection indicator - use 3 chars for alignment (▶ may render as wide char) */}
-			<Text color={isSelected ? "#E4002B" : "#333333"}>
+			<Text color={isSelected ? "#CA260A" : "#333333"}>
 				{isSelected ? "▶ " : "   "}
 			</Text>
 
@@ -155,7 +155,7 @@ export function Suggestions({
 		<Box
 			flexDirection="column"
 			borderStyle="round"
-			borderColor="#E4002B"
+			borderColor="#CA260A"
 			paddingX={1}
 		>
 			{/* Scroll up indicator */}

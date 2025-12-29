@@ -167,7 +167,7 @@ _xcsh() {
         (action)
             case ${line[1]} in
         (login)
-            _values 'command' 'show:Command' 'profile:Subcommand group' 'context:Subcommand group'
+            _values 'command' 'show:Command' 'banner:Command' 'profile:Subcommand group' 'context:Subcommand group'
             ;;
         (cloudstatus)
             _values 'command' 'status:Command' 'summary:Command' 'components:Command' 'incidents:Command' 'maintenance:Command'

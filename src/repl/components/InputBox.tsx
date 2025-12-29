@@ -22,7 +22,7 @@ interface InputBoxProps {
  */
 function HorizontalRule({ width }: { width: number }): React.ReactElement {
 	const rule = "\u2500".repeat(Math.max(width, 1));
-	return <Text color="#E4002B">{rule}</Text>;
+	return <Text color="#CA260A">{rule}</Text>;
 }
 
 /**

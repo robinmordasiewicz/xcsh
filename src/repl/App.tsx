@@ -15,6 +15,23 @@ import { useDoubleCtrlC } from "./hooks/useDoubleCtrlC.js";
 import { useHistory } from "./hooks/useHistory.js";
 import { useCompletion } from "./hooks/useCompletion.js";
 import { executeCommand } from "./executor.js";
+import { isCustomDomain } from "../domains/index.js";
+import { domainRegistry } from "../types/domains.js";
+import { extensionRegistry } from "../extensions/index.js";
+/**
+ * Check if a word is a valid domain (custom, API, or extension)
+ */
+function isValidDomain(word: string): boolean {
+	const lowerWord = word.toLowerCase();
+	// Check custom domains
+	if (isCustomDomain(lowerWord)) return true;
+	// Check API domains
+	if (domainRegistry.has(lowerWord)) return true;
+	// Check extension-only domains
+	if (extensionRegistry.getExtension(lowerWord)) return true;
+	return false;
+}
+
 /**
  * Convert completion suggestions to UI suggestions
  */
@@ -72,6 +89,30 @@ export function App(): React.ReactElement {
 	const [statusHint, setStatusHint] = useState("Ctrl+C twice to exit");
 	const [historyArray, setHistoryArray] = useState<string[]>([]);
 	const [inputKey, setInputKey] = useState(0); // Key to reset cursor position
+	// Raw stdout handling - hide status bar while writing direct stdout content
+	const [hideStatusBar, setHideStatusBar] = useState(false);
+	const [pendingRawStdout, setPendingRawStdout] = useState<string | null>(
+		null,
+	);
+
+	// Effect to handle raw stdout writing when status bar is hidden
+	// This ensures the status bar is removed from render BEFORE we write content
+	// that may cause terminal scrolling, preventing it from being captured in scrollback
+	// CRITICAL: Do not modify without testing - prevents status bar in scrollback
+	useEffect(() => {
+		if (hideStatusBar && pendingRawStdout) {
+			// Status bar is now hidden from Ink's render, safe to write raw stdout
+			process.stdout.write(pendingRawStdout);
+			// CRITICAL: Newlines to prevent Ink from truncating banner bottom border
+			// - 3 newlines is minimum needed to prevent truncation
+			// - DO NOT REDUCE below 3 - will truncate bottom of banner frame
+			// - DO NOT INCREASE above 3 - causes excessive deadspace below banner
+			process.stdout.write("\n\n\n");
+			// Restore state - status bar will reappear in next render
+			setPendingRawStdout(null);
+			setHideStatusBar(false);
+		}
+	}, [hideStatusBar, pendingRawStdout]);
 
 	// Completion state
 	const completion = useCompletion({
@@ -81,7 +122,11 @@ export function App(): React.ReactElement {
 	// History state
 	const history = useHistory({
 		history: historyArray,
-		onSelect: (cmd) => setInput(cmd),
+		onSelect: (cmd) => {
+			setInput(cmd);
+			// Force TextInput remount to reflect new value
+			setInputKey((k) => k + 1);
+		},
 	});
 
 	// Double Ctrl+C detection
@@ -215,8 +260,16 @@ export function App(): React.ReactElement {
 			// Execute via executor module
 			const result = await executeCommand(trimmed, session);
 
-			// Handle clear
-			if (result.shouldClear) {
+			// Handle raw stdout content (e.g., image banner with cursor positioning)
+			// This bypasses Ink's rendering to avoid status bar in scrollback
+			if (result.rawStdout) {
+				// Hide status bar before writing raw content
+				// The useEffect will handle the actual writing after render
+				setHideStatusBar(true);
+				setPendingRawStdout(result.rawStdout);
+				// Don't process normal output - rawStdout is the complete output
+			} else if (result.shouldClear) {
+				// Handle clear
 				setOutputItems([]);
 			} else {
 				// Add output lines
@@ -250,6 +303,7 @@ export function App(): React.ReactElement {
 			// Live filtering when suggestions are showing
 			if (completion.isShowing) {
 				completion.filterSuggestions(newValue);
+				return;
 			}
 
 			// Check if "/" was typed - trigger completion
@@ -257,6 +311,26 @@ export function App(): React.ReactElement {
 				const beforeSlash = newValue.slice(0, -1);
 				if (beforeSlash === "" || beforeSlash.endsWith(" ")) {
 					completion.triggerCompletion(newValue);
+					return;
+				}
+			}
+
+			// Check if space was typed after a known domain - trigger contextual completion
+			// This works at any depth: "login ", "login profile ", "login profile use ", etc.
+			if (
+				newValue !== oldValue &&
+				newValue.endsWith(" ") &&
+				!oldValue.endsWith(" ")
+			) {
+				const trimmed = newValue.trimEnd();
+				const words = trimmed.split(/\s+/);
+				if (words.length > 0 && words[0]) {
+					const firstWord = words[0].startsWith("/")
+						? words[0].slice(1)
+						: words[0];
+					if (isValidDomain(firstWord)) {
+						completion.triggerCompletion(newValue);
+					}
 				}
 			}
 		},
@@ -431,26 +505,28 @@ export function App(): React.ReactElement {
 					/>
 
 					{/* Suggestions popup OR Status bar - mutually exclusive to conserve space */}
-					{completion.isShowing &&
-					completion.suggestions.length > 0 ? (
-						<Suggestions
-							suggestions={toUISuggestions(
-								completion.suggestions,
-							)}
-							selectedIndex={completion.selectedIndex}
-							onSelect={handleSuggestionSelect}
-							onNavigate={handleSuggestionNavigate}
-							onCancel={completion.hide}
-							maxVisible={20}
-							isActive={false} // Let App handle keyboard
-						/>
-					) : (
-						<StatusBar
-							gitInfo={gitInfo}
-							width={width}
-							hint={statusHint}
-						/>
-					)}
+					{/* Hide status bar when writing raw stdout to prevent it appearing in scrollback */}
+					{!hideStatusBar &&
+						(completion.isShowing &&
+						completion.suggestions.length > 0 ? (
+							<Suggestions
+								suggestions={toUISuggestions(
+									completion.suggestions,
+								)}
+								selectedIndex={completion.selectedIndex}
+								onSelect={handleSuggestionSelect}
+								onNavigate={handleSuggestionNavigate}
+								onCancel={completion.hide}
+								maxVisible={20}
+								isActive={false} // Let App handle keyboard
+							/>
+						) : (
+							<StatusBar
+								gitInfo={gitInfo}
+								width={width}
+								hint={statusHint}
+							/>
+						))}
 				</>
 			) : (
 				<Text>Initializing...</Text>

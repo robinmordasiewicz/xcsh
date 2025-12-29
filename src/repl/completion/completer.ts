@@ -296,6 +296,26 @@ export class Completer {
 			}
 		}
 
+		// First arg is a direct command - delegate to command's completion handler
+		const directCmdName = args[0]?.toLowerCase() ?? "";
+		const directCmd = domain.commands.get(directCmdName);
+		if (directCmd?.completion) {
+			try {
+				const completions = await directCmd.completion(
+					currentWord,
+					args.slice(1),
+					this.session!,
+				);
+				return completions.map((text) => ({
+					text,
+					description: "",
+					category: "argument" as const,
+				}));
+			} catch {
+				// Ignore completion errors
+			}
+		}
+
 		return suggestions;
 	}
 

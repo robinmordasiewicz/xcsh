@@ -45,6 +45,13 @@ export interface ExecutionResult {
 	contextChanged: boolean;
 	/** Error message if command failed */
 	error?: string;
+	/**
+	 * Raw stdout content to write directly (bypassing Ink).
+	 * When set, App.tsx will hide status bar first, write this content,
+	 * then restore status bar. Used for commands that need cursor positioning
+	 * like the image banner.
+	 */
+	rawStdout?: string;
 }
 
 /**
@@ -753,6 +760,10 @@ export async function executeCommand(
 		};
 	}
 
+	// Add ALL non-empty commands to history (before execution)
+	// This ensures direct navigation, builtins, and API commands are all recorded
+	session.addToHistory(input);
+
 	// Handle "/" prefix direct navigation
 	if (cmd.isDirectNavigation) {
 		return handleDirectNavigation(cmd, ctx, session);
@@ -793,9 +804,6 @@ export async function executeCommand(
 			};
 		}
 	}
-
-	// Add to history
-	session.addToHistory(cmd.raw);
 
 	// Execute API command
 	return await executeAPICommand(session, ctx, cmd);

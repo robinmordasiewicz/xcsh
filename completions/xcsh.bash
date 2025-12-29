@@ -27,7 +27,7 @@ _xcsh_completions() {
       local domain="${words[1]}"
       case "${domain}" in
         login)
-          COMPREPLY=($(compgen -W "show profile context" -- "${cur}"))
+          COMPREPLY=($(compgen -W "show banner profile context" -- "${cur}"))
           return 0
           ;;
         login/profile)

@@ -4,5 +4,4 @@
 
 export { InputBox, useInputState } from "./InputBox.js";
 export { StatusBar, getGitInfo, type GitInfo } from "./StatusBar.js";
-export { Banner } from "./Banner.js";
 export { Suggestions, useSuggestions, type Suggestion } from "./Suggestions.js";

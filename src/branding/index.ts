@@ -76,8 +76,9 @@ export const F5_LOGO = `\
 
 // ANSI color codes for terminal output
 export const colors = {
-	// F5 Brand colors
-	red: "\x1b[38;2;228;0;43m", // F5 Brand Red (#E4002B)
+	// F5 Brand colors - brightness-adjusted for terminal rendering
+	// PNG uses #E4002B but ANSI needs higher values to match visually
+	red: "\x1b[38;2;202;38;10m", // F5 Brand Red (adjusted for ANSI)
 	boldWhite: "\x1b[1;97m", // Bold bright white
 	reset: "\x1b[0m", // Reset to default
 
@@ -135,3 +136,21 @@ export function colorBlue(text: string): string {
 export function colorDim(text: string): string {
 	return `${colors.dim}${text}${colors.reset}`;
 }
+
+// Re-export terminal detection and logo rendering utilities
+export {
+	detectTerminalCapabilities,
+	generateITerm2ImageSequence,
+	getTerminalImageSequence,
+	type TerminalCapabilities,
+	type ITerm2ImageOptions,
+} from "./terminal.js";
+
+export {
+	renderLogo,
+	resolveLogoMode,
+	getLogoModeFromEnv,
+	hasImageData,
+	type LogoRenderOptions,
+	type RenderedLogo,
+} from "./logo-renderer.js";

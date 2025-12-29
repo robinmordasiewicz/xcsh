@@ -19,6 +19,13 @@ export interface DomainCommandResult {
 	contextChanged: boolean;
 	/** Error message if command failed */
 	error?: string;
+	/**
+	 * Raw stdout content to write directly (bypassing Ink).
+	 * When set, App.tsx will hide status bar first, write this content,
+	 * then restore status bar. Used for commands that need cursor positioning
+	 * like the image banner.
+	 */
+	rawStdout?: string;
 }
 
 /**
@@ -174,6 +181,15 @@ class DomainRegistry {
 			}
 
 			const cmdName = restArgs[0]?.toLowerCase() ?? "";
+
+			// Handle --help, -h, or help as first arg in subgroup - show subgroup help
+			if (
+				cmdName === "--help" ||
+				cmdName === "-h" ||
+				cmdName === "help"
+			) {
+				return this.showSubcommandHelp(domain, subgroup);
+			}
 			const cmdArgs = restArgs.slice(1);
 
 			// Find command in subgroup
@@ -397,5 +413,19 @@ export function errorResult(message: string): DomainCommandResult {
 		shouldClear: false,
 		contextChanged: false,
 		error: message,
+	};
+}
+
+/**
+ * Helper to create a result with raw stdout content
+ * Used for commands that need cursor positioning (e.g., image banner)
+ */
+export function rawStdoutResult(content: string): DomainCommandResult {
+	return {
+		output: [], // No regular output - rawStdout is used instead
+		shouldExit: false,
+		shouldClear: false,
+		contextChanged: false,
+		rawStdout: content,
 	};
 }

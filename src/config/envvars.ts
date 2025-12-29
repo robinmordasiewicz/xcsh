@@ -46,6 +46,11 @@ export const EnvVarRegistry: EnvVar[] = [
 		relatedFlag: "",
 	},
 	{
+		name: `${ENV_PREFIX}_LOGO`,
+		description: "Logo display mode (auto, image, ascii, both, none)",
+		relatedFlag: "--logo",
+	},
+	{
 		name: "NO_COLOR",
 		description: "Disable color output",
 		relatedFlag: "--no-color",
