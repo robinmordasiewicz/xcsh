@@ -110,9 +110,9 @@ export function generateBashCompletion(): string {
 			];
 			customDomainCompletions.push(
 				`        ${domain.name})`,
-				`            COMPREPLY=( $(compgen -W "${allCommands.join(" ")}" -- "\${cur}") )`,
-				`            return 0`,
-				`            ;;`,
+				`          COMPREPLY=($(compgen -W "${allCommands.join(" ")}" -- "\${cur}"))`,
+				`          return 0`,
+				`          ;;`,
 			);
 		}
 
@@ -120,9 +120,9 @@ export function generateBashCompletion(): string {
 		for (const [groupName, groupCommands] of subcommands) {
 			customDomainCompletions.push(
 				`        ${domain.name}/${groupName})`,
-				`            COMPREPLY=( $(compgen -W "${groupCommands.join(" ")}" -- "\${cur}") )`,
-				`            return 0`,
-				`            ;;`,
+				`          COMPREPLY=($(compgen -W "${groupCommands.join(" ")}" -- "\${cur}"))`,
+				`          return 0`,
+				`          ;;`,
 			);
 		}
 	}
@@ -132,49 +132,49 @@ export function generateBashCompletion(): string {
 # shellcheck disable=SC2034,SC2207
 
 _xcsh_completions() {
-    local cur prev words cword
-    _init_completion || return
+  local cur prev words cword
+  _init_completion || return
 
-    local commands="${domainNames} ${allAliases} help quit exit clear history"
-    local actions="${actions}"
-    local builtins="help quit exit clear history context ctx"
-    local global_flags="--help -h --version -v --interactive -i --no-color --output -o --namespace -ns"
+  local commands="${domainNames} ${allAliases} help quit exit clear history"
+  local actions="${actions}"
+  local builtins="help quit exit clear history context ctx"
+  local global_flags="--help -h --version -v --interactive -i --no-color --output -o --namespace -ns"
 
-    # Handle completion based on position
-    case \${cword} in
-        1)
-            # First word: domains, builtins, or flags
-            if [[ "\${cur}" == -* ]]; then
-                COMPREPLY=( $(compgen -W "\${global_flags}" -- "\${cur}") )
-            else
-                COMPREPLY=( $(compgen -W "\${commands} \${builtins}" -- "\${cur}") )
-            fi
-            return 0
-            ;;
-        2)
-            # Second word: actions or subcommands based on first word
-            local domain="\${words[1]}"
-            case "\${domain}" in
+  # Handle completion based on position
+  case \${cword} in
+    1)
+      # First word: domains, builtins, or flags
+      if [[ "\${cur}" == -* ]]; then
+        COMPREPLY=($(compgen -W "\${global_flags}" -- "\${cur}"))
+      else
+        COMPREPLY=($(compgen -W "\${commands} \${builtins}" -- "\${cur}"))
+      fi
+      return 0
+      ;;
+    2)
+      # Second word: actions or subcommands based on first word
+      local domain="\${words[1]}"
+      case "\${domain}" in
 ${customDomainCompletions.join("\n")}
-                help|quit|exit|clear|history|context|ctx)
-                    return 0
-                    ;;
-                *)
-                    # API domain - suggest actions
-                    COMPREPLY=( $(compgen -W "\${actions}" -- "\${cur}") )
-                    return 0
-                    ;;
-            esac
-            ;;
+        help | quit | exit | clear | history | context | ctx)
+          return 0
+          ;;
         *)
-            # Third+ word: flags
-            if [[ "\${cur}" == -* ]]; then
-                local action_flags="--name -n --namespace -ns --output -o --json --yaml --limit --label"
-                COMPREPLY=( $(compgen -W "\${action_flags}" -- "\${cur}") )
-            fi
-            return 0
-            ;;
-    esac
+          # API domain - suggest actions
+          COMPREPLY=($(compgen -W "\${actions}" -- "\${cur}"))
+          return 0
+          ;;
+      esac
+      ;;
+    *)
+      # Third+ word: flags
+      if [[ "\${cur}" == -* ]]; then
+        local action_flags="--name -n --namespace -ns --output -o --json --yaml --limit --label"
+        COMPREPLY=($(compgen -W "\${action_flags}" -- "\${cur}"))
+      fi
+      return 0
+      ;;
+  esac
 }
 
 complete -F _xcsh_completions xcsh
