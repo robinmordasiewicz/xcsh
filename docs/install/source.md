@@ -14,7 +14,7 @@ Building from source requires:
 ## Clone Repository
 
 ```bash
-git clone https://github.com/robinmordasiewicz/xcsh.git
+git clone https://github.com/robinmordasiewicz/f5xc-xcsh.git
 cd xcsh
 ```
 
@@ -54,8 +54,8 @@ Move the binary to your PATH:
 For release-quality builds with embedded version information:
 
 ```bash
-go build -ldflags="-X github.com/robinmordasiewicz/xcsh/cmd.Version=dev \
-  -X github.com/robinmordasiewicz/xcsh/cmd.GitCommit=$(git rev-parse --short HEAD) \
-  -X github.com/robinmordasiewicz/xcsh/cmd.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+go build -ldflags="-X github.com/robinmordasiewicz/f5xc-xcsh/cmd.Version=dev \
+  -X github.com/robinmordasiewicz/f5xc-xcsh/cmd.GitCommit=$(git rev-parse --short HEAD) \
+  -X github.com/robinmordasiewicz/f5xc-xcsh/cmd.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
   -o xcsh .
 ```

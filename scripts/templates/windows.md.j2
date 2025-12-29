@@ -11,7 +11,7 @@ Download and extract the latest release:
     ```powershell
     # Download latest release
     $version = "{{ version or 'X.Y.Z' }}"
-    $url = "https://github.com/robinmordasiewicz/xcsh/releases/download/v$version/xcsh-win-x64.exe"
+    $url = "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v$version/xcsh-win-x64.exe"
 
     # Create installation directory
     $installDir = "$env:LOCALAPPDATA\Programs\xcsh"
@@ -32,7 +32,7 @@ Download and extract the latest release:
     ```powershell
     # Download latest release
     $version = "{{ version or 'X.Y.Z' }}"
-    $url = "https://github.com/robinmordasiewicz/xcsh/releases/download/v$version/xcsh-win-arm64.exe"
+    $url = "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v$version/xcsh-win-arm64.exe"
 
     # Create installation directory
     $installDir = "$env:LOCALAPPDATA\Programs\xcsh"
@@ -78,7 +78,7 @@ if ($currentPath -notlike "*$installDir*") {
 
 Alternatively, download directly from GitHub:
 
-1. Visit [GitHub Releases](https://github.com/robinmordasiewicz/xcsh/releases/latest)
+1. Visit [GitHub Releases](https://github.com/robinmordasiewicz/f5xc-xcsh/releases/latest)
 2. Download `xcsh-win-x64.exe` (or `xcsh-win-arm64.exe` for ARM processors)
 3. Rename to `xcsh.exe` and place in a directory of your choice
 4. Add the directory to your PATH
@@ -124,7 +124,7 @@ To upgrade to a newer version:
 ```powershell
 # Download new version (same as install)
 $version = "NEW_VERSION"
-$url = "https://github.com/robinmordasiewicz/xcsh/releases/download/v$version/xcsh-win-x64.exe"
+$url = "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v$version/xcsh-win-x64.exe"
 Invoke-WebRequest -Uri $url -OutFile "$env:LOCALAPPDATA\Programs\xcsh\xcsh.exe"
 ```
 

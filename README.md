@@ -4,7 +4,7 @@ F5 Distributed Cloud Shell - A command-line interface for managing F5 Distribute
 
 ## Documentation
 
-Full documentation is available at **[robinmordasiewicz.github.io/xcsh](https://robinmordasiewicz.github.io/xcsh)**
+Full documentation is available at **[robinmordasiewicz.github.io/f5xc-xcsh](https://robinmordasiewicz.github.io/f5xc-xcsh)**
 
 ## Installation
 
@@ -18,7 +18,7 @@ brew install --cask xcsh
 ### Install Script
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/robinmordasiewicz/xcsh/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/robinmordasiewicz/f5xc-xcsh/main/install.sh | sh
 ```
 
 ## Usage

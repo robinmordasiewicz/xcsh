@@ -1,5 +1,5 @@
 {
-  "name": "@robinmordasiewicz/xcsh",
+  "name": "@robinmordasiewicz/f5xc-xcsh",
   "version": "6.4.1",
   "description": "F5 Distributed Cloud Shell - Interactive CLI for F5 XC",
   "type": "module",
@@ -9,9 +9,9 @@
   "main": "./dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/robinmordasiewicz/xcsh.git"
+    "url": "https://github.com/robinmordasiewicz/f5xc-xcsh.git"
   },
-  "homepage": "https://robinmordasiewicz.github.io/xcsh",
+  "homepage": "https://robinmordasiewicz.github.io/f5xc-xcsh",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"

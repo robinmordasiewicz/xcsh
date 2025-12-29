@@ -9,7 +9,7 @@ const packageJson = JSON.parse(readFileSync("./package.json", "utf-8"));
 function fetchLatestRelease(): string | null {
 	try {
 		const result = execSync(
-			'curl -s --connect-timeout 3 "https://api.github.com/repos/robinmordasiewicz/xcsh/releases/latest" | grep \'"tag_name":\' | sed -E \'s/.*"v?([^"]+)".*/\\1/\'',
+			'curl -s --connect-timeout 3 "https://api.github.com/repos/robinmordasiewicz/f5xc-xcsh/releases/latest" | grep \'"tag_name":\' | sed -E \'s/.*"v?([^"]+)".*/\\1/\'',
 			{ encoding: "utf-8", timeout: 5000 },
 		).trim();
 		// Validate we got a version-like string (e.g., "6.9.0")

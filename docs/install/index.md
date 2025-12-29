@@ -58,7 +58,7 @@ brew install --cask xcsh
 Or use the universal install script on any platform:
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
+curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | sh
 ```
 
 ## Post-Installation Setup

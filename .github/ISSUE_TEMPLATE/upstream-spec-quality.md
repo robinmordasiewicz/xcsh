@@ -69,4 +69,4 @@ We have documented this in `.specs/domain_config.yaml` with the following overri
 
 ---
 
-**Note**: Issues of this type are automatically detected during daily upstream syncs. This issue may have been created automatically by the [xcsh sync-upstream-specs](https://github.com/robinmordasiewicz/xcsh/blob/main/.github/workflows/sync-upstream-specs.yml) workflow.
+**Note**: Issues of this type are automatically detected during daily upstream syncs. This issue may have been created automatically by the [xcsh sync-upstream-specs](https://github.com/robinmordasiewicz/f5xc-xcsh/blob/main/.github/workflows/sync-upstream-specs.yml) workflow.

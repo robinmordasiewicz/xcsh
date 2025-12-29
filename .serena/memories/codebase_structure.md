@@ -5,7 +5,7 @@
 ```text
 xcsh/
 ├── main.go              # Entry point - calls cmd.Execute()
-├── go.mod               # Go module definition (github.com/robinmordasiewicz/xcsh)
+├── go.mod               # Go module definition (github.com/robinmordasiewicz/f5xc-xcsh)
 ├── go.sum               # Dependency checksums
 ├── Makefile             # Build, test, lint commands
 ├── .goreleaser.yaml     # GoReleaser configuration

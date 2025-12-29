@@ -342,28 +342,28 @@ jobs:
 
           **macOS (Apple Silicon)**
           ```bash
-          curl -LO https://github.com/robinmordasiewicz/xcsh/releases/download/v${VERSION}/xcsh_${VERSION}_darwin_arm64.tar.gz
+          curl -LO https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v${VERSION}/xcsh_${VERSION}_darwin_arm64.tar.gz
           tar -xzf xcsh_${VERSION}_darwin_arm64.tar.gz
           sudo mv xcsh /usr/local/bin/
           ```
 
           **macOS (Intel)**
           ```bash
-          curl -LO https://github.com/robinmordasiewicz/xcsh/releases/download/v${VERSION}/xcsh_${VERSION}_darwin_amd64.tar.gz
+          curl -LO https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v${VERSION}/xcsh_${VERSION}_darwin_amd64.tar.gz
           tar -xzf xcsh_${VERSION}_darwin_amd64.tar.gz
           sudo mv xcsh /usr/local/bin/
           ```
 
           **Linux (amd64)**
           ```bash
-          curl -LO https://github.com/robinmordasiewicz/xcsh/releases/download/v${VERSION}/xcsh_${VERSION}_linux_amd64.tar.gz
+          curl -LO https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v${VERSION}/xcsh_${VERSION}_linux_amd64.tar.gz
           tar -xzf xcsh_${VERSION}_linux_amd64.tar.gz
           sudo mv xcsh /usr/local/bin/
           ```
 
           **Linux (arm64)**
           ```bash
-          curl -LO https://github.com/robinmordasiewicz/xcsh/releases/download/v${VERSION}/xcsh_${VERSION}_linux_arm64.tar.gz
+          curl -LO https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v${VERSION}/xcsh_${VERSION}_linux_arm64.tar.gz
           tar -xzf xcsh_${VERSION}_linux_arm64.tar.gz
           sudo mv xcsh /usr/local/bin/
           ```
@@ -373,12 +373,12 @@ jobs:
 
           **npm (requires Node.js)**
           ```bash
-          npm install -g @robinmordasiewicz/xcsh
+          npm install -g @robinmordasiewicz/f5xc-xcsh
           ```
 
           **npx (no installation)**
           ```bash
-          npx @robinmordasiewicz/xcsh
+          npx @robinmordasiewicz/f5xc-xcsh
           ```
           RELEASE_EOF
 
@@ -689,7 +689,7 @@ jobs:
           cask "xcsh" do
             name "xcsh"
             desc "Command-line interface for F5 Distributed Cloud"
-            homepage "https://robinmordasiewicz.github.io/xcsh"
+            homepage "https://robinmordasiewicz.github.io/f5xc-xcsh"
             version "${VERSION}"
 
             livecheck do
@@ -725,22 +725,22 @@ jobs:
 
             on_macos do
               on_intel do
-                url "https://github.com/robinmordasiewicz/xcsh/releases/download/v#{version}/xcsh_#{version}_darwin_amd64.tar.gz"
+                url "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v#{version}/xcsh_#{version}_darwin_amd64.tar.gz"
                 sha256 "${HASH_darwin_amd64}"
               end
               on_arm do
-                url "https://github.com/robinmordasiewicz/xcsh/releases/download/v#{version}/xcsh_#{version}_darwin_arm64.tar.gz"
+                url "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v#{version}/xcsh_#{version}_darwin_arm64.tar.gz"
                 sha256 "${HASH_darwin_arm64}"
               end
             end
 
             on_linux do
               on_intel do
-                url "https://github.com/robinmordasiewicz/xcsh/releases/download/v#{version}/xcsh_#{version}_linux_amd64.tar.gz"
+                url "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v#{version}/xcsh_#{version}_linux_amd64.tar.gz"
                 sha256 "${HASH_linux_amd64}"
               end
               on_arm do
-                url "https://github.com/robinmordasiewicz/xcsh/releases/download/v#{version}/xcsh_#{version}_linux_arm64.tar.gz"
+                url "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v#{version}/xcsh_#{version}_linux_arm64.tar.gz"
                 sha256 "${HASH_linux_arm64}"
               end
             end
@@ -752,7 +752,7 @@ jobs:
               You may need to restart your shell or source your shell config.
 
               For setup instructions, see:
-                https://robinmordasiewicz.github.io/xcsh/install/homebrew/
+                https://robinmordasiewicz.github.io/f5xc-xcsh/install/homebrew/
 
               Quick start:
                 xcsh --help

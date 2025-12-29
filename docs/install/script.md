@@ -5,7 +5,7 @@ Install xcsh on Linux or macOS using the universal install script.
 ## Quick Install
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
+curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | sh
 ```
 
 ## What the Script Does
@@ -42,13 +42,13 @@ Customize the installation with these environment variables:
 ### Example: User-Local Installation
 
 ```bash
-F5XC_NO_SUDO=1 curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
+F5XC_NO_SUDO=1 curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | sh
 ```
 
 ### Example: Specific Version
 
 ```bash
-F5XC_VERSION=4.39.0 curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
+F5XC_VERSION=4.39.0 curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | sh
 ```
 
 ## Post-Installation

@@ -4,7 +4,7 @@ Install xcsh on Windows by downloading the binary directly.
 
 ## Download
 
-1. Go to the [GitHub Releases](https://github.com/robinmordasiewicz/xcsh/releases) page
+1. Go to the [GitHub Releases](https://github.com/robinmordasiewicz/f5xc-xcsh/releases) page
 2. Download `xcsh_windows_amd64.zip` (or `xcsh_windows_arm64.zip` for ARM)
 3. Extract the archive
 
@@ -60,7 +60,7 @@ xcsh completion powershell | Out-String | Invoke-Expression
 If you prefer a Unix-like environment, you can use Windows Subsystem for Linux (WSL) and follow the [Script](script.md) installation method:
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
+curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | sh
 ```
 
 ## Troubleshooting

@@ -1,6 +1,6 @@
 #!/bin/sh
 # xcsh install script
-# Usage: curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
+# Usage: curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | sh
 #
 # Environment variables:
 #   F5XC_VERSION      - Specific version to install (default: latest)
@@ -12,7 +12,7 @@
 set -eu
 
 # Configuration
-GITHUB_REPO="robinmordasiewicz/xcsh"
+GITHUB_REPO="robinmordasiewicz/f5xc-xcsh"
 GITHUB_API="https://api.github.com/repos/${GITHUB_REPO}/releases/latest"
 GITHUB_RELEASES="https://github.com/${GITHUB_REPO}/releases/download"
 DEFAULT_INSTALL_DIR="/usr/local/bin"
@@ -879,8 +879,8 @@ Automatically detects your platform and installs the appropriate binary
 from GitHub releases.
 
 USAGE
-    curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
-    wget -qO- https://robinmordasiewicz.github.io/xcsh/install.sh | sh
+    curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | sh
+    wget -qO- https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | sh
 
 OPTIONS
     --uninstall     Remove xcsh and shell completions
@@ -899,23 +899,23 @@ SUPPORTED PLATFORMS
 
 EXAMPLES
     # Install latest version
-    curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
+    curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | sh
 
     # Install specific version
-    curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | F5XC_VERSION=1.1.0 sh
+    curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | F5XC_VERSION=1.1.0 sh
 
     # Install to custom directory (no sudo required)
-    curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | F5XC_INSTALL_DIR=$HOME/.local/bin sh
+    curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | F5XC_INSTALL_DIR=$HOME/.local/bin sh
 
     # Install using wget instead of curl
-    wget -qO- https://robinmordasiewicz.github.io/xcsh/install.sh | sh
+    wget -qO- https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | sh
 
     # Uninstall
-    curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh -s -- --uninstall
+    curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | sh -s -- --uninstall
 
 WINDOWS INSTALLATION
     Download the appropriate zip file from GitHub releases:
-    https://github.com/robinmordasiewicz/xcsh/releases/latest
+    https://github.com/robinmordasiewicz/f5xc-xcsh/releases/latest
 
     - Windows (Intel/AMD): xcsh_VERSION_windows_amd64.zip
     - Windows (ARM):       xcsh_VERSION_windows_arm64.zip

@@ -7,13 +7,13 @@ Install xcsh with automatic platform detection and shell configuration.
 === "curl"
 
     ```bash
-    curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh
+    curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | sh
     ```
 
 === "wget"
 
     ```bash
-    wget -qO- https://robinmordasiewicz.github.io/xcsh/install.sh | sh
+    wget -qO- https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | sh
     ```
 
 {% if install_output %}
@@ -31,19 +31,19 @@ Install xcsh with automatic platform detection and shell configuration.
 ## Specific Version
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | VES_VERSION={{ version or 'X.Y.Z' }} sh
+curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | VES_VERSION={{ version or 'X.Y.Z' }} sh
 ```
 
 ## Custom Install Directory
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | VES_INSTALL_DIR=$HOME/.local/bin sh
+curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | VES_INSTALL_DIR=$HOME/.local/bin sh
 ```
 
 ## Uninstall
 
 ```bash
-curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh -s -- --uninstall
+curl -fsSL https://robinmordasiewicz.github.io/f5xc-xcsh/install.sh | sh -s -- --uninstall
 ```
 
 ## Environment Variables
@@ -71,4 +71,4 @@ curl -fsSL https://robinmordasiewicz.github.io/xcsh/install.sh | sh -s -- --unin
 | macOS | amd64 (Intel), arm64 (Apple Silicon) |
 
 !!! note "Windows"
-    Download manually from [GitHub Releases](https://github.com/robinmordasiewicz/xcsh/releases/latest).
+    Download manually from [GitHub Releases](https://github.com/robinmordasiewicz/f5xc-xcsh/releases/latest).

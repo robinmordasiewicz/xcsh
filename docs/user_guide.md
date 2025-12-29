@@ -35,13 +35,13 @@ brew install robinmordasiewicz/tap/xcsh
 #### Using Install Script
 
 ```bash
-sh -c "$(curl -sSL https://raw.githubusercontent.com/robinmordasiewicz/xcsh/main/install.sh)"
+sh -c "$(curl -sSL https://raw.githubusercontent.com/robinmordasiewicz/f5xc-xcsh/main/install.sh)"
 ```
 
 #### Using npm (for development)
 
 ```bash
-git clone https://github.com/robinmordasiewicz/xcsh.git
+git clone https://github.com/robinmordasiewicz/f5xc-xcsh.git
 cd xcsh
 npm install
 npm run build
@@ -777,9 +777,9 @@ Manage multiple environments with profiles:
 
 ### Support
 
-- **Report Issues**: https://github.com/robinmordasiewicz/xcsh/issues
-- **Discussions**: https://github.com/robinmordasiewicz/xcsh/discussions
-- **Documentation**: https://github.com/robinmordasiewicz/xcsh/tree/main/docs
+- **Report Issues**: https://github.com/robinmordasiewicz/f5xc-xcsh/issues
+- **Discussions**: https://github.com/robinmordasiewicz/f5xc-xcsh/discussions
+- **Documentation**: https://github.com/robinmordasiewicz/f5xc-xcsh/tree/main/docs
 
 ### Contributing
 
