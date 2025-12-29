@@ -4,14 +4,9 @@
  */
 
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import { Box, Text, useApp, useInput, useStdout } from "ink";
+import { Box, Text, useApp, useInput, useStdout, Static } from "ink";
 
-import {
-	Banner,
-	InputBox,
-	StatusBar,
-	Suggestions,
-} from "./components/index.js";
+import { InputBox, StatusBar, Suggestions } from "./components/index.js";
 import type { Suggestion } from "./components/Suggestions.js";
 import { getGitInfo, type GitInfo } from "./components/StatusBar.js";
 import { REPLSession } from "./session.js";
@@ -20,8 +15,6 @@ import { useDoubleCtrlC } from "./hooks/useDoubleCtrlC.js";
 import { useHistory } from "./hooks/useHistory.js";
 import { useCompletion } from "./hooks/useCompletion.js";
 import { executeCommand } from "./executor.js";
-import { CLI_VERSION } from "../branding/index.js";
-
 /**
  * Convert completion suggestions to UI suggestions
  */
@@ -68,9 +61,12 @@ export function App(): React.ReactElement {
 		[],
 	);
 
-	const [output, setOutput] = useState<string[]>([]);
-	const [showBanner, setShowBanner] = useState(true);
-	const [prompt, setPrompt] = useState("<xc> ");
+	// Output items with unique IDs for Static component (goes to scrollback)
+	const [outputItems, setOutputItems] = useState<
+		Array<{ id: number; content: string }>
+	>([]);
+	const outputIdRef = useRef(0);
+	const [prompt, setPrompt] = useState("> ");
 	const [width, setWidth] = useState(stdout?.columns ?? 80);
 	const [gitInfo, setGitInfo] = useState<GitInfo | undefined>(undefined);
 	const [statusHint, setStatusHint] = useState("Ctrl+C twice to exit");
@@ -106,6 +102,7 @@ export function App(): React.ReactElement {
 		const init = async () => {
 			await session.initialize();
 			setPrompt(buildPlainPrompt(session));
+
 			// Get initial history array
 			const histMgr = session.getHistory();
 			if (histMgr) {
@@ -132,15 +129,20 @@ export function App(): React.ReactElement {
 		};
 	}, [stdout]);
 
-	// Add output line(s)
+	// Add output line(s) - each line gets unique ID for Static component
 	const addOutput = useCallback((line: string) => {
-		setOutput((prev) => {
-			const newLines = [...prev, ...line.split("\n")];
-			// Keep buffer under 1000 lines
-			if (newLines.length > 1000) {
-				return newLines.slice(newLines.length - 1000);
+		const lines = line.split("\n");
+		const newItems = lines.map((content) => ({
+			id: outputIdRef.current++,
+			content,
+		}));
+		setOutputItems((prev) => {
+			const combined = [...prev, ...newItems];
+			// Keep buffer under 1000 items
+			if (combined.length > 1000) {
+				return combined.slice(combined.length - 1000);
 			}
-			return newLines;
+			return combined;
 		});
 	}, []);
 
@@ -210,15 +212,12 @@ export function App(): React.ReactElement {
 			// Show command in output
 			addOutput(prompt + trimmed);
 
-			// Hide banner after first command
-			setShowBanner(false);
-
 			// Execute via executor module
 			const result = await executeCommand(trimmed, session);
 
 			// Handle clear
 			if (result.shouldClear) {
-				setOutput([]);
+				setOutputItems([]);
 			} else {
 				// Add output lines
 				result.output.forEach((line) => addOutput(line));
@@ -303,15 +302,23 @@ export function App(): React.ReactElement {
 			return;
 		}
 
-		// Tab - trigger or cycle completion
+		// Tab - trigger completion or select current suggestion
 		if (key.tab) {
 			// Use ref to get current input value (avoids stale closure)
 			const currentInput = inputRef.current;
 			if (completion.isShowing) {
-				if (key.shift) {
-					completion.navigateUp();
-				} else {
-					completion.navigateDown();
+				// Tab selects the current suggestion (same as Enter)
+				const selected = completion.suggestions.at(
+					completion.selectedIndex,
+				);
+				if (selected) {
+					applyCompletion({
+						label: selected.text,
+						value: selected.text,
+						description: selected.description,
+						category: selected.category ?? "builtin",
+					});
+					completion.hide();
 				}
 			} else {
 				// triggerCompletion is async - returns suggestion for single match
@@ -400,65 +407,53 @@ export function App(): React.ReactElement {
 		[applyCompletion, completion],
 	);
 
-	// Render loading state
-	if (!isInitialized) {
-		return (
-			<Box>
-				<Text>Initializing...</Text>
-			</Box>
-		);
-	}
-
-	// Calculate output height
-	const maxOutputLines = Math.max(5, 20); // Show reasonable output
-
-	// Build connection info for banner
-	const connectionInfo = {
-		tenant: session.getTenant() || undefined,
-		username: session.getUsername() || undefined,
-		tier: session.getTier() || undefined,
-		namespace: session.getNamespace(),
-		isConnected: session.isConnected(),
-	};
-
+	// Always mount Static from start to prevent tree restructure issues
+	// This keeps the component tree stable and prevents Ink's screen clearing
 	return (
 		<Box flexDirection="column" width={width}>
-			{/* Banner - shown until first command */}
-			{showBanner && (
-				<Banner version={CLI_VERSION} connectionInfo={connectionInfo} />
-			)}
+			{/* Static content - goes to scrollback, never re-rendered */}
+			<Static items={outputItems}>
+				{(item) => <Text key={item.id}>{item.content}</Text>}
+			</Static>
 
-			{/* Output area */}
-			<Box flexDirection="column">
-				{output.slice(-maxOutputLines).map((line, i) => (
-					<Text key={i}>{line}</Text>
-				))}
-			</Box>
+			{/* Conditionally render active UI or loading state */}
+			{isInitialized ? (
+				<>
+					{/* Input box */}
+					<InputBox
+						prompt={prompt}
+						value={input}
+						onChange={handleInputChange}
+						onSubmit={handleSubmit}
+						width={width}
+						isActive={true}
+						inputKey={inputKey}
+					/>
 
-			{/* Input box */}
-			<InputBox
-				prompt={prompt}
-				value={input}
-				onChange={handleInputChange}
-				onSubmit={handleSubmit}
-				width={width}
-				isActive={true}
-				inputKey={inputKey}
-			/>
-
-			{/* Suggestions popup OR Status bar - mutually exclusive to conserve space */}
-			{completion.isShowing && completion.suggestions.length > 0 ? (
-				<Suggestions
-					suggestions={toUISuggestions(completion.suggestions)}
-					selectedIndex={completion.selectedIndex}
-					onSelect={handleSuggestionSelect}
-					onNavigate={handleSuggestionNavigate}
-					onCancel={completion.hide}
-					maxVisible={10}
-					isActive={false} // Let App handle keyboard
-				/>
+					{/* Suggestions popup OR Status bar - mutually exclusive to conserve space */}
+					{completion.isShowing &&
+					completion.suggestions.length > 0 ? (
+						<Suggestions
+							suggestions={toUISuggestions(
+								completion.suggestions,
+							)}
+							selectedIndex={completion.selectedIndex}
+							onSelect={handleSuggestionSelect}
+							onNavigate={handleSuggestionNavigate}
+							onCancel={completion.hide}
+							maxVisible={10}
+							isActive={false} // Let App handle keyboard
+						/>
+					) : (
+						<StatusBar
+							gitInfo={gitInfo}
+							width={width}
+							hint={statusHint}
+						/>
+					)}
+				</>
 			) : (
-				<StatusBar gitInfo={gitInfo} width={width} hint={statusHint} />
+				<Text>Initializing...</Text>
 			)}
 		</Box>
 	);

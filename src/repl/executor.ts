@@ -23,6 +23,13 @@ import { getWhoamiInfo, formatWhoami } from "../domains/login/whoami/index.js";
 import { APIError } from "../api/index.js";
 import { formatOutput, formatAPIError } from "../output/index.js";
 import { CLI_NAME, CLI_VERSION } from "../branding/index.js";
+import {
+	formatRootHelp,
+	formatDomainHelp,
+	formatActionHelp,
+	formatTopicHelp,
+} from "./help.js";
+import { getDomainInfo } from "../types/domains.js";
 
 /**
  * Command execution result
@@ -45,6 +52,8 @@ export interface ExecutionResult {
  */
 const BUILTIN_COMMANDS = new Set([
 	"help",
+	"--help",
+	"-h",
 	"clear",
 	"quit",
 	"exit",
@@ -129,9 +138,21 @@ export function parseCommand(input: string): ParsedCommand {
 
 	// Check for built-in commands
 	const firstWord = trimmed.split(/\s+/)[0]?.toLowerCase() ?? "";
-	if (BUILTIN_COMMANDS.has(firstWord)) {
+	// Normalize: strip leading "/" for builtin check (e.g., "/help" → "help")
+	const normalizedFirst = firstWord.startsWith("/")
+		? firstWord.slice(1)
+		: firstWord;
+	if (
+		BUILTIN_COMMANDS.has(firstWord) ||
+		BUILTIN_COMMANDS.has(normalizedFirst)
+	) {
+		// Map --help and -h to help for execution
+		const effectiveCommand =
+			normalizedFirst === "--help" || normalizedFirst === "-h"
+				? "help"
+				: normalizedFirst;
 		return {
-			raw: trimmed,
+			raw: effectiveCommand,
 			isDirectNavigation: false,
 			isBuiltin: true,
 			args: trimmed.split(/\s+/).slice(1),
@@ -339,34 +360,73 @@ function executeBuiltin(
 			}));
 	}
 
-	// Help command
+	// Help command - context-aware
 	if (command === "help" || command.startsWith("help ")) {
+		// Check if a specific topic was requested
+		// Topic comes from cmd.args (parsed command arguments)
+		const topic = cmd.args[0]?.trim() ?? "";
+
+		if (topic) {
+			// Help for a specific topic
+			return {
+				output: formatTopicHelp(topic),
+				shouldExit: false,
+				shouldClear: false,
+				contextChanged: false,
+			};
+		}
+
+		// Context-aware help
+		if (ctx.isRoot()) {
+			// Root context: show comprehensive help
+			return {
+				output: formatRootHelp(),
+				shouldExit: false,
+				shouldClear: false,
+				contextChanged: false,
+			};
+		}
+
+		if (ctx.isDomain()) {
+			// Domain context: show domain-specific help (no global flags/env vars)
+			const domain = ctx.domain ?? "";
+			const domainInfo = getDomainInfo(domain);
+			if (domainInfo) {
+				return {
+					output: formatDomainHelp(domainInfo),
+					shouldExit: false,
+					shouldClear: false,
+					contextChanged: false,
+				};
+			}
+			// Fallback for unknown domain
+			return {
+				output: [
+					`Help for domain: ${domain}`,
+					"",
+					"Use 'help' at root for full help.",
+				],
+				shouldExit: false,
+				shouldClear: false,
+				contextChanged: false,
+			};
+		}
+
+		if (ctx.isAction()) {
+			// Action context: show action-specific help
+			const domain = ctx.domain ?? "";
+			const action = ctx.action ?? "";
+			return {
+				output: formatActionHelp(domain, action),
+				shouldExit: false,
+				shouldClear: false,
+				contextChanged: false,
+			};
+		}
+
+		// Fallback to root help
 		return {
-			output: [
-				"xcsh - F5 Distributed Cloud Shell",
-				"",
-				"Navigation:",
-				"  /domain         Navigate directly to domain",
-				"  exit, back, ..  Navigate up one level (exits at root)",
-				"  /, root         Navigate to root context",
-				"  context, ctx    Show current context",
-				"",
-				"Built-in commands:",
-				"  help            Show this help",
-				"  clear           Clear the screen",
-				"  quit            Exit the shell",
-				"  history         Show command history",
-				"  domains         List available domains",
-				"  whoami          Show current user and connection (-q/--quota, -a/--addons, -v/--verbose, --json)",
-				"  version         Show version info",
-				"",
-				"Keyboard shortcuts:",
-				"  Tab             Trigger/cycle completions",
-				"  Up/Down         Navigate history or suggestions",
-				"  Ctrl+C twice    Exit (within 500ms)",
-				"  Ctrl+D          Exit immediately",
-				"  Escape          Cancel suggestions",
-			],
+			output: formatRootHelp(),
 			shouldExit: false,
 			shouldClear: false,
 			contextChanged: false,
@@ -407,12 +467,41 @@ async function handleDirectNavigation(
 	}
 
 	// Check if it's a custom domain (including aliases) - execute directly with all args
+	// Custom domains handle their own --help
 	if (isCustomDomain(cmd.targetDomain)) {
 		const canonicalDomain = resolveDomainAlias(cmd.targetDomain);
 		const allArgs = [cmd.targetAction, ...cmd.args].filter(
 			(arg): arg is string => arg !== undefined,
 		);
 		return customDomains.execute(canonicalDomain, allArgs, session);
+	}
+
+	// Check for --help or -h flag on API/extension domains - show domain-specific help
+	if (
+		cmd.targetAction === "--help" ||
+		cmd.targetAction === "-h" ||
+		cmd.targetAction === "help"
+	) {
+		const domainInfo = getDomainInfo(cmd.targetDomain);
+		if (domainInfo) {
+			return {
+				output: formatDomainHelp(domainInfo),
+				shouldExit: false,
+				shouldClear: false,
+				contextChanged: false,
+			};
+		}
+		// For domains without domain info, show a basic message
+		return {
+			output: [
+				`${cmd.targetDomain} - Run '${cmd.targetDomain}' for available commands.`,
+				"",
+				`For global options, run: help`,
+			],
+			shouldExit: false,
+			shouldClear: false,
+			contextChanged: false,
+		};
 	}
 
 	// Check for extension commands
@@ -529,9 +618,35 @@ async function handleDomainNavigation(
 	session: REPLSession,
 ): Promise<ExecutionResult> {
 	// Check if it's a custom domain (including aliases) - execute directly
+	// Custom domains handle their own --help
 	if (isCustomDomain(domain)) {
 		const canonicalDomain = resolveDomainAlias(domain);
 		return customDomains.execute(canonicalDomain, args, session);
+	}
+
+	// Check for --help or -h flag on API/extension domains - show domain-specific help
+	const firstArg = args[0]?.toLowerCase() ?? "";
+	if (firstArg === "--help" || firstArg === "-h" || firstArg === "help") {
+		const domainInfo = getDomainInfo(domain);
+		if (domainInfo) {
+			return {
+				output: formatDomainHelp(domainInfo),
+				shouldExit: false,
+				shouldClear: false,
+				contextChanged: false,
+			};
+		}
+		// For domains without domain info, show a basic message
+		return {
+			output: [
+				`${domain} - Run '${domain}' for available commands.`,
+				"",
+				`For global options, run: help`,
+			],
+			shouldExit: false,
+			shouldClear: false,
+			contextChanged: false,
+		};
 	}
 
 	// Check for extension domain

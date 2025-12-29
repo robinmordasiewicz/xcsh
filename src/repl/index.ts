@@ -25,3 +25,16 @@ export * from "./components/index.js";
 
 // Completion
 export * from "./completion/index.js";
+
+// Help system
+export {
+	formatRootHelp,
+	formatDomainHelp,
+	formatActionHelp,
+	formatTopicHelp,
+	formatGlobalFlags,
+	formatEnvironmentVariables,
+	formatDomainsHelp,
+	formatActionsHelp,
+	formatNavigationHelp,
+} from "./help.js";

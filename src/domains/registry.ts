@@ -156,6 +156,11 @@ class DomainRegistry {
 		const firstArg = args[0]?.toLowerCase() ?? "";
 		const restArgs = args.slice(1);
 
+		// Handle --help, -h, or help as first arg - show domain help
+		if (firstArg === "--help" || firstArg === "-h" || firstArg === "help") {
+			return this.showDomainHelp(domain);
+		}
+
 		// Check for subcommand group first (e.g., "profile" in "login profile list")
 		const subgroup = domain.subcommands.get(firstArg);
 		if (subgroup) {

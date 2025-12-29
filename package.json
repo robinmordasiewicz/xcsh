@@ -25,6 +25,7 @@
     "build:binaries": "./scripts/build-binaries.sh",
     "build:release": "npm run build && npm run build:binaries",
     "dev": "tsx src/index.tsx",
+    "build:dev": "npm run build && ${HOME}/.bun/bin/bun build dist/index.js --compile --outfile ./xcsh",
     "start": "node dist/index.js",
     "test": "vitest",
     "test:coverage": "vitest --coverage",

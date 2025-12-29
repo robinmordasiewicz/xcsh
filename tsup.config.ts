@@ -71,10 +71,13 @@ export default defineConfig({
 const require = __createRequire(import.meta.url);`,
 	},
 	esbuildOptions(options) {
-		// Stub react-devtools-core (optional dependency not needed for production)
-		// This creates an empty module instead of failing to find the package
+		// Module aliasing for stubs and patches
 		options.alias = {
+			// Stub react-devtools-core (optional dependency not needed for production)
 			"react-devtools-core": "./src/stubs/devtools.ts",
+			// Patch ansi-escapes to preserve scrollback buffer
+			// The original clearTerminal uses \x1b[3J which erases scrollback
+			"ansi-escapes": "./src/stubs/ansi-escapes.ts",
 		};
 	},
 });
