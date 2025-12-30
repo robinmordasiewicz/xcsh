@@ -22,6 +22,54 @@ import {
 	statusIndicatorToExitCode,
 } from "../../cloudstatus/index.js";
 import type { SummaryResponse } from "../../cloudstatus/index.js";
+import {
+	type OutputFormat,
+	parseOutputFormat,
+	getCommandSpec,
+	formatSpec,
+} from "../../output/index.js";
+import type { REPLSession } from "../../repl/session.js";
+
+/**
+ * Parse output format and spec flag from command args
+ * Returns the effective output format and whether --spec was requested
+ */
+function parseOutputArgs(
+	args: string[],
+	session: REPLSession,
+): { format: OutputFormat; spec: boolean; filteredArgs: string[] } {
+	let format: OutputFormat | undefined;
+	let spec = false;
+	const filteredArgs: string[] = [];
+
+	for (let i = 0; i < args.length; i++) {
+		const arg = args[i] ?? "";
+		const nextArg = args[i + 1];
+
+		if (arg === "--output" || arg === "-o") {
+			if (nextArg) {
+				format = parseOutputFormat(nextArg);
+				i++; // Skip the value
+			}
+		} else if (arg === "--spec") {
+			spec = true;
+		} else if (arg.startsWith("--output=")) {
+			// Handle --output=json style
+			format = parseOutputFormat(arg.split("=")[1] ?? "table");
+		} else if (arg.startsWith("-o=")) {
+			// Handle -o=json style
+			format = parseOutputFormat(arg.split("=")[1] ?? "table");
+		} else {
+			filteredArgs.push(arg);
+		}
+	}
+
+	return {
+		format: format ?? session.getOutputFormat(),
+		spec,
+		filteredArgs,
+	};
+}
 
 // Lazy-initialized cloudstatus client
 let cloudstatusClient: CloudstatusClient | null = null;
@@ -47,8 +95,17 @@ const statusCommand: CommandDefinition = {
 	aliases: ["st"],
 
 	async execute(args, session): Promise<DomainCommandResult> {
-		const quiet = args.includes("--quiet") || args.includes("-q");
-		const format = session.getOutputFormat();
+		const { format, spec, filteredArgs } = parseOutputArgs(args, session);
+		const quiet =
+			filteredArgs.includes("--quiet") || filteredArgs.includes("-q");
+
+		// Handle --spec flag: return command specification for AI assistants
+		if (spec) {
+			const cmdSpec = getCommandSpec("cloudstatus status");
+			if (cmdSpec) {
+				return successResult([formatSpec(cmdSpec)]);
+			}
+		}
 
 		try {
 			const client = getClient();
@@ -116,8 +173,17 @@ const summaryCommand: CommandDefinition = {
 	aliases: ["sum"],
 
 	async execute(args, session): Promise<DomainCommandResult> {
-		const brief = args.includes("--brief") || args.includes("-b");
-		const format = session.getOutputFormat();
+		const { format, spec, filteredArgs } = parseOutputArgs(args, session);
+		const brief =
+			filteredArgs.includes("--brief") || filteredArgs.includes("-b");
+
+		// Handle --spec flag: return command specification for AI assistants
+		if (spec) {
+			const cmdSpec = getCommandSpec("cloudstatus summary");
+			if (cmdSpec) {
+				return successResult([formatSpec(cmdSpec)]);
+			}
+		}
 
 		try {
 			const client = getClient();
@@ -161,9 +227,18 @@ const componentsCommand: CommandDefinition = {
 	aliases: ["comp"],
 
 	async execute(args, session): Promise<DomainCommandResult> {
+		const { format, spec, filteredArgs } = parseOutputArgs(args, session);
 		const degradedOnly =
-			args.includes("--degraded-only") || args.includes("-d");
-		const format = session.getOutputFormat();
+			filteredArgs.includes("--degraded-only") ||
+			filteredArgs.includes("-d");
+
+		// Handle --spec flag: return command specification for AI assistants
+		if (spec) {
+			const cmdSpec = getCommandSpec("cloudstatus components");
+			if (cmdSpec) {
+				return successResult([formatSpec(cmdSpec)]);
+			}
+		}
 
 		try {
 			const client = getClient();
@@ -222,9 +297,18 @@ const incidentsCommand: CommandDefinition = {
 	aliases: ["inc"],
 
 	async execute(args, session): Promise<DomainCommandResult> {
+		const { format, spec, filteredArgs } = parseOutputArgs(args, session);
 		const activeOnly =
-			args.includes("--active-only") || args.includes("-a");
-		const format = session.getOutputFormat();
+			filteredArgs.includes("--active-only") ||
+			filteredArgs.includes("-a");
+
+		// Handle --spec flag: return command specification for AI assistants
+		if (spec) {
+			const cmdSpec = getCommandSpec("cloudstatus incidents");
+			if (cmdSpec) {
+				return successResult([formatSpec(cmdSpec)]);
+			}
+		}
 
 		try {
 			const client = getClient();
@@ -281,8 +365,17 @@ const maintenanceCommand: CommandDefinition = {
 	aliases: ["maint"],
 
 	async execute(args, session): Promise<DomainCommandResult> {
-		const upcomingOnly = args.includes("--upcoming") || args.includes("-u");
-		const format = session.getOutputFormat();
+		const { format, spec, filteredArgs } = parseOutputArgs(args, session);
+		const upcomingOnly =
+			filteredArgs.includes("--upcoming") || filteredArgs.includes("-u");
+
+		// Handle --spec flag: return command specification for AI assistants
+		if (spec) {
+			const cmdSpec = getCommandSpec("cloudstatus maintenance");
+			if (cmdSpec) {
+				return successResult([formatSpec(cmdSpec)]);
+			}
+		}
 
 		try {
 			const client = getClient();

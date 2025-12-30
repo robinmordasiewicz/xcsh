@@ -13,6 +13,7 @@ _xcsh() {
         '--no-color[Disable color output]'
         '(-o --output)'{-o,--output}'[Output format]:format:(json yaml table)'
         '(-ns --namespace)'{-ns,--namespace}'[Namespace]:namespace:_xcsh_namespaces'
+        '--spec[Output command specification as JSON for AI assistants]'
     )
 
     _arguments -C \
@@ -202,6 +203,7 @@ _xcsh() {
                 '--limit[Maximum results]:limit:'
                 '--label[Filter by label]:label:'
                 '(-f --file)'{-f,--file}'[Configuration file]:file:_files'
+                '--spec[Output command specification as JSON for AI assistants]'
             )
             _arguments "${action_opts[@]}"
             ;;

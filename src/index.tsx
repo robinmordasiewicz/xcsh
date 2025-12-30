@@ -33,6 +33,8 @@ program
 	.version(CLI_VERSION, "-v, --version", "Show version number")
 	.option("--no-color", "Disable color output")
 	.option("--logo <mode>", "Logo display mode: image, ascii, none")
+	.option("-o, --output <format>", "Output format (json, yaml, table)")
+	.option("--spec", "Output command specification as JSON (for AI)")
 	.option("-h, --help", "Show help") // Manual help option to prevent auto-exit
 	.argument("[command...]", "Command to execute non-interactively")
 	.allowUnknownOption(true) // Pass through unknown options to commands
@@ -40,7 +42,12 @@ program
 	.action(
 		async (
 			commandArgs: string[],
-			options: { help?: boolean; logo?: string },
+			options: {
+				help?: boolean;
+				logo?: string;
+				output?: string;
+				spec?: boolean;
+			},
 		) => {
 			// Handle root-level help (xcsh --help or xcsh -h with no domain)
 			if (options.help && commandArgs.length === 0) {
@@ -58,6 +65,18 @@ program
 			// Commander consumes --logo as an option, so we add it back for non-interactive mode
 			if (options.logo && commandArgs.length > 0) {
 				commandArgs.push("--logo", options.logo);
+			}
+
+			// If --output with a command, re-inject --output into args for command handling
+			// Commander consumes --output as an option, so we add it back for non-interactive mode
+			if (options.output && commandArgs.length > 0) {
+				commandArgs.push("--output", options.output);
+			}
+
+			// If --spec with a command, re-inject --spec into args for command handling
+			// Commander consumes --spec as an option, so we add it back for non-interactive mode
+			if (options.spec && commandArgs.length > 0) {
+				commandArgs.push("--spec");
 			}
 
 			// If no command args, enter REPL mode

@@ -10,6 +10,7 @@ complete -c xcsh -s v -l version -d 'Show version number'
 complete -c xcsh -l no-color -d 'Disable color output'
 complete -c xcsh -s o -l output -d 'Output format' -xa 'json yaml table'
 complete -c xcsh -l namespace -s ns -d 'Namespace' -xa 'default system shared'
+complete -c xcsh -l spec -d 'Output command specification as JSON for AI assistants'
 
 # Builtin commands
 complete -c xcsh -n "__fish_use_subcommand" -a "help" -d 'Show help information'
@@ -558,3 +559,4 @@ complete -c xcsh -l label -d 'Filter by label'
 complete -c xcsh -s f -l file -d 'Configuration file' -r
 complete -c xcsh -l force -d 'Force deletion'
 complete -c xcsh -l cascade -d 'Cascade delete'
+complete -c xcsh -l spec -d 'Output command specification as JSON for AI assistants'

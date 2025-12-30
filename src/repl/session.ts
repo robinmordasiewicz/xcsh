@@ -13,6 +13,7 @@ import {
 } from "../profile/index.js";
 import { APIClient } from "../api/index.js";
 import type { OutputFormat } from "../output/index.js";
+import { getOutputFormatFromEnv } from "../output/index.js";
 
 /**
  * Configuration for creating a REPL session
@@ -44,7 +45,7 @@ export class REPLSession {
 	private _serverUrl: string = "";
 	private _apiToken: string = "";
 	private _apiClient: APIClient | null = null;
-	private _outputFormat: OutputFormat = "yaml";
+	private _outputFormat: OutputFormat = "table";
 	private _debug: boolean = false;
 	private _profileManager: ProfileManager;
 	private _activeProfile: Profile | null = null;
@@ -61,7 +62,9 @@ export class REPLSession {
 			config.serverUrl ?? process.env[`${ENV_PREFIX}_API_URL`] ?? "";
 		this._apiToken =
 			config.apiToken ?? process.env[`${ENV_PREFIX}_API_TOKEN`] ?? "";
-		this._outputFormat = config.outputFormat ?? "yaml";
+		// Output format priority: config > env var > default (table)
+		this._outputFormat =
+			config.outputFormat ?? getOutputFormatFromEnv() ?? "table";
 		this._debug =
 			config.debug ?? process.env[`${ENV_PREFIX}_DEBUG`] === "true";
 

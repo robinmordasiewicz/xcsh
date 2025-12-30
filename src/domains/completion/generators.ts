@@ -76,7 +76,7 @@ _xcsh_completions() {
   local commands="${domainNames} ${allAliases.join(" ")} help quit exit clear history"
   local actions="${actions}"
   local builtins="help quit exit clear history context ctx"
-  local global_flags="--help -h --version -v --no-color --output -o --namespace -ns"
+  local global_flags="--help -h --version -v --no-color --output -o --namespace -ns --spec"
 
   # Handle completion based on position
   case \${cword} in
@@ -107,7 +107,7 @@ ${customDomainCompletions.join("\n")}
     *)
       # Third+ word: flags
       if [[ "\${cur}" == -* ]]; then
-        local action_flags="--name -n --namespace -ns --output -o --json --yaml --limit --label"
+        local action_flags="--name -n --namespace -ns --output -o --json --yaml --limit --label --spec"
         COMPREPLY=($(compgen -W "\${action_flags}" -- "\${cur}"))
       fi
       return 0
@@ -183,6 +183,7 @@ _xcsh() {
         '--no-color[Disable color output]'
         '(-o --output)'{-o,--output}'[Output format]:format:(json yaml table)'
         '(-ns --namespace)'{-ns,--namespace}'[Namespace]:namespace:_xcsh_namespaces'
+        '--spec[Output command specification as JSON for AI assistants]'
     )
 
     _arguments -C \\
@@ -233,6 +234,7 @@ ${customDomainCompletions.join("\n")}
                 '--limit[Maximum results]:limit:'
                 '--label[Filter by label]:label:'
                 '(-f --file)'{-f,--file}'[Configuration file]:file:_files'
+                '--spec[Output command specification as JSON for AI assistants]'
             )
             _arguments "\${action_opts[@]}"
             ;;
@@ -323,6 +325,7 @@ complete -c xcsh -s v -l version -d 'Show version number'
 complete -c xcsh -l no-color -d 'Disable color output'
 complete -c xcsh -s o -l output -d 'Output format' -xa 'json yaml table'
 complete -c xcsh -l namespace -s ns -d 'Namespace' -xa 'default system shared'
+complete -c xcsh -l spec -d 'Output command specification as JSON for AI assistants'
 
 # Builtin commands
 complete -c xcsh -n "__fish_use_subcommand" -a "help" -d 'Show help information'
@@ -352,5 +355,6 @@ complete -c xcsh -l label -d 'Filter by label'
 complete -c xcsh -s f -l file -d 'Configuration file' -r
 complete -c xcsh -l force -d 'Force deletion'
 complete -c xcsh -l cascade -d 'Cascade delete'
+complete -c xcsh -l spec -d 'Output command specification as JSON for AI assistants'
 `;
 }

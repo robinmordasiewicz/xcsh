@@ -110,6 +110,7 @@ export function formatGlobalFlags(): string[] {
 		"  --no-color            Disable color output",
 		"  -o, --output <fmt>    Output format (json, yaml, table)",
 		"  -ns, --namespace <ns> Target namespace",
+		"  --spec                Output command specification as JSON (for AI)",
 	];
 }
 

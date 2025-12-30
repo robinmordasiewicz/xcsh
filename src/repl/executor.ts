@@ -21,7 +21,14 @@ import {
 import { extensionRegistry } from "../extensions/index.js";
 import { getWhoamiInfo, formatWhoami } from "../domains/login/whoami/index.js";
 import { APIError } from "../api/index.js";
-import { formatOutput, formatAPIError } from "../output/index.js";
+import {
+	formatOutput,
+	formatAPIError,
+	parseOutputFormat,
+	getCommandSpec,
+	formatSpec,
+	type OutputFormat,
+} from "../output/index.js";
 import { CLI_NAME, CLI_VERSION } from "../branding/index.js";
 import {
 	formatRootHelp,
@@ -830,42 +837,77 @@ function domainToResourcePath(domain: string): string {
 interface ParsedArgs {
 	name: string | undefined;
 	namespace: string | undefined;
+	outputFormat: OutputFormat | undefined;
+	spec: boolean;
+	noColor: boolean;
 }
 
 /**
- * Parse command arguments for name and namespace
+ * Parse command arguments for name, namespace, output format, and other flags
  */
 function parseCommandArgs(args: string[]): ParsedArgs {
 	let name: string | undefined;
 	let namespace: string | undefined;
+	let outputFormat: OutputFormat | undefined;
+	let spec = false;
+	let noColor = false;
 
 	for (let i = 0; i < args.length; i++) {
 		const arg = args[i] ?? "";
 
 		if (arg.startsWith("--")) {
-			const flagName = arg.slice(2);
+			const flagName = arg.slice(2).toLowerCase();
 			const nextArg = args[i + 1];
 
-			if (flagName === "namespace" || flagName === "ns") {
-				namespace = nextArg;
-				i++;
-			} else if (flagName === "name") {
-				name = nextArg;
-				i++;
-			} else if (nextArg && !nextArg.startsWith("--")) {
-				// Skip other flags with values
-				i++;
+			switch (flagName) {
+				case "namespace":
+				case "ns":
+					namespace = nextArg;
+					i++;
+					break;
+				case "name":
+					name = nextArg;
+					i++;
+					break;
+				case "output":
+					if (nextArg) {
+						outputFormat = parseOutputFormat(nextArg);
+						i++;
+					}
+					break;
+				case "spec":
+					spec = true;
+					break;
+				case "no-color":
+					noColor = true;
+					break;
+				default:
+					// Skip other flags with values
+					if (nextArg && !nextArg.startsWith("--")) {
+						i++;
+					}
 			}
 		} else if (arg.startsWith("-")) {
 			const flagName = arg.slice(1);
 			const nextArg = args[i + 1];
 
-			if (flagName === "n") {
-				namespace = nextArg;
-				i++;
-			} else if (nextArg && !nextArg.startsWith("-")) {
-				// Skip other flags with values
-				i++;
+			switch (flagName) {
+				case "n":
+				case "ns":
+					namespace = nextArg;
+					i++;
+					break;
+				case "o":
+					if (nextArg) {
+						outputFormat = parseOutputFormat(nextArg);
+						i++;
+					}
+					break;
+				default:
+					// Skip other flags with values
+					if (nextArg && !nextArg.startsWith("-")) {
+						i++;
+					}
 			}
 		} else if (!name) {
 			// First non-flag argument is the resource name
@@ -873,7 +915,7 @@ function parseCommandArgs(args: string[]): ParsedArgs {
 		}
 	}
 
-	return { name, namespace };
+	return { name, namespace, outputFormat, spec, noColor };
 }
 
 /**
@@ -947,8 +989,55 @@ async function executeAPICommand(
 	const canonicalDomain = resolveDomain(domain) ?? domain;
 
 	// Parse arguments
-	const { name, namespace } = parseCommandArgs(args);
+	const { name, namespace, outputFormat, spec, noColor } =
+		parseCommandArgs(args);
 	const effectiveNamespace = namespace ?? session.getNamespace();
+
+	// Handle --spec flag: return command specification for AI assistants
+	if (spec) {
+		const commandPath = `${canonicalDomain} ${action}`;
+		const cmdSpec = getCommandSpec(commandPath);
+		if (cmdSpec) {
+			return {
+				output: [formatSpec(cmdSpec)],
+				shouldExit: false,
+				shouldClear: false,
+				contextChanged: false,
+			};
+		}
+		// Build a basic spec for API commands
+		const basicSpec = {
+			command: `${CLI_NAME} ${canonicalDomain} ${action}`,
+			description: `Execute ${action} on ${canonicalDomain} resources`,
+			usage: `${CLI_NAME} ${canonicalDomain} ${action} [name] [options]`,
+			flags: [
+				{
+					name: "--namespace",
+					alias: "-ns",
+					type: "string",
+					description: "Target namespace",
+				},
+				{
+					name: "--output",
+					alias: "-o",
+					type: "string",
+					description: "Output format (json, yaml, table)",
+				},
+				{
+					name: "--name",
+					type: "string",
+					description: "Resource name",
+				},
+			],
+			outputFormats: ["table", "json", "yaml"],
+		};
+		return {
+			output: [JSON.stringify(basicSpec, null, 2)],
+			shouldExit: false,
+			shouldClear: false,
+			contextChanged: false,
+		};
+	}
 
 	// Build API path
 	const resourcePath = domainToResourcePath(canonicalDomain);
@@ -1048,8 +1137,9 @@ async function executeAPICommand(
 		}
 
 		// Format output
-		const outputFormat = session.getOutputFormat();
-		const formatted = formatOutput(result, outputFormat);
+		// Priority: CLI flag (--output) > session format (from env var or default)
+		const effectiveFormat = outputFormat ?? session.getOutputFormat();
+		const formatted = formatOutput(result, effectiveFormat, noColor);
 
 		return {
 			output: formatted ? [formatted] : ["(no output)"],

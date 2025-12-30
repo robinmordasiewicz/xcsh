@@ -1,25 +1,32 @@
 /**
  * Output Formatter
  * Formats API responses as JSON, YAML, or table
+ * Unified formatting with beautiful tables and color auto-detection
  */
 
 import YAML from "yaml";
+import { formatResourceTable } from "./table.js";
+import { shouldUseColors } from "./resolver.js";
 
-/**
- * Output format types
- */
-export type OutputFormat = "json" | "yaml" | "table" | "text" | "tsv" | "none";
+// Re-export types from types.ts for backward compatibility
+export type { OutputFormat } from "./types.js";
+export { isValidOutputFormat } from "./types.js";
+
+// Import OutputFormat for local use
+import type { OutputFormat } from "./types.js";
 
 /**
  * Formatter configuration
  */
 export interface FormatterConfig {
 	/** Output format */
-	format: OutputFormat;
+	format: import("./types.js").OutputFormat;
 	/** Column widths for table format (optional) */
 	columnWidths?: number[];
 	/** Priority columns to show first */
 	priorityColumns?: string[];
+	/** Disable colors (for piped output) */
+	noColor?: boolean;
 }
 
 /**
@@ -27,11 +34,15 @@ export interface FormatterConfig {
  */
 export function formatOutput(
 	data: unknown,
-	format: OutputFormat = "yaml",
+	format: import("./types.js").OutputFormat = "table",
+	noColor: boolean = false,
 ): string {
 	if (format === "none") {
 		return "";
 	}
+
+	// Auto-detect color support if not explicitly disabled
+	const useNoColor = noColor || !shouldUseColors();
 
 	switch (format) {
 		case "json":
@@ -40,11 +51,14 @@ export function formatOutput(
 			return formatYAML(data);
 		case "table":
 		case "text":
-			return formatTable(data);
+			return formatTable(data, useNoColor);
 		case "tsv":
 			return formatTSV(data);
+		case "spec":
+			// Spec format is handled at command level
+			return formatJSON(data);
 		default:
-			return formatYAML(data);
+			return formatTable(data, useNoColor);
 	}
 }
 
@@ -93,153 +107,15 @@ function extractItems(data: unknown): Record<string, unknown>[] {
 	return [];
 }
 
-/**
- * Get string value from nested path
- */
-function getStringField(obj: Record<string, unknown>, key: string): string {
-	const value = obj[key];
-	if (typeof value === "string") {
-		return value;
-	}
-	if (value !== null && value !== undefined) {
-		return String(value);
-	}
-	return "";
-}
+// NOTE: Helper functions getStringField, formatLabels, and wrapText
+// have been moved to table.ts for direct use in beautiful table formatting.
 
 /**
- * Format labels as map[key:value key:value]
+ * Format as beautiful Unicode table with F5 red borders
+ * Falls back to plain ASCII when colors are disabled
  */
-function formatLabels(obj: Record<string, unknown>): string {
-	const labels = obj["labels"];
-	if (!labels || typeof labels !== "object") {
-		return "";
-	}
-
-	const labelMap = labels as Record<string, unknown>;
-	const entries = Object.entries(labelMap)
-		.sort(([a], [b]) => a.localeCompare(b))
-		.map(([k, v]) => `${k}:${v}`);
-
-	if (entries.length === 0) {
-		return "";
-	}
-
-	return `map[${entries.join(" ")}]`;
-}
-
-/**
- * Wrap text to fit within max width
- */
-function wrapText(text: string, maxWidth: number): string[] {
-	if (text.length <= maxWidth) {
-		return [text];
-	}
-
-	const lines: string[] = [];
-	let remaining = text;
-
-	while (remaining.length > 0) {
-		if (remaining.length <= maxWidth) {
-			lines.push(remaining);
-			break;
-		}
-
-		// Find break point (prefer space)
-		let breakPoint = maxWidth;
-		for (let i = maxWidth - 1; i > 0; i--) {
-			if (remaining[i] === " ") {
-				breakPoint = i;
-				break;
-			}
-		}
-
-		lines.push(remaining.slice(0, breakPoint));
-		remaining = remaining.slice(breakPoint).trimStart();
-	}
-
-	return lines;
-}
-
-/**
- * Format as ASCII box table
- */
-export function formatTable(data: unknown): string {
-	const items = extractItems(data);
-	if (items.length === 0) {
-		return "";
-	}
-
-	// Standard columns for F5 XC resources
-	const headers = ["NAMESPACE", "NAME", "LABELS"];
-	const widths = [9, 27, 30];
-
-	// Build rows with wrapping
-	const rows: string[][][] = [];
-	for (const item of items) {
-		const row = [
-			getStringField(item, "namespace") || "<None>",
-			getStringField(item, "name") || "<None>",
-			formatLabels(item) || "<None>",
-		];
-
-		// Wrap each cell
-		const wrappedCells = row.map((cell, i) => wrapText(cell, widths[i]!));
-		const maxLines = Math.max(...wrappedCells.map((c) => c.length));
-
-		const wrappedRows: string[][] = [];
-		for (let line = 0; line < maxLines; line++) {
-			wrappedRows.push(wrappedCells.map((c) => c[line] ?? ""));
-		}
-		rows.push(wrappedRows);
-	}
-
-	// Build output
-	const lines: string[] = [];
-
-	// Print box line
-	const boxLine = "+" + widths.map((w) => "-".repeat(w + 2)).join("+") + "+";
-
-	// Print header
-	lines.push(boxLine);
-	lines.push(
-		"|" +
-			headers
-				.map((h, i) => {
-					const padding = widths[i]! - h.length;
-					const leftPad = Math.floor(padding / 2);
-					const rightPad = padding - leftPad;
-					return (
-						" " +
-						" ".repeat(leftPad) +
-						h +
-						" ".repeat(rightPad) +
-						" "
-					);
-				})
-				.join("|") +
-			"|",
-	);
-	lines.push(boxLine);
-
-	// Print data rows
-	for (const wrappedRows of rows) {
-		for (const row of wrappedRows) {
-			lines.push(
-				"|" +
-					row
-						.map((cell, i) => {
-							const padding = widths[i]! - cell.length;
-							return " " + cell + " ".repeat(padding) + " ";
-						})
-						.join("|") +
-					"|",
-			);
-		}
-		lines.push(boxLine);
-	}
-
-	return lines.join("\n");
+export function formatTable(data: unknown, noColor: boolean = false): string {
+	return formatResourceTable(data, noColor);
 }
 
 /**
@@ -297,7 +173,7 @@ export function parseOutputFormat(format: string): OutputFormat {
 		case "none":
 			return "none";
 		default:
-			return "yaml";
+			return "table";
 	}
 }
 
