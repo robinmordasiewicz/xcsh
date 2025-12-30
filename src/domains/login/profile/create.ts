@@ -6,6 +6,10 @@ import type { CommandDefinition } from "../../registry.js";
 import { successResult, errorResult } from "../../registry.js";
 import { getProfileManager } from "../../../profile/index.js";
 import type { Profile } from "../../../profile/index.js";
+import {
+	formatConnectionTable,
+	buildConnectionInfo,
+} from "./connection-table.js";
 
 export const createCommand: CommandDefinition = {
 	name: "create",
@@ -98,8 +102,22 @@ export const createCommand: CommandDefinition = {
 			return errorResult(result.message);
 		}
 
+		// Build connection info for display
+		const connectionInfo = buildConnectionInfo(
+			name,
+			apiUrl,
+			true, // hasToken - we just saved it
+			defaultNamespace || "default",
+			false, // Not connected yet - profile just created
+		);
+
+		// Format connection table
+		const tableLines = formatConnectionTable(connectionInfo);
+
 		return successResult([
 			`Profile '${name}' created successfully.`,
+			``,
+			...tableLines,
 			``,
 			`Use 'login profile use ${name}' to activate this profile.`,
 		]);

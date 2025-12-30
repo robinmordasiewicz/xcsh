@@ -135,10 +135,22 @@ export class REPLSession {
 	/**
 	 * Load the active profile from profile manager
 	 * Note: Environment variables take priority over profile settings
+	 * If no active profile is set but exactly one profile exists, auto-activate it
 	 */
 	async loadActiveProfile(): Promise<void> {
 		try {
-			const activeName = await this._profileManager.getActive();
+			let activeName = await this._profileManager.getActive();
+
+			// Auto-select single profile if no active profile is set
+			if (!activeName) {
+				const profiles = await this._profileManager.list();
+				if (profiles.length === 1 && profiles[0]) {
+					const singleProfile = profiles[0];
+					await this._profileManager.setActive(singleProfile.name);
+					activeName = singleProfile.name;
+				}
+			}
+
 			if (activeName) {
 				const profile = await this._profileManager.get(activeName);
 				if (profile) {

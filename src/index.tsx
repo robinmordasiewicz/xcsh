@@ -13,7 +13,7 @@
 import { render } from "ink";
 import { Command } from "commander";
 import { App, type AppProps } from "./repl/index.js";
-import { CLI_NAME, CLI_VERSION } from "./branding/index.js";
+import { CLI_NAME, CLI_VERSION, colors, ENV_PREFIX } from "./branding/index.js";
 import { executeCommand } from "./repl/executor.js";
 import { REPLSession } from "./repl/session.js";
 import { formatRootHelp } from "./repl/help.js";
@@ -111,6 +111,37 @@ program
 				// Print banner to scrollback BEFORE Ink takes over
 				// Use "startup" context for direct stdout with image support
 				renderBanner(cliLogoMode, "startup");
+
+				// Check if user needs guidance on connecting
+				const profiles = await session.getProfileManager().list();
+				const envConfigured =
+					process.env[`${ENV_PREFIX}_API_URL`] &&
+					process.env[`${ENV_PREFIX}_API_TOKEN`];
+
+				if (profiles.length === 0 && !envConfigured) {
+					console.log("");
+					console.log(
+						`${colors.yellow}No connection profiles found.${colors.reset}`,
+					);
+					console.log("");
+					console.log(
+						"Create a profile to connect to F5 Distributed Cloud:",
+					);
+					console.log("");
+					console.log(
+						`  ${colors.blue}login profile create${colors.reset} <name> --url <api-url> --token <api-token>`,
+					);
+					console.log("");
+					console.log("Or set environment variables:");
+					console.log("");
+					console.log(
+						`  ${colors.blue}export ${ENV_PREFIX}_API_URL${colors.reset}=https://tenant.console.ves.volterra.io`,
+					);
+					console.log(
+						`  ${colors.blue}export ${ENV_PREFIX}_API_TOKEN${colors.reset}=<your-api-token>`,
+					);
+					console.log("");
+				}
 
 				// Enter interactive REPL mode with pre-initialized session
 				// WORKAROUND: Bun doesn't call process.stdin.resume() automatically,

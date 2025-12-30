@@ -5,6 +5,10 @@
 import type { CommandDefinition } from "../../registry.js";
 import { successResult, errorResult } from "../../registry.js";
 import { getProfileManager } from "../../../profile/index.js";
+import {
+	formatConnectionTable,
+	buildConnectionInfo,
+} from "./connection-table.js";
 
 export const useCommand: CommandDefinition = {
 	name: "use",
@@ -34,14 +38,20 @@ export const useCommand: CommandDefinition = {
 			// Get the profile for display
 			const profile = session.getActiveProfile();
 
+			// Build connection info for display
+			const connectionInfo = buildConnectionInfo(
+				name,
+				profile?.apiUrl || "",
+				!!profile?.apiToken,
+				profile?.defaultNamespace || session.getNamespace(),
+				session.isAuthenticated(),
+			);
+
+			// Format connection table
+			const tableLines = formatConnectionTable(connectionInfo);
+
 			return successResult(
-				[
-					`Switched to profile '${name}'.`,
-					profile?.apiUrl ? `  API URL: ${profile.apiUrl}` : "",
-					profile?.defaultNamespace
-						? `  Namespace: ${profile.defaultNamespace}`
-						: "",
-				].filter(Boolean),
+				[`Switched to profile '${name}'.`, ``, ...tableLines],
 				true, // contextChanged - prompt should update
 			);
 		} catch (error) {
