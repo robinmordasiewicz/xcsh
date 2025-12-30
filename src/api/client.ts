@@ -9,8 +9,59 @@ import type {
 	APIResponse,
 	APIErrorResponse,
 	HTTPMethod,
+	RetryConfig,
 } from "./types.js";
 import { APIError } from "./types.js";
+
+/**
+ * Default retry configuration
+ */
+const DEFAULT_RETRY_CONFIG: Required<RetryConfig> = {
+	maxRetries: 3,
+	initialDelayMs: 1000,
+	maxDelayMs: 10000,
+	backoffMultiplier: 2,
+	jitter: true,
+};
+
+/**
+ * Status codes that should trigger a retry
+ */
+const RETRYABLE_STATUS_CODES = new Set([
+	408, // Request Timeout
+	429, // Too Many Requests
+	500, // Internal Server Error
+	502, // Bad Gateway
+	503, // Service Unavailable
+	504, // Gateway Timeout
+]);
+
+/**
+ * Calculate delay with exponential backoff and optional jitter
+ */
+function calculateBackoffDelay(
+	attempt: number,
+	config: Required<RetryConfig>,
+): number {
+	const exponentialDelay =
+		config.initialDelayMs * Math.pow(config.backoffMultiplier, attempt);
+	const cappedDelay = Math.min(exponentialDelay, config.maxDelayMs);
+
+	if (config.jitter) {
+		// Add random jitter between 0-25% of the delay
+		const jitterFactor = 1 + Math.random() * 0.25;
+		return Math.floor(cappedDelay * jitterFactor);
+	}
+
+	return cappedDelay;
+}
+
+/**
+ * Sleep for specified milliseconds
+ */
+function sleep(ms: number): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 /**
  * API Client for F5 Distributed Cloud
@@ -20,6 +71,7 @@ export class APIClient {
 	private readonly apiToken: string;
 	private readonly timeout: number;
 	private readonly debug: boolean;
+	private readonly retryConfig: Required<RetryConfig>;
 
 	constructor(config: APIClientConfig) {
 		// Normalize server URL (remove trailing slash)
@@ -27,6 +79,10 @@ export class APIClient {
 		this.apiToken = config.apiToken ?? "";
 		this.timeout = config.timeout ?? 30000;
 		this.debug = config.debug ?? false;
+		this.retryConfig = {
+			...DEFAULT_RETRY_CONFIG,
+			...config.retry,
+		};
 	}
 
 	/**
@@ -68,39 +124,35 @@ export class APIClient {
 	}
 
 	/**
-	 * Execute an HTTP request
+	 * Check if an error is retryable
 	 */
-	async request<T = unknown>(
+	private isRetryableError(error: unknown): boolean {
+		if (error instanceof APIError) {
+			return RETRYABLE_STATUS_CODES.has(error.statusCode);
+		}
+		// Network errors and timeouts are retryable
+		if (error instanceof Error) {
+			return (
+				error.name === "AbortError" ||
+				error.message.includes("fetch failed") ||
+				error.message.includes("network") ||
+				error.message.includes("ECONNREFUSED") ||
+				error.message.includes("ENOTFOUND") ||
+				error.message.includes("ETIMEDOUT")
+			);
+		}
+		return false;
+	}
+
+	/**
+	 * Execute a single HTTP request attempt
+	 */
+	private async executeRequest<T = unknown>(
 		options: APIRequestOptions,
+		url: string,
+		headers: Record<string, string>,
+		body: string | null,
 	): Promise<APIResponse<T>> {
-		const url = this.buildUrl(options.path, options.query);
-
-		// Prepare headers
-		const headers: Record<string, string> = {
-			"Content-Type": "application/json",
-			Accept: "application/json",
-			...options.headers,
-		};
-
-		// Add API token authorization
-		if (this.apiToken) {
-			headers["Authorization"] = `APIToken ${this.apiToken}`;
-		}
-
-		// Prepare body
-		const body: string | null = options.body
-			? JSON.stringify(options.body)
-			: null;
-
-		// Debug logging
-		if (this.debug) {
-			console.error(`DEBUG: ${options.method} ${url}`);
-			if (body) {
-				console.error(`DEBUG: Request body: ${body}`);
-			}
-		}
-
-		// Execute request with timeout
 		const controller = new AbortController();
 		const timeoutId = setTimeout(() => controller.abort(), this.timeout);
 
@@ -167,7 +219,7 @@ export class APIClient {
 			if (error instanceof Error && error.name === "AbortError") {
 				throw new APIError(
 					`Request timed out after ${this.timeout}ms`,
-					0,
+					408,
 					undefined,
 					`${options.method} ${options.path}`,
 				);
@@ -185,6 +237,91 @@ export class APIClient {
 
 			throw error;
 		}
+	}
+
+	/**
+	 * Execute an HTTP request with retry logic
+	 */
+	async request<T = unknown>(
+		options: APIRequestOptions,
+	): Promise<APIResponse<T>> {
+		const url = this.buildUrl(options.path, options.query);
+
+		// Prepare headers
+		const headers: Record<string, string> = {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+			...options.headers,
+		};
+
+		// Add API token authorization
+		if (this.apiToken) {
+			headers["Authorization"] = `APIToken ${this.apiToken}`;
+		}
+
+		// Prepare body
+		const body: string | null = options.body
+			? JSON.stringify(options.body)
+			: null;
+
+		// Debug logging
+		if (this.debug) {
+			console.error(`DEBUG: ${options.method} ${url}`);
+			if (body) {
+				console.error(`DEBUG: Request body: ${body}`);
+			}
+		}
+
+		let lastError: Error | undefined;
+
+		// Retry loop
+		for (
+			let attempt = 0;
+			attempt <= this.retryConfig.maxRetries;
+			attempt++
+		) {
+			try {
+				return await this.executeRequest<T>(
+					options,
+					url,
+					headers,
+					body,
+				);
+			} catch (error) {
+				lastError =
+					error instanceof Error ? error : new Error(String(error));
+
+				// Check if we should retry
+				const isRetryable = this.isRetryableError(error);
+				const hasRetriesLeft = attempt < this.retryConfig.maxRetries;
+
+				if (isRetryable && hasRetriesLeft) {
+					const delay = calculateBackoffDelay(
+						attempt,
+						this.retryConfig,
+					);
+
+					if (this.debug) {
+						const statusInfo =
+							error instanceof APIError
+								? ` (${error.statusCode})`
+								: "";
+						console.error(
+							`DEBUG: Request failed${statusInfo}, retrying in ${delay}ms (attempt ${attempt + 1}/${this.retryConfig.maxRetries})`,
+						);
+					}
+
+					await sleep(delay);
+					continue;
+				}
+
+				// Not retryable or no retries left - throw the error
+				throw error;
+			}
+		}
+
+		// Should not reach here, but just in case
+		throw lastError ?? new Error("Request failed after all retries");
 	}
 
 	/**

@@ -275,6 +275,17 @@ export class ProfileManager {
 	}
 
 	/**
+	 * Clear the active profile (used for force delete)
+	 */
+	async clearActive(): Promise<void> {
+		try {
+			await fs.unlink(this.config.activeProfileFile);
+		} catch {
+			// Ignore if file doesn't exist
+		}
+	}
+
+	/**
 	 * Set the active profile
 	 */
 	async setActive(name: string): Promise<ProfileResult> {

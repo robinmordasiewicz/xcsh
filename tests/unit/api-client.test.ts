@@ -311,10 +311,11 @@ describe('APIClient', () => {
 		});
 
 		it('should handle timeout', async () => {
-			// Create a client with short timeout
+			// Create a client with short timeout and no retries (to test timeout handling directly)
 			const shortTimeoutClient = new APIClient({
 				serverUrl: 'https://api.example.com',
 				timeout: 10, // 10ms timeout
+				retry: { maxRetries: 0 }, // Disable retries for this test
 			});
 
 			// Simulate AbortError from AbortController

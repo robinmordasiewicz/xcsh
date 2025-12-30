@@ -9,8 +9,7 @@ import { getWhoamiInfo } from "./service.js";
 import { formatWhoami } from "./formatter.js";
 
 // Re-export types and utilities for external use (e.g., Banner)
-export type { WhoamiInfo, WhoamiOptions, DisplayTier } from "./types.js";
-export { toDisplayTier } from "./types.js";
+export type { WhoamiInfo, WhoamiOptions } from "./types.js";
 export { getWhoamiInfo, getWhoamiInfoBasic } from "./service.js";
 export { formatWhoami, formatWhoamiCompact } from "./formatter.js";
 

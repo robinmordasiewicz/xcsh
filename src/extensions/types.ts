@@ -25,7 +25,7 @@ import type { DomainInfo } from "../types/domains.js";
 export interface DomainExtension {
 	/**
 	 * Target domain to extend (canonical name from upstream specs)
-	 * @example "subscription", "sites", "http_loadbalancer"
+	 * @example "sites", "http_loadbalancer", "virtual_k8s"
 	 */
 	targetDomain: string;
 

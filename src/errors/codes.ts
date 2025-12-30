@@ -178,9 +178,9 @@ export function exitCodeHint(code: ExitCodeValue): string {
 		case ExitCode.RateLimitError:
 			return "Wait a moment and try again";
 		case ExitCode.QuotaExceeded:
-			return "Check subscription quotas with '/subscription quota'";
+			return "Check subscription quotas in the F5 XC console";
 		case ExitCode.FeatureNotAvailable:
-			return "This feature may require a plan upgrade. Check '/subscription overview'";
+			return "This feature may require a plan upgrade";
 		default:
 			return "An unexpected error occurred";
 	}

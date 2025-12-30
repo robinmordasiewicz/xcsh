@@ -5,10 +5,13 @@
 
 import type { CompletionSuggestion, ParsedInput } from "./types.js";
 import type { REPLSession } from "../session.js";
-import { domainRegistry } from "../../types/domains.js";
 import { customDomains, isCustomDomain } from "../../domains/index.js";
 import { extensionRegistry } from "../../extensions/index.js";
 import { CompletionCache } from "./cache.js";
+import {
+	completionRegistry,
+	getActionDescriptions,
+} from "../../completion/index.js";
 
 /**
  * Parse input text into args array, handling quoted strings
@@ -184,7 +187,32 @@ export class Completer {
 		// Get base suggestions based on context
 		let suggestions: CompletionSuggestion[];
 		if (parsed.isEscapedToRoot) {
-			suggestions = this.getRootContextSuggestions();
+			const firstArg = parsed.args[0];
+			if (parsed.args.length > 0 && firstArg) {
+				// /domain - navigating to a specific domain, show its children
+				const targetDomain = firstArg.toLowerCase();
+
+				// Check if domain exists in registry
+				if (completionRegistry.has(targetDomain)) {
+					const domainNode = completionRegistry.get(targetDomain);
+					if (domainNode?.source === "api") {
+						// API domain - show actions
+						suggestions = this.getActionSuggestions();
+					} else {
+						// Custom domain with children - show child suggestions
+						suggestions = completionRegistry.getChildSuggestions(
+							targetDomain,
+							parsed.currentWord,
+						);
+					}
+				} else {
+					// Unknown domain - fall back to root suggestions filtered by prefix
+					suggestions = this.getRootContextSuggestions();
+				}
+			} else {
+				// Just "/" - show all domains
+				suggestions = this.getRootContextSuggestions();
+			}
 		} else {
 			suggestions = await this.getContextualSuggestions();
 		}
@@ -199,84 +227,55 @@ export class Completer {
 
 	/**
 	 * Get completions for custom domain commands
+	 * Uses unified completion registry for structure navigation,
+	 * falls back to domain handlers for argument completions
 	 */
 	async getCustomDomainCompletions(
 		domainName: string,
 		args: string[],
 		currentWord: string,
 	): Promise<CompletionSuggestion[]> {
-		const domain = customDomains.get(domainName);
-		if (!domain) {
+		// Check if domain exists in registry
+		const domainNode = completionRegistry.get(domainName);
+		if (!domainNode) {
 			return [];
 		}
 
-		const suggestions: CompletionSuggestion[] = [];
-
-		// No args after domain - suggest subcommands and direct commands
+		// No args after domain - suggest children (subcommands and direct commands)
 		if (
 			args.length === 0 ||
 			(args.length === 1 && currentWord === args[0])
 		) {
-			// Add subcommand groups
-			for (const [name, group] of domain.subcommands) {
-				if (
-					!currentWord ||
-					name.toLowerCase().startsWith(currentWord.toLowerCase())
-				) {
-					suggestions.push({
-						text: name,
-						description: group.description,
-						category: "subcommand",
-					});
-				}
-			}
-
-			// Add direct commands
-			for (const [name, cmd] of domain.commands) {
-				if (
-					!currentWord ||
-					name.toLowerCase().startsWith(currentWord.toLowerCase())
-				) {
-					suggestions.push({
-						text: name,
-						description: cmd.description,
-						category: "command",
-					});
-				}
-			}
-
-			return suggestions;
+			return completionRegistry.getChildSuggestions(
+				domainName,
+				currentWord,
+			);
 		}
 
-		// First arg is a subcommand group - suggest commands within
+		// First arg is a subcommand group - check for nested children
 		const subgroupName = args[0]?.toLowerCase() ?? "";
-		const subgroup = domain.subcommands.get(subgroupName);
-		if (subgroup) {
-			// Only one arg so far (the subgroup name) - suggest commands
+		const subgroupNode = domainNode.children?.get(subgroupName);
+
+		if (subgroupNode?.children) {
+			// Only one arg so far (the subgroup name) - suggest nested commands
 			if (
 				args.length === 1 ||
 				(args.length === 2 && currentWord === args[1])
 			) {
-				const cmdPrefix = args.length === 2 ? currentWord : "";
-				for (const [name, cmd] of subgroup.commands) {
-					if (
-						!cmdPrefix ||
-						name.toLowerCase().startsWith(cmdPrefix.toLowerCase())
-					) {
-						suggestions.push({
-							text: name,
-							description: cmd.description,
-							category: "command",
-						});
-					}
-				}
-				return suggestions;
+				const prefix = args.length === 2 ? currentWord : "";
+				return completionRegistry.getNestedChildSuggestions(
+					domainName,
+					[subgroupName],
+					prefix,
+				);
 			}
 
-			// Deeper completion - delegate to command's completion handler
+			// Deeper completion - delegate to original command's completion handler
 			if (args.length >= 2 && this.session) {
 				const cmdName = args[1]?.toLowerCase() ?? "";
-				const cmd = subgroup.commands.get(cmdName);
+				const domain = customDomains.get(domainName);
+				const subgroup = domain?.subcommands.get(subgroupName);
+				const cmd = subgroup?.commands.get(cmdName);
 				if (cmd?.completion) {
 					try {
 						const completions = await cmd.completion(
@@ -298,13 +297,14 @@ export class Completer {
 
 		// First arg is a direct command - delegate to command's completion handler
 		const directCmdName = args[0]?.toLowerCase() ?? "";
-		const directCmd = domain.commands.get(directCmdName);
-		if (directCmd?.completion) {
+		const domain = customDomains.get(domainName);
+		const directCmd = domain?.commands.get(directCmdName);
+		if (directCmd?.completion && this.session) {
 			try {
 				const completions = await directCmd.completion(
 					currentWord,
 					args.slice(1),
-					this.session!,
+					this.session,
 				);
 				return completions.map((text) => ({
 					text,
@@ -316,7 +316,7 @@ export class Completer {
 			}
 		}
 
-		return suggestions;
+		return [];
 	}
 
 	/**
@@ -528,105 +528,26 @@ export class Completer {
 	}
 
 	/**
-	 * Get domain suggestions from registry
+	 * Get domain suggestions from unified registry
 	 */
 	getDomainSuggestions(): CompletionSuggestion[] {
-		const suggestions: CompletionSuggestion[] = [];
-		const addedDomains = new Set<string>();
-
-		// Add custom domains first (highest priority)
-		for (const domain of customDomains.all()) {
-			suggestions.push({
-				text: domain.name,
-				description: domain.description,
-				category: "domain",
-			});
-			addedDomains.add(domain.name);
-		}
-
-		// Add standalone extension domains (not in API registry)
-		for (const extDomain of extensionRegistry.getExtendedDomains()) {
-			if (addedDomains.has(extDomain)) continue;
-			if (domainRegistry.has(extDomain)) continue; // Will be added below with API info
-
-			const merged = extensionRegistry.getMergedDomain(extDomain);
-			if (merged && merged.source === "extension") {
-				suggestions.push({
-					text: extDomain,
-					description: merged.description,
-					category: "domain",
-				});
-				addedDomains.add(extDomain);
-			}
-		}
-
-		// Add API-generated domains (skip if already added)
-		for (const [domain, meta] of domainRegistry) {
-			if (addedDomains.has(domain)) continue;
-
-			suggestions.push({
-				text: domain,
-				description: meta.descriptionShort,
-				category: "domain",
-			});
-			addedDomains.add(domain);
-		}
-
-		return suggestions;
+		// Use unified completion registry for domain suggestions
+		return completionRegistry.getDomainSuggestions();
 	}
 
 	/**
-	 * Get action suggestions
+	 * Get action suggestions from unified registry
 	 */
 	getActionSuggestions(): CompletionSuggestion[] {
-		return [
-			{ text: "list", description: "List resources", category: "action" },
-			{
-				text: "get",
-				description: "Get a specific resource",
-				category: "action",
-			},
-			{
-				text: "create",
-				description: "Create a new resource",
-				category: "action",
-			},
-			{
-				text: "delete",
-				description: "Delete a resource",
-				category: "action",
-			},
-			{
-				text: "replace",
-				description: "Replace a resource",
-				category: "action",
-			},
-			{
-				text: "apply",
-				description: "Apply configuration from file",
-				category: "action",
-			},
-			{
-				text: "status",
-				description: "Get resource status",
-				category: "action",
-			},
-			{
-				text: "patch",
-				description: "Patch a resource",
-				category: "action",
-			},
-			{
-				text: "add-labels",
-				description: "Add labels to a resource",
-				category: "action",
-			},
-			{
-				text: "remove-labels",
-				description: "Remove labels from a resource",
-				category: "action",
-			},
-		];
+		// Use shared action descriptions from completion module
+		const actionDescriptions = getActionDescriptions();
+		return Object.entries(actionDescriptions).map(
+			([action, description]) => ({
+				text: action,
+				description,
+				category: "action" as const,
+			}),
+		);
 	}
 
 	/**

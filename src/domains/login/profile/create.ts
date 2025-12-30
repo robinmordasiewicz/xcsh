@@ -76,11 +76,15 @@ export const createCommand: CommandDefinition = {
 			return errorResult("Missing required --token option");
 		}
 
+		// Sanitize token: strip surrounding quotes if present
+		// Users may accidentally include quotes when copying tokens
+		const sanitizedToken = apiToken.replace(/^["']|["']$/g, "");
+
 		// Create profile
 		const profile: Profile = {
 			name,
 			apiUrl,
-			apiToken,
+			apiToken: sanitizedToken,
 		};
 
 		if (defaultNamespace) {

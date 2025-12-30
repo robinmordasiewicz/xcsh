@@ -48,8 +48,8 @@ export const deleteCommand: CommandDefinition = {
 						].join("\n"),
 					);
 				}
-				// Force delete - clear active profile
-				// Note: This would need to be implemented in the manager
+				// Force delete - clear the active profile file first
+				await manager.clearActive();
 			}
 
 			// Delete the profile

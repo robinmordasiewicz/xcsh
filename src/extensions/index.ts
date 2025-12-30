@@ -13,7 +13,7 @@
  *   import { extensionRegistry } from './extensions/index.js';
  *
  *   // Check if domain has extension commands
- *   const merged = extensionRegistry.getMergedDomain('subscription');
+ *   const merged = extensionRegistry.getMergedDomain('sites');
  *   if (merged?.hasExtension) {
  *     // Extension commands available
  *   }
@@ -32,20 +32,15 @@ export { ExtensionRegistry, extensionRegistry } from "./registry.js";
 
 // Import extensions for registration
 // Extensions are registered when this module loads
-import { extensionRegistry } from "./registry.js";
-import { subscriptionExtension } from "./subscription/index.js";
+// import { extensionRegistry } from "./registry.js";
 
 /**
  * Initialize all extensions
  * Called automatically on module load
  */
 function initializeExtensions(): void {
-	// Register subscription extension
-	// This provides xcsh-specific commands: overview, quota, validate, activation-status
-	// API actions (list, get, create, etc.) will come from upstream when available
-	extensionRegistry.register(subscriptionExtension);
-
-	// Future extensions can be registered here:
+	// No extensions currently registered
+	// Extensions can be added here when needed:
 	// extensionRegistry.register(sitesExtension);
 	// extensionRegistry.register(virtualExtension);
 }
@@ -58,6 +53,6 @@ initializeExtensions();
  * Useful for testing or dynamic reloading
  */
 export function reinitializeExtensions(): void {
-	extensionRegistry.clearCache();
+	// extensionRegistry.clearCache();
 	initializeExtensions();
 }

@@ -95,6 +95,14 @@ const setCommand: CommandDefinition = {
 	},
 
 	async completion(partial: string, _args: string[], session: REPLSession) {
+		// Try to use cached namespaces first
+		const cached = session.getNamespaceCache();
+		if (cached.length > 0) {
+			return cached.filter((ns) =>
+				ns.toLowerCase().startsWith(partial.toLowerCase()),
+			);
+		}
+
 		// Fetch namespaces from API if available
 		const client = session.getAPIClient();
 		if (client?.isAuthenticated()) {
@@ -105,7 +113,10 @@ const setCommand: CommandDefinition = {
 				if (response.ok && response.data?.items) {
 					const namespaces = response.data.items
 						.map((item) => item.name)
-						.filter((name): name is string => !!name);
+						.filter((name): name is string => !!name)
+						.sort();
+					// Cache the fetched namespaces
+					session.setNamespaceCache(namespaces);
 					return namespaces.filter((ns) =>
 						ns.toLowerCase().startsWith(partial.toLowerCase()),
 					);
@@ -165,6 +176,9 @@ const listCommand: CommandDefinition = {
 				.map((item) => item.name)
 				.filter((name): name is string => !!name)
 				.sort();
+
+			// Cache the namespaces for tab completion
+			session.setNamespaceCache(namespaces);
 
 			const lines: string[] = ["Available namespaces:", ""];
 			for (const ns of namespaces) {

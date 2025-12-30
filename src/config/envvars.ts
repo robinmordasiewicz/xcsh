@@ -41,11 +41,6 @@ export const EnvVarRegistry: EnvVar[] = [
 		relatedFlag: "-o",
 	},
 	{
-		name: `${ENV_PREFIX}_SUBSCRIPTION_TIER`,
-		description: "Subscription tier for feature validation",
-		relatedFlag: "",
-	},
-	{
 		name: `${ENV_PREFIX}_LOGO`,
 		description: "Logo display mode (auto, image, ascii, both, none)",
 		relatedFlag: "--logo",

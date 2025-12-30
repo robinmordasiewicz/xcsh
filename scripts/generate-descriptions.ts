@@ -694,19 +694,6 @@ function getCustomDomainContexts(): DomainContext[] {
 				"Generate shell completion scripts for bash, zsh, and fish shells.",
 			commands: ["bash", "zsh", "fish"],
 		},
-		{
-			name: "subscription",
-			type: "domain",
-			existingDescription:
-				"Manage subscription tier, addon services, and quota usage.",
-			commands: [
-				"overview",
-				"addons",
-				"quota",
-				"validate",
-				"activation-status",
-			],
-		},
 	];
 }
 

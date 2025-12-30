@@ -12,3 +12,4 @@ rules:
 ignore: |
   docs/commands/
   .specs/
+  config/custom-domain-descriptions.yaml

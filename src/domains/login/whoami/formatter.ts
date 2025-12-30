@@ -26,7 +26,7 @@ export function formatWhoami(
 	}
 
 	// Text output with box
-	return formatWhoamiBox(info, options);
+	return formatWhoamiBox(info);
 }
 
 /**
@@ -39,33 +39,9 @@ function formatWhoamiJson(info: WhoamiInfo): string[] {
 	if (info.tenant) output.tenant = info.tenant;
 	if (info.username) output.username = info.username;
 	if (info.email) output.email = info.email;
-	if (info.tier) output.tier = info.tier;
 	output.namespace = info.namespace;
 	output.serverUrl = info.serverUrl;
 	output.isAuthenticated = info.isAuthenticated;
-
-	if (info.quotas) {
-		output.quotas = {
-			totalLimits: info.quotas.totalLimits,
-			limitsAtRisk: info.quotas.limitsAtRisk,
-			limitsExceeded: info.quotas.limitsExceeded,
-			objects: info.quotas.objects?.map((q) => ({
-				name: q.name,
-				displayName: q.displayName,
-				usage: q.usage,
-				limit: q.limit,
-				percentage: Math.round(q.percentage),
-			})),
-		};
-	}
-
-	if (info.addons && info.addons.length > 0) {
-		output.addons = info.addons.map((a) => ({
-			name: a.name,
-			displayName: a.displayName,
-			state: a.state,
-		}));
-	}
 
 	return [JSON.stringify(output, null, 2)];
 }
@@ -74,7 +50,7 @@ function formatWhoamiJson(info: WhoamiInfo): string[] {
  * Format whoami with box decoration
  * Uses F5 brand red for the box frame
  */
-function formatWhoamiBox(info: WhoamiInfo, options: WhoamiOptions): string[] {
+function formatWhoamiBox(info: WhoamiInfo): string[] {
 	const lines: string[] = [];
 	const red = colors.red;
 	const reset = colors.reset;
@@ -87,8 +63,6 @@ function formatWhoamiBox(info: WhoamiInfo, options: WhoamiOptions): string[] {
 		bottomRight: "\u256F",
 		horizontal: "\u2500",
 		vertical: "\u2502",
-		leftT: "\u251C",
-		rightT: "\u2524",
 	};
 
 	// Build all content lines first to calculate width
@@ -102,9 +76,6 @@ function formatWhoamiBox(info: WhoamiInfo, options: WhoamiOptions): string[] {
 	} else if (info.username) {
 		contentLines.push({ label: "User", value: info.username });
 	}
-	if (info.tier) {
-		contentLines.push({ label: "Tier", value: info.tier });
-	}
 	contentLines.push({ label: "Namespace", value: info.namespace });
 	contentLines.push({ label: "Server", value: info.serverUrl });
 	contentLines.push({
@@ -113,37 +84,6 @@ function formatWhoamiBox(info: WhoamiInfo, options: WhoamiOptions): string[] {
 			? "\u2713 Authenticated"
 			: "Not authenticated",
 	});
-
-	// Build quota lines if included
-	const quotaLines: string[] = [];
-	if (
-		info.quotas &&
-		info.quotas.objects &&
-		(options.includeQuotas || options.verbose)
-	) {
-		for (const quota of info.quotas.objects.slice(0, 10)) {
-			const pct = Math.round(quota.percentage);
-			quotaLines.push(
-				`${quota.displayName}:  ${quota.usage}/${quota.limit} (${pct}%)`,
-			);
-		}
-		if (info.quotas.objects.length > 10) {
-			const remaining = info.quotas.objects.length - 10;
-			quotaLines.push(`... and ${remaining} more`);
-		}
-	}
-
-	// Build addon lines if included
-	const addonLines: string[] = [];
-	if (
-		info.addons &&
-		info.addons.length > 0 &&
-		(options.includeAddons || options.verbose)
-	) {
-		for (const addon of info.addons) {
-			addonLines.push(`\u2713 ${addon.displayName}`);
-		}
-	}
 
 	// Find max label width for alignment
 	const maxLabelWidth = Math.max(...contentLines.map((c) => c.label.length));
@@ -155,13 +95,8 @@ function formatWhoamiBox(info: WhoamiInfo, options: WhoamiOptions): string[] {
 	});
 
 	// Calculate dynamic width based on longest content
-	const headerTitles = ["Connection Info", "Quota Usage", "Active Addons"];
-	const allTextLines = [
-		...formattedContent,
-		...quotaLines,
-		...addonLines,
-		...headerTitles,
-	];
+	const headerTitle = "Connection Info";
+	const allTextLines = [...formattedContent, headerTitle];
 	const maxContentWidth = Math.max(...allTextLines.map((l) => l.length));
 	const innerWidth = maxContentWidth + 2; // Add padding
 
@@ -180,42 +115,6 @@ function formatWhoamiBox(info: WhoamiInfo, options: WhoamiOptions): string[] {
 		lines.push(
 			`${red}${BOX.vertical}${reset} ${text}${" ".repeat(Math.max(0, padding - 1))}${red}${BOX.vertical}${reset}`,
 		);
-	}
-
-	// Quota section if included
-	if (quotaLines.length > 0) {
-		const quotaTitle = " Quota Usage ";
-		const quotaRemaining = innerWidth - quotaTitle.length;
-		const quotaLeft = 1;
-		const quotaRight = Math.max(0, quotaRemaining - quotaLeft);
-		lines.push(
-			`${red}${BOX.leftT}${BOX.horizontal.repeat(quotaLeft)}${reset}${quotaTitle}${red}${BOX.horizontal.repeat(quotaRight)}${BOX.rightT}${reset}`,
-		);
-
-		for (const text of quotaLines) {
-			const padding = innerWidth - text.length;
-			lines.push(
-				`${red}${BOX.vertical}${reset} ${text}${" ".repeat(Math.max(0, padding - 1))}${red}${BOX.vertical}${reset}`,
-			);
-		}
-	}
-
-	// Addons section if included
-	if (addonLines.length > 0) {
-		const addonTitle = " Active Addons ";
-		const addonRemaining = innerWidth - addonTitle.length;
-		const addonLeft = 1;
-		const addonRight = Math.max(0, addonRemaining - addonLeft);
-		lines.push(
-			`${red}${BOX.leftT}${BOX.horizontal.repeat(addonLeft)}${reset}${addonTitle}${red}${BOX.horizontal.repeat(addonRight)}${BOX.rightT}${reset}`,
-		);
-
-		for (const text of addonLines) {
-			const padding = innerWidth - text.length;
-			lines.push(
-				`${red}${BOX.vertical}${reset} ${text}${" ".repeat(Math.max(0, padding - 1))}${red}${BOX.vertical}${reset}`,
-			);
-		}
 	}
 
 	// Bottom border
@@ -245,10 +144,6 @@ export function formatWhoamiCompact(info: WhoamiInfo): string {
 		parts.push(info.email);
 	} else if (info.username) {
 		parts.push(info.username);
-	}
-
-	if (info.tier) {
-		parts.push(`[${info.tier}]`);
 	}
 
 	return parts.join(" | ");

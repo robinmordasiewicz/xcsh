@@ -59,7 +59,6 @@ _xcsh() {
             'shape:Bot defense and threat prevention with Shape Security'
             'sites:Multi-cloud site deployment and edge infrastructure'
             'statistics:Flow statistics, alerts, logs, and operational analytics'
-            'subscription:xcsh-specific subscription management commands (overview, quota analysis, validation)'
             'support:Customer support ticket lifecycle and site diagnostics'
             'telemetry_and_insights:Telemetry And Insights API'
             'tenant_and_identity:User settings, notifications, sessions, and identity...'
@@ -166,14 +165,14 @@ _xcsh() {
             ;;
         (action)
             case ${line[1]} in
-        (login)
-            _values 'command' 'banner:Command' 'profile:Subcommand group' 'context:Subcommand group'
-            ;;
         (cloudstatus)
-            _values 'command' 'status:Command' 'summary:Command' 'components:Command' 'incidents:Command' 'maintenance:Command'
+            _values 'command' 'status:Get overall cloud status indicator' 'summary:Get complete status summary' 'components:List all components and status' 'incidents:List active and recent incidents' 'maintenance:List scheduled maintenance windows'
             ;;
         (completion)
-            _values 'command' 'bash:Command' 'zsh:Command' 'fish:Command'
+            _values 'command' 'bash:Generate bash completion script' 'zsh:Generate zsh completion script' 'fish:Generate fish completion script'
+            ;;
+        (login)
+            _values 'command' 'banner:Display xcsh banner with logo' 'profile:Manage saved connection profiles' 'context:Manage default namespace context'
             ;;
                 (help|quit|exit|clear|history|context|ctx)
                     ;;

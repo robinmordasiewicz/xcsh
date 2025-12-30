@@ -1,21 +1,37 @@
 /**
  * Domains index - Register all custom domains
- *
- * Note: subscription is now an extension, not a custom domain.
- * Extensions augment API domains with xcsh-specific commands.
- * See src/extensions/ for extension implementations.
  */
 
 import { customDomains } from "./registry.js";
 import { loginDomain } from "./login/index.js";
 import { cloudstatusDomain, cloudstatusAliases } from "./cloudstatus/index.js";
 import { completionDomain } from "./completion/index.js";
+import { domainRegistry } from "../types/domains.js";
+import {
+	completionRegistry,
+	fromCustomDomain,
+	fromApiDomain,
+} from "../completion/index.js";
 
 // Register custom domains
 // Only domains with no upstream API equivalent stay as custom domains
 customDomains.register(loginDomain);
 customDomains.register(cloudstatusDomain);
 customDomains.register(completionDomain);
+
+// Populate unified completion registry
+// Custom domains first (higher priority)
+for (const domain of customDomains.all()) {
+	completionRegistry.registerDomain(fromCustomDomain(domain));
+}
+
+// API-generated domains
+for (const [, info] of domainRegistry) {
+	// Skip if already registered by custom domain (custom takes precedence)
+	if (!completionRegistry.has(info.name)) {
+		completionRegistry.registerDomain(fromApiDomain(info));
+	}
+}
 
 // Domain alias mapping (alias -> canonical name)
 const domainAliases = new Map<string, string>();
@@ -37,11 +53,13 @@ export type {
 } from "./registry.js";
 export { successResult, errorResult } from "./registry.js";
 
+// Export unified completion registry
+export { completionRegistry } from "../completion/index.js";
+
 // Export domain definitions for reference
 export { loginDomain } from "./login/index.js";
 export { cloudstatusDomain } from "./cloudstatus/index.js";
 export { completionDomain } from "./completion/index.js";
-// Note: subscription is now an extension - see src/extensions/subscription/
 
 /**
  * Resolve domain alias to canonical name

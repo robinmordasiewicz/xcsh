@@ -4,6 +4,22 @@
  */
 
 /**
+ * Retry configuration for transient errors
+ */
+export interface RetryConfig {
+	/** Maximum number of retry attempts (default: 3) */
+	maxRetries?: number;
+	/** Initial delay in milliseconds (default: 1000) */
+	initialDelayMs?: number;
+	/** Maximum delay in milliseconds (default: 10000) */
+	maxDelayMs?: number;
+	/** Multiplier for exponential backoff (default: 2) */
+	backoffMultiplier?: number;
+	/** Add jitter to prevent thundering herd (default: true) */
+	jitter?: boolean;
+}
+
+/**
  * API client configuration
  */
 export interface APIClientConfig {
@@ -15,6 +31,8 @@ export interface APIClientConfig {
 	timeout?: number;
 	/** Enable debug logging */
 	debug?: boolean;
+	/** Retry configuration for transient errors */
+	retry?: RetryConfig;
 }
 
 /**

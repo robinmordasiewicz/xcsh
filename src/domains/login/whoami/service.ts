@@ -5,9 +5,6 @@
 
 import type { REPLSession } from "../../../repl/session.js";
 import type { WhoamiInfo, WhoamiOptions } from "./types.js";
-import { toDisplayTier } from "./types.js";
-import { SubscriptionClient } from "../../../subscription/client.js";
-import { isAddonActive } from "../../../subscription/types.js";
 
 /**
  * Get whoami information from session
@@ -15,7 +12,7 @@ import { isAddonActive } from "../../../subscription/types.js";
  */
 export async function getWhoamiInfo(
 	session: REPLSession,
-	options: WhoamiOptions = {},
+	_options: WhoamiOptions = {},
 ): Promise<WhoamiInfo> {
 	const info: WhoamiInfo = {
 		serverUrl: session.getServerUrl(),
@@ -45,45 +42,6 @@ export async function getWhoamiInfo(
 		}
 	}
 
-	// Fetch tier from subscription API
-	const apiClient = session.getAPIClient();
-	if (apiClient) {
-		const subscriptionClient = new SubscriptionClient(apiClient);
-
-		// Get tier
-		try {
-			const tierValue = await subscriptionClient.getTierFromCurrentPlan();
-			const displayTier = toDisplayTier(tierValue);
-			if (displayTier) {
-				info.tier = displayTier;
-			}
-		} catch {
-			// Tier fetch failed - just omit from display
-		}
-
-		// Get quotas if requested
-		if (options.includeQuotas || options.verbose) {
-			try {
-				const subscriptionInfo =
-					await subscriptionClient.getSubscriptionInfo();
-				info.quotas = subscriptionInfo.quotaSummary;
-			} catch {
-				// Quota fetch failed - omit from display
-			}
-		}
-
-		// Get addons if requested
-		if (options.includeAddons || options.verbose) {
-			try {
-				const addons = await subscriptionClient.getAddonServices();
-				// Only include active addons
-				info.addons = addons.filter(isAddonActive);
-			} catch {
-				// Addon fetch failed - omit from display
-			}
-		}
-	}
-
 	return info;
 }
 
@@ -93,9 +51,5 @@ export async function getWhoamiInfo(
 export async function getWhoamiInfoBasic(
 	session: REPLSession,
 ): Promise<WhoamiInfo> {
-	return getWhoamiInfo(session, {
-		includeQuotas: false,
-		includeAddons: false,
-		verbose: false,
-	});
+	return getWhoamiInfo(session, { verbose: false });
 }

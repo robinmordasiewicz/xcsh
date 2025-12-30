@@ -12,7 +12,6 @@ import {
 	type ProfileManager,
 } from "../profile/index.js";
 import { APIClient } from "../api/index.js";
-import { SubscriptionClient } from "../subscription/client.js";
 import type { OutputFormat } from "../output/index.js";
 
 /**
@@ -25,6 +24,11 @@ export interface SessionConfig {
 	outputFormat?: OutputFormat;
 	debug?: boolean;
 }
+
+/**
+ * Cache TTL for namespaces (5 minutes in milliseconds)
+ */
+const NAMESPACE_CACHE_TTL = 5 * 60 * 1000;
 
 /**
  * REPLSession holds state across the REPL lifetime
@@ -45,7 +49,8 @@ export class REPLSession {
 	private _profileManager: ProfileManager;
 	private _activeProfile: Profile | null = null;
 	private _activeProfileName: string | null = null;
-	private _tier: string = "";
+	private _namespaceCache: string[] = [];
+	private _namespaceCacheTime: number = 0;
 
 	constructor(config: SessionConfig = {}) {
 		this._namespace = config.namespace ?? this.getDefaultNamespace();
@@ -96,21 +101,6 @@ export class REPLSession {
 		// Fetch user info if connected and authenticated
 		if (this._apiClient?.isAuthenticated()) {
 			await this.fetchUserInfo();
-			await this.fetchTier();
-		}
-	}
-
-	/**
-	 * Fetch subscription tier from the API
-	 */
-	private async fetchTier(): Promise<void> {
-		if (!this._apiClient) return;
-
-		try {
-			const subscriptionClient = new SubscriptionClient(this._apiClient);
-			this._tier = await subscriptionClient.getTierFromCurrentPlan();
-		} catch {
-			// Ignore tier fetch errors - not critical for session
 		}
 	}
 
@@ -141,6 +131,7 @@ export class REPLSession {
 
 	/**
 	 * Load the active profile from profile manager
+	 * Note: Environment variables take priority over profile settings
 	 */
 	async loadActiveProfile(): Promise<void> {
 		try {
@@ -151,19 +142,24 @@ export class REPLSession {
 					this._activeProfileName = activeName;
 					this._activeProfile = profile;
 
-					// Apply profile settings to session
-					if (profile.apiUrl) {
+					// Check if env vars were provided (they take priority over profile)
+					const envUrl = process.env[`${ENV_PREFIX}_API_URL`];
+					const envToken = process.env[`${ENV_PREFIX}_API_TOKEN`];
+					const envNamespace = process.env[`${ENV_PREFIX}_NAMESPACE`];
+
+					// Apply profile settings ONLY if env vars are not set
+					if (!envUrl && profile.apiUrl) {
 						this._serverUrl = profile.apiUrl;
 						this._tenant = this.extractTenant(profile.apiUrl);
 					}
-					if (profile.apiToken) {
+					if (!envToken && profile.apiToken) {
 						this._apiToken = profile.apiToken;
 					}
-					if (profile.defaultNamespace) {
+					if (!envNamespace && profile.defaultNamespace) {
 						this._namespace = profile.defaultNamespace;
 					}
 
-					// Recreate API client with profile settings
+					// Recreate API client with final settings (env vars or profile)
 					if (this._serverUrl) {
 						this._apiClient = new APIClient({
 							serverUrl: this._serverUrl,
@@ -258,13 +254,6 @@ export class REPLSession {
 	 */
 	setUsername(username: string): void {
 		this._username = username;
-	}
-
-	/**
-	 * Get the subscription tier (Standard/Advanced)
-	 */
-	getTier(): string {
-		return this._tier;
 	}
 
 	/**
@@ -365,6 +354,9 @@ export class REPLSession {
 			return false;
 		}
 
+		// Clear namespace cache when switching profiles
+		this.clearNamespaceCache();
+
 		// Update session with new profile settings
 		this._activeProfileName = profileName;
 		this._activeProfile = profile;
@@ -400,6 +392,36 @@ export class REPLSession {
 	clearActiveProfile(): void {
 		this._activeProfileName = null;
 		this._activeProfile = null;
+	}
+
+	/**
+	 * Get cached namespaces (returns empty array if cache is stale/empty)
+	 */
+	getNamespaceCache(): string[] {
+		const now = Date.now();
+		if (
+			this._namespaceCache.length > 0 &&
+			now - this._namespaceCacheTime < NAMESPACE_CACHE_TTL
+		) {
+			return this._namespaceCache;
+		}
+		return [];
+	}
+
+	/**
+	 * Set namespace cache
+	 */
+	setNamespaceCache(namespaces: string[]): void {
+		this._namespaceCache = namespaces;
+		this._namespaceCacheTime = Date.now();
+	}
+
+	/**
+	 * Clear namespace cache (called when switching profiles)
+	 */
+	clearNamespaceCache(): void {
+		this._namespaceCache = [];
+		this._namespaceCacheTime = 0;
 	}
 
 	/**

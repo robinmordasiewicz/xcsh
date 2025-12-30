@@ -1,129 +1,67 @@
 /**
  * Shell Completion Generators
- * Generate completion scripts for bash, zsh, and fish shells
+ *
+ * Generate completion scripts for bash, zsh, and fish shells.
+ * Uses the unified CompletionRegistry for consistent behavior.
  */
 
 /* eslint-disable no-useless-escape */
 // Note: \$ escapes are required in template strings to generate shell scripts
 // where $ is a literal character, not a template interpolation
 
-import { domainRegistry, validActions } from "../../types/domains.js";
-import { customDomains } from "../registry.js";
-import { extensionRegistry } from "../../extensions/index.js";
-
-/**
- * Get all completable domains (API + custom + extension)
- */
-function getAllDomains(): Array<{
-	name: string;
-	description: string;
-	aliases: string[];
-}> {
-	const domains: Array<{
-		name: string;
-		description: string;
-		aliases: string[];
-	}> = [];
-	const seen = new Set<string>();
-
-	// Custom domains first (highest priority)
-	for (const domain of customDomains.all()) {
-		domains.push({
-			name: domain.name,
-			description: domain.descriptionShort,
-			aliases: [],
-		});
-		seen.add(domain.name);
-	}
-
-	// Extension-only domains
-	for (const extDomain of extensionRegistry.getExtendedDomains()) {
-		if (seen.has(extDomain)) continue;
-		if (domainRegistry.has(extDomain)) continue;
-
-		const merged = extensionRegistry.getMergedDomain(extDomain);
-		if (merged && merged.source === "extension") {
-			domains.push({
-				name: extDomain,
-				description: merged.description,
-				aliases: [],
-			});
-			seen.add(extDomain);
-		}
-	}
-
-	// API-generated domains
-	for (const [name, info] of domainRegistry) {
-		if (seen.has(name)) continue;
-		domains.push({
-			name,
-			description: info.descriptionShort,
-			aliases: info.aliases,
-		});
-		seen.add(name);
-	}
-
-	return domains.sort((a, b) => a.name.localeCompare(b.name));
-}
-
-/**
- * Get custom domain commands and subcommands for completion
- */
-function getCustomDomainCommands(domainName: string): {
-	commands: string[];
-	subcommands: Map<string, string[]>;
-} {
-	const domain = customDomains.get(domainName);
-	if (!domain) {
-		return { commands: [], subcommands: new Map() };
-	}
-
-	const commands = Array.from(domain.commands.keys());
-	const subcommands = new Map<string, string[]>();
-
-	for (const [groupName, group] of domain.subcommands) {
-		subcommands.set(groupName, Array.from(group.commands.keys()));
-	}
-
-	return { commands, subcommands };
-}
+import { completionRegistry } from "../../completion/index.js";
+import {
+	escapeForZsh,
+	escapeForFish,
+	getActionDescriptions,
+} from "../../completion/index.js";
 
 /**
  * Generate Bash completion script
  */
 export function generateBashCompletion(): string {
-	const domains = getAllDomains();
+	const domains = completionRegistry.getDomains();
 	const domainNames = domains.map((d) => d.name).join(" ");
-	const allAliases = domains.flatMap((d) => d.aliases).join(" ");
-	const actions = Array.from(validActions).join(" ");
 
-	// Build custom domain completions
+	// Collect all aliases
+	const allAliases: string[] = [];
+	for (const domain of domains) {
+		if (domain.aliases) {
+			allAliases.push(...domain.aliases);
+		}
+	}
+
+	// Get actions from the registry
+	const actionDescriptions = getActionDescriptions();
+	const actions = Object.keys(actionDescriptions).join(" ");
+
+	// Build custom domain completions (domains with custom children structure)
 	const customDomainCompletions: string[] = [];
-	for (const domain of customDomains.all()) {
-		const { commands, subcommands } = getCustomDomainCommands(domain.name);
+	for (const domain of domains) {
+		if (domain.source !== "custom" || !domain.children) continue;
 
-		// Direct commands for domain
-		if (commands.length > 0 || subcommands.size > 0) {
-			const allCommands = [
-				...commands,
-				...Array.from(subcommands.keys()),
-			];
+		// Collect all child names (commands and subcommand groups)
+		const childNames = Array.from(domain.children.keys());
+		if (childNames.length > 0) {
 			customDomainCompletions.push(
 				`        ${domain.name})`,
-				`          COMPREPLY=($(compgen -W "${allCommands.join(" ")}" -- "\${cur}"))`,
+				`          COMPREPLY=($(compgen -W "${childNames.join(" ")}" -- "\${cur}"))`,
 				`          return 0`,
 				`          ;;`,
 			);
 		}
 
-		// Subcommand groups
-		for (const [groupName, groupCommands] of subcommands) {
-			customDomainCompletions.push(
-				`        ${domain.name}/${groupName})`,
-				`          COMPREPLY=($(compgen -W "${groupCommands.join(" ")}" -- "\${cur}"))`,
-				`          return 0`,
-				`          ;;`,
-			);
+		// Add nested subcommand groups
+		for (const [childName, child] of domain.children) {
+			if (child.children && child.children.size > 0) {
+				const nestedNames = Array.from(child.children.keys());
+				customDomainCompletions.push(
+					`        ${domain.name}/${childName})`,
+					`          COMPREPLY=($(compgen -W "${nestedNames.join(" ")}" -- "\${cur}"))`,
+					`          return 0`,
+					`          ;;`,
+				);
+			}
 		}
 	}
 
@@ -135,7 +73,7 @@ _xcsh_completions() {
   local cur prev words cword
   _init_completion || return
 
-  local commands="${domainNames} ${allAliases} help quit exit clear history"
+  local commands="${domainNames} ${allAliases.join(" ")} help quit exit clear history"
   local actions="${actions}"
   local builtins="help quit exit clear history context ctx"
   local global_flags="--help -h --version -v --interactive -i --no-color --output -o --namespace -ns"
@@ -185,56 +123,46 @@ complete -F _xcsh_completions xcsh
  * Generate Zsh completion script
  */
 export function generateZshCompletion(): string {
-	const domains = getAllDomains();
+	const domains = completionRegistry.getDomains();
 
 	// Build domain descriptions for zsh
 	const domainDescriptions = domains
 		.map((d) => {
-			const escaped = d.description
-				.replace(/'/g, "'\\''")
-				.replace(/:/g, "\\:");
+			const escaped = escapeForZsh(d.description);
 			return `'${d.name}:${escaped}'`;
 		})
 		.join("\n            ");
 
 	// Build alias descriptions
 	const aliasDescriptions = domains
-		.flatMap((d) => d.aliases.map((a) => `'${a}:Alias for ${d.name}'`))
+		.filter((d) => d.aliases && d.aliases.length > 0)
+		.flatMap((d) => d.aliases!.map((a) => `'${a}:Alias for ${d.name}'`))
 		.join("\n            ");
 
 	// Build action descriptions
-	const actionDescriptions = [
-		"'list:List resources'",
-		"'get:Get a specific resource'",
-		"'create:Create a new resource'",
-		"'delete:Delete a resource'",
-		"'replace:Replace a resource'",
-		"'apply:Apply configuration from file'",
-		"'status:Get resource status'",
-		"'patch:Patch a resource'",
-		"'add-labels:Add labels to a resource'",
-		"'remove-labels:Remove labels from a resource'",
-	].join("\n            ");
+	const actionDescriptions = getActionDescriptions();
+	const actionDescArray = Object.entries(actionDescriptions)
+		.map(([action, desc]) => {
+			const escaped = escapeForZsh(desc);
+			return `'${action}:${escaped}'`;
+		})
+		.join("\n            ");
 
-	// Build custom domain completions
+	// Build custom domain completions with actual descriptions
 	const customDomainCompletions: string[] = [];
-	for (const domain of customDomains.all()) {
-		const { commands, subcommands } = getCustomDomainCommands(domain.name);
+	for (const domain of domains) {
+		if (domain.source !== "custom" || !domain.children) continue;
 
-		if (commands.length > 0 || subcommands.size > 0) {
-			const cmdDescriptions = commands.map((c) => `'${c}:Command'`);
-			const subDescriptions = Array.from(subcommands.keys()).map(
-				(s) => `'${s}:Subcommand group'`,
-			);
+		const childDescriptions: string[] = [];
+		for (const child of domain.children.values()) {
+			const escaped = escapeForZsh(child.description);
+			childDescriptions.push(`'${child.name}:${escaped}'`);
+		}
 
-			// Combine non-empty descriptions to avoid trailing whitespace
-			const allDescriptions = [...cmdDescriptions, ...subDescriptions]
-				.filter((d) => d.length > 0)
-				.join(" ");
-
+		if (childDescriptions.length > 0) {
 			customDomainCompletions.push(
 				`        (${domain.name})`,
-				`            _values 'command' ${allDescriptions}`,
+				`            _values 'command' ${childDescriptions.join(" ")}`,
 				`            ;;`,
 			);
 		}
@@ -291,7 +219,7 @@ ${customDomainCompletions.join("\n")}
                 (*)
                     local -a actions
                     actions=(
-            ${actionDescriptions}
+            ${actionDescArray}
                     )
                     _describe -t actions 'action' actions
                     ;;
@@ -326,64 +254,63 @@ _xcsh "\$@"
  * Generate Fish completion script
  */
 export function generateFishCompletion(): string {
-	const domains = getAllDomains();
-	const actions = Array.from(validActions);
+	const domains = completionRegistry.getDomains();
+	const actionDescriptions = getActionDescriptions();
 
 	// Build domain completions
 	const domainCompletions = domains
 		.map((d) => {
-			const escaped = d.description.replace(/'/g, "\\'");
+			const escaped = escapeForFish(d.description);
 			return `complete -c xcsh -n "__fish_use_subcommand" -a "${d.name}" -d '${escaped}'`;
 		})
 		.join("\n");
 
 	// Build alias completions
 	const aliasCompletions = domains
+		.filter((d) => d.aliases && d.aliases.length > 0)
 		.flatMap((d) =>
-			d.aliases.map(
+			d.aliases!.map(
 				(a) =>
 					`complete -c xcsh -n "__fish_use_subcommand" -a "${a}" -d 'Alias for ${d.name}'`,
 			),
 		)
 		.join("\n");
 
-	// Build action completions for each domain
-	const actionCompletions = domains
+	// Build custom domain subcommand completions
+	const customDomainCompletions: string[] = [];
+	for (const domain of domains) {
+		if (domain.source !== "custom" || !domain.children) continue;
+
+		for (const child of domain.children.values()) {
+			const escaped = escapeForFish(child.description);
+			customDomainCompletions.push(
+				`complete -c xcsh -n "__fish_seen_subcommand_from ${domain.name}" -a "${child.name}" -d '${escaped}'`,
+			);
+
+			// Nested commands within subcommand groups
+			if (child.children) {
+				for (const nested of child.children.values()) {
+					const nestedEscaped = escapeForFish(nested.description);
+					customDomainCompletions.push(
+						`complete -c xcsh -n "__fish_seen_subcommand_from ${domain.name}; and __fish_seen_subcommand_from ${child.name}" -a "${nested.name}" -d '${nestedEscaped}'`,
+					);
+				}
+			}
+		}
+	}
+
+	// Build action completions for API domains
+	const apiDomains = domains.filter((d) => d.source === "api");
+	const actionCompletions = apiDomains
 		.map((d) =>
-			actions
+			Object.entries(actionDescriptions)
 				.map(
-					(a) =>
-						`complete -c xcsh -n "__fish_seen_subcommand_from ${d.name}" -a "${a}" -d '${a.charAt(0).toUpperCase() + a.slice(1)} resources'`,
+					([action, desc]) =>
+						`complete -c xcsh -n "__fish_seen_subcommand_from ${d.name}" -a "${action}" -d '${escapeForFish(desc)}'`,
 				)
 				.join("\n"),
 		)
 		.join("\n");
-
-	// Build custom domain subcommand completions
-	const customDomainCompletions: string[] = [];
-	for (const domain of customDomains.all()) {
-		const { commands, subcommands } = getCustomDomainCommands(domain.name);
-
-		// Direct commands
-		for (const cmd of commands) {
-			customDomainCompletions.push(
-				`complete -c xcsh -n "__fish_seen_subcommand_from ${domain.name}" -a "${cmd}" -d 'Command'`,
-			);
-		}
-
-		// Subcommand groups
-		for (const [groupName, groupCommands] of subcommands) {
-			customDomainCompletions.push(
-				`complete -c xcsh -n "__fish_seen_subcommand_from ${domain.name}" -a "${groupName}" -d 'Subcommand group'`,
-			);
-			// Commands within subcommand groups
-			for (const cmd of groupCommands) {
-				customDomainCompletions.push(
-					`complete -c xcsh -n "__fish_seen_subcommand_from ${domain.name}; and __fish_seen_subcommand_from ${groupName}" -a "${cmd}" -d 'Command'`,
-				);
-			}
-		}
-	}
 
 	return `# fish completion for xcsh
 # Generated by xcsh completion fish

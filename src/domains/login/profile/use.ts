@@ -17,7 +17,6 @@ export const useCommand: CommandDefinition = {
 	aliases: ["switch", "activate"],
 
 	async execute(args, session) {
-		const manager = getProfileManager();
 		const name = args[0];
 
 		if (!name) {
@@ -25,23 +24,15 @@ export const useCommand: CommandDefinition = {
 		}
 
 		try {
-			// Set active profile
-			const result = await manager.setActive(name);
+			// Use session.switchProfile() which properly updates the API client
+			const success = await session.switchProfile(name);
 
-			if (!result.success) {
-				return errorResult(result.message);
+			if (!success) {
+				return errorResult(`Profile '${name}' not found.`);
 			}
 
-			// Get the profile to update session
-			const profile = await manager.get(name);
-			if (profile) {
-				// Update session with profile settings
-				if (profile.defaultNamespace) {
-					session.setNamespace(profile.defaultNamespace);
-				}
-				// Note: API URL and token will be used when making API calls
-				// The session will need to be extended to support this
-			}
+			// Get the profile for display
+			const profile = session.getActiveProfile();
 
 			return successResult(
 				[
