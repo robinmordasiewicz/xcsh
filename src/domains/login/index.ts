@@ -8,6 +8,7 @@ import { showCommand } from "./profile/show.js";
 import { createCommand } from "./profile/create.js";
 import { useCommand } from "./profile/use.js";
 import { deleteCommand } from "./profile/delete.js";
+import { activeCommand } from "./profile/active.js";
 import { contextSubcommands } from "./context/index.js";
 import { bannerCommand } from "./banner/index.js";
 import { whoamiCommand } from "./whoami/index.js";
@@ -17,7 +18,11 @@ import { whoamiCommand } from "./whoami/index.js";
  */
 const profileSubcommands: SubcommandGroup = {
 	name: "profile",
-	description: "Manage saved connection profiles",
+	description:
+		"Manage saved connection profiles for tenant authentication. Create, list, activate, and delete profiles that store tenant URL, credentials, and default namespace settings for seamless tenant switching.",
+	descriptionShort: "Manage saved connection profiles",
+	descriptionMedium:
+		"Create, list, switch, and delete saved authentication profiles for multi-tenant management.",
 	commands: new Map([
 		["list", listCommand],
 		["show", showCommand],
@@ -25,6 +30,7 @@ const profileSubcommands: SubcommandGroup = {
 		["use", useCommand],
 		["delete", deleteCommand],
 	]),
+	defaultCommand: activeCommand,
 };
 
 /**

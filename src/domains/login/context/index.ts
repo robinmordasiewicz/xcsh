@@ -15,7 +15,11 @@ import type { REPLSession } from "../../../repl/session.js";
  */
 const showCommand: CommandDefinition = {
 	name: "show",
-	description: "Show current default namespace context",
+	description:
+		"Display the currently active namespace context used for scoping operations. Shows both the namespace value and its source (environment variable, profile default, or session configuration).",
+	descriptionShort: "Show current default namespace",
+	descriptionMedium:
+		"Display active namespace context and its configuration source.",
 	usage: "",
 	aliases: ["current", "get"],
 
@@ -54,7 +58,11 @@ function determineNamespaceSource(namespace: string): string {
  */
 const setCommand: CommandDefinition = {
 	name: "set",
-	description: "Set default namespace context for API operations",
+	description:
+		"Change the default namespace context for all subsequent operations. Updates the session scope so operations target the specified namespace unless explicitly overridden.",
+	descriptionShort: "Set default namespace context",
+	descriptionMedium:
+		"Switch namespace context for scoped operations without specifying namespace each time.",
 	usage: "<namespace>",
 	aliases: ["use", "switch"],
 
@@ -117,7 +125,11 @@ const setCommand: CommandDefinition = {
  */
 const listCommand: CommandDefinition = {
 	name: "list",
-	description: "List available namespaces",
+	description:
+		"Fetch and display all available namespaces from the tenant. Requires authenticated connection. Shows current namespace indicator and provides switch command guidance.",
+	descriptionShort: "List available namespaces",
+	descriptionMedium:
+		"Query tenant for available namespaces with current context indicator.",
 	usage: "",
 	aliases: ["ls"],
 
@@ -179,7 +191,11 @@ const listCommand: CommandDefinition = {
  */
 export const contextSubcommands: SubcommandGroup = {
 	name: "context",
-	description: "Manage default namespace context for API operations",
+	description:
+		"Manage default namespace context for scoping operations. Set, display, and list namespaces to control which namespace is used when no explicit namespace is specified in commands.",
+	descriptionShort: "Manage default namespace context",
+	descriptionMedium:
+		"Set, display, and list namespaces for scoping operations without explicit namespace flags.",
 	commands: new Map([
 		["show", showCommand],
 		["set", setCommand],

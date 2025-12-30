@@ -56,7 +56,11 @@ function getClient(apiClient: APIClient): SubscriptionClient {
  */
 const overviewCommand: CommandDefinition = {
 	name: "overview",
-	description: "Display subscription tier, active addons, and quota summary",
+	description:
+		"Display a comprehensive overview of your tenant subscription including current tier level, activated addon services, and quota usage summary. Provides at-a-glance subscription health assessment.",
+	descriptionShort: "Display subscription tier and summary",
+	descriptionMedium:
+		"Show subscription tier, active addons, and quota usage summary for tenant health assessment.",
 	usage: "[--json]",
 	aliases: ["show", "info"],
 
@@ -127,7 +131,11 @@ const overviewCommand: CommandDefinition = {
  */
 const addonsCommand: CommandDefinition = {
 	name: "addons",
-	description: "List addon services and their subscription status",
+	description:
+		"List all addon services with their activation state and access status. Filter by active, available, or denied status. Shows tier requirements and enables identification of upgradable features.",
+	descriptionShort: "List addon services and status",
+	descriptionMedium:
+		"Display addon services with activation state. Filter by active, available, or denied status.",
 	usage: "[--filter active|available|denied] [--all] [--json]",
 	aliases: ["services"],
 
@@ -251,7 +259,11 @@ const addonsCommand: CommandDefinition = {
  */
 const quotaCommand: CommandDefinition = {
 	name: "quota",
-	description: "Display tenant-level quota limits and usage",
+	description:
+		"Display tenant-level quota limits and current usage for all resource types. Identify resources approaching limits with warning thresholds. Use --warnings to filter for at-risk quotas only.",
+	descriptionShort: "Display quota limits and usage",
+	descriptionMedium:
+		"Show tenant-level quota limits with usage percentages. Filter for at-risk resources.",
 	usage: "[--warnings] [--json]",
 	aliases: ["quotas", "limits"],
 
@@ -353,7 +365,11 @@ const quotaCommand: CommandDefinition = {
  */
 const validateCommand: CommandDefinition = {
 	name: "validate",
-	description: "Pre-deployment validation for quotas and features",
+	description:
+		"Run pre-deployment validation checks against quota limits and feature availability. Verify resource creation will succeed before deployment. Check if specific features are enabled for your subscription tier.",
+	descriptionShort: "Validate quotas and feature access",
+	descriptionMedium:
+		"Pre-deployment validation for quota capacity and feature availability checks.",
 	usage: "[--resource-type <type> --count <n>] [--feature <name>] [--json]",
 
 	async execute(args, session): Promise<DomainCommandResult> {
@@ -468,7 +484,11 @@ const validateCommand: CommandDefinition = {
  */
 const activationStatusCommand: CommandDefinition = {
 	name: "activation-status",
-	description: "Check pending addon activation requests",
+	description:
+		"Monitor the status of pending addon service activation requests. Track which addons are awaiting approval or provisioning. View currently active addons alongside pending requests.",
+	descriptionShort: "Check pending addon activations",
+	descriptionMedium:
+		"Monitor pending addon activation requests and track provisioning status.",
 	usage: "[--json]",
 
 	async execute(args, session): Promise<DomainCommandResult> {

@@ -8,7 +8,11 @@ import { getProfileManager } from "../../../profile/index.js";
 
 export const deleteCommand: CommandDefinition = {
 	name: "delete",
-	description: "Delete a saved profile",
+	description:
+		"Delete a saved connection profile permanently. Requires --force flag to delete the currently active profile to prevent accidental disconnection from active tenant.",
+	descriptionShort: "Delete a saved profile",
+	descriptionMedium:
+		"Remove a saved profile permanently. Use --force to delete active profile.",
 	usage: "<name> [--force]",
 	aliases: ["rm", "remove"],
 

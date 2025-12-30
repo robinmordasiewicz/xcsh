@@ -1,0 +1,320 @@
+#!/usr/bin/env npx tsx
+/**
+ * Description Loader Generator
+ *
+ * Reads descriptions from config/custom-domain-descriptions.yaml
+ * and generates a TypeScript module that exports them for use by domain definitions.
+ *
+ * This runs as part of the build process to make YAML descriptions available at compile time.
+ */
+
+import { readFileSync, writeFileSync, existsSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
+import { parse as parseYaml } from "yaml";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+interface DescriptionTiers {
+	short: string;
+	medium: string;
+	long: string;
+}
+
+interface CommandDescription extends DescriptionTiers {}
+
+interface SubcommandDescription extends DescriptionTiers {
+	commands?: Record<string, CommandDescription>;
+}
+
+interface DomainDescription extends DescriptionTiers {
+	source_patterns_hash: string;
+	subcommands?: Record<string, SubcommandDescription>;
+	commands?: Record<string, CommandDescription>;
+}
+
+interface GeneratedDescriptions {
+	version: string;
+	generated_at: string;
+	domains: Record<string, DomainDescription>;
+}
+
+/**
+ * Escape string for TypeScript
+ */
+function escapeTs(str: string): string {
+	return str
+		.replace(/\\/g, "\\\\")
+		.replace(/"/g, '\\"')
+		.replace(/\n/g, "\\n")
+		.replace(/\r/g, "\\r")
+		.replace(/\t/g, "\\t");
+}
+
+/**
+ * Generate TypeScript interface definitions
+ */
+function generateInterfaces(): string {
+	return `/**
+ * Generated Description Types
+ * Auto-generated from config/custom-domain-descriptions.yaml
+ */
+
+export interface DescriptionTiers {
+	short: string;
+	medium: string;
+	long: string;
+}
+
+export type CommandDescriptions = DescriptionTiers;
+
+export interface SubcommandDescriptions extends DescriptionTiers {
+	commands?: Record<string, CommandDescriptions>;
+}
+
+export interface DomainDescriptions extends DescriptionTiers {
+	subcommands?: Record<string, SubcommandDescriptions>;
+	commands?: Record<string, CommandDescriptions>;
+}
+
+export interface GeneratedDescriptionsData {
+	version: string;
+	generatedAt: string;
+	domains: Record<string, DomainDescriptions>;
+}
+`;
+}
+
+/**
+ * Generate description object for a tier
+ */
+function generateTierObject(desc: DescriptionTiers, indent: string): string {
+	return `{
+${indent}	short: "${escapeTs(desc.short)}",
+${indent}	medium: "${escapeTs(desc.medium)}",
+${indent}	long: "${escapeTs(desc.long)}",
+${indent}}`;
+}
+
+/**
+ * Generate commands object
+ */
+function generateCommandsObject(
+	commands: Record<string, CommandDescription>,
+	indent: string,
+): string {
+	const entries = Object.entries(commands).map(([name, cmd]) => {
+		return `${indent}	"${name}": ${generateTierObject(cmd, indent + "\t")},`;
+	});
+	return `{
+${entries.join("\n")}
+${indent}}`;
+}
+
+/**
+ * Generate subcommands object
+ */
+function generateSubcommandsObject(
+	subcommands: Record<string, SubcommandDescription>,
+	indent: string,
+): string {
+	const entries = Object.entries(subcommands).map(([name, sub]) => {
+		let obj = `${indent}	"${name}": {
+${indent}		short: "${escapeTs(sub.short)}",
+${indent}		medium: "${escapeTs(sub.medium)}",
+${indent}		long: "${escapeTs(sub.long)}",`;
+
+		if (sub.commands && Object.keys(sub.commands).length > 0) {
+			obj += `
+${indent}		commands: ${generateCommandsObject(sub.commands, indent + "\t\t")},`;
+		}
+
+		obj += `
+${indent}	},`;
+		return obj;
+	});
+	return `{
+${entries.join("\n")}
+${indent}}`;
+}
+
+/**
+ * Generate domain object
+ */
+function generateDomainObject(
+	domain: DomainDescription,
+	indent: string,
+): string {
+	let obj = `{
+${indent}	short: "${escapeTs(domain.short)}",
+${indent}	medium: "${escapeTs(domain.medium)}",
+${indent}	long: "${escapeTs(domain.long)}",`;
+
+	if (domain.subcommands && Object.keys(domain.subcommands).length > 0) {
+		obj += `
+${indent}	subcommands: ${generateSubcommandsObject(domain.subcommands, indent + "\t")},`;
+	}
+
+	if (domain.commands && Object.keys(domain.commands).length > 0) {
+		obj += `
+${indent}	commands: ${generateCommandsObject(domain.commands, indent + "\t")},`;
+	}
+
+	obj += `
+${indent}}`;
+	return obj;
+}
+
+/**
+ * Generate the full TypeScript module
+ */
+function generateModule(data: GeneratedDescriptions): string {
+	const interfaces = generateInterfaces();
+
+	const domainEntries = Object.entries(data.domains).map(([name, domain]) => {
+		return `	"${name}": ${generateDomainObject(domain, "\t")},`;
+	});
+
+	return `${interfaces}
+
+/**
+ * Generated Descriptions Data
+ * Auto-generated from config/custom-domain-descriptions.yaml
+ * Generated at: ${data.generated_at}
+ *
+ * DO NOT EDIT MANUALLY - Regenerate with: npm run generate:descriptions
+ */
+export const generatedDescriptions: GeneratedDescriptionsData = {
+	version: "${data.version}",
+	generatedAt: "${data.generated_at}",
+	domains: {
+${domainEntries.join("\n")}
+	},
+};
+
+/**
+ * Get descriptions for a domain
+ */
+export function getDomainDescriptions(domainName: string): DomainDescriptions | undefined {
+	return generatedDescriptions.domains[domainName];
+}
+
+/**
+ * Get descriptions for a subcommand within a domain
+ */
+export function getSubcommandDescriptions(
+	domainName: string,
+	subcommandName: string,
+): SubcommandDescriptions | undefined {
+	const domain = generatedDescriptions.domains[domainName];
+	return domain?.subcommands?.[subcommandName];
+}
+
+/**
+ * Get descriptions for a command within a domain or subcommand
+ */
+export function getCommandDescriptions(
+	domainName: string,
+	commandName: string,
+	subcommandName?: string,
+): CommandDescriptions | undefined {
+	const domain = generatedDescriptions.domains[domainName];
+	if (!domain) return undefined;
+
+	if (subcommandName) {
+		const subcommand = domain.subcommands?.[subcommandName];
+		return subcommand?.commands?.[commandName];
+	}
+
+	return domain.commands?.[commandName];
+}
+`;
+}
+
+/**
+ * Main function
+ */
+async function main(): Promise<void> {
+	console.log("=== Description Loader Generator ===\n");
+
+	const projectRoot = join(__dirname, "..");
+	const yamlPath = join(projectRoot, "config", "custom-domain-descriptions.yaml");
+	const outputPath = join(projectRoot, "src", "domains", "descriptions.generated.ts");
+
+	// Check if YAML exists
+	if (!existsSync(yamlPath)) {
+		console.log("No descriptions YAML found. Creating empty module.");
+		const emptyModule = `${generateInterfaces()}
+
+/**
+ * Empty descriptions - run 'npm run generate:descriptions' to populate
+ */
+export const generatedDescriptions: GeneratedDescriptionsData = {
+	version: "1.0.0",
+	generatedAt: "",
+	domains: {},
+};
+
+export function getDomainDescriptions(_domainName: string): DomainDescriptions | undefined {
+	return undefined;
+}
+
+export function getSubcommandDescriptions(
+	_domainName: string,
+	_subcommandName: string,
+): SubcommandDescriptions | undefined {
+	return undefined;
+}
+
+export function getCommandDescriptions(
+	_domainName: string,
+	_commandName: string,
+	_subcommandName?: string,
+): CommandDescriptions | undefined {
+	return undefined;
+}
+`;
+		writeFileSync(outputPath, emptyModule, "utf-8");
+		console.log(`  Generated empty module: ${outputPath}`);
+		return;
+	}
+
+	// Read and parse YAML
+	console.log(`Reading: ${yamlPath}`);
+	const yamlContent = readFileSync(yamlPath, "utf-8");
+	const data = parseYaml(yamlContent) as GeneratedDescriptions;
+
+	if (!data || !data.domains) {
+		console.error("Invalid YAML structure");
+		process.exit(1);
+	}
+
+	// Generate TypeScript module
+	console.log("Generating TypeScript module...");
+	const tsModule = generateModule(data);
+
+	// Write output
+	console.log(`Writing: ${outputPath}`);
+	writeFileSync(outputPath, tsModule, "utf-8");
+
+	// Count what was generated
+	const domainCount = Object.keys(data.domains).length;
+	let subcommandCount = 0;
+	for (const domain of Object.values(data.domains)) {
+		if (domain.subcommands) {
+			subcommandCount += Object.keys(domain.subcommands).length;
+		}
+	}
+
+	console.log(`\n=== Complete ===`);
+	console.log(`  Domains: ${domainCount}`);
+	console.log(`  Subcommands: ${subcommandCount}`);
+	console.log(`  Output: ${outputPath}`);
+}
+
+// Run main
+main().catch((err) => {
+	console.error("Fatal error:", err);
+	process.exit(1);
+});

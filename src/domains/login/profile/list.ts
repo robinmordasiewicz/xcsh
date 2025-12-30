@@ -8,7 +8,11 @@ import { getProfileManager } from "../../../profile/index.js";
 
 export const listCommand: CommandDefinition = {
 	name: "list",
-	description: "List all saved profiles",
+	description:
+		"Display all saved connection profiles with their tenant URLs and authentication types. Highlights the currently active profile for easy identification when managing multiple tenants.",
+	descriptionShort: "List all saved profiles",
+	descriptionMedium:
+		"Show all profiles with tenant URLs, auth types, and active status indicator.",
 	aliases: ["ls"],
 
 	async execute(_args, _session) {

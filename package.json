@@ -39,7 +39,9 @@
     "generate:domains": "tsx scripts/generate-domains.ts",
     "generate:completions": "tsx scripts/generate-completions.ts",
     "generate:logo": "tsx scripts/generate-logo-asset.ts",
-    "generate": "npm run generate:domains && npm run generate:completions && npm run generate:logo",
+    "generate:descriptions": "tsx scripts/generate-descriptions.ts",
+    "generate:description-loader": "tsx scripts/generate-description-loader.ts",
+    "generate": "npm run generate:domains && npm run generate:completions && npm run generate:logo && npm run generate:description-loader",
     "prebuild": "npm run generate"
   },
   "keywords": [

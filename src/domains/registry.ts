@@ -51,8 +51,12 @@ export type CompletionHandler = (
 export interface CommandDefinition {
 	/** Command name (e.g., "list", "show", "create") */
 	name: string;
-	/** Short description for help/completion (~60 chars) */
+	/** Long description (~500 chars) for detailed help */
 	description: string;
+	/** Short description (~60 chars) for completions, badges */
+	descriptionShort: string;
+	/** Medium description (~150 chars) for tooltips, summaries */
+	descriptionMedium: string;
 	/** Usage pattern (e.g., "<name> [options]") */
 	usage?: string;
 	/** Command execution handler */
@@ -69,10 +73,16 @@ export interface CommandDefinition {
 export interface SubcommandGroup {
 	/** Group name (e.g., "profile") */
 	name: string;
-	/** Short description */
+	/** Long description (~500 chars) for detailed help */
 	description: string;
+	/** Short description (~60 chars) for completions, badges */
+	descriptionShort: string;
+	/** Medium description (~150 chars) for tooltips, summaries */
+	descriptionMedium: string;
 	/** Commands within this group */
 	commands: Map<string, CommandDefinition>;
+	/** Default command to run when subgroup is invoked with no args */
+	defaultCommand?: CommandDefinition;
 }
 
 /**
@@ -180,8 +190,11 @@ class DomainRegistry {
 		// Check for subcommand group first (e.g., "profile" in "login profile list")
 		const subgroup = domain.subcommands.get(firstArg);
 		if (subgroup) {
-			// Need a command within the subgroup
+			// No args in subgroup - run default command if set, otherwise show help
 			if (restArgs.length === 0) {
+				if (subgroup.defaultCommand) {
+					return subgroup.defaultCommand.execute([], session);
+				}
 				return this.showSubcommandHelp(domain, subgroup);
 			}
 
@@ -276,7 +289,7 @@ class DomainRegistry {
 				if (name.toLowerCase().startsWith(partial.toLowerCase())) {
 					suggestions.push({
 						text: name,
-						description: group.description,
+						description: group.descriptionShort,
 						category: "subcommand",
 					});
 				}
@@ -287,7 +300,7 @@ class DomainRegistry {
 				if (name.toLowerCase().startsWith(partial.toLowerCase())) {
 					suggestions.push({
 						text: name,
-						description: cmd.description,
+						description: cmd.descriptionShort,
 						category: "command",
 					});
 				}
@@ -305,7 +318,7 @@ class DomainRegistry {
 				if (name.toLowerCase().startsWith(partial.toLowerCase())) {
 					suggestions.push({
 						text: name,
-						description: cmd.description,
+						description: cmd.descriptionShort,
 						category: "command",
 					});
 				}

@@ -8,7 +8,11 @@ import { getProfileManager } from "../../../profile/index.js";
 
 export const useCommand: CommandDefinition = {
 	name: "use",
-	description: "Switch to a different profile",
+	description:
+		"Switch the active connection to a different saved profile. Updates the session context to use the new profile's tenant URL, credentials, and default namespace for all subsequent operations.",
+	descriptionShort: "Switch to a different profile",
+	descriptionMedium:
+		"Activate a profile and update session context with its tenant and namespace settings.",
 	usage: "<name>",
 	aliases: ["switch", "activate"],
 

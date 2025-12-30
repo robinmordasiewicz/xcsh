@@ -584,7 +584,11 @@ function parseLogoArg(args: string[]): LogoDisplayMode | undefined {
  */
 export const bannerCommand: CommandDefinition = {
 	name: "banner",
-	description: "Display the xcsh banner with optional logo mode",
+	description:
+		"Render the xcsh startup banner with customizable logo display. Supports multiple render modes including image, ASCII, Unicode, and sixel graphics based on terminal capabilities.",
+	descriptionShort: "Display xcsh banner with logo",
+	descriptionMedium:
+		"Show startup banner with configurable logo mode (image, ASCII, sixel) based on terminal.",
 	usage: "[--logo <mode>]",
 
 	async execute(args, _session) {

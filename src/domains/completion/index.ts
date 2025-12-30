@@ -18,7 +18,11 @@ import {
  */
 const bashCommand: CommandDefinition = {
 	name: "bash",
-	description: "Generate bash completion script",
+	description:
+		"Generate a bash shell completion script for xcsh. Output the script to stdout for manual installation or pipe to a file. Enables tab-completion for commands, domains, actions, and option flags.",
+	descriptionShort: "Generate bash completion script",
+	descriptionMedium:
+		"Output bash completion script for tab-completion of commands, domains, and flags.",
 
 	async execute() {
 		try {
@@ -37,7 +41,11 @@ const bashCommand: CommandDefinition = {
  */
 const zshCommand: CommandDefinition = {
 	name: "zsh",
-	description: "Generate zsh completion script",
+	description:
+		"Generate a zsh shell completion script for xcsh. Output the script to stdout for manual installation or add to your fpath. Provides rich tab-completion with descriptions for commands, domains, and options.",
+	descriptionShort: "Generate zsh completion script",
+	descriptionMedium:
+		"Output zsh completion script with rich descriptions for commands and options.",
 
 	async execute() {
 		try {
@@ -56,7 +64,11 @@ const zshCommand: CommandDefinition = {
  */
 const fishCommand: CommandDefinition = {
 	name: "fish",
-	description: "Generate fish completion script",
+	description:
+		"Generate a fish shell completion script for xcsh. Output the script to stdout for manual installation or save to your fish completions directory. Enables intelligent tab-completion with inline descriptions.",
+	descriptionShort: "Generate fish completion script",
+	descriptionMedium:
+		"Output fish completion script with inline descriptions for commands and options.",
 
 	async execute() {
 		try {

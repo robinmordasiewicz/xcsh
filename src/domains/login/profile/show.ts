@@ -8,7 +8,11 @@ import { getProfileManager } from "../../../profile/index.js";
 
 export const showCommand: CommandDefinition = {
 	name: "show",
-	description: "Show profile details (sensitive data masked)",
+	description:
+		"Display detailed configuration for a specific profile. Shows tenant URL, authentication method, and namespace settings with sensitive credentials securely masked for safe viewing.",
+	descriptionShort: "Show profile details (masked credentials)",
+	descriptionMedium:
+		"Display profile configuration with tenant URL, auth type, and masked credentials.",
 	usage: "<name>",
 	aliases: ["get", "view"],
 

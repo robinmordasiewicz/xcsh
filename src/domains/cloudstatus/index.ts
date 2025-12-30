@@ -38,7 +38,11 @@ function getClient(): CloudstatusClient {
  */
 const statusCommand: CommandDefinition = {
 	name: "status",
-	description: "Get overall F5 Cloud status indicator",
+	description:
+		"Retrieve the current overall health indicator for F5 Distributed Cloud services. Returns status level (operational, degraded, major outage) with description. Use --quiet for script-friendly exit code output.",
+	descriptionShort: "Get overall cloud status indicator",
+	descriptionMedium:
+		"Check overall service health status. Use --quiet for exit code suitable for scripts.",
 	usage: "[--quiet]",
 	aliases: ["st"],
 
@@ -104,7 +108,10 @@ const statusCommand: CommandDefinition = {
 const summaryCommand: CommandDefinition = {
 	name: "summary",
 	description:
-		"Get complete status summary including components and incidents",
+		"Display comprehensive status overview combining overall health, component statuses, active incidents, and scheduled maintenance in a single report. Use --brief for condensed statistics output.",
+	descriptionShort: "Get complete status summary",
+	descriptionMedium:
+		"Show combined overview of health, components, incidents, and maintenance windows.",
 	usage: "[--brief]",
 	aliases: ["sum"],
 
@@ -145,7 +152,11 @@ const summaryCommand: CommandDefinition = {
  */
 const componentsCommand: CommandDefinition = {
 	name: "components",
-	description: "List all components and their status",
+	description:
+		"List all service components with their current operational status. Shows each component's health level. Use --degraded-only to filter for components experiencing issues.",
+	descriptionShort: "List all components and status",
+	descriptionMedium:
+		"Display service component health. Use --degraded-only to show only affected components.",
 	usage: "[--degraded-only]",
 	aliases: ["comp"],
 
@@ -202,7 +213,11 @@ const componentsCommand: CommandDefinition = {
  */
 const incidentsCommand: CommandDefinition = {
 	name: "incidents",
-	description: "List active and recent incidents",
+	description:
+		"Track service incidents with their impact levels, status, and latest updates. Shows both active and recently resolved incidents. Use --active-only to filter for ongoing issues requiring attention.",
+	descriptionShort: "List active and recent incidents",
+	descriptionMedium:
+		"Display incidents with impact levels and updates. Use --active-only for ongoing issues.",
 	usage: "[--active-only]",
 	aliases: ["inc"],
 
@@ -257,7 +272,11 @@ const incidentsCommand: CommandDefinition = {
  */
 const maintenanceCommand: CommandDefinition = {
 	name: "maintenance",
-	description: "List scheduled and active maintenance windows",
+	description:
+		"View scheduled and in-progress maintenance windows with their timing and affected services. Plan around downtime windows. Use --upcoming to filter for future maintenance only.",
+	descriptionShort: "List scheduled maintenance windows",
+	descriptionMedium:
+		"Show maintenance schedules and timing. Use --upcoming for future windows only.",
 	usage: "[--upcoming]",
 	aliases: ["maint"],
 

@@ -19,7 +19,11 @@ export { formatWhoami, formatWhoamiCompact } from "./formatter.js";
  */
 export const whoamiCommand: CommandDefinition = {
 	name: "show",
-	description: "Show connection and identity information",
+	description:
+		"Display current connection status and authenticated identity information. Shows active profile, tenant URL, username, tenant details, and session context including namespace targeting.",
+	descriptionShort: "Show connection and identity info",
+	descriptionMedium:
+		"Display active profile, tenant URL, user identity, and current namespace context.",
 
 	async execute(_args, session) {
 		try {

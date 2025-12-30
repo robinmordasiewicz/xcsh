@@ -9,7 +9,11 @@ import type { Profile } from "../../../profile/index.js";
 
 export const createCommand: CommandDefinition = {
 	name: "create",
-	description: "Create a new profile",
+	description:
+		"Create a new connection profile with tenant URL and authentication credentials. Profiles store all settings needed to connect to a tenant, including optional default namespace for scoped operations.",
+	descriptionShort: "Create a new connection profile",
+	descriptionMedium:
+		"Create a profile with tenant URL, authentication token, and optional default namespace.",
 	usage: "<name> --url <api-url> --token <api-token> [--namespace <ns>]",
 	aliases: ["add", "new"],
 
