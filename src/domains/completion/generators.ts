@@ -76,7 +76,7 @@ _xcsh_completions() {
   local commands="${domainNames} ${allAliases.join(" ")} help quit exit clear history"
   local actions="${actions}"
   local builtins="help quit exit clear history context ctx"
-  local global_flags="--help -h --version -v --interactive -i --no-color --output -o --namespace -ns"
+  local global_flags="--help -h --version -v --no-color --output -o --namespace -ns"
 
   # Handle completion based on position
   case \${cword} in
@@ -180,7 +180,6 @@ _xcsh() {
     global_opts=(
         '(-h --help)'{-h,--help}'[Show help information]'
         '(-v --version)'{-v,--version}'[Show version number]'
-        '(-i --interactive)'{-i,--interactive}'[Force interactive mode]'
         '--no-color[Disable color output]'
         '(-o --output)'{-o,--output}'[Output format]:format:(json yaml table)'
         '(-ns --namespace)'{-ns,--namespace}'[Namespace]:namespace:_xcsh_namespaces'
@@ -321,7 +320,6 @@ complete -c xcsh -f
 # Global options
 complete -c xcsh -s h -l help -d 'Show help information'
 complete -c xcsh -s v -l version -d 'Show version number'
-complete -c xcsh -s i -l interactive -d 'Force interactive mode'
 complete -c xcsh -l no-color -d 'Disable color output'
 complete -c xcsh -s o -l output -d 'Output format' -xa 'json yaml table'
 complete -c xcsh -l namespace -s ns -d 'Namespace' -xa 'default system shared'

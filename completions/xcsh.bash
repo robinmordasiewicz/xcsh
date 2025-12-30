@@ -9,7 +9,7 @@ _xcsh_completions() {
   local commands="admin_console_and_ui api authentication bigip billing_and_usage blindfold bot_and_threat_defense cdn ce_management certificates cloud_infrastructure cloudstatus completion container_services data_and_privacy_security data_intelligence ddos dns generative_ai login managed_kubernetes marketplace network network_security nginx_one object_storage observability rate_limiting secops_and_incident_response service_mesh shape sites statistics support telemetry_and_insights tenant_and_identity threat_campaign users virtual vpm_and_node_management waf apisec api-discovery authn oidc sso f5-bigip irule ltm bf encrypt secrets cache content cert certs ssl tls cloud infra provider vk8s containers workloads di intelligence insights dos ddos-protect dns-zone zones ai genai assistant mk8s appstack k8s-mgmt market addons extensions net routing bgp netsec nfw nginx nms nginx-plus storage s3 buckets obs monitoring synth ratelimit throttle policer mesh svc-mesh shape-sec safeap site deployment stats metrics logs tickets help-desk telemetry ti threats campaigns threat-intel user accounts iam lb loadbalancer vhost vpm nodes node-mgmt firewall appfw help quit exit clear history"
   local actions="list get create delete replace apply status patch add-labels remove-labels"
   local builtins="help quit exit clear history context ctx"
-  local global_flags="--help -h --version -v --interactive -i --no-color --output -o --namespace -ns"
+  local global_flags="--help -h --version -v --no-color --output -o --namespace -ns"
 
   # Handle completion based on position
   case ${cword} in

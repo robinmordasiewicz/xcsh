@@ -10,7 +10,6 @@ _xcsh() {
     global_opts=(
         '(-h --help)'{-h,--help}'[Show help information]'
         '(-v --version)'{-v,--version}'[Show version number]'
-        '(-i --interactive)'{-i,--interactive}'[Force interactive mode]'
         '--no-color[Disable color output]'
         '(-o --output)'{-o,--output}'[Output format]:format:(json yaml table)'
         '(-ns --namespace)'{-ns,--namespace}'[Namespace]:namespace:_xcsh_namespaces'

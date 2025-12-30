@@ -31,7 +31,6 @@ program
 	.name(CLI_NAME)
 	.description("F5 Distributed Cloud Shell - Interactive CLI for F5 XC")
 	.version(CLI_VERSION, "-v, --version", "Show version number")
-	.option("-i, --interactive", "Force interactive mode")
 	.option("--no-color", "Disable color output")
 	.option("--logo <mode>", "Logo display mode: image, ascii, none")
 	.option("-h, --help", "Show help") // Manual help option to prevent auto-exit
@@ -41,7 +40,7 @@ program
 	.action(
 		async (
 			commandArgs: string[],
-			options: { interactive?: boolean; help?: boolean; logo?: string },
+			options: { help?: boolean; logo?: string },
 		) => {
 			// Handle root-level help (xcsh --help or xcsh -h with no domain)
 			if (options.help && commandArgs.length === 0) {
@@ -61,10 +60,10 @@ program
 				commandArgs.push("--logo", options.logo);
 			}
 
-			// If no command args or --interactive flag, enter REPL mode
-			if (commandArgs.length === 0 || options.interactive) {
+			// If no command args, enter REPL mode
+			if (commandArgs.length === 0) {
 				// Check if stdin is a TTY (interactive terminal)
-				if (!process.stdin.isTTY && !options.interactive) {
+				if (!process.stdin.isTTY) {
 					console.error(
 						"Error: Interactive mode requires a terminal (TTY).",
 					);

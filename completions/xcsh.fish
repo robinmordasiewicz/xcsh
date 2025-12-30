@@ -7,7 +7,6 @@ complete -c xcsh -f
 # Global options
 complete -c xcsh -s h -l help -d 'Show help information'
 complete -c xcsh -s v -l version -d 'Show version number'
-complete -c xcsh -s i -l interactive -d 'Force interactive mode'
 complete -c xcsh -l no-color -d 'Disable color output'
 complete -c xcsh -s o -l output -d 'Output format' -xa 'json yaml table'
 complete -c xcsh -l namespace -s ns -d 'Namespace' -xa 'default system shared'
