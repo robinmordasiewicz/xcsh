@@ -26,6 +26,7 @@ export interface GeneratedDescriptionsData {
 	domains: Record<string, DomainDescriptions>;
 }
 
+
 /**
  * Generated Descriptions Data
  * Auto-generated from config/custom-domain-descriptions.yaml
@@ -37,42 +38,40 @@ export const generatedDescriptions: GeneratedDescriptionsData = {
 	version: "1.0.0",
 	generatedAt: "2025-12-30T03:58:36.781Z",
 	domains: {
-		login: {
-			short: "Configure session credentials and environment profiles",
-			medium: "Set up authentication tokens, organize named profiles for multiple tenants, and switch between target environments for CLI operations.",
-			long: "Control authentication and session state across multiple environments. Run 'show' to display current connection details and token status. Organize credentials with 'profile' to maintain separate configurations for development, staging, and production tenants. Switch active targets via 'context' without re-authenticating. Run 'banner' for visual confirmation of the active environment. Profiles persist locally with token-based and certificate authentication support.",
-			subcommands: {
-				profile: {
-					short: "Manage saved connection configurations for authentication",
-					medium: "Store and switch between multiple tenant connection settings. Create, list, and activate named configurations to avoid repeated credential entry.",
-					long: "Organize tenant connections as reusable named entries for rapid environment switching. Each entry persists URLs and authentication tokens, removing manual reconfiguration overhead. Available operations: 'list' enumerates saved entries, 'show' reveals configuration details, 'create' registers new connections, 'delete' purges obsolete ones, 'active' identifies the current selection, and 'use' changes context. Ideal for workflows spanning development, staging, and production tiers.",
-				},
-				context: {
-					short: "Manage default namespace for scoping operations",
-					medium: "Configure and display the active namespace used to scope commands. Set, view, or list available namespaces for your session.",
-					long: "Control which namespace subsequent operations target by default. Namespaces partition resources and configurations, ensuring commands affect only the intended area. Use 'show' to display the current selection, 'set' to switch contexts, and 'list' to enumerate accessible options. Once configured, the choice persists across commands until explicitly changed, eliminating repeated namespace flag usage.",
-				},
+	"login": {
+		short: "Configure session credentials and environment profiles",
+		medium: "Set up authentication tokens, organize named profiles for multiple tenants, and switch between target environments for CLI operations.",
+		long: "Control authentication and session state across multiple environments. Run 'show' to display current connection details and token status. Organize credentials with 'profile' to maintain separate configurations for development, staging, and production tenants. Switch active targets via 'context' without re-authenticating. Run 'banner' for visual confirmation of the active environment. Profiles persist locally with token-based and certificate authentication support.",
+		subcommands: {
+			"profile": {
+				short: "Manage saved connection configurations for authentication",
+				medium: "Store and switch between multiple tenant connection settings. Create, list, and activate named configurations to avoid repeated credential entry.",
+				long: "Organize tenant connections as reusable named entries for rapid environment switching. Each entry persists URLs and authentication tokens, removing manual reconfiguration overhead. Available operations: 'list' enumerates saved entries, 'show' reveals configuration details, 'create' registers new connections, 'delete' purges obsolete ones, 'active' identifies the current selection, and 'use' changes context. Ideal for workflows spanning development, staging, and production tiers.",
+			},
+			"context": {
+				short: "Manage default namespace for scoping operations",
+				medium: "Configure and display the active namespace used to scope commands. Set, view, or list available namespaces for your session.",
+				long: "Control which namespace subsequent operations target by default. Namespaces partition resources and configurations, ensuring commands affect only the intended area. Use 'show' to display the current selection, 'set' to switch contexts, and 'list' to enumerate accessible options. Once configured, the choice persists across commands until explicitly changed, eliminating repeated namespace flag usage.",
 			},
 		},
-		cloudstatus: {
-			short: "Check infrastructure health and active incidents",
-			medium: "Query service availability, component health, ongoing incidents, and scheduled maintenance windows across infrastructure regions.",
-			long: "Display real-time operational state for infrastructure components and services. Track ongoing incidents with severity levels and resolution timelines. View upcoming maintenance windows affecting particular regions or deployments. Filter results by component type, severity, time range, or operational condition. Retrieve incident history and outage notifications. Commands support monitoring degraded performance indicators and uptime metrics useful for operations teams.",
-		},
-		completion: {
-			short: "Generate tab-assist scripts for supported shells",
-			medium: "Create shell scripts enabling tab-triggered suggestions for commands, subcommands, flags, and option values in bash, zsh, and fish.",
-			long: "Output autocomplete functionality for your terminal environment. Bash, zsh, and fish are fully supported with context-aware prompts covering command names, nested subcommands, available flags, and valid argument values. Installation requires sourcing the generated content in your shell's configuration file (.bashrc, .zshrc, or config.fish). Execute the appropriate subcommand to produce the script, then follow shell-specific setup instructions to activate intelligent tab behavior.",
-		},
+	},
+	"cloudstatus": {
+		short: "Check infrastructure health and active incidents",
+		medium: "Query service availability, component health, ongoing incidents, and scheduled maintenance windows across infrastructure regions.",
+		long: "Display real-time operational state for infrastructure components and services. Track ongoing incidents with severity levels and resolution timelines. View upcoming maintenance windows affecting particular regions or deployments. Filter results by component type, severity, time range, or operational condition. Retrieve incident history and outage notifications. Commands support monitoring degraded performance indicators and uptime metrics useful for operations teams.",
+	},
+	"completion": {
+		short: "Generate tab-assist scripts for supported shells",
+		medium: "Create shell scripts enabling tab-triggered suggestions for commands, subcommands, flags, and option values in bash, zsh, and fish.",
+		long: "Output autocomplete functionality for your terminal environment. Bash, zsh, and fish are fully supported with context-aware prompts covering command names, nested subcommands, available flags, and valid argument values. Installation requires sourcing the generated content in your shell's configuration file (.bashrc, .zshrc, or config.fish). Execute the appropriate subcommand to produce the script, then follow shell-specific setup instructions to activate intelligent tab behavior.",
+	},
 	},
 };
 
 /**
  * Get descriptions for a domain
  */
-export function getDomainDescriptions(
-	domainName: string,
-): DomainDescriptions | undefined {
+export function getDomainDescriptions(domainName: string): DomainDescriptions | undefined {
 	return generatedDescriptions.domains[domainName];
 }
 
