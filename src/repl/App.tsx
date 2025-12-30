@@ -10,7 +10,7 @@ import { InputBox, StatusBar, Suggestions } from "./components/index.js";
 import type { Suggestion } from "./components/Suggestions.js";
 import { getGitInfo, type GitInfo } from "./components/StatusBar.js";
 import { REPLSession } from "./session.js";
-import { buildPlainPrompt } from "./prompt.js";
+import { buildPromptWithLogo } from "./prompt.js";
 import { useDoubleCtrlC } from "./hooks/useDoubleCtrlC.js";
 import { useHistory } from "./hooks/useHistory.js";
 import { useCompletion } from "./hooks/useCompletion.js";
@@ -162,7 +162,7 @@ export function App({ initialSession }: AppProps = {}): React.ReactElement {
 			}
 
 			// Always set up prompt, history, and git info
-			setPrompt(buildPlainPrompt(session));
+			setPrompt(buildPromptWithLogo(session));
 
 			// Get initial history array
 			const histMgr = session.getHistory();
@@ -302,7 +302,7 @@ export function App({ initialSession }: AppProps = {}): React.ReactElement {
 
 			// Update prompt if context changed
 			if (result.contextChanged) {
-				setPrompt(buildPlainPrompt(session));
+				setPrompt(buildPromptWithLogo(session));
 			}
 
 			// Refresh history
