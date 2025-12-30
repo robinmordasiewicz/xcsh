@@ -85,6 +85,9 @@ jobs:
       - name: Generate domains
         run: npx tsx scripts/generate-domains.ts
 
+      - name: Format generated code
+        run: npx prettier --write "src/**/*.{ts,tsx}"
+
       - name: Validate generated code
         run: npm run build
 
