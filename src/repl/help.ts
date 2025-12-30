@@ -21,6 +21,7 @@ import {
 	validActions,
 	getDomainInfo,
 } from "../types/domains.js";
+import type { DomainDefinition, SubcommandGroup } from "../domains/registry.js";
 
 /**
  * Wrap text to specified width with indentation.
@@ -451,6 +452,95 @@ export function formatDomainsSection(): string[] {
 		const padding = " ".repeat(maxNameLen - domain.name.length + 2);
 		output.push(`  ${domain.name}${padding}${domain.descriptionShort}`);
 	}
+
+	return output;
+}
+
+/**
+ * Format help for a custom domain (login, cloudstatus, completion).
+ * Mirrors formatDomainHelp() structure for consistency across all domains.
+ */
+export function formatCustomDomainHelp(domain: DomainDefinition): string[] {
+	const output: string[] = ["", colorBoldWhite(domain.name), ""];
+
+	// Description
+	output.push("DESCRIPTION");
+	output.push(...wrapText(domain.description, 80, 2));
+	output.push("");
+
+	// Usage
+	output.push("USAGE");
+	output.push(`  ${CLI_NAME} ${domain.name} <command> [options]`);
+	output.push("");
+
+	// Subcommands (if any)
+	if (domain.subcommands.size > 0) {
+		output.push("SUBCOMMANDS");
+		for (const [name, group] of domain.subcommands) {
+			output.push(`  ${name.padEnd(16)} ${group.descriptionShort}`);
+		}
+		output.push("");
+	}
+
+	// Commands (if any)
+	if (domain.commands.size > 0) {
+		output.push("COMMANDS");
+		for (const [name, cmd] of domain.commands) {
+			output.push(`  ${name.padEnd(16)} ${cmd.descriptionShort}`);
+		}
+		output.push("");
+	}
+
+	// Footer
+	output.push(colorDim(`For global options, run: ${CLI_NAME} --help`));
+	output.push("");
+
+	return output;
+}
+
+/**
+ * Format help for a subcommand group (e.g., login profile).
+ * Mirrors formatDomainHelp() structure for consistency.
+ */
+export function formatSubcommandHelp(
+	domainName: string,
+	subcommand: SubcommandGroup,
+): string[] {
+	const output: string[] = [
+		"",
+		colorBoldWhite(`${domainName} ${subcommand.name}`),
+		"",
+	];
+
+	// Description
+	output.push("DESCRIPTION");
+	output.push(...wrapText(subcommand.description, 80, 2));
+	output.push("");
+
+	// Usage
+	output.push("USAGE");
+	output.push(
+		`  ${CLI_NAME} ${domainName} ${subcommand.name} <command> [options]`,
+	);
+	output.push("");
+
+	// Commands
+	if (subcommand.commands.size > 0) {
+		output.push("COMMANDS");
+		for (const [name, cmd] of subcommand.commands) {
+			const usage = cmd.usage ? ` ${cmd.usage}` : "";
+			output.push(
+				`  ${name}${usage.padEnd(16 - name.length)} ${cmd.descriptionShort}`,
+			);
+		}
+		output.push("");
+	}
+
+	// Footer
+	output.push(
+		colorDim(`For domain help, run: ${CLI_NAME} ${domainName} --help`),
+	);
+	output.push("");
 
 	return output;
 }

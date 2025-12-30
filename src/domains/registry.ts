@@ -3,6 +3,7 @@
  */
 
 import type { REPLSession } from "../repl/session.js";
+import { formatCustomDomainHelp, formatSubcommandHelp } from "../repl/help.js";
 
 /**
  * Result from domain command execution
@@ -348,28 +349,12 @@ class DomainRegistry {
 	}
 
 	/**
-	 * Show help for a domain
+	 * Show help for a domain using the unified help formatter.
+	 * This ensures consistent professional formatting across all domains.
 	 */
 	private showDomainHelp(domain: DomainDefinition): DomainCommandResult {
-		const output: string[] = [`${domain.name} - ${domain.description}`, ``];
-
-		if (domain.subcommands.size > 0) {
-			output.push(`Subcommands:`);
-			for (const [name, group] of domain.subcommands) {
-				output.push(`  ${name}  ${group.description}`);
-			}
-			output.push(``);
-		}
-
-		if (domain.commands.size > 0) {
-			output.push(`Commands:`);
-			for (const [name, cmd] of domain.commands) {
-				output.push(`  ${name}  ${cmd.description}`);
-			}
-		}
-
 		return {
-			output,
+			output: formatCustomDomainHelp(domain),
 			shouldExit: false,
 			shouldClear: false,
 			contextChanged: false,
@@ -377,25 +362,15 @@ class DomainRegistry {
 	}
 
 	/**
-	 * Show help for a subcommand group
+	 * Show help for a subcommand group using the unified help formatter.
+	 * This ensures consistent professional formatting across all subcommands.
 	 */
 	private showSubcommandHelp(
 		domain: DomainDefinition,
 		subgroup: SubcommandGroup,
 	): DomainCommandResult {
-		const output: string[] = [
-			`${domain.name} ${subgroup.name} - ${subgroup.description}`,
-			``,
-			`Commands:`,
-		];
-
-		for (const [name, cmd] of subgroup.commands) {
-			const usage = cmd.usage ? ` ${cmd.usage}` : "";
-			output.push(`  ${name}${usage}  ${cmd.description}`);
-		}
-
 		return {
-			output,
+			output: formatSubcommandHelp(domain.name, subgroup),
 			shouldExit: false,
 			shouldClear: false,
 			contextChanged: false,
