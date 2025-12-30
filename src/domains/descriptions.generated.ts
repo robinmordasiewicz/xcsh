@@ -20,9 +20,12 @@ export interface DomainDescriptions extends DescriptionTiers {
 	commands?: Record<string, CommandDescriptions>;
 }
 
+export type CliDescriptions = DescriptionTiers;
+
 export interface GeneratedDescriptionsData {
 	version: string;
 	generatedAt: string;
+	cli?: Record<string, CliDescriptions>;
 	domains: Record<string, DomainDescriptions>;
 }
 
@@ -36,6 +39,13 @@ export interface GeneratedDescriptionsData {
 export const generatedDescriptions: GeneratedDescriptionsData = {
 	version: "1.0.0",
 	generatedAt: "2025-12-30T03:58:36.781Z",
+	cli: {
+		xcsh: {
+			short: "Navigate cloud services via interactive shell",
+			medium: "Manage multi-tenant connections, execute domain operations across 100+ services, and output results in JSON, YAML, or table format.",
+			long: "Interact with cloud services through an intelligent shell environment. Navigate over 100 domain operations using tab completion for commands, flags, and values. Organize multiple tenant connections with named profiles and switch contexts without re-authenticating. Execute commands directly from scripts or explore interactively with history and suggestions. Configure output format as JSON, YAML, or formatted tables. Set behavior through environment variables or persistent profile settings. Generate shell completions for bash, zsh, and fish terminals.",
+		},
+	},
 	domains: {
 		login: {
 			short: "Configure session credentials and environment profiles",
@@ -66,6 +76,15 @@ export const generatedDescriptions: GeneratedDescriptionsData = {
 		},
 	},
 };
+
+/**
+ * Get CLI descriptions
+ */
+export function getCliDescriptions(
+	cliName: string = "xcsh",
+): CliDescriptions | undefined {
+	return generatedDescriptions.cli?.[cliName];
+}
 
 /**
  * Get descriptions for a domain

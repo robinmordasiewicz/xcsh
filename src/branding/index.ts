@@ -4,6 +4,8 @@
  * Update this file to rebrand the entire application.
  */
 
+import { getCliDescriptions } from "../domains/descriptions.generated.js";
+
 // CLI identification
 export const CLI_NAME = "xcsh";
 export const CLI_FULL_NAME = "F5 Distributed Cloud Shell";
@@ -39,9 +41,15 @@ function getVersion(): string {
 }
 
 export const CLI_VERSION = getVersion();
-export const CLI_DESCRIPTION =
-	"Command-line interface for F5 Distributed Cloud services.";
-export const CLI_SHORT_DESCRIPTION = "F5 Distributed Cloud Shell";
+
+// Load CLI descriptions from generated data
+const cliDescs = getCliDescriptions();
+
+// 3-tier CLI descriptions with fallbacks
+export const CLI_DESCRIPTION_SHORT =
+	cliDescs?.short ?? "Navigate cloud services via interactive shell";
+export const CLI_DESCRIPTION_MEDIUM = cliDescs?.medium ?? CLI_DESCRIPTION_SHORT;
+export const CLI_DESCRIPTION_LONG = cliDescs?.long ?? CLI_DESCRIPTION_MEDIUM;
 
 // Configuration
 export const CONFIG_FILE_NAME = ".xcshconfig";

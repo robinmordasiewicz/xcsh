@@ -7,6 +7,7 @@ import {
 	CLI_NAME,
 	CLI_VERSION,
 	CLI_FULL_NAME,
+	CLI_DESCRIPTION_LONG,
 	colorBoldWhite,
 	colorDim,
 } from "../branding/index.js";
@@ -22,6 +23,33 @@ import {
 } from "../types/domains.js";
 
 /**
+ * Wrap text to specified width with indentation.
+ * Preserves words and wraps at word boundaries.
+ */
+function wrapText(text: string, width: number, indent: number): string[] {
+	const prefix = " ".repeat(indent);
+	const words = text.split(/\s+/);
+	const lines: string[] = [];
+	let currentLine = prefix;
+
+	for (const word of words) {
+		if (
+			currentLine.length + word.length + 1 > width &&
+			currentLine !== prefix
+		) {
+			lines.push(currentLine);
+			currentLine = prefix + word;
+		} else {
+			currentLine += (currentLine === prefix ? "" : " ") + word;
+		}
+	}
+	if (currentLine.trim()) {
+		lines.push(currentLine);
+	}
+	return lines;
+}
+
+/**
  * Format root-level help with full details.
  * Includes: description, usage, examples, global flags, environment variables.
  * Matches the Go version's professional structure.
@@ -32,7 +60,7 @@ export function formatRootHelp(): string[] {
 		colorBoldWhite(`${CLI_NAME} - ${CLI_FULL_NAME} v${CLI_VERSION}`),
 		"",
 		"DESCRIPTION",
-		`  Interactive CLI for F5 Distributed Cloud services.`,
+		...wrapText(CLI_DESCRIPTION_LONG, 80, 2),
 		"",
 		"USAGE",
 		`  ${CLI_NAME}                              Enter interactive REPL mode`,

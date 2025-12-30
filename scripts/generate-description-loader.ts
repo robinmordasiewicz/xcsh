@@ -34,9 +34,14 @@ interface DomainDescription extends DescriptionTiers {
 	commands?: Record<string, CommandDescription>;
 }
 
+interface CliDescription extends DescriptionTiers {
+	source_patterns_hash: string;
+}
+
 interface GeneratedDescriptions {
 	version: string;
 	generated_at: string;
+	cli?: Record<string, CliDescription>;
 	domains: Record<string, DomainDescription>;
 }
 
@@ -78,9 +83,12 @@ export interface DomainDescriptions extends DescriptionTiers {
 	commands?: Record<string, CommandDescriptions>;
 }
 
+export type CliDescriptions = DescriptionTiers;
+
 export interface GeneratedDescriptionsData {
 	version: string;
 	generatedAt: string;
+	cli?: Record<string, CliDescriptions>;
 	domains: Record<string, DomainDescriptions>;
 }
 `;
@@ -167,13 +175,35 @@ ${indent}}`;
 }
 
 /**
+ * Generate CLI object
+ */
+function generateCliObject(cli: CliDescription, indent: string): string {
+	return `{
+${indent}	short: "${escapeTs(cli.short)}",
+${indent}	medium: "${escapeTs(cli.medium)}",
+${indent}	long: "${escapeTs(cli.long)}",
+${indent}}`;
+}
+
+/**
  * Generate the full TypeScript module
  */
 function generateModule(data: GeneratedDescriptions): string {
 	const interfaces = generateInterfaces();
 
+	// Generate CLI entries if present
+	let cliSection = "";
+	if (data.cli && Object.keys(data.cli).length > 0) {
+		const cliEntries = Object.entries(data.cli).map(([name, cli]) => {
+			return `		"${name}": ${generateCliObject(cli, "\t\t")},`;
+		});
+		cliSection = `	cli: {
+${cliEntries.join("\n")}
+	},`;
+	}
+
 	const domainEntries = Object.entries(data.domains).map(([name, domain]) => {
-		return `	"${name}": ${generateDomainObject(domain, "\t")},`;
+		return `		"${name}": ${generateDomainObject(domain, "\t\t")},`;
 	});
 
 	return `${interfaces}
@@ -188,10 +218,18 @@ function generateModule(data: GeneratedDescriptions): string {
 export const generatedDescriptions: GeneratedDescriptionsData = {
 	version: "${data.version}",
 	generatedAt: "${data.generated_at}",
+${cliSection}
 	domains: {
 ${domainEntries.join("\n")}
 	},
 };
+
+/**
+ * Get CLI descriptions
+ */
+export function getCliDescriptions(cliName: string = "xcsh"): CliDescriptions | undefined {
+	return generatedDescriptions.cli?.[cliName];
+}
 
 /**
  * Get descriptions for a domain
@@ -253,8 +291,13 @@ async function main(): Promise<void> {
 export const generatedDescriptions: GeneratedDescriptionsData = {
 	version: "1.0.0",
 	generatedAt: "",
+	cli: {},
 	domains: {},
 };
+
+export function getCliDescriptions(_cliName: string = "xcsh"): CliDescriptions | undefined {
+	return undefined;
+}
 
 export function getDomainDescriptions(_domainName: string): DomainDescriptions | undefined {
 	return undefined;
@@ -299,6 +342,7 @@ export function getCommandDescriptions(
 	writeFileSync(outputPath, tsModule, "utf-8");
 
 	// Count what was generated
+	const cliCount = data.cli ? Object.keys(data.cli).length : 0;
 	const domainCount = Object.keys(data.domains).length;
 	let subcommandCount = 0;
 	for (const domain of Object.values(data.domains)) {
@@ -308,6 +352,9 @@ export function getCommandDescriptions(
 	}
 
 	console.log(`\n=== Complete ===`);
+	if (cliCount > 0) {
+		console.log(`  CLI: ${cliCount}`);
+	}
 	console.log(`  Domains: ${domainCount}`);
 	console.log(`  Subcommands: ${subcommandCount}`);
 	console.log(`  Output: ${outputPath}`);

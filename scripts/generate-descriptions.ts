@@ -111,15 +111,24 @@ interface DescriptionTiers {
 
 interface DomainContext {
 	name: string;
-	type: "domain" | "subcommand" | "command";
+	type: "domain" | "subcommand" | "command" | "cli_root";
 	parentName?: string;
 	existingDescription?: string;
 	commands?: string[];
+	features?: string[];
+}
+
+interface CliDescription {
+	source_patterns_hash: string;
+	short: string;
+	medium: string;
+	long: string;
 }
 
 interface GeneratedDescriptions {
 	version: string;
 	generated_at: string;
+	cli?: Record<string, CliDescription>;
 	domains: Record<string, DomainDescription>;
 }
 
@@ -357,7 +366,9 @@ function buildInitialPrompt(context: DomainContext): string {
 			? "CLI domain"
 			: context.type === "subcommand"
 				? "subcommand group"
-				: "command";
+				: context.type === "cli_root"
+					? "command-line interface tool"
+					: "command";
 
 	let prompt = `Generate 3-tier descriptions for a ${typeLabel} named "${context.name}"`;
 
@@ -369,6 +380,14 @@ function buildInitialPrompt(context: DomainContext): string {
 
 	if (context.existingDescription) {
 		prompt += `Current description: "${context.existingDescription}"\n\n`;
+	}
+
+	if (context.features && context.features.length > 0) {
+		prompt += `Key features:\n`;
+		for (const feature of context.features) {
+			prompt += `- ${feature}\n`;
+		}
+		prompt += "\n";
 	}
 
 	if (context.commands && context.commands.length > 0) {
@@ -598,8 +617,24 @@ function formatToYaml(data: GeneratedDescriptions): string {
 version: "${data.version}"
 generated_at: "${data.generated_at}"
 
-domains:
 `;
+
+	// Output CLI section first if present
+	if (data.cli && Object.keys(data.cli).length > 0) {
+		yaml += `cli:\n`;
+		for (const [cliName, cli] of Object.entries(data.cli)) {
+			yaml += `  ${cliName}:\n`;
+			yaml += `    source_patterns_hash: "${cli.source_patterns_hash}"\n`;
+			yaml += `    short: "${escapeYaml(cli.short)}"\n`;
+			yaml += `    medium: >-\n`;
+			yaml += `      ${escapeYamlMultiline(cli.medium)}\n`;
+			yaml += `    long: >-\n`;
+			yaml += `      ${escapeYamlMultiline(cli.long)}\n`;
+		}
+		yaml += "\n";
+	}
+
+	yaml += `domains:\n`;
 
 	for (const [domainName, domain] of Object.entries(data.domains)) {
 		yaml += `  ${domainName}:\n`;
@@ -645,10 +680,55 @@ domains:
 }
 
 /**
- * Escape YAML string
+ * Escape YAML string for inline use
  */
 function escapeYaml(str: string): string {
 	return str.replace(/"/g, '\\"').replace(/\n/g, "\\n");
+}
+
+/**
+ * Escape YAML string for multiline (>-) block scalar use
+ * Wraps long lines for readability while preserving content
+ */
+function escapeYamlMultiline(str: string): string {
+	// For >- block scalar, we just need to handle line breaks
+	// The >- indicator will fold lines, so we can use line breaks for wrapping
+	const words = str.split(/\s+/);
+	let result = "";
+	let lineLength = 0;
+	const maxLineLength = 76; // Leave room for indentation
+
+	for (const word of words) {
+		if (lineLength + word.length + 1 > maxLineLength && lineLength > 0) {
+			result += "\n      " + word;
+			lineLength = word.length;
+		} else {
+			result += (lineLength > 0 ? " " : "") + word;
+			lineLength += word.length + 1;
+		}
+	}
+
+	return result;
+}
+
+/**
+ * Get CLI root context for generating CLI-level descriptions
+ */
+function getCliRootContext(): DomainContext {
+	return {
+		name: "xcsh",
+		type: "cli_root",
+		existingDescription:
+			"Interactive CLI for F5 Distributed Cloud services.",
+		features: [
+			"Interactive REPL with intelligent tab completion",
+			"Multi-tenant profile management for environment switching",
+			"100+ API domain operations across cloud services",
+			"JSON, YAML, and table output format options",
+			"Environment-based configuration with profile persistence",
+			"Shell completion generation for bash, zsh, and fish",
+		],
+	};
 }
 
 /**
@@ -701,8 +781,8 @@ function getCustomDomainContexts(): DomainContext[] {
  * Main function
  */
 async function main(): Promise<void> {
-	console.log("Description Generator for Custom Domains");
-	console.log("========================================\n");
+	console.log("Description Generator for CLI and Custom Domains");
+	console.log("================================================\n");
 
 	const projectRoot = join(__dirname, "..");
 	const outputPath = join(projectRoot, "config", "custom-domain-descriptions.yaml");
@@ -714,18 +794,37 @@ async function main(): Promise<void> {
 		mkdirSync(configDir, { recursive: true });
 	}
 
-	// Get domain contexts
-	const contexts = getCustomDomainContexts();
-
-	console.log(`Processing ${contexts.length} custom domains/subcommands...\n`);
-
 	const generatedData: GeneratedDescriptions = {
 		version: "1.0.0",
 		generated_at: new Date().toISOString(),
+		cli: {},
 		domains: {},
 	};
 
-	// Process each context
+	// Process CLI root context first
+	const cliContext = getCliRootContext();
+	console.log(`Processing: ${cliContext.type} "${cliContext.name}"`);
+
+	const cliDescriptions = await generateWithRetry(cliContext);
+	if (cliDescriptions) {
+		const hash = calculateHash(JSON.stringify(cliContext));
+		generatedData.cli![cliContext.name] = {
+			source_patterns_hash: hash,
+			short: cliDescriptions.short,
+			medium: cliDescriptions.medium,
+			long: cliDescriptions.long,
+		};
+		console.log(`  Short: "${cliDescriptions.short.slice(0, 50)}..."`);
+	} else {
+		console.error(`  FAILED to generate CLI descriptions`);
+	}
+
+	// Get domain contexts
+	const contexts = getCustomDomainContexts();
+
+	console.log(`\nProcessing ${contexts.length} custom domains/subcommands...\n`);
+
+	// Process each domain context
 	for (const context of contexts) {
 		console.log(`\nProcessing: ${context.type} "${context.name}"`);
 
