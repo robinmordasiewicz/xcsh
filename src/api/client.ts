@@ -114,29 +114,46 @@ export class APIClient {
 		}
 
 		try {
-			// Use namespaces endpoint for token validation (universally available)
+			// Use namespaces endpoint for token validation (lightweight, universal)
 			await this.get<{ items?: unknown[] }>("/api/web/namespaces");
 			this._isValidated = true;
 			this._validationError = null;
 			return { valid: true };
 		} catch (error) {
-			this._isValidated = false;
 			if (error instanceof APIError) {
 				if (error.statusCode === 401) {
+					// Definitive: token is invalid or expired
+					this._isValidated = false;
 					this._validationError = "Invalid or expired API token";
+					return { valid: false, error: this._validationError };
 				} else if (error.statusCode === 403) {
+					// Definitive: token lacks permissions
+					this._isValidated = false;
 					this._validationError = "Token lacks required permissions";
-				} else if (error.statusCode === 0) {
-					// Network error - don't mark as invalid, could be offline
-					this._validationError =
-						"Network error - could not reach server";
+					return { valid: false, error: this._validationError };
 				} else {
-					this._validationError = `Validation failed: HTTP ${error.statusCode}`;
+					// Non-auth error (404, 500, network) - assume token is OK
+					// Don't show warning for server-side issues
+					if (this.debug) {
+						console.error(
+							`DEBUG: Validation endpoint returned ${error.statusCode}, assuming token is valid`,
+						);
+					}
+					this._isValidated = true;
+					this._validationError = null;
+					return { valid: true };
 				}
 			} else {
-				this._validationError = `Validation failed: ${error instanceof Error ? error.message : "Unknown error"}`;
+				// Unknown error - assume token is OK, don't block user
+				if (this.debug) {
+					console.error(
+						`DEBUG: Validation error: ${error instanceof Error ? error.message : "Unknown"}, assuming token is valid`,
+					);
+				}
+				this._isValidated = true;
+				this._validationError = null;
+				return { valid: true };
 			}
-			return { valid: false, error: this._validationError };
 		}
 	}
 
