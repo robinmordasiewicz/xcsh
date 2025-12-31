@@ -32,8 +32,8 @@ node_modules/
 .DS_Store
 Thumbs.db
 
-# Debug files
-debug
+# Debug files (root-level debug folder only, not src/debug/)
+/debug
 *.log
 
 # Environment files

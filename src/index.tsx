@@ -19,6 +19,7 @@ import { REPLSession } from "./repl/session.js";
 import { formatRootHelp } from "./repl/help.js";
 import { isValidLogoMode, type LogoDisplayMode } from "./config/index.js";
 import { renderBanner } from "./domains/login/banner/display.js";
+import { debugProtocol, emitSessionState } from "./debug/protocol.js";
 
 const program = new Command();
 
@@ -105,6 +106,10 @@ program
 				const session = new REPLSession();
 				await session.initialize();
 
+				// Emit debug event for session state (helps AI/PTY debugging)
+				debugProtocol.session("init", { mode: "repl" });
+				emitSessionState(session);
+
 				// Clear the "Initializing..." message
 				process.stdout.write("\r\x1b[K");
 
@@ -176,6 +181,13 @@ program
 async function executeNonInteractive(args: string[]): Promise<void> {
 	const session = new REPLSession();
 	await session.initialize();
+
+	// Emit debug event for session state (helps AI/PTY debugging)
+	debugProtocol.session("init", {
+		mode: "non-interactive",
+		command: args.join(" "),
+	});
+	emitSessionState(session);
 
 	// Show warning if token validation failed
 	if (

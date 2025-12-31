@@ -14,6 +14,7 @@ import {
 import { APIClient } from "../api/index.js";
 import type { OutputFormat } from "../output/index.js";
 import { getOutputFormatFromEnv } from "../output/index.js";
+import { debugProtocol } from "../debug/protocol.js";
 
 /**
  * Configuration for creating a REPL session
@@ -107,9 +108,21 @@ export class REPLSession {
 
 		// Validate token and fetch user info if connected and authenticated
 		if (this._apiClient?.isAuthenticated()) {
+			debugProtocol.auth("token_validation_start", {
+				serverUrl: this._serverUrl,
+				hasApiClient: true,
+			});
+
 			const result = await this._apiClient.validateToken();
 			this._tokenValidated = result.valid;
 			this._validationError = result.error ?? null;
+
+			debugProtocol.auth("token_validation_complete", {
+				valid: result.valid,
+				error: result.error,
+				tokenValidated: this._tokenValidated,
+				validationError: this._validationError,
+			});
 
 			// Only fetch user info if token is valid
 			if (result.valid) {
@@ -195,8 +208,11 @@ export class REPLSession {
 					}
 				}
 			}
-		} catch {
-			// Ignore profile loading errors - session can work without profile
+		} catch (error) {
+			// Log profile loading errors in debug mode, but don't fail
+			debugProtocol.error("profile_load_failed", error, {
+				activeProfile: this._activeProfileName,
+			});
 		}
 	}
 
