@@ -8,6 +8,10 @@ on:
   # Allow manual trigger for immediate sync
   workflow_dispatch:
 
+  # Triggered by upstream f5xc-api-enriched when new specs are released
+  repository_dispatch:
+    types: [enriched-specs-updated]
+
   # Trigger on domain config changes
   push:
     paths:
@@ -25,6 +29,15 @@ jobs:
       current_version: ${{ steps.check.outputs.current_version }}
 
     steps:
+      - name: Log upstream dispatch info
+        if: github.event_name == 'repository_dispatch'
+        run: |
+          echo "🔔 Triggered by upstream repository_dispatch"
+          echo "Event type: ${{ github.event.action }}"
+          echo "Version: ${{ github.event.client_payload.version }}"
+          echo "Release: ${{ github.event.client_payload.release_url }}"
+          echo "Source: ${{ github.event.client_payload.trigger_source }}"
+
       - uses: actions/checkout@v4
 
       - name: Get current version from specs
