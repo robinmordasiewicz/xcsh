@@ -109,6 +109,10 @@ export class APIClient {
 			return { valid: false, error: this._validationError };
 		}
 
+		if (this.debug) {
+			console.error(`DEBUG: Validating token against ${this.serverUrl}`);
+		}
+
 		try {
 			// Use namespaces endpoint for token validation (universally available)
 			await this.get<{ items?: unknown[] }>("/api/web/namespaces");
@@ -130,7 +134,7 @@ export class APIClient {
 					this._validationError = `Validation failed: HTTP ${error.statusCode}`;
 				}
 			} else {
-				this._validationError = "Validation failed: Unknown error";
+				this._validationError = `Validation failed: ${error instanceof Error ? error.message : "Unknown error"}`;
 			}
 			return { valid: false, error: this._validationError };
 		}
