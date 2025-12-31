@@ -336,34 +336,34 @@ jobs:
 
           # Create release notes
           cat > release-notes.md << 'RELEASE_EOF'
-          ## xcsh v${VERSION}
+          ## xcsh ${VERSION}
 
           ### Installation
 
           **macOS (Apple Silicon)**
           ```bash
-          curl -LO https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v${VERSION}/xcsh_${VERSION}_darwin_arm64.tar.gz
+          curl -LO https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/${VERSION}/xcsh_${VERSION}_darwin_arm64.tar.gz
           tar -xzf xcsh_${VERSION}_darwin_arm64.tar.gz
           sudo mv xcsh /usr/local/bin/
           ```
 
           **macOS (Intel)**
           ```bash
-          curl -LO https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v${VERSION}/xcsh_${VERSION}_darwin_amd64.tar.gz
+          curl -LO https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/${VERSION}/xcsh_${VERSION}_darwin_amd64.tar.gz
           tar -xzf xcsh_${VERSION}_darwin_amd64.tar.gz
           sudo mv xcsh /usr/local/bin/
           ```
 
           **Linux (amd64)**
           ```bash
-          curl -LO https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v${VERSION}/xcsh_${VERSION}_linux_amd64.tar.gz
+          curl -LO https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/${VERSION}/xcsh_${VERSION}_linux_amd64.tar.gz
           tar -xzf xcsh_${VERSION}_linux_amd64.tar.gz
           sudo mv xcsh /usr/local/bin/
           ```
 
           **Linux (arm64)**
           ```bash
-          curl -LO https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v${VERSION}/xcsh_${VERSION}_linux_arm64.tar.gz
+          curl -LO https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/${VERSION}/xcsh_${VERSION}_linux_arm64.tar.gz
           tar -xzf xcsh_${VERSION}_linux_arm64.tar.gz
           sudo mv xcsh /usr/local/bin/
           ```
@@ -386,8 +386,8 @@ jobs:
           sed -i "s/\${VERSION}/${VERSION}/g" release-notes.md
 
           # Create GitHub release
-          gh release create "v${VERSION}" \
-            --title "xcsh v${VERSION}" \
+          gh release create "${VERSION}" \
+            --title "xcsh ${VERSION}" \
             --notes-file release-notes.md \
             release-archives/*
 
@@ -542,7 +542,7 @@ jobs:
             echo "Processing $ASSET_NAME..."
 
             # Download release asset with retry
-            retry_with_backoff gh release download "v${VERSION}" -p "$ASSET_NAME" -D $RUNNER_TEMP
+            retry_with_backoff gh release download "${VERSION}" -p "$ASSET_NAME" -D $RUNNER_TEMP
 
             # Extract
             mkdir -p $RUNNER_TEMP/sign_${ARCH}
@@ -585,7 +585,7 @@ jobs:
 
             # Upload signed binary to release (replace unsigned)
             echo "Uploading signed $ASSET_NAME..."
-            gh release upload "v${VERSION}" $RUNNER_TEMP/$ASSET_NAME --clobber
+            gh release upload "${VERSION}" $RUNNER_TEMP/$ASSET_NAME --clobber
           done
 
           echo "macOS binaries signed and uploaded successfully!"
@@ -626,7 +626,7 @@ jobs:
 
           # Download all release assets with retry
           echo "Downloading all release assets..."
-          retry_with_backoff sh -c "GH_TOKEN=\"\$GITHUB_TOKEN\" gh release download \"v${VERSION}\" --repo \"${{ github.repository }}\""
+          retry_with_backoff sh -c "GH_TOKEN=\"\$GITHUB_TOKEN\" gh release download \"${VERSION}\" --repo \"${{ github.repository }}\""
 
           # Generate new checksums.txt
           echo "Computing SHA256 checksums..."
@@ -634,7 +634,7 @@ jobs:
 
           # Upload new checksums.txt to replace the old one
           echo "Uploading updated checksums.txt..."
-          GH_TOKEN="$GITHUB_TOKEN" gh release upload "v${VERSION}" checksums.txt --clobber --repo "${{ github.repository }}"
+          GH_TOKEN="$GITHUB_TOKEN" gh release upload "${VERSION}" checksums.txt --clobber --repo "${{ github.repository }}"
 
           echo "checksums.txt regenerated successfully!"
 
@@ -678,7 +678,7 @@ jobs:
           for PLATFORM in darwin_amd64 darwin_arm64 linux_amd64 linux_arm64; do
             ASSET="xcsh_${VERSION}_${PLATFORM}.tar.gz"
             echo "Downloading $ASSET..."
-            retry_with_backoff sh -c "GH_TOKEN=\"\$GITHUB_TOKEN\" gh release download \"v${VERSION}\" --pattern \"$ASSET\" --repo \"${{ github.repository }}\""
+            retry_with_backoff sh -c "GH_TOKEN=\"\$GITHUB_TOKEN\" gh release download \"${VERSION}\" --pattern \"$ASSET\" --repo \"${{ github.repository }}\""
             HASH=$(shasum -a 256 "$ASSET" | cut -d' ' -f1)
             export "HASH_${PLATFORM}=${HASH}"
             echo "$PLATFORM: $HASH"
@@ -730,22 +730,22 @@ jobs:
 
             on_macos do
               on_intel do
-                url "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v#{version}/xcsh_#{version}_darwin_amd64.tar.gz"
+                url "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/#{version}/xcsh_#{version}_darwin_amd64.tar.gz"
                 sha256 "${HASH_darwin_amd64}"
               end
               on_arm do
-                url "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v#{version}/xcsh_#{version}_darwin_arm64.tar.gz"
+                url "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/#{version}/xcsh_#{version}_darwin_arm64.tar.gz"
                 sha256 "${HASH_darwin_arm64}"
               end
             end
 
             on_linux do
               on_intel do
-                url "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v#{version}/xcsh_#{version}_linux_amd64.tar.gz"
+                url "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/#{version}/xcsh_#{version}_linux_amd64.tar.gz"
                 sha256 "${HASH_linux_amd64}"
               end
               on_arm do
-                url "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/v#{version}/xcsh_#{version}_linux_arm64.tar.gz"
+                url "https://github.com/robinmordasiewicz/f5xc-xcsh/releases/download/#{version}/xcsh_#{version}_linux_arm64.tar.gz"
                 sha256 "${HASH_linux_arm64}"
               end
             end
@@ -771,5 +771,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add Casks/xcsh.rb
-          git commit -m "chore: Update xcsh cask to v${VERSION}"
+          git commit -m "chore: Update xcsh cask to ${VERSION}"
           git push
