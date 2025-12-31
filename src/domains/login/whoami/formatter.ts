@@ -47,6 +47,22 @@ function formatWhoamiJson(info: WhoamiInfo): string[] {
 }
 
 /**
+ * Get auth status display string based on validation state
+ */
+function getAuthStatusDisplay(info: WhoamiInfo): string {
+	if (!info.isAuthenticated) {
+		return "Not authenticated";
+	}
+	if (info.isValidated) {
+		return "\u2713 Authenticated";
+	}
+	if (info.validationError) {
+		return `\u2717 ${info.validationError}`;
+	}
+	return "\u26A0 Token not verified";
+}
+
+/**
  * Format whoami with box decoration
  * Uses F5 brand red for the box frame
  */
@@ -80,9 +96,7 @@ function formatWhoamiBox(info: WhoamiInfo): string[] {
 	contentLines.push({ label: "Server", value: info.serverUrl });
 	contentLines.push({
 		label: "Auth",
-		value: info.isAuthenticated
-			? "\u2713 Authenticated"
-			: "Not authenticated",
+		value: getAuthStatusDisplay(info),
 	});
 
 	// Find max label width for alignment

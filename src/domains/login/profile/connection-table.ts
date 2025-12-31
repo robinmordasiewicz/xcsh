@@ -44,6 +44,8 @@ export interface ConnectionInfo {
 	hasToken: boolean;
 	namespace: string;
 	isConnected: boolean;
+	isValidated?: boolean;
+	validationError?: string;
 }
 
 /**
@@ -61,6 +63,25 @@ export function extractTenantFromUrl(url: string): string {
 	} catch {
 		return "unknown";
 	}
+}
+
+/**
+ * Get auth status display value based on validation state
+ */
+function getAuthStatusValue(
+	info: ConnectionInfo,
+	colorStatus: (text: string, isGood: boolean) => string,
+): string {
+	if (!info.hasToken) {
+		return colorStatus("\u2717 No token", false);
+	}
+	if (info.isValidated) {
+		return colorStatus("\u2713 Authenticated", true);
+	}
+	if (info.validationError) {
+		return colorStatus(`\u2717 ${info.validationError}`, false);
+	}
+	return colorStatus("\u26A0 Token not verified", false);
 }
 
 /**
@@ -93,9 +114,7 @@ export function formatConnectionTable(
 		{ label: "API URL", value: info.apiUrl },
 		{
 			label: "Auth",
-			value: info.hasToken
-				? colorStatus("\u2713 Token configured", true)
-				: colorStatus("\u2717 No token", false),
+			value: getAuthStatusValue(info, colorStatus),
 		},
 		{ label: "Namespace", value: info.namespace || "default" },
 		{
@@ -170,8 +189,10 @@ export function buildConnectionInfo(
 	hasToken: boolean,
 	namespace: string,
 	isConnected: boolean,
+	isValidated?: boolean,
+	validationError?: string,
 ): ConnectionInfo {
-	return {
+	const info: ConnectionInfo = {
 		profileName,
 		tenant: extractTenantFromUrl(apiUrl),
 		apiUrl,
@@ -179,4 +200,14 @@ export function buildConnectionInfo(
 		namespace,
 		isConnected,
 	};
+
+	// Add optional validation fields only if they have values
+	if (isValidated !== undefined) {
+		info.isValidated = isValidated;
+	}
+	if (validationError) {
+		info.validationError = validationError;
+	}
+
+	return info;
 }

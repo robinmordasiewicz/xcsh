@@ -53,6 +53,10 @@ export class REPLSession {
 	private _namespaceCache: string[] = [];
 	private _namespaceCacheTime: number = 0;
 
+	// Token validation state
+	private _tokenValidated: boolean = false;
+	private _validationError: string | null = null;
+
 	constructor(config: SessionConfig = {}) {
 		this._namespace = config.namespace ?? this.getDefaultNamespace();
 		this._contextPath = new ContextPath();
@@ -101,9 +105,16 @@ export class REPLSession {
 		// Load active profile if one is set
 		await this.loadActiveProfile();
 
-		// Fetch user info if connected and authenticated
+		// Validate token and fetch user info if connected and authenticated
 		if (this._apiClient?.isAuthenticated()) {
-			await this.fetchUserInfo();
+			const result = await this._apiClient.validateToken();
+			this._tokenValidated = result.valid;
+			this._validationError = result.error ?? null;
+
+			// Only fetch user info if token is valid
+			if (result.valid) {
+				await this.fetchUserInfo();
+			}
 		}
 	}
 
@@ -307,6 +318,20 @@ export class REPLSession {
 	}
 
 	/**
+	 * Check if the token has been validated (verified working)
+	 */
+	isTokenValidated(): boolean {
+		return this._tokenValidated;
+	}
+
+	/**
+	 * Get the token validation error, if any
+	 */
+	getValidationError(): string | null {
+		return this._validationError;
+	}
+
+	/**
 	 * Get the API client
 	 */
 	getAPIClient(): APIClient | null {
@@ -372,6 +397,10 @@ export class REPLSession {
 		// Clear namespace cache when switching profiles
 		this.clearNamespaceCache();
 
+		// Clear validation state before switch
+		this._tokenValidated = false;
+		this._validationError = null;
+
 		// Update session with new profile settings
 		this._activeProfileName = profileName;
 		this._activeProfile = profile;
@@ -394,6 +423,13 @@ export class REPLSession {
 				apiToken: this._apiToken,
 				debug: this._debug,
 			});
+
+			// Validate the new profile's token
+			if (this._apiClient.isAuthenticated()) {
+				const validationResult = await this._apiClient.validateToken();
+				this._tokenValidated = validationResult.valid;
+				this._validationError = validationResult.error ?? null;
+			}
 		} else {
 			this._apiClient = null;
 		}

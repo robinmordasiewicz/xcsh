@@ -12,6 +12,10 @@ export interface WhoamiInfo {
 	namespace: string;
 	isAuthenticated: boolean;
 
+	// Token validation status
+	isValidated?: boolean;
+	validationError?: string;
+
 	// Fetched (undefined if fetch fails - omit from display)
 	tenant?: string;
 	username?: string;

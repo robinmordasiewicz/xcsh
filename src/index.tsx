@@ -112,6 +112,18 @@ program
 				// Use "startup" context for direct stdout with image support
 				renderBanner(cliLogoMode, "startup");
 
+				// Show warning if token validation failed
+				if (
+					session.isAuthenticated() &&
+					!session.isTokenValidated() &&
+					session.getValidationError()
+				) {
+					console.log("");
+					console.log(
+						`${colors.yellow}Warning: ${session.getValidationError()}${colors.reset}`,
+					);
+				}
+
 				// Check if user needs guidance on connecting
 				const profiles = await session.getProfileManager().list();
 				const envConfigured =
@@ -164,6 +176,17 @@ program
 async function executeNonInteractive(args: string[]): Promise<void> {
 	const session = new REPLSession();
 	await session.initialize();
+
+	// Show warning if token validation failed
+	if (
+		session.isAuthenticated() &&
+		!session.isTokenValidated() &&
+		session.getValidationError()
+	) {
+		console.error(
+			`${colors.yellow}Warning: ${session.getValidationError()}${colors.reset}`,
+		);
+	}
 
 	// Join args into a command string
 	const command = args.join(" ");

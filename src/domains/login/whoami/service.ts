@@ -20,6 +20,16 @@ export async function getWhoamiInfo(
 		isAuthenticated: session.isAuthenticated(),
 	};
 
+	// Add validation fields only if they have values
+	const isValidated = session.isTokenValidated();
+	const validationError = session.getValidationError();
+	if (isValidated !== undefined) {
+		info.isValidated = isValidated;
+	}
+	if (validationError) {
+		info.validationError = validationError;
+	}
+
 	// If not authenticated, return minimal info
 	if (!info.isAuthenticated) {
 		return info;

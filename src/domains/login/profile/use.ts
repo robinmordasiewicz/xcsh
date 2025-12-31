@@ -45,6 +45,8 @@ export const useCommand: CommandDefinition = {
 				!!profile?.apiToken,
 				profile?.defaultNamespace || session.getNamespace(),
 				session.isAuthenticated(),
+				session.isTokenValidated(),
+				session.getValidationError() ?? undefined,
 			);
 
 			// Format connection table

@@ -73,6 +73,10 @@ export class APIClient {
 	private readonly debug: boolean;
 	private readonly retryConfig: Required<RetryConfig>;
 
+	// Token validation state
+	private _isValidated: boolean = false;
+	private _validationError: string | null = null;
+
 	constructor(config: APIClientConfig) {
 		// Normalize server URL (remove trailing slash)
 		this.serverUrl = config.serverUrl.replace(/\/+$/, "");
@@ -86,10 +90,72 @@ export class APIClient {
 	}
 
 	/**
-	 * Check if client has authentication configured
+	 * Check if client has authentication configured (token exists).
+	 * Note: This does NOT verify the token is valid. Use isValidated() for that.
 	 */
 	isAuthenticated(): boolean {
 		return this.apiToken !== "";
+	}
+
+	/**
+	 * Validate the API token by making a lightweight API call.
+	 * Returns true if token is valid, false otherwise.
+	 */
+	async validateToken(): Promise<{ valid: boolean; error?: string }> {
+		// Skip if no token configured
+		if (!this.apiToken) {
+			this._isValidated = false;
+			this._validationError = "No API token configured";
+			return { valid: false, error: this._validationError };
+		}
+
+		try {
+			// Use namespaces endpoint for token validation (universally available)
+			await this.get<{ items?: unknown[] }>("/api/web/namespaces");
+			this._isValidated = true;
+			this._validationError = null;
+			return { valid: true };
+		} catch (error) {
+			this._isValidated = false;
+			if (error instanceof APIError) {
+				if (error.statusCode === 401) {
+					this._validationError = "Invalid or expired API token";
+				} else if (error.statusCode === 403) {
+					this._validationError = "Token lacks required permissions";
+				} else if (error.statusCode === 0) {
+					// Network error - don't mark as invalid, could be offline
+					this._validationError =
+						"Network error - could not reach server";
+				} else {
+					this._validationError = `Validation failed: HTTP ${error.statusCode}`;
+				}
+			} else {
+				this._validationError = "Validation failed: Unknown error";
+			}
+			return { valid: false, error: this._validationError };
+		}
+	}
+
+	/**
+	 * Check if client has a validated (verified working) token
+	 */
+	isValidated(): boolean {
+		return this._isValidated;
+	}
+
+	/**
+	 * Get the validation error message, if any
+	 */
+	getValidationError(): string | null {
+		return this._validationError;
+	}
+
+	/**
+	 * Clear validation state (called on profile switch)
+	 */
+	clearValidationCache(): void {
+		this._isValidated = false;
+		this._validationError = null;
 	}
 
 	/**
