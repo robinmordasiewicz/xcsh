@@ -81,6 +81,16 @@ export interface CompletionSuggestion {
 }
 
 /**
+ * Authentication source type for headless output
+ */
+export type HeadlessAuthSource =
+	| "env"
+	| "profile"
+	| "mixed"
+	| "profile-fallback"
+	| "none";
+
+/**
  * Session state for headless output
  */
 export interface HeadlessSessionState {
@@ -88,6 +98,8 @@ export interface HeadlessSessionState {
 	authenticated: boolean;
 	/** Whether token has been validated */
 	tokenValidated: boolean;
+	/** Authentication source (env, profile, mixed, profile-fallback, none) */
+	authSource: HeadlessAuthSource;
 	/** Current namespace */
 	namespace: string;
 	/** Server URL */

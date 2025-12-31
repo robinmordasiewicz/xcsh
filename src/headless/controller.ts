@@ -53,6 +53,19 @@ export class HeadlessController {
 			"session_initialized",
 			this.getSessionState() as unknown as Record<string, unknown>,
 		);
+
+		// Emit explicit warning event if token validation failed
+		// This provides clear feedback to AI agents about authentication issues
+		if (
+			this.session.isAuthenticated() &&
+			!this.session.isTokenValidated() &&
+			this.session.getValidationError()
+		) {
+			this.emitEvent("warning", {
+				message: this.session.getValidationError(),
+				type: "token_validation",
+			});
+		}
 	}
 
 	/**
@@ -63,6 +76,7 @@ export class HeadlessController {
 		return {
 			authenticated: this.session.isAuthenticated(),
 			tokenValidated: this.session.isTokenValidated(),
+			authSource: this.session.getAuthSource(),
 			namespace: this.session.getNamespace(),
 			serverUrl: this.session.getServerUrl(),
 			activeProfile: this.session.getActiveProfileName(),

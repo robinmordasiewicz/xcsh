@@ -17,6 +17,21 @@ import { getOutputFormatFromEnv } from "../output/index.js";
 import { debugProtocol } from "../debug/protocol.js";
 
 /**
+ * Authentication source tracking
+ * - 'env': Credentials from environment variables
+ * - 'profile': Credentials from saved profile
+ * - 'mixed': URL from one source, token from another
+ * - 'profile-fallback': Fell back to profile after env var token failed
+ * - 'none': No authentication configured
+ */
+export type AuthSource =
+	| "env"
+	| "profile"
+	| "mixed"
+	| "profile-fallback"
+	| "none";
+
+/**
  * Configuration for creating a REPL session
  */
 export interface SessionConfig {
@@ -58,15 +73,31 @@ export class REPLSession {
 	private _tokenValidated: boolean = false;
 	private _validationError: string | null = null;
 
+	// Authentication source tracking
+	private _authSource: AuthSource = "none";
+
 	constructor(config: SessionConfig = {}) {
 		this._namespace = config.namespace ?? this.getDefaultNamespace();
 		this._contextPath = new ContextPath();
 		this._validator = new ContextValidator();
 		this._profileManager = getProfileManager();
-		this._serverUrl =
-			config.serverUrl ?? process.env[`${ENV_PREFIX}_API_URL`] ?? "";
-		this._apiToken =
-			config.apiToken ?? process.env[`${ENV_PREFIX}_API_TOKEN`] ?? "";
+
+		// Check for environment variables
+		const envUrl = process.env[`${ENV_PREFIX}_API_URL`];
+		const envToken = process.env[`${ENV_PREFIX}_API_TOKEN`];
+
+		this._serverUrl = config.serverUrl ?? envUrl ?? "";
+		this._apiToken = config.apiToken ?? envToken ?? "";
+
+		// Track auth source based on environment variables
+		// (will be updated in loadActiveProfile if profile is used)
+		if (envUrl && envToken) {
+			this._authSource = "env";
+		} else if (envUrl || envToken) {
+			this._authSource = "mixed"; // Partial env, will merge with profile
+		}
+		// else remains "none", will be set to "profile" in loadActiveProfile if applicable
+
 		// Output format priority: config > env var > default (table)
 		this._outputFormat =
 			config.outputFormat ?? getOutputFormatFromEnv() ?? "table";
@@ -111,6 +142,7 @@ export class REPLSession {
 			debugProtocol.auth("token_validation_start", {
 				serverUrl: this._serverUrl,
 				hasApiClient: true,
+				authSource: this._authSource,
 			});
 
 			const result = await this._apiClient.validateToken();
@@ -122,10 +154,65 @@ export class REPLSession {
 				error: result.error,
 				tokenValidated: this._tokenValidated,
 				validationError: this._validationError,
+				authSource: this._authSource,
 			});
 
+			// Fallback logic: If env var token is invalid, try profile token
+			if (
+				!result.valid &&
+				(this._authSource === "env" || this._authSource === "mixed") &&
+				this._activeProfile?.apiToken &&
+				this._activeProfile.apiToken !== this._apiToken
+			) {
+				debugProtocol.auth("token_fallback_attempt", {
+					fromSource: this._authSource,
+					hasProfileToken: true,
+					profileName: this._activeProfileName,
+				});
+
+				// Try the profile token instead
+				this._apiToken = this._activeProfile.apiToken;
+
+				// Also use profile URL if we only had partial env vars (mixed mode)
+				if (
+					this._authSource === "mixed" &&
+					!process.env[`${ENV_PREFIX}_API_URL`] &&
+					this._activeProfile.apiUrl
+				) {
+					this._serverUrl = this._activeProfile.apiUrl;
+					this._tenant = this.extractTenant(
+						this._activeProfile.apiUrl,
+					);
+				}
+
+				// Recreate API client with profile credentials
+				this._apiClient = new APIClient({
+					serverUrl: this._serverUrl,
+					apiToken: this._apiToken,
+					debug: this._debug,
+				});
+
+				// Re-validate with profile token
+				const fallbackResult = await this._apiClient.validateToken();
+				if (fallbackResult.valid) {
+					this._tokenValidated = true;
+					this._validationError = null;
+					this._authSource = "profile-fallback";
+
+					debugProtocol.auth("token_fallback_success", {
+						authSource: this._authSource,
+						profileName: this._activeProfileName,
+					});
+				} else {
+					debugProtocol.auth("token_fallback_failed", {
+						error: fallbackResult.error,
+						profileName: this._activeProfileName,
+					});
+				}
+			}
+
 			// Only fetch user info if token is valid
-			if (result.valid) {
+			if (this._tokenValidated) {
 				await this.fetchUserInfo();
 			}
 		}
@@ -186,17 +273,32 @@ export class REPLSession {
 					const envToken = process.env[`${ENV_PREFIX}_API_TOKEN`];
 					const envNamespace = process.env[`${ENV_PREFIX}_NAMESPACE`];
 
+					// Track whether we're using profile credentials
+					let usingProfileUrl = false;
+					let usingProfileToken = false;
+
 					// Apply profile settings ONLY if env vars are not set
 					if (!envUrl && profile.apiUrl) {
 						this._serverUrl = profile.apiUrl;
 						this._tenant = this.extractTenant(profile.apiUrl);
+						usingProfileUrl = true;
 					}
 					if (!envToken && profile.apiToken) {
 						this._apiToken = profile.apiToken;
+						usingProfileToken = true;
 					}
 					if (!envNamespace && profile.defaultNamespace) {
 						this._namespace = profile.defaultNamespace;
 					}
+
+					// Update auth source based on what we're using
+					if (usingProfileUrl && usingProfileToken) {
+						this._authSource = "profile";
+					} else if (usingProfileUrl || usingProfileToken) {
+						// Mixed: some from env, some from profile
+						this._authSource = "mixed";
+					}
+					// If neither, keep existing auth source (env or none)
 
 					// Recreate API client with final settings (env vars or profile)
 					if (this._serverUrl) {
@@ -345,6 +447,14 @@ export class REPLSession {
 	 */
 	getValidationError(): string | null {
 		return this._validationError;
+	}
+
+	/**
+	 * Get the authentication source
+	 * Indicates where credentials were obtained from
+	 */
+	getAuthSource(): AuthSource {
+		return this._authSource;
 	}
 
 	/**
