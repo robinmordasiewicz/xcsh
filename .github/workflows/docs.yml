@@ -761,6 +761,59 @@ jobs:
             --version-output "${{ steps.source-build.outputs.version_output }}" \
             --output docs/install/source.md
 
+      - name: Generate command documentation
+        id: generate-command-docs
+        run: |
+          # Find xcsh binary (check multiple locations)
+          XCSH_PATH=""
+
+          # 1. Try Homebrew Caskroom (ARM Mac)
+          if [ -z "$XCSH_PATH" ]; then
+            XCSH_PATH=$(find /opt/homebrew/Caskroom/xcsh -name xcsh -type f 2>/dev/null | head -1 || true)
+          fi
+
+          # 2. Try Homebrew Caskroom (Intel Mac)
+          if [ -z "$XCSH_PATH" ] || [ ! -x "$XCSH_PATH" ]; then
+            XCSH_PATH=$(find /usr/local/Caskroom/xcsh -name xcsh -type f 2>/dev/null | head -1 || true)
+          fi
+
+          # 3. Try script install location
+          if [ -z "$XCSH_PATH" ] || [ ! -x "$XCSH_PATH" ]; then
+            if [ -x "$HOME/.local/bin/xcsh" ]; then
+              XCSH_PATH="$HOME/.local/bin/xcsh"
+            fi
+          fi
+
+          # 4. Try Homebrew bin symlinks
+          if [ -z "$XCSH_PATH" ] || [ ! -x "$XCSH_PATH" ]; then
+            for path in /opt/homebrew/bin/xcsh /usr/local/bin/xcsh; do
+              if [ -x "$path" ]; then
+                XCSH_PATH="$path"
+                break
+              fi
+            done
+          fi
+
+          if [ -z "$XCSH_PATH" ] || [ ! -x "$XCSH_PATH" ]; then
+            echo "::error::xcsh binary not found - cannot generate command documentation"
+            exit 1
+          fi
+
+          echo "Using xcsh at: $XCSH_PATH"
+
+          # Generate command documentation
+          python scripts/generate-docs.py \
+            --cli-binary "$XCSH_PATH" \
+            --output docs/commands \
+            --clean \
+            --update-mkdocs
+
+          echo "✅ Command documentation generated successfully"
+
+          # List generated directories
+          echo "Generated documentation directories:"
+          ls -la docs/commands/ | head -20
+
       - name: Validate required documentation files
         id: validate-docs
         run: |

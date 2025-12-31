@@ -20,6 +20,7 @@ import { formatRootHelp } from "./repl/help.js";
 import { isValidLogoMode, type LogoDisplayMode } from "./config/index.js";
 import { renderBanner } from "./domains/login/banner/display.js";
 import { debugProtocol, emitSessionState } from "./debug/protocol.js";
+import { formatFullCLISpec } from "./output/spec.js";
 
 const program = new Command();
 
@@ -53,6 +54,13 @@ program
 			// Handle root-level help (xcsh --help or xcsh -h with no domain)
 			if (options.help && commandArgs.length === 0) {
 				formatRootHelp().forEach((line) => console.log(line));
+				process.exit(0);
+			}
+
+			// Handle root-level spec (xcsh --spec with no domain)
+			// Outputs full CLI specification for documentation generation
+			if (options.spec && commandArgs.length === 0) {
+				console.log(formatFullCLISpec());
 				process.exit(0);
 			}
 

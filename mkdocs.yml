@@ -111,527 +111,160 @@ nav:
       - Status: commands/admin_console_and_ui/status/index.md
     - API:
       - API Overview: commands/api/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/api/add-labels/index.md
-        - API Credential: commands/api/add-labels/api_credential.md
-        - API Definition: commands/api/add-labels/api_definition.md
-        - App API Group: commands/api/add-labels/app_api_group.md
-      - Apply:
-        - Apply Overview: commands/api/apply/index.md
-        - API Credential: commands/api/apply/api_credential.md
-        - API Definition: commands/api/apply/api_definition.md
-        - App API Group: commands/api/apply/app_api_group.md
-      - Create:
-        - Create Overview: commands/api/create/index.md
-        - API Credential: commands/api/create/api_credential.md
-        - API Definition: commands/api/create/api_definition.md
-        - App API Group: commands/api/create/app_api_group.md
-      - Delete:
-        - Delete Overview: commands/api/delete/index.md
-        - API Credential: commands/api/delete/api_credential.md
-        - API Definition: commands/api/delete/api_definition.md
-        - App API Group: commands/api/delete/app_api_group.md
-      - Get:
-        - Get Overview: commands/api/get/index.md
-        - API Credential: commands/api/get/api_credential.md
-        - API Definition: commands/api/get/api_definition.md
-        - App API Group: commands/api/get/app_api_group.md
-      - List:
-        - List Overview: commands/api/list/index.md
-        - API Credential: commands/api/list/api_credential.md
-        - API Definition: commands/api/list/api_definition.md
-        - App API Group: commands/api/list/app_api_group.md
-      - Patch:
-        - Patch Overview: commands/api/patch/index.md
-        - API Credential: commands/api/patch/api_credential.md
-        - API Definition: commands/api/patch/api_definition.md
-        - App API Group: commands/api/patch/app_api_group.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/api/remove-labels/index.md
-        - API Credential: commands/api/remove-labels/api_credential.md
-        - API Definition: commands/api/remove-labels/api_definition.md
-        - App API Group: commands/api/remove-labels/app_api_group.md
-      - Replace:
-        - Replace Overview: commands/api/replace/index.md
-        - API Credential: commands/api/replace/api_credential.md
-        - API Definition: commands/api/replace/api_definition.md
-        - App API Group: commands/api/replace/app_api_group.md
-      - Status:
-        - Status Overview: commands/api/status/index.md
-        - API Credential: commands/api/status/api_credential.md
-        - API Definition: commands/api/status/api_definition.md
-        - App API Group: commands/api/status/app_api_group.md
-    - API Endpoint:
-      - API Endpoint Overview: commands/api-endpoint/index.md
-      - Control: commands/api-endpoint/control/index.md
-      - Discover: commands/api-endpoint/discover/index.md
+      - Add Labels: commands/api/add-labels/index.md
+      - Apply: commands/api/apply/index.md
+      - Create: commands/api/create/index.md
+      - Delete: commands/api/delete/index.md
+      - Get: commands/api/get/index.md
+      - List: commands/api/list/index.md
+      - Patch: commands/api/patch/index.md
+      - Remove Labels: commands/api/remove-labels/index.md
+      - Replace: commands/api/replace/index.md
+      - Status: commands/api/status/index.md
     - Authentication:
       - Authentication Overview: commands/authentication/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/authentication/add-labels/index.md
-        - API Credential: commands/authentication/add-labels/api_credential.md
-      - Apply:
-        - Apply Overview: commands/authentication/apply/index.md
-        - API Credential: commands/authentication/apply/api_credential.md
-      - Create:
-        - Create Overview: commands/authentication/create/index.md
-        - API Credential: commands/authentication/create/api_credential.md
-      - Delete:
-        - Delete Overview: commands/authentication/delete/index.md
-        - API Credential: commands/authentication/delete/api_credential.md
-      - Get:
-        - Get Overview: commands/authentication/get/index.md
-        - API Credential: commands/authentication/get/api_credential.md
-      - List:
-        - List Overview: commands/authentication/list/index.md
-        - API Credential: commands/authentication/list/api_credential.md
-      - Patch:
-        - Patch Overview: commands/authentication/patch/index.md
-        - API Credential: commands/authentication/patch/api_credential.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/authentication/remove-labels/index.md
-        - API Credential: commands/authentication/remove-labels/api_credential.md
-      - Replace:
-        - Replace Overview: commands/authentication/replace/index.md
-        - API Credential: commands/authentication/replace/api_credential.md
-      - Status:
-        - Status Overview: commands/authentication/status/index.md
-        - API Credential: commands/authentication/status/api_credential.md
+      - Add Labels: commands/authentication/add-labels/index.md
+      - Apply: commands/authentication/apply/index.md
+      - Create: commands/authentication/create/index.md
+      - Delete: commands/authentication/delete/index.md
+      - Get: commands/authentication/get/index.md
+      - List: commands/authentication/list/index.md
+      - Patch: commands/authentication/patch/index.md
+      - Remove Labels: commands/authentication/remove-labels/index.md
+      - Replace: commands/authentication/replace/index.md
+      - Status: commands/authentication/status/index.md
     - BIG-IP:
       - BIG-IP Overview: commands/bigip/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/bigip/add-labels/index.md
-        - BIG-IP APM: commands/bigip/add-labels/bigip_apm.md
-        - BIG-IP iRule: commands/bigip/add-labels/bigip_irule.md
-      - Apply:
-        - Apply Overview: commands/bigip/apply/index.md
-        - BIG-IP APM: commands/bigip/apply/bigip_apm.md
-        - BIG-IP iRule: commands/bigip/apply/bigip_irule.md
-      - Create:
-        - Create Overview: commands/bigip/create/index.md
-        - BIG-IP APM: commands/bigip/create/bigip_apm.md
-        - BIG-IP iRule: commands/bigip/create/bigip_irule.md
-      - Delete:
-        - Delete Overview: commands/bigip/delete/index.md
-        - BIG-IP APM: commands/bigip/delete/bigip_apm.md
-        - BIG-IP iRule: commands/bigip/delete/bigip_irule.md
-      - Get:
-        - Get Overview: commands/bigip/get/index.md
-        - BIG-IP APM: commands/bigip/get/bigip_apm.md
-        - BIG-IP iRule: commands/bigip/get/bigip_irule.md
-      - List:
-        - List Overview: commands/bigip/list/index.md
-        - BIG-IP APM: commands/bigip/list/bigip_apm.md
-        - BIG-IP iRule: commands/bigip/list/bigip_irule.md
-      - Patch:
-        - Patch Overview: commands/bigip/patch/index.md
-        - BIG-IP APM: commands/bigip/patch/bigip_apm.md
-        - BIG-IP iRule: commands/bigip/patch/bigip_irule.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/bigip/remove-labels/index.md
-        - BIG-IP APM: commands/bigip/remove-labels/bigip_apm.md
-        - BIG-IP iRule: commands/bigip/remove-labels/bigip_irule.md
-      - Replace:
-        - Replace Overview: commands/bigip/replace/index.md
-        - BIG-IP APM: commands/bigip/replace/bigip_apm.md
-        - BIG-IP iRule: commands/bigip/replace/bigip_irule.md
-      - Status:
-        - Status Overview: commands/bigip/status/index.md
-        - BIG-IP APM: commands/bigip/status/bigip_apm.md
-        - BIG-IP iRule: commands/bigip/status/bigip_irule.md
+      - Add Labels: commands/bigip/add-labels/index.md
+      - Apply: commands/bigip/apply/index.md
+      - Create: commands/bigip/create/index.md
+      - Delete: commands/bigip/delete/index.md
+      - Get: commands/bigip/get/index.md
+      - List: commands/bigip/list/index.md
+      - Patch: commands/bigip/patch/index.md
+      - Remove Labels: commands/bigip/remove-labels/index.md
+      - Replace: commands/bigip/replace/index.md
+      - Status: commands/bigip/status/index.md
     - Billing And Usage:
       - Billing And Usage Overview: commands/billing_and_usage/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/billing_and_usage/add-labels/index.md
-        - Quota: commands/billing_and_usage/add-labels/quota.md
+      - Add Labels: commands/billing_and_usage/add-labels/index.md
       - Apply: commands/billing_and_usage/apply/index.md
       - Create: commands/billing_and_usage/create/index.md
       - Delete: commands/billing_and_usage/delete/index.md
-      - Get:
-        - Get Overview: commands/billing_and_usage/get/index.md
-        - Quota: commands/billing_and_usage/get/quota.md
-      - List:
-        - List Overview: commands/billing_and_usage/list/index.md
-        - Quota: commands/billing_and_usage/list/quota.md
+      - Get: commands/billing_and_usage/get/index.md
+      - List: commands/billing_and_usage/list/index.md
       - Patch: commands/billing_and_usage/patch/index.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/billing_and_usage/remove-labels/index.md
-        - Quota: commands/billing_and_usage/remove-labels/quota.md
+      - Remove Labels: commands/billing_and_usage/remove-labels/index.md
       - Replace: commands/billing_and_usage/replace/index.md
-      - Status:
-        - Status Overview: commands/billing_and_usage/status/index.md
-        - Quota: commands/billing_and_usage/status/quota.md
+      - Status: commands/billing_and_usage/status/index.md
     - Blindfold:
       - Blindfold Overview: commands/blindfold/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/blindfold/add-labels/index.md
-        - Secret Policy: commands/blindfold/add-labels/secret_policy.md
-        - Secret Policy Rule: commands/blindfold/add-labels/secret_policy_rule.md
-      - Apply:
-        - Apply Overview: commands/blindfold/apply/index.md
-        - Secret Policy: commands/blindfold/apply/secret_policy.md
-        - Secret Policy Rule: commands/blindfold/apply/secret_policy_rule.md
-      - Create:
-        - Create Overview: commands/blindfold/create/index.md
-        - Secret Policy: commands/blindfold/create/secret_policy.md
-        - Secret Policy Rule: commands/blindfold/create/secret_policy_rule.md
-      - Delete:
-        - Delete Overview: commands/blindfold/delete/index.md
-        - Secret Policy: commands/blindfold/delete/secret_policy.md
-        - Secret Policy Rule: commands/blindfold/delete/secret_policy_rule.md
-      - Get:
-        - Get Overview: commands/blindfold/get/index.md
-        - Secret Policy: commands/blindfold/get/secret_policy.md
-        - Secret Policy Rule: commands/blindfold/get/secret_policy_rule.md
-      - List:
-        - List Overview: commands/blindfold/list/index.md
-        - Secret Policy: commands/blindfold/list/secret_policy.md
-        - Secret Policy Rule: commands/blindfold/list/secret_policy_rule.md
-      - Patch:
-        - Patch Overview: commands/blindfold/patch/index.md
-        - Secret Policy: commands/blindfold/patch/secret_policy.md
-        - Secret Policy Rule: commands/blindfold/patch/secret_policy_rule.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/blindfold/remove-labels/index.md
-        - Secret Policy: commands/blindfold/remove-labels/secret_policy.md
-        - Secret Policy Rule: commands/blindfold/remove-labels/secret_policy_rule.md
-      - Replace:
-        - Replace Overview: commands/blindfold/replace/index.md
-        - Secret Policy: commands/blindfold/replace/secret_policy.md
-        - Secret Policy Rule: commands/blindfold/replace/secret_policy_rule.md
-      - Status:
-        - Status Overview: commands/blindfold/status/index.md
-        - Secret Policy: commands/blindfold/status/secret_policy.md
-        - Secret Policy Rule: commands/blindfold/status/secret_policy_rule.md
+      - Add Labels: commands/blindfold/add-labels/index.md
+      - Apply: commands/blindfold/apply/index.md
+      - Create: commands/blindfold/create/index.md
+      - Delete: commands/blindfold/delete/index.md
+      - Get: commands/blindfold/get/index.md
+      - List: commands/blindfold/list/index.md
+      - Patch: commands/blindfold/patch/index.md
+      - Remove Labels: commands/blindfold/remove-labels/index.md
+      - Replace: commands/blindfold/replace/index.md
+      - Status: commands/blindfold/status/index.md
     - Bot And Threat Defense:
       - Bot And Threat Defense Overview: commands/bot_and_threat_defense/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/bot_and_threat_defense/add-labels/index.md
-        - Bot Defense App Infrastructure: commands/bot_and_threat_defense/add-labels/bot_defense_app_infrastructure.md
-      - Apply:
-        - Apply Overview: commands/bot_and_threat_defense/apply/index.md
-        - Bot Defense App Infrastructure: commands/bot_and_threat_defense/apply/bot_defense_app_infrastructure.md
-      - Create:
-        - Create Overview: commands/bot_and_threat_defense/create/index.md
-        - Bot Defense App Infrastructure: commands/bot_and_threat_defense/create/bot_defense_app_infrastructure.md
-      - Delete:
-        - Delete Overview: commands/bot_and_threat_defense/delete/index.md
-        - Bot Defense App Infrastructure: commands/bot_and_threat_defense/delete/bot_defense_app_infrastructure.md
-      - Get:
-        - Get Overview: commands/bot_and_threat_defense/get/index.md
-        - Bot Defense App Infrastructure: commands/bot_and_threat_defense/get/bot_defense_app_infrastructure.md
-      - List:
-        - List Overview: commands/bot_and_threat_defense/list/index.md
-        - Bot Defense App Infrastructure: commands/bot_and_threat_defense/list/bot_defense_app_infrastructure.md
-      - Patch:
-        - Patch Overview: commands/bot_and_threat_defense/patch/index.md
-        - Bot Defense App Infrastructure: commands/bot_and_threat_defense/patch/bot_defense_app_infrastructure.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/bot_and_threat_defense/remove-labels/index.md
-        - Bot Defense App Infrastructure: commands/bot_and_threat_defense/remove-labels/bot_defense_app_infrastructure.md
-      - Replace:
-        - Replace Overview: commands/bot_and_threat_defense/replace/index.md
-        - Bot Defense App Infrastructure: commands/bot_and_threat_defense/replace/bot_defense_app_infrastructure.md
-      - Status:
-        - Status Overview: commands/bot_and_threat_defense/status/index.md
-        - Bot Defense App Infrastructure: commands/bot_and_threat_defense/status/bot_defense_app_infrastructure.md
+      - Add Labels: commands/bot_and_threat_defense/add-labels/index.md
+      - Apply: commands/bot_and_threat_defense/apply/index.md
+      - Create: commands/bot_and_threat_defense/create/index.md
+      - Delete: commands/bot_and_threat_defense/delete/index.md
+      - Get: commands/bot_and_threat_defense/get/index.md
+      - List: commands/bot_and_threat_defense/list/index.md
+      - Patch: commands/bot_and_threat_defense/patch/index.md
+      - Remove Labels: commands/bot_and_threat_defense/remove-labels/index.md
+      - Replace: commands/bot_and_threat_defense/replace/index.md
+      - Status: commands/bot_and_threat_defense/status/index.md
     - CDN:
       - CDN Overview: commands/cdn/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/cdn/add-labels/index.md
-        - CDN Cache Rule: commands/cdn/add-labels/cdn_cache_rule.md
-        - CDN Load Balancer: commands/cdn/add-labels/cdn_loadbalancer.md
-        - HTTP Load Balancer: commands/cdn/add-labels/http_loadbalancer.md
-      - Apply:
-        - Apply Overview: commands/cdn/apply/index.md
-        - CDN Cache Rule: commands/cdn/apply/cdn_cache_rule.md
-        - CDN Load Balancer: commands/cdn/apply/cdn_loadbalancer.md
-        - HTTP Load Balancer: commands/cdn/apply/http_loadbalancer.md
-      - Create:
-        - Create Overview: commands/cdn/create/index.md
-        - CDN Cache Rule: commands/cdn/create/cdn_cache_rule.md
-        - CDN Load Balancer: commands/cdn/create/cdn_loadbalancer.md
-        - HTTP Load Balancer: commands/cdn/create/http_loadbalancer.md
-      - Delete:
-        - Delete Overview: commands/cdn/delete/index.md
-        - CDN Cache Rule: commands/cdn/delete/cdn_cache_rule.md
-        - CDN Load Balancer: commands/cdn/delete/cdn_loadbalancer.md
-        - HTTP Load Balancer: commands/cdn/delete/http_loadbalancer.md
-      - Get:
-        - Get Overview: commands/cdn/get/index.md
-        - CDN Cache Rule: commands/cdn/get/cdn_cache_rule.md
-        - CDN Load Balancer: commands/cdn/get/cdn_loadbalancer.md
-        - HTTP Load Balancer: commands/cdn/get/http_loadbalancer.md
-      - List:
-        - List Overview: commands/cdn/list/index.md
-        - CDN Cache Rule: commands/cdn/list/cdn_cache_rule.md
-        - CDN Load Balancer: commands/cdn/list/cdn_loadbalancer.md
-        - HTTP Load Balancer: commands/cdn/list/http_loadbalancer.md
-      - Patch:
-        - Patch Overview: commands/cdn/patch/index.md
-        - CDN Cache Rule: commands/cdn/patch/cdn_cache_rule.md
-        - CDN Load Balancer: commands/cdn/patch/cdn_loadbalancer.md
-        - HTTP Load Balancer: commands/cdn/patch/http_loadbalancer.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/cdn/remove-labels/index.md
-        - CDN Cache Rule: commands/cdn/remove-labels/cdn_cache_rule.md
-        - CDN Load Balancer: commands/cdn/remove-labels/cdn_loadbalancer.md
-        - HTTP Load Balancer: commands/cdn/remove-labels/http_loadbalancer.md
-      - Replace:
-        - Replace Overview: commands/cdn/replace/index.md
-        - CDN Cache Rule: commands/cdn/replace/cdn_cache_rule.md
-        - CDN Load Balancer: commands/cdn/replace/cdn_loadbalancer.md
-        - HTTP Load Balancer: commands/cdn/replace/http_loadbalancer.md
-      - Status:
-        - Status Overview: commands/cdn/status/index.md
-        - CDN Cache Rule: commands/cdn/status/cdn_cache_rule.md
-        - CDN Load Balancer: commands/cdn/status/cdn_loadbalancer.md
-        - HTTP Load Balancer: commands/cdn/status/http_loadbalancer.md
+      - Add Labels: commands/cdn/add-labels/index.md
+      - Apply: commands/cdn/apply/index.md
+      - Create: commands/cdn/create/index.md
+      - Delete: commands/cdn/delete/index.md
+      - Get: commands/cdn/get/index.md
+      - List: commands/cdn/list/index.md
+      - Patch: commands/cdn/patch/index.md
+      - Remove Labels: commands/cdn/remove-labels/index.md
+      - Replace: commands/cdn/replace/index.md
+      - Status: commands/cdn/status/index.md
     - CE Management:
       - CE Management Overview: commands/ce_management/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/ce_management/add-labels/index.md
-        - Network Interface: commands/ce_management/add-labels/network_interface.md
-        - Registration: commands/ce_management/add-labels/registration.md
-        - Usb Policy: commands/ce_management/add-labels/usb_policy.md
-      - Apply:
-        - Apply Overview: commands/ce_management/apply/index.md
-        - Network Interface: commands/ce_management/apply/network_interface.md
-        - Registration: commands/ce_management/apply/registration.md
-        - Usb Policy: commands/ce_management/apply/usb_policy.md
-      - Create:
-        - Create Overview: commands/ce_management/create/index.md
-        - Network Interface: commands/ce_management/create/network_interface.md
-        - Registration: commands/ce_management/create/registration.md
-        - Usb Policy: commands/ce_management/create/usb_policy.md
-      - Delete:
-        - Delete Overview: commands/ce_management/delete/index.md
-        - Network Interface: commands/ce_management/delete/network_interface.md
-        - Registration: commands/ce_management/delete/registration.md
-        - Usb Policy: commands/ce_management/delete/usb_policy.md
-      - Get:
-        - Get Overview: commands/ce_management/get/index.md
-        - Network Interface: commands/ce_management/get/network_interface.md
-        - Registration: commands/ce_management/get/registration.md
-        - Usb Policy: commands/ce_management/get/usb_policy.md
-      - List:
-        - List Overview: commands/ce_management/list/index.md
-        - Network Interface: commands/ce_management/list/network_interface.md
-        - Registration: commands/ce_management/list/registration.md
-        - Usb Policy: commands/ce_management/list/usb_policy.md
-      - Patch:
-        - Patch Overview: commands/ce_management/patch/index.md
-        - Network Interface: commands/ce_management/patch/network_interface.md
-        - Registration: commands/ce_management/patch/registration.md
-        - Usb Policy: commands/ce_management/patch/usb_policy.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/ce_management/remove-labels/index.md
-        - Network Interface: commands/ce_management/remove-labels/network_interface.md
-        - Registration: commands/ce_management/remove-labels/registration.md
-        - Usb Policy: commands/ce_management/remove-labels/usb_policy.md
-      - Replace:
-        - Replace Overview: commands/ce_management/replace/index.md
-        - Network Interface: commands/ce_management/replace/network_interface.md
-        - Registration: commands/ce_management/replace/registration.md
-        - Usb Policy: commands/ce_management/replace/usb_policy.md
-      - Status:
-        - Status Overview: commands/ce_management/status/index.md
-        - Network Interface: commands/ce_management/status/network_interface.md
-        - Registration: commands/ce_management/status/registration.md
-        - Usb Policy: commands/ce_management/status/usb_policy.md
+      - Add Labels: commands/ce_management/add-labels/index.md
+      - Apply: commands/ce_management/apply/index.md
+      - Create: commands/ce_management/create/index.md
+      - Delete: commands/ce_management/delete/index.md
+      - Get: commands/ce_management/get/index.md
+      - List: commands/ce_management/list/index.md
+      - Patch: commands/ce_management/patch/index.md
+      - Remove Labels: commands/ce_management/remove-labels/index.md
+      - Replace: commands/ce_management/replace/index.md
+      - Status: commands/ce_management/status/index.md
     - Certificates:
       - Certificates Overview: commands/certificates/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/certificates/add-labels/index.md
-        - Certificate: commands/certificates/add-labels/certificate.md
-        - Certificate Chain: commands/certificates/add-labels/certificate_chain.md
-        - CRL: commands/certificates/add-labels/crl.md
-        - Trusted CA List: commands/certificates/add-labels/trusted_ca_list.md
-      - Apply:
-        - Apply Overview: commands/certificates/apply/index.md
-        - Certificate: commands/certificates/apply/certificate.md
-        - Certificate Chain: commands/certificates/apply/certificate_chain.md
-        - CRL: commands/certificates/apply/crl.md
-        - Trusted CA List: commands/certificates/apply/trusted_ca_list.md
-      - Create:
-        - Create Overview: commands/certificates/create/index.md
-        - Certificate: commands/certificates/create/certificate.md
-        - Certificate Chain: commands/certificates/create/certificate_chain.md
-        - CRL: commands/certificates/create/crl.md
-        - Trusted CA List: commands/certificates/create/trusted_ca_list.md
-      - Delete:
-        - Delete Overview: commands/certificates/delete/index.md
-        - Certificate: commands/certificates/delete/certificate.md
-        - Certificate Chain: commands/certificates/delete/certificate_chain.md
-        - CRL: commands/certificates/delete/crl.md
-        - Trusted CA List: commands/certificates/delete/trusted_ca_list.md
-      - Get:
-        - Get Overview: commands/certificates/get/index.md
-        - Certificate: commands/certificates/get/certificate.md
-        - Certificate Chain: commands/certificates/get/certificate_chain.md
-        - CRL: commands/certificates/get/crl.md
-        - Trusted CA List: commands/certificates/get/trusted_ca_list.md
-      - List:
-        - List Overview: commands/certificates/list/index.md
-        - Certificate: commands/certificates/list/certificate.md
-        - Certificate Chain: commands/certificates/list/certificate_chain.md
-        - CRL: commands/certificates/list/crl.md
-        - Trusted CA List: commands/certificates/list/trusted_ca_list.md
-      - Patch:
-        - Patch Overview: commands/certificates/patch/index.md
-        - Certificate: commands/certificates/patch/certificate.md
-        - Certificate Chain: commands/certificates/patch/certificate_chain.md
-        - CRL: commands/certificates/patch/crl.md
-        - Trusted CA List: commands/certificates/patch/trusted_ca_list.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/certificates/remove-labels/index.md
-        - Certificate: commands/certificates/remove-labels/certificate.md
-        - Certificate Chain: commands/certificates/remove-labels/certificate_chain.md
-        - CRL: commands/certificates/remove-labels/crl.md
-        - Trusted CA List: commands/certificates/remove-labels/trusted_ca_list.md
-      - Replace:
-        - Replace Overview: commands/certificates/replace/index.md
-        - Certificate: commands/certificates/replace/certificate.md
-        - Certificate Chain: commands/certificates/replace/certificate_chain.md
-        - CRL: commands/certificates/replace/crl.md
-        - Trusted CA List: commands/certificates/replace/trusted_ca_list.md
-      - Status:
-        - Status Overview: commands/certificates/status/index.md
-        - Certificate: commands/certificates/status/certificate.md
-        - Certificate Chain: commands/certificates/status/certificate_chain.md
-        - CRL: commands/certificates/status/crl.md
-        - Trusted CA List: commands/certificates/status/trusted_ca_list.md
+      - Add Labels: commands/certificates/add-labels/index.md
+      - Apply: commands/certificates/apply/index.md
+      - Create: commands/certificates/create/index.md
+      - Delete: commands/certificates/delete/index.md
+      - Get: commands/certificates/get/index.md
+      - List: commands/certificates/list/index.md
+      - Patch: commands/certificates/patch/index.md
+      - Remove Labels: commands/certificates/remove-labels/index.md
+      - Replace: commands/certificates/replace/index.md
+      - Status: commands/certificates/status/index.md
     - Cloud Infrastructure:
       - Cloud Infrastructure Overview: commands/cloud_infrastructure/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/cloud_infrastructure/add-labels/index.md
-        - Cloud Connect: commands/cloud_infrastructure/add-labels/cloud_connect.md
-        - Cloud Credentials: commands/cloud_infrastructure/add-labels/cloud_credentials.md
-        - Cloud Elastic IP: commands/cloud_infrastructure/add-labels/cloud_elastic_ip.md
-        - Cloud Link: commands/cloud_infrastructure/add-labels/cloud_link.md
-      - Apply:
-        - Apply Overview: commands/cloud_infrastructure/apply/index.md
-        - Cloud Connect: commands/cloud_infrastructure/apply/cloud_connect.md
-        - Cloud Credentials: commands/cloud_infrastructure/apply/cloud_credentials.md
-        - Cloud Elastic IP: commands/cloud_infrastructure/apply/cloud_elastic_ip.md
-        - Cloud Link: commands/cloud_infrastructure/apply/cloud_link.md
-      - Create:
-        - Create Overview: commands/cloud_infrastructure/create/index.md
-        - Cloud Connect: commands/cloud_infrastructure/create/cloud_connect.md
-        - Cloud Credentials: commands/cloud_infrastructure/create/cloud_credentials.md
-        - Cloud Elastic IP: commands/cloud_infrastructure/create/cloud_elastic_ip.md
-        - Cloud Link: commands/cloud_infrastructure/create/cloud_link.md
-      - Delete:
-        - Delete Overview: commands/cloud_infrastructure/delete/index.md
-        - Cloud Connect: commands/cloud_infrastructure/delete/cloud_connect.md
-        - Cloud Credentials: commands/cloud_infrastructure/delete/cloud_credentials.md
-        - Cloud Elastic IP: commands/cloud_infrastructure/delete/cloud_elastic_ip.md
-        - Cloud Link: commands/cloud_infrastructure/delete/cloud_link.md
-      - Get:
-        - Get Overview: commands/cloud_infrastructure/get/index.md
-        - Cloud Connect: commands/cloud_infrastructure/get/cloud_connect.md
-        - Cloud Credentials: commands/cloud_infrastructure/get/cloud_credentials.md
-        - Cloud Elastic IP: commands/cloud_infrastructure/get/cloud_elastic_ip.md
-        - Cloud Link: commands/cloud_infrastructure/get/cloud_link.md
-      - List:
-        - List Overview: commands/cloud_infrastructure/list/index.md
-        - Cloud Connect: commands/cloud_infrastructure/list/cloud_connect.md
-        - Cloud Credentials: commands/cloud_infrastructure/list/cloud_credentials.md
-        - Cloud Elastic IP: commands/cloud_infrastructure/list/cloud_elastic_ip.md
-        - Cloud Link: commands/cloud_infrastructure/list/cloud_link.md
-      - Patch:
-        - Patch Overview: commands/cloud_infrastructure/patch/index.md
-        - Cloud Connect: commands/cloud_infrastructure/patch/cloud_connect.md
-        - Cloud Credentials: commands/cloud_infrastructure/patch/cloud_credentials.md
-        - Cloud Elastic IP: commands/cloud_infrastructure/patch/cloud_elastic_ip.md
-        - Cloud Link: commands/cloud_infrastructure/patch/cloud_link.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/cloud_infrastructure/remove-labels/index.md
-        - Cloud Connect: commands/cloud_infrastructure/remove-labels/cloud_connect.md
-        - Cloud Credentials: commands/cloud_infrastructure/remove-labels/cloud_credentials.md
-        - Cloud Elastic IP: commands/cloud_infrastructure/remove-labels/cloud_elastic_ip.md
-        - Cloud Link: commands/cloud_infrastructure/remove-labels/cloud_link.md
-      - Replace:
-        - Replace Overview: commands/cloud_infrastructure/replace/index.md
-        - Cloud Connect: commands/cloud_infrastructure/replace/cloud_connect.md
-        - Cloud Credentials: commands/cloud_infrastructure/replace/cloud_credentials.md
-        - Cloud Elastic IP: commands/cloud_infrastructure/replace/cloud_elastic_ip.md
-        - Cloud Link: commands/cloud_infrastructure/replace/cloud_link.md
-      - Status:
-        - Status Overview: commands/cloud_infrastructure/status/index.md
-        - Cloud Connect: commands/cloud_infrastructure/status/cloud_connect.md
-        - Cloud Credentials: commands/cloud_infrastructure/status/cloud_credentials.md
-        - Cloud Elastic IP: commands/cloud_infrastructure/status/cloud_elastic_ip.md
-        - Cloud Link: commands/cloud_infrastructure/status/cloud_link.md
+      - Add Labels: commands/cloud_infrastructure/add-labels/index.md
+      - Apply: commands/cloud_infrastructure/apply/index.md
+      - Create: commands/cloud_infrastructure/create/index.md
+      - Delete: commands/cloud_infrastructure/delete/index.md
+      - Get: commands/cloud_infrastructure/get/index.md
+      - List: commands/cloud_infrastructure/list/index.md
+      - Patch: commands/cloud_infrastructure/patch/index.md
+      - Remove Labels: commands/cloud_infrastructure/remove-labels/index.md
+      - Replace: commands/cloud_infrastructure/replace/index.md
+      - Status: commands/cloud_infrastructure/status/index.md
     - Cloudstatus:
       - Cloudstatus Overview: commands/cloudstatus/index.md
-      - Components:
-        - Components Overview: commands/cloudstatus/components/index.md
-        - Get: commands/cloudstatus/components/get.md
-        - Groups: commands/cloudstatus/components/groups.md
-        - List: commands/cloudstatus/components/list.md
-      - Incidents:
-        - Incidents Overview: commands/cloudstatus/incidents/index.md
-        - Active: commands/cloudstatus/incidents/active.md
-        - Get: commands/cloudstatus/incidents/get.md
-        - List: commands/cloudstatus/incidents/list.md
-        - Updates: commands/cloudstatus/incidents/updates.md
-      - Maintenance:
-        - Maintenance Overview: commands/cloudstatus/maintenance/index.md
-        - Active: commands/cloudstatus/maintenance/active.md
-        - Get: commands/cloudstatus/maintenance/get.md
-        - List: commands/cloudstatus/maintenance/list.md
-        - Upcoming: commands/cloudstatus/maintenance/upcoming.md
-      - Pops:
-        - Pops Overview: commands/cloudstatus/pops/index.md
-        - List: commands/cloudstatus/pops/list.md
-        - Status: commands/cloudstatus/pops/status.md
+      - Components: commands/cloudstatus/components/index.md
+      - Incidents: commands/cloudstatus/incidents/index.md
+      - Maintenance: commands/cloudstatus/maintenance/index.md
       - Status: commands/cloudstatus/status/index.md
       - Summary: commands/cloudstatus/summary/index.md
-      - Watch: commands/cloudstatus/watch/index.md
-    - Completion: commands/completion/index.md
+    - Completion:
+      - Completion Overview: commands/completion/index.md
+      - Bash: commands/completion/bash/index.md
+      - Fish: commands/completion/fish/index.md
+      - Zsh: commands/completion/zsh/index.md
+    - Container Services:
+      - Container Services Overview: commands/container_services/index.md
+      - Add Labels: commands/container_services/add-labels/index.md
+      - Apply: commands/container_services/apply/index.md
+      - Create: commands/container_services/create/index.md
+      - Delete: commands/container_services/delete/index.md
+      - Get: commands/container_services/get/index.md
+      - List: commands/container_services/list/index.md
+      - Patch: commands/container_services/patch/index.md
+      - Remove Labels: commands/container_services/remove-labels/index.md
+      - Replace: commands/container_services/replace/index.md
+      - Status: commands/container_services/status/index.md
     - Data And Privacy Security:
       - Data And Privacy Security Overview: commands/data_and_privacy_security/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/data_and_privacy_security/add-labels/index.md
-        - Data Type: commands/data_and_privacy_security/add-labels/data_type.md
-        - Sensitive Data Policy: commands/data_and_privacy_security/add-labels/sensitive_data_policy.md
-      - Apply:
-        - Apply Overview: commands/data_and_privacy_security/apply/index.md
-        - Data Type: commands/data_and_privacy_security/apply/data_type.md
-        - Sensitive Data Policy: commands/data_and_privacy_security/apply/sensitive_data_policy.md
-      - Create:
-        - Create Overview: commands/data_and_privacy_security/create/index.md
-        - Data Type: commands/data_and_privacy_security/create/data_type.md
-        - Sensitive Data Policy: commands/data_and_privacy_security/create/sensitive_data_policy.md
-      - Delete:
-        - Delete Overview: commands/data_and_privacy_security/delete/index.md
-        - Data Type: commands/data_and_privacy_security/delete/data_type.md
-        - Sensitive Data Policy: commands/data_and_privacy_security/delete/sensitive_data_policy.md
-      - Get:
-        - Get Overview: commands/data_and_privacy_security/get/index.md
-        - Data Type: commands/data_and_privacy_security/get/data_type.md
-        - Sensitive Data Policy: commands/data_and_privacy_security/get/sensitive_data_policy.md
-      - List:
-        - List Overview: commands/data_and_privacy_security/list/index.md
-        - Data Type: commands/data_and_privacy_security/list/data_type.md
-        - Sensitive Data Policy: commands/data_and_privacy_security/list/sensitive_data_policy.md
-      - Patch:
-        - Patch Overview: commands/data_and_privacy_security/patch/index.md
-        - Data Type: commands/data_and_privacy_security/patch/data_type.md
-        - Sensitive Data Policy: commands/data_and_privacy_security/patch/sensitive_data_policy.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/data_and_privacy_security/remove-labels/index.md
-        - Data Type: commands/data_and_privacy_security/remove-labels/data_type.md
-        - Sensitive Data Policy: commands/data_and_privacy_security/remove-labels/sensitive_data_policy.md
-      - Replace:
-        - Replace Overview: commands/data_and_privacy_security/replace/index.md
-        - Data Type: commands/data_and_privacy_security/replace/data_type.md
-        - Sensitive Data Policy: commands/data_and_privacy_security/replace/sensitive_data_policy.md
-      - Status:
-        - Status Overview: commands/data_and_privacy_security/status/index.md
-        - Data Type: commands/data_and_privacy_security/status/data_type.md
-        - Sensitive Data Policy: commands/data_and_privacy_security/status/sensitive_data_policy.md
+      - Add Labels: commands/data_and_privacy_security/add-labels/index.md
+      - Apply: commands/data_and_privacy_security/apply/index.md
+      - Create: commands/data_and_privacy_security/create/index.md
+      - Delete: commands/data_and_privacy_security/delete/index.md
+      - Get: commands/data_and_privacy_security/get/index.md
+      - List: commands/data_and_privacy_security/list/index.md
+      - Patch: commands/data_and_privacy_security/patch/index.md
+      - Remove Labels: commands/data_and_privacy_security/remove-labels/index.md
+      - Replace: commands/data_and_privacy_security/replace/index.md
+      - Status: commands/data_and_privacy_security/status/index.md
     - Data Intelligence:
       - Data Intelligence Overview: commands/data_intelligence/index.md
       - Add Labels: commands/data_intelligence/add-labels/index.md
@@ -646,181 +279,28 @@ nav:
       - Status: commands/data_intelligence/status/index.md
     - DDOS:
       - DDOS Overview: commands/ddos/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/ddos/add-labels/index.md
-        - Infraprotect ASN: commands/ddos/add-labels/infraprotect_asn.md
-        - Infraprotect ASN Prefix: commands/ddos/add-labels/infraprotect_asn_prefix.md
-        - Infraprotect Deny List Rule: commands/ddos/add-labels/infraprotect_deny_list_rule.md
-        - Infraprotect Firewall Rule: commands/ddos/add-labels/infraprotect_firewall_rule.md
-        - Infraprotect Firewall Rule Group: commands/ddos/add-labels/infraprotect_firewall_rule_group.md
-        - Infraprotect Internet Prefix Advertisement: commands/ddos/add-labels/infraprotect_internet_prefix_advertisement.md
-        - Infraprotect Tunnel: commands/ddos/add-labels/infraprotect_tunnel.md
-      - Apply:
-        - Apply Overview: commands/ddos/apply/index.md
-        - Infraprotect ASN: commands/ddos/apply/infraprotect_asn.md
-        - Infraprotect ASN Prefix: commands/ddos/apply/infraprotect_asn_prefix.md
-        - Infraprotect Deny List Rule: commands/ddos/apply/infraprotect_deny_list_rule.md
-        - Infraprotect Firewall Rule: commands/ddos/apply/infraprotect_firewall_rule.md
-        - Infraprotect Firewall Rule Group: commands/ddos/apply/infraprotect_firewall_rule_group.md
-        - Infraprotect Internet Prefix Advertisement: commands/ddos/apply/infraprotect_internet_prefix_advertisement.md
-        - Infraprotect Tunnel: commands/ddos/apply/infraprotect_tunnel.md
-      - Create:
-        - Create Overview: commands/ddos/create/index.md
-        - Infraprotect ASN: commands/ddos/create/infraprotect_asn.md
-        - Infraprotect ASN Prefix: commands/ddos/create/infraprotect_asn_prefix.md
-        - Infraprotect Deny List Rule: commands/ddos/create/infraprotect_deny_list_rule.md
-        - Infraprotect Firewall Rule: commands/ddos/create/infraprotect_firewall_rule.md
-        - Infraprotect Firewall Rule Group: commands/ddos/create/infraprotect_firewall_rule_group.md
-        - Infraprotect Internet Prefix Advertisement: commands/ddos/create/infraprotect_internet_prefix_advertisement.md
-        - Infraprotect Tunnel: commands/ddos/create/infraprotect_tunnel.md
-      - Delete:
-        - Delete Overview: commands/ddos/delete/index.md
-        - Infraprotect ASN: commands/ddos/delete/infraprotect_asn.md
-        - Infraprotect ASN Prefix: commands/ddos/delete/infraprotect_asn_prefix.md
-        - Infraprotect Deny List Rule: commands/ddos/delete/infraprotect_deny_list_rule.md
-        - Infraprotect Firewall Rule: commands/ddos/delete/infraprotect_firewall_rule.md
-        - Infraprotect Firewall Rule Group: commands/ddos/delete/infraprotect_firewall_rule_group.md
-        - Infraprotect Internet Prefix Advertisement: commands/ddos/delete/infraprotect_internet_prefix_advertisement.md
-        - Infraprotect Tunnel: commands/ddos/delete/infraprotect_tunnel.md
-      - Get:
-        - Get Overview: commands/ddos/get/index.md
-        - Infraprotect ASN: commands/ddos/get/infraprotect_asn.md
-        - Infraprotect ASN Prefix: commands/ddos/get/infraprotect_asn_prefix.md
-        - Infraprotect Deny List Rule: commands/ddos/get/infraprotect_deny_list_rule.md
-        - Infraprotect Firewall Rule: commands/ddos/get/infraprotect_firewall_rule.md
-        - Infraprotect Firewall Rule Group: commands/ddos/get/infraprotect_firewall_rule_group.md
-        - Infraprotect Internet Prefix Advertisement: commands/ddos/get/infraprotect_internet_prefix_advertisement.md
-        - Infraprotect Tunnel: commands/ddos/get/infraprotect_tunnel.md
-      - List:
-        - List Overview: commands/ddos/list/index.md
-        - Infraprotect ASN: commands/ddos/list/infraprotect_asn.md
-        - Infraprotect ASN Prefix: commands/ddos/list/infraprotect_asn_prefix.md
-        - Infraprotect Deny List Rule: commands/ddos/list/infraprotect_deny_list_rule.md
-        - Infraprotect Firewall Rule: commands/ddos/list/infraprotect_firewall_rule.md
-        - Infraprotect Firewall Rule Group: commands/ddos/list/infraprotect_firewall_rule_group.md
-        - Infraprotect Internet Prefix Advertisement: commands/ddos/list/infraprotect_internet_prefix_advertisement.md
-        - Infraprotect Tunnel: commands/ddos/list/infraprotect_tunnel.md
-      - Patch:
-        - Patch Overview: commands/ddos/patch/index.md
-        - Infraprotect ASN: commands/ddos/patch/infraprotect_asn.md
-        - Infraprotect ASN Prefix: commands/ddos/patch/infraprotect_asn_prefix.md
-        - Infraprotect Deny List Rule: commands/ddos/patch/infraprotect_deny_list_rule.md
-        - Infraprotect Firewall Rule: commands/ddos/patch/infraprotect_firewall_rule.md
-        - Infraprotect Firewall Rule Group: commands/ddos/patch/infraprotect_firewall_rule_group.md
-        - Infraprotect Internet Prefix Advertisement: commands/ddos/patch/infraprotect_internet_prefix_advertisement.md
-        - Infraprotect Tunnel: commands/ddos/patch/infraprotect_tunnel.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/ddos/remove-labels/index.md
-        - Infraprotect ASN: commands/ddos/remove-labels/infraprotect_asn.md
-        - Infraprotect ASN Prefix: commands/ddos/remove-labels/infraprotect_asn_prefix.md
-        - Infraprotect Deny List Rule: commands/ddos/remove-labels/infraprotect_deny_list_rule.md
-        - Infraprotect Firewall Rule: commands/ddos/remove-labels/infraprotect_firewall_rule.md
-        - Infraprotect Firewall Rule Group: commands/ddos/remove-labels/infraprotect_firewall_rule_group.md
-        - Infraprotect Internet Prefix Advertisement: commands/ddos/remove-labels/infraprotect_internet_prefix_advertisement.md
-        - Infraprotect Tunnel: commands/ddos/remove-labels/infraprotect_tunnel.md
-      - Replace:
-        - Replace Overview: commands/ddos/replace/index.md
-        - Infraprotect ASN: commands/ddos/replace/infraprotect_asn.md
-        - Infraprotect ASN Prefix: commands/ddos/replace/infraprotect_asn_prefix.md
-        - Infraprotect Deny List Rule: commands/ddos/replace/infraprotect_deny_list_rule.md
-        - Infraprotect Firewall Rule: commands/ddos/replace/infraprotect_firewall_rule.md
-        - Infraprotect Firewall Rule Group: commands/ddos/replace/infraprotect_firewall_rule_group.md
-        - Infraprotect Internet Prefix Advertisement: commands/ddos/replace/infraprotect_internet_prefix_advertisement.md
-        - Infraprotect Tunnel: commands/ddos/replace/infraprotect_tunnel.md
-      - Status:
-        - Status Overview: commands/ddos/status/index.md
-        - Infraprotect ASN: commands/ddos/status/infraprotect_asn.md
-        - Infraprotect ASN Prefix: commands/ddos/status/infraprotect_asn_prefix.md
-        - Infraprotect Deny List Rule: commands/ddos/status/infraprotect_deny_list_rule.md
-        - Infraprotect Firewall Rule: commands/ddos/status/infraprotect_firewall_rule.md
-        - Infraprotect Firewall Rule Group: commands/ddos/status/infraprotect_firewall_rule_group.md
-        - Infraprotect Internet Prefix Advertisement: commands/ddos/status/infraprotect_internet_prefix_advertisement.md
-        - Infraprotect Tunnel: commands/ddos/status/infraprotect_tunnel.md
+      - Add Labels: commands/ddos/add-labels/index.md
+      - Apply: commands/ddos/apply/index.md
+      - Create: commands/ddos/create/index.md
+      - Delete: commands/ddos/delete/index.md
+      - Get: commands/ddos/get/index.md
+      - List: commands/ddos/list/index.md
+      - Patch: commands/ddos/patch/index.md
+      - Remove Labels: commands/ddos/remove-labels/index.md
+      - Replace: commands/ddos/replace/index.md
+      - Status: commands/ddos/status/index.md
     - DNS:
       - DNS Overview: commands/dns/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/dns/add-labels/index.md
-        - DNS Compliance Checks: commands/dns/add-labels/dns_compliance_checks.md
-        - DNS Domain: commands/dns/add-labels/dns_domain.md
-        - DNS LB Health Check: commands/dns/add-labels/dns_lb_health_check.md
-        - DNS LB Pool: commands/dns/add-labels/dns_lb_pool.md
-        - DNS Load Balancer: commands/dns/add-labels/dns_load_balancer.md
-        - DNS Zone: commands/dns/add-labels/dns_zone.md
-      - Apply:
-        - Apply Overview: commands/dns/apply/index.md
-        - DNS Compliance Checks: commands/dns/apply/dns_compliance_checks.md
-        - DNS Domain: commands/dns/apply/dns_domain.md
-        - DNS LB Health Check: commands/dns/apply/dns_lb_health_check.md
-        - DNS LB Pool: commands/dns/apply/dns_lb_pool.md
-        - DNS Load Balancer: commands/dns/apply/dns_load_balancer.md
-        - DNS Zone: commands/dns/apply/dns_zone.md
-      - Create:
-        - Create Overview: commands/dns/create/index.md
-        - DNS Compliance Checks: commands/dns/create/dns_compliance_checks.md
-        - DNS Domain: commands/dns/create/dns_domain.md
-        - DNS LB Health Check: commands/dns/create/dns_lb_health_check.md
-        - DNS LB Pool: commands/dns/create/dns_lb_pool.md
-        - DNS Load Balancer: commands/dns/create/dns_load_balancer.md
-        - DNS Zone: commands/dns/create/dns_zone.md
-      - Delete:
-        - Delete Overview: commands/dns/delete/index.md
-        - DNS Compliance Checks: commands/dns/delete/dns_compliance_checks.md
-        - DNS Domain: commands/dns/delete/dns_domain.md
-        - DNS LB Health Check: commands/dns/delete/dns_lb_health_check.md
-        - DNS LB Pool: commands/dns/delete/dns_lb_pool.md
-        - DNS Load Balancer: commands/dns/delete/dns_load_balancer.md
-        - DNS Zone: commands/dns/delete/dns_zone.md
-      - Get:
-        - Get Overview: commands/dns/get/index.md
-        - DNS Compliance Checks: commands/dns/get/dns_compliance_checks.md
-        - DNS Domain: commands/dns/get/dns_domain.md
-        - DNS LB Health Check: commands/dns/get/dns_lb_health_check.md
-        - DNS LB Pool: commands/dns/get/dns_lb_pool.md
-        - DNS Load Balancer: commands/dns/get/dns_load_balancer.md
-        - DNS Zone: commands/dns/get/dns_zone.md
-      - List:
-        - List Overview: commands/dns/list/index.md
-        - DNS Compliance Checks: commands/dns/list/dns_compliance_checks.md
-        - DNS Domain: commands/dns/list/dns_domain.md
-        - DNS LB Health Check: commands/dns/list/dns_lb_health_check.md
-        - DNS LB Pool: commands/dns/list/dns_lb_pool.md
-        - DNS Load Balancer: commands/dns/list/dns_load_balancer.md
-        - DNS Zone: commands/dns/list/dns_zone.md
-      - Patch:
-        - Patch Overview: commands/dns/patch/index.md
-        - DNS Compliance Checks: commands/dns/patch/dns_compliance_checks.md
-        - DNS Domain: commands/dns/patch/dns_domain.md
-        - DNS LB Health Check: commands/dns/patch/dns_lb_health_check.md
-        - DNS LB Pool: commands/dns/patch/dns_lb_pool.md
-        - DNS Load Balancer: commands/dns/patch/dns_load_balancer.md
-        - DNS Zone: commands/dns/patch/dns_zone.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/dns/remove-labels/index.md
-        - DNS Compliance Checks: commands/dns/remove-labels/dns_compliance_checks.md
-        - DNS Domain: commands/dns/remove-labels/dns_domain.md
-        - DNS LB Health Check: commands/dns/remove-labels/dns_lb_health_check.md
-        - DNS LB Pool: commands/dns/remove-labels/dns_lb_pool.md
-        - DNS Load Balancer: commands/dns/remove-labels/dns_load_balancer.md
-        - DNS Zone: commands/dns/remove-labels/dns_zone.md
-      - Replace:
-        - Replace Overview: commands/dns/replace/index.md
-        - DNS Compliance Checks: commands/dns/replace/dns_compliance_checks.md
-        - DNS Domain: commands/dns/replace/dns_domain.md
-        - DNS LB Health Check: commands/dns/replace/dns_lb_health_check.md
-        - DNS LB Pool: commands/dns/replace/dns_lb_pool.md
-        - DNS Load Balancer: commands/dns/replace/dns_load_balancer.md
-        - DNS Zone: commands/dns/replace/dns_zone.md
-      - Status:
-        - Status Overview: commands/dns/status/index.md
-        - DNS Compliance Checks: commands/dns/status/dns_compliance_checks.md
-        - DNS Domain: commands/dns/status/dns_domain.md
-        - DNS LB Health Check: commands/dns/status/dns_lb_health_check.md
-        - DNS LB Pool: commands/dns/status/dns_lb_pool.md
-        - DNS Load Balancer: commands/dns/status/dns_load_balancer.md
-        - DNS Zone: commands/dns/status/dns_zone.md
-    - Domains:
-      - Domains Overview: commands/domains/index.md
-      - By Tier: commands/domains/by-tier/index.md
+      - Add Labels: commands/dns/add-labels/index.md
+      - Apply: commands/dns/apply/index.md
+      - Create: commands/dns/create/index.md
+      - Delete: commands/dns/delete/index.md
+      - Get: commands/dns/get/index.md
+      - List: commands/dns/list/index.md
+      - Patch: commands/dns/patch/index.md
+      - Remove Labels: commands/dns/remove-labels/index.md
+      - Replace: commands/dns/replace/index.md
+      - Status: commands/dns/status/index.md
     - Generative Ai:
       - Generative Ai Overview: commands/generative_ai/index.md
       - Add Labels: commands/generative_ai/add-labels/index.md
@@ -833,538 +313,69 @@ nav:
       - Remove Labels: commands/generative_ai/remove-labels/index.md
       - Replace: commands/generative_ai/replace/index.md
       - Status: commands/generative_ai/status/index.md
-    - Kubernetes:
-      - Kubernetes Overview: commands/kubernetes/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/kubernetes/add-labels/index.md
-        - Workload: commands/kubernetes/add-labels/workload.md
-      - Apply:
-        - Apply Overview: commands/kubernetes/apply/index.md
-        - Workload: commands/kubernetes/apply/workload.md
-      - Create:
-        - Create Overview: commands/kubernetes/create/index.md
-        - Workload: commands/kubernetes/create/workload.md
-      - Delete:
-        - Delete Overview: commands/kubernetes/delete/index.md
-        - Workload: commands/kubernetes/delete/workload.md
-      - Get:
-        - Get Overview: commands/kubernetes/get/index.md
-        - Workload: commands/kubernetes/get/workload.md
-      - List:
-        - List Overview: commands/kubernetes/list/index.md
-        - Workload: commands/kubernetes/list/workload.md
-      - Patch:
-        - Patch Overview: commands/kubernetes/patch/index.md
-        - Workload: commands/kubernetes/patch/workload.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/kubernetes/remove-labels/index.md
-        - Workload: commands/kubernetes/remove-labels/workload.md
-      - Replace:
-        - Replace Overview: commands/kubernetes/replace/index.md
-        - Workload: commands/kubernetes/replace/workload.md
-      - Status:
-        - Status Overview: commands/kubernetes/status/index.md
-        - Workload: commands/kubernetes/status/workload.md
-    - Kubernetes And Orchestration:
-      - Kubernetes And Orchestration Overview: commands/kubernetes_and_orchestration/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/kubernetes_and_orchestration/add-labels/index.md
-        - Cluster: commands/kubernetes_and_orchestration/add-labels/cluster.md
-        - Container Registry: commands/kubernetes_and_orchestration/add-labels/container_registry.md
-        - K8S Pod Security Admission: commands/kubernetes_and_orchestration/add-labels/k8s_pod_security_admission.md
-        - K8S Pod Security Policy: commands/kubernetes_and_orchestration/add-labels/k8s_pod_security_policy.md
-        - Virtual K8S: commands/kubernetes_and_orchestration/add-labels/virtual_k8s.md
-        - Workload: commands/kubernetes_and_orchestration/add-labels/workload.md
-        - Workload Flavor: commands/kubernetes_and_orchestration/add-labels/workload_flavor.md
-      - Apply:
-        - Apply Overview: commands/kubernetes_and_orchestration/apply/index.md
-        - Cluster: commands/kubernetes_and_orchestration/apply/cluster.md
-        - Container Registry: commands/kubernetes_and_orchestration/apply/container_registry.md
-        - K8S Pod Security Admission: commands/kubernetes_and_orchestration/apply/k8s_pod_security_admission.md
-        - K8S Pod Security Policy: commands/kubernetes_and_orchestration/apply/k8s_pod_security_policy.md
-        - Virtual K8S: commands/kubernetes_and_orchestration/apply/virtual_k8s.md
-        - Workload: commands/kubernetes_and_orchestration/apply/workload.md
-        - Workload Flavor: commands/kubernetes_and_orchestration/apply/workload_flavor.md
-      - Create:
-        - Create Overview: commands/kubernetes_and_orchestration/create/index.md
-        - Cluster: commands/kubernetes_and_orchestration/create/cluster.md
-        - Container Registry: commands/kubernetes_and_orchestration/create/container_registry.md
-        - K8S Pod Security Admission: commands/kubernetes_and_orchestration/create/k8s_pod_security_admission.md
-        - K8S Pod Security Policy: commands/kubernetes_and_orchestration/create/k8s_pod_security_policy.md
-        - Virtual K8S: commands/kubernetes_and_orchestration/create/virtual_k8s.md
-        - Workload: commands/kubernetes_and_orchestration/create/workload.md
-        - Workload Flavor: commands/kubernetes_and_orchestration/create/workload_flavor.md
-      - Delete:
-        - Delete Overview: commands/kubernetes_and_orchestration/delete/index.md
-        - Cluster: commands/kubernetes_and_orchestration/delete/cluster.md
-        - Container Registry: commands/kubernetes_and_orchestration/delete/container_registry.md
-        - K8S Pod Security Admission: commands/kubernetes_and_orchestration/delete/k8s_pod_security_admission.md
-        - K8S Pod Security Policy: commands/kubernetes_and_orchestration/delete/k8s_pod_security_policy.md
-        - Virtual K8S: commands/kubernetes_and_orchestration/delete/virtual_k8s.md
-        - Workload: commands/kubernetes_and_orchestration/delete/workload.md
-        - Workload Flavor: commands/kubernetes_and_orchestration/delete/workload_flavor.md
-      - Get:
-        - Get Overview: commands/kubernetes_and_orchestration/get/index.md
-        - Cluster: commands/kubernetes_and_orchestration/get/cluster.md
-        - Container Registry: commands/kubernetes_and_orchestration/get/container_registry.md
-        - K8S Pod Security Admission: commands/kubernetes_and_orchestration/get/k8s_pod_security_admission.md
-        - K8S Pod Security Policy: commands/kubernetes_and_orchestration/get/k8s_pod_security_policy.md
-        - Virtual K8S: commands/kubernetes_and_orchestration/get/virtual_k8s.md
-        - Workload: commands/kubernetes_and_orchestration/get/workload.md
-        - Workload Flavor: commands/kubernetes_and_orchestration/get/workload_flavor.md
-      - List:
-        - List Overview: commands/kubernetes_and_orchestration/list/index.md
-        - Cluster: commands/kubernetes_and_orchestration/list/cluster.md
-        - Container Registry: commands/kubernetes_and_orchestration/list/container_registry.md
-        - K8S Pod Security Admission: commands/kubernetes_and_orchestration/list/k8s_pod_security_admission.md
-        - K8S Pod Security Policy: commands/kubernetes_and_orchestration/list/k8s_pod_security_policy.md
-        - Virtual K8S: commands/kubernetes_and_orchestration/list/virtual_k8s.md
-        - Workload: commands/kubernetes_and_orchestration/list/workload.md
-        - Workload Flavor: commands/kubernetes_and_orchestration/list/workload_flavor.md
-      - Patch:
-        - Patch Overview: commands/kubernetes_and_orchestration/patch/index.md
-        - Cluster: commands/kubernetes_and_orchestration/patch/cluster.md
-        - Container Registry: commands/kubernetes_and_orchestration/patch/container_registry.md
-        - K8S Pod Security Admission: commands/kubernetes_and_orchestration/patch/k8s_pod_security_admission.md
-        - K8S Pod Security Policy: commands/kubernetes_and_orchestration/patch/k8s_pod_security_policy.md
-        - Virtual K8S: commands/kubernetes_and_orchestration/patch/virtual_k8s.md
-        - Workload: commands/kubernetes_and_orchestration/patch/workload.md
-        - Workload Flavor: commands/kubernetes_and_orchestration/patch/workload_flavor.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/kubernetes_and_orchestration/remove-labels/index.md
-        - Cluster: commands/kubernetes_and_orchestration/remove-labels/cluster.md
-        - Container Registry: commands/kubernetes_and_orchestration/remove-labels/container_registry.md
-        - K8S Pod Security Admission: commands/kubernetes_and_orchestration/remove-labels/k8s_pod_security_admission.md
-        - K8S Pod Security Policy: commands/kubernetes_and_orchestration/remove-labels/k8s_pod_security_policy.md
-        - Virtual K8S: commands/kubernetes_and_orchestration/remove-labels/virtual_k8s.md
-        - Workload: commands/kubernetes_and_orchestration/remove-labels/workload.md
-        - Workload Flavor: commands/kubernetes_and_orchestration/remove-labels/workload_flavor.md
-      - Replace:
-        - Replace Overview: commands/kubernetes_and_orchestration/replace/index.md
-        - Cluster: commands/kubernetes_and_orchestration/replace/cluster.md
-        - Container Registry: commands/kubernetes_and_orchestration/replace/container_registry.md
-        - K8S Pod Security Admission: commands/kubernetes_and_orchestration/replace/k8s_pod_security_admission.md
-        - K8S Pod Security Policy: commands/kubernetes_and_orchestration/replace/k8s_pod_security_policy.md
-        - Virtual K8S: commands/kubernetes_and_orchestration/replace/virtual_k8s.md
-        - Workload: commands/kubernetes_and_orchestration/replace/workload.md
-        - Workload Flavor: commands/kubernetes_and_orchestration/replace/workload_flavor.md
-      - Status:
-        - Status Overview: commands/kubernetes_and_orchestration/status/index.md
-        - Cluster: commands/kubernetes_and_orchestration/status/cluster.md
-        - Container Registry: commands/kubernetes_and_orchestration/status/container_registry.md
-        - K8S Pod Security Admission: commands/kubernetes_and_orchestration/status/k8s_pod_security_admission.md
-        - K8S Pod Security Policy: commands/kubernetes_and_orchestration/status/k8s_pod_security_policy.md
-        - Virtual K8S: commands/kubernetes_and_orchestration/status/virtual_k8s.md
-        - Workload: commands/kubernetes_and_orchestration/status/workload.md
-        - Workload Flavor: commands/kubernetes_and_orchestration/status/workload_flavor.md
+    - Login:
+      - Login Overview: commands/login/index.md
+      - Banner: commands/login/banner/index.md
+      - Context:
+        - Context Overview: commands/login/context/index.md
+        - List: commands/login/context/list.md
+        - Set: commands/login/context/set.md
+        - Show: commands/login/context/show.md
+      - Profile:
+        - Profile Overview: commands/login/profile/index.md
+        - Create: commands/login/profile/create.md
+        - Delete: commands/login/profile/delete.md
+        - List: commands/login/profile/list.md
+        - Show: commands/login/profile/show.md
+        - Use: commands/login/profile/use.md
+    - Managed Kubernetes:
+      - Managed Kubernetes Overview: commands/managed_kubernetes/index.md
+      - Add Labels: commands/managed_kubernetes/add-labels/index.md
+      - Apply: commands/managed_kubernetes/apply/index.md
+      - Create: commands/managed_kubernetes/create/index.md
+      - Delete: commands/managed_kubernetes/delete/index.md
+      - Get: commands/managed_kubernetes/get/index.md
+      - List: commands/managed_kubernetes/list/index.md
+      - Patch: commands/managed_kubernetes/patch/index.md
+      - Remove Labels: commands/managed_kubernetes/remove-labels/index.md
+      - Replace: commands/managed_kubernetes/replace/index.md
+      - Status: commands/managed_kubernetes/status/index.md
     - Marketplace:
       - Marketplace Overview: commands/marketplace/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/marketplace/add-labels/index.md
-        - Cminstance: commands/marketplace/add-labels/cminstance.md
-        - External Connector: commands/marketplace/add-labels/external_connector.md
-        - Tpm API Key: commands/marketplace/add-labels/tpm_api_key.md
-        - Tpm Category: commands/marketplace/add-labels/tpm_category.md
-        - Tpm Manager: commands/marketplace/add-labels/tpm_manager.md
-        - Voltshare Admin Policy: commands/marketplace/add-labels/voltshare_admin_policy.md
-      - Apply:
-        - Apply Overview: commands/marketplace/apply/index.md
-        - Cminstance: commands/marketplace/apply/cminstance.md
-        - External Connector: commands/marketplace/apply/external_connector.md
-        - Tpm API Key: commands/marketplace/apply/tpm_api_key.md
-        - Tpm Category: commands/marketplace/apply/tpm_category.md
-        - Tpm Manager: commands/marketplace/apply/tpm_manager.md
-        - Voltshare Admin Policy: commands/marketplace/apply/voltshare_admin_policy.md
-      - Create:
-        - Create Overview: commands/marketplace/create/index.md
-        - Cminstance: commands/marketplace/create/cminstance.md
-        - External Connector: commands/marketplace/create/external_connector.md
-        - Tpm API Key: commands/marketplace/create/tpm_api_key.md
-        - Tpm Category: commands/marketplace/create/tpm_category.md
-        - Tpm Manager: commands/marketplace/create/tpm_manager.md
-        - Voltshare Admin Policy: commands/marketplace/create/voltshare_admin_policy.md
-      - Delete:
-        - Delete Overview: commands/marketplace/delete/index.md
-        - Cminstance: commands/marketplace/delete/cminstance.md
-        - External Connector: commands/marketplace/delete/external_connector.md
-        - Voltshare Admin Policy: commands/marketplace/delete/voltshare_admin_policy.md
-      - Get:
-        - Get Overview: commands/marketplace/get/index.md
-        - Cminstance: commands/marketplace/get/cminstance.md
-        - External Connector: commands/marketplace/get/external_connector.md
-        - Tpm API Key: commands/marketplace/get/tpm_api_key.md
-        - Tpm Category: commands/marketplace/get/tpm_category.md
-        - Tpm Manager: commands/marketplace/get/tpm_manager.md
-        - Voltshare Admin Policy: commands/marketplace/get/voltshare_admin_policy.md
-      - List:
-        - List Overview: commands/marketplace/list/index.md
-        - Cminstance: commands/marketplace/list/cminstance.md
-        - External Connector: commands/marketplace/list/external_connector.md
-        - Tpm API Key: commands/marketplace/list/tpm_api_key.md
-        - Tpm Category: commands/marketplace/list/tpm_category.md
-        - Tpm Manager: commands/marketplace/list/tpm_manager.md
-        - Voltshare Admin Policy: commands/marketplace/list/voltshare_admin_policy.md
-      - Patch:
-        - Patch Overview: commands/marketplace/patch/index.md
-        - Cminstance: commands/marketplace/patch/cminstance.md
-        - External Connector: commands/marketplace/patch/external_connector.md
-        - Tpm API Key: commands/marketplace/patch/tpm_api_key.md
-        - Tpm Category: commands/marketplace/patch/tpm_category.md
-        - Voltshare Admin Policy: commands/marketplace/patch/voltshare_admin_policy.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/marketplace/remove-labels/index.md
-        - Cminstance: commands/marketplace/remove-labels/cminstance.md
-        - External Connector: commands/marketplace/remove-labels/external_connector.md
-        - Tpm API Key: commands/marketplace/remove-labels/tpm_api_key.md
-        - Tpm Category: commands/marketplace/remove-labels/tpm_category.md
-        - Tpm Manager: commands/marketplace/remove-labels/tpm_manager.md
-        - Voltshare Admin Policy: commands/marketplace/remove-labels/voltshare_admin_policy.md
-      - Replace:
-        - Replace Overview: commands/marketplace/replace/index.md
-        - Cminstance: commands/marketplace/replace/cminstance.md
-        - External Connector: commands/marketplace/replace/external_connector.md
-        - Tpm API Key: commands/marketplace/replace/tpm_api_key.md
-        - Tpm Category: commands/marketplace/replace/tpm_category.md
-        - Voltshare Admin Policy: commands/marketplace/replace/voltshare_admin_policy.md
-      - Status:
-        - Status Overview: commands/marketplace/status/index.md
-        - Cminstance: commands/marketplace/status/cminstance.md
-        - External Connector: commands/marketplace/status/external_connector.md
-        - Voltshare Admin Policy: commands/marketplace/status/voltshare_admin_policy.md
+      - Add Labels: commands/marketplace/add-labels/index.md
+      - Apply: commands/marketplace/apply/index.md
+      - Create: commands/marketplace/create/index.md
+      - Delete: commands/marketplace/delete/index.md
+      - Get: commands/marketplace/get/index.md
+      - List: commands/marketplace/list/index.md
+      - Patch: commands/marketplace/patch/index.md
+      - Remove Labels: commands/marketplace/remove-labels/index.md
+      - Replace: commands/marketplace/replace/index.md
+      - Status: commands/marketplace/status/index.md
     - Network:
       - Network Overview: commands/network/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/network/add-labels/index.md
-        - Address Allocator: commands/network/add-labels/address_allocator.md
-        - Advertise Policy: commands/network/add-labels/advertise_policy.md
-        - BGP: commands/network/add-labels/bgp.md
-        - BGP ASN Set: commands/network/add-labels/bgp_asn_set.md
-        - BGP Routing Policy: commands/network/add-labels/bgp_routing_policy.md
-        - Dc Cluster Group: commands/network/add-labels/dc_cluster_group.md
-        - Forwarding Class: commands/network/add-labels/forwarding_class.md
-        - Ike1: commands/network/add-labels/ike1.md
-        - Ike2: commands/network/add-labels/ike2.md
-        - IKE Phase1 Profile: commands/network/add-labels/ike_phase1_profile.md
-        - IKE Phase2 Profile: commands/network/add-labels/ike_phase2_profile.md
-        - IP Prefix Set: commands/network/add-labels/ip_prefix_set.md
-        - Network Connector: commands/network/add-labels/network_connector.md
-        - Route: commands/network/add-labels/route.md
-        - Srv6 Network Slice: commands/network/add-labels/srv6_network_slice.md
-        - Subnet: commands/network/add-labels/subnet.md
-        - Tunnel: commands/network/add-labels/tunnel.md
-      - Apply:
-        - Apply Overview: commands/network/apply/index.md
-        - Address Allocator: commands/network/apply/address_allocator.md
-        - Advertise Policy: commands/network/apply/advertise_policy.md
-        - BGP: commands/network/apply/bgp.md
-        - BGP ASN Set: commands/network/apply/bgp_asn_set.md
-        - BGP Routing Policy: commands/network/apply/bgp_routing_policy.md
-        - Dc Cluster Group: commands/network/apply/dc_cluster_group.md
-        - Forwarding Class: commands/network/apply/forwarding_class.md
-        - Ike1: commands/network/apply/ike1.md
-        - Ike2: commands/network/apply/ike2.md
-        - IKE Phase1 Profile: commands/network/apply/ike_phase1_profile.md
-        - IKE Phase2 Profile: commands/network/apply/ike_phase2_profile.md
-        - IP Prefix Set: commands/network/apply/ip_prefix_set.md
-        - Network Connector: commands/network/apply/network_connector.md
-        - Route: commands/network/apply/route.md
-        - Srv6 Network Slice: commands/network/apply/srv6_network_slice.md
-        - Subnet: commands/network/apply/subnet.md
-        - Tunnel: commands/network/apply/tunnel.md
-      - Create:
-        - Create Overview: commands/network/create/index.md
-        - Address Allocator: commands/network/create/address_allocator.md
-        - Advertise Policy: commands/network/create/advertise_policy.md
-        - BGP: commands/network/create/bgp.md
-        - BGP ASN Set: commands/network/create/bgp_asn_set.md
-        - BGP Routing Policy: commands/network/create/bgp_routing_policy.md
-        - Dc Cluster Group: commands/network/create/dc_cluster_group.md
-        - Forwarding Class: commands/network/create/forwarding_class.md
-        - Ike1: commands/network/create/ike1.md
-        - Ike2: commands/network/create/ike2.md
-        - IKE Phase1 Profile: commands/network/create/ike_phase1_profile.md
-        - IKE Phase2 Profile: commands/network/create/ike_phase2_profile.md
-        - IP Prefix Set: commands/network/create/ip_prefix_set.md
-        - Network Connector: commands/network/create/network_connector.md
-        - Route: commands/network/create/route.md
-        - Srv6 Network Slice: commands/network/create/srv6_network_slice.md
-        - Subnet: commands/network/create/subnet.md
-        - Tunnel: commands/network/create/tunnel.md
-      - Delete:
-        - Delete Overview: commands/network/delete/index.md
-        - Address Allocator: commands/network/delete/address_allocator.md
-        - Advertise Policy: commands/network/delete/advertise_policy.md
-        - BGP: commands/network/delete/bgp.md
-        - BGP ASN Set: commands/network/delete/bgp_asn_set.md
-        - BGP Routing Policy: commands/network/delete/bgp_routing_policy.md
-        - Dc Cluster Group: commands/network/delete/dc_cluster_group.md
-        - Forwarding Class: commands/network/delete/forwarding_class.md
-        - Ike1: commands/network/delete/ike1.md
-        - Ike2: commands/network/delete/ike2.md
-        - IKE Phase1 Profile: commands/network/delete/ike_phase1_profile.md
-        - IKE Phase2 Profile: commands/network/delete/ike_phase2_profile.md
-        - IP Prefix Set: commands/network/delete/ip_prefix_set.md
-        - Network Connector: commands/network/delete/network_connector.md
-        - Route: commands/network/delete/route.md
-        - Srv6 Network Slice: commands/network/delete/srv6_network_slice.md
-        - Subnet: commands/network/delete/subnet.md
-        - Tunnel: commands/network/delete/tunnel.md
-      - Get:
-        - Get Overview: commands/network/get/index.md
-        - Address Allocator: commands/network/get/address_allocator.md
-        - Advertise Policy: commands/network/get/advertise_policy.md
-        - BGP: commands/network/get/bgp.md
-        - BGP ASN Set: commands/network/get/bgp_asn_set.md
-        - BGP Routing Policy: commands/network/get/bgp_routing_policy.md
-        - Dc Cluster Group: commands/network/get/dc_cluster_group.md
-        - Forwarding Class: commands/network/get/forwarding_class.md
-        - Ike1: commands/network/get/ike1.md
-        - Ike2: commands/network/get/ike2.md
-        - IKE Phase1 Profile: commands/network/get/ike_phase1_profile.md
-        - IKE Phase2 Profile: commands/network/get/ike_phase2_profile.md
-        - IP Prefix Set: commands/network/get/ip_prefix_set.md
-        - Network Connector: commands/network/get/network_connector.md
-        - Route: commands/network/get/route.md
-        - Srv6 Network Slice: commands/network/get/srv6_network_slice.md
-        - Subnet: commands/network/get/subnet.md
-        - Tunnel: commands/network/get/tunnel.md
-      - List:
-        - List Overview: commands/network/list/index.md
-        - Address Allocator: commands/network/list/address_allocator.md
-        - Advertise Policy: commands/network/list/advertise_policy.md
-        - BGP: commands/network/list/bgp.md
-        - BGP ASN Set: commands/network/list/bgp_asn_set.md
-        - BGP Routing Policy: commands/network/list/bgp_routing_policy.md
-        - Dc Cluster Group: commands/network/list/dc_cluster_group.md
-        - Forwarding Class: commands/network/list/forwarding_class.md
-        - Ike1: commands/network/list/ike1.md
-        - Ike2: commands/network/list/ike2.md
-        - IKE Phase1 Profile: commands/network/list/ike_phase1_profile.md
-        - IKE Phase2 Profile: commands/network/list/ike_phase2_profile.md
-        - IP Prefix Set: commands/network/list/ip_prefix_set.md
-        - Network Connector: commands/network/list/network_connector.md
-        - Route: commands/network/list/route.md
-        - Srv6 Network Slice: commands/network/list/srv6_network_slice.md
-        - Subnet: commands/network/list/subnet.md
-        - Tunnel: commands/network/list/tunnel.md
-      - Patch:
-        - Patch Overview: commands/network/patch/index.md
-        - Address Allocator: commands/network/patch/address_allocator.md
-        - Advertise Policy: commands/network/patch/advertise_policy.md
-        - BGP: commands/network/patch/bgp.md
-        - BGP ASN Set: commands/network/patch/bgp_asn_set.md
-        - BGP Routing Policy: commands/network/patch/bgp_routing_policy.md
-        - Dc Cluster Group: commands/network/patch/dc_cluster_group.md
-        - Forwarding Class: commands/network/patch/forwarding_class.md
-        - Ike1: commands/network/patch/ike1.md
-        - Ike2: commands/network/patch/ike2.md
-        - IKE Phase1 Profile: commands/network/patch/ike_phase1_profile.md
-        - IKE Phase2 Profile: commands/network/patch/ike_phase2_profile.md
-        - IP Prefix Set: commands/network/patch/ip_prefix_set.md
-        - Network Connector: commands/network/patch/network_connector.md
-        - Route: commands/network/patch/route.md
-        - Srv6 Network Slice: commands/network/patch/srv6_network_slice.md
-        - Subnet: commands/network/patch/subnet.md
-        - Tunnel: commands/network/patch/tunnel.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/network/remove-labels/index.md
-        - Address Allocator: commands/network/remove-labels/address_allocator.md
-        - Advertise Policy: commands/network/remove-labels/advertise_policy.md
-        - BGP: commands/network/remove-labels/bgp.md
-        - BGP ASN Set: commands/network/remove-labels/bgp_asn_set.md
-        - BGP Routing Policy: commands/network/remove-labels/bgp_routing_policy.md
-        - Dc Cluster Group: commands/network/remove-labels/dc_cluster_group.md
-        - Forwarding Class: commands/network/remove-labels/forwarding_class.md
-        - Ike1: commands/network/remove-labels/ike1.md
-        - Ike2: commands/network/remove-labels/ike2.md
-        - IKE Phase1 Profile: commands/network/remove-labels/ike_phase1_profile.md
-        - IKE Phase2 Profile: commands/network/remove-labels/ike_phase2_profile.md
-        - IP Prefix Set: commands/network/remove-labels/ip_prefix_set.md
-        - Network Connector: commands/network/remove-labels/network_connector.md
-        - Route: commands/network/remove-labels/route.md
-        - Srv6 Network Slice: commands/network/remove-labels/srv6_network_slice.md
-        - Subnet: commands/network/remove-labels/subnet.md
-        - Tunnel: commands/network/remove-labels/tunnel.md
-      - Replace:
-        - Replace Overview: commands/network/replace/index.md
-        - Address Allocator: commands/network/replace/address_allocator.md
-        - Advertise Policy: commands/network/replace/advertise_policy.md
-        - BGP: commands/network/replace/bgp.md
-        - BGP ASN Set: commands/network/replace/bgp_asn_set.md
-        - BGP Routing Policy: commands/network/replace/bgp_routing_policy.md
-        - Dc Cluster Group: commands/network/replace/dc_cluster_group.md
-        - Forwarding Class: commands/network/replace/forwarding_class.md
-        - Ike1: commands/network/replace/ike1.md
-        - Ike2: commands/network/replace/ike2.md
-        - IKE Phase1 Profile: commands/network/replace/ike_phase1_profile.md
-        - IKE Phase2 Profile: commands/network/replace/ike_phase2_profile.md
-        - IP Prefix Set: commands/network/replace/ip_prefix_set.md
-        - Network Connector: commands/network/replace/network_connector.md
-        - Route: commands/network/replace/route.md
-        - Srv6 Network Slice: commands/network/replace/srv6_network_slice.md
-        - Subnet: commands/network/replace/subnet.md
-        - Tunnel: commands/network/replace/tunnel.md
-      - Status:
-        - Status Overview: commands/network/status/index.md
-        - Address Allocator: commands/network/status/address_allocator.md
-        - Advertise Policy: commands/network/status/advertise_policy.md
-        - BGP: commands/network/status/bgp.md
-        - BGP ASN Set: commands/network/status/bgp_asn_set.md
-        - BGP Routing Policy: commands/network/status/bgp_routing_policy.md
-        - Dc Cluster Group: commands/network/status/dc_cluster_group.md
-        - Forwarding Class: commands/network/status/forwarding_class.md
-        - Ike1: commands/network/status/ike1.md
-        - Ike2: commands/network/status/ike2.md
-        - IKE Phase1 Profile: commands/network/status/ike_phase1_profile.md
-        - IKE Phase2 Profile: commands/network/status/ike_phase2_profile.md
-        - IP Prefix Set: commands/network/status/ip_prefix_set.md
-        - Network Connector: commands/network/status/network_connector.md
-        - Route: commands/network/status/route.md
-        - Srv6 Network Slice: commands/network/status/srv6_network_slice.md
-        - Subnet: commands/network/status/subnet.md
-        - Tunnel: commands/network/status/tunnel.md
+      - Add Labels: commands/network/add-labels/index.md
+      - Apply: commands/network/apply/index.md
+      - Create: commands/network/create/index.md
+      - Delete: commands/network/delete/index.md
+      - Get: commands/network/get/index.md
+      - List: commands/network/list/index.md
+      - Patch: commands/network/patch/index.md
+      - Remove Labels: commands/network/remove-labels/index.md
+      - Replace: commands/network/replace/index.md
+      - Status: commands/network/status/index.md
     - Network Security:
       - Network Security Overview: commands/network_security/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/network_security/add-labels/index.md
-        - Fast ACL: commands/network_security/add-labels/fast_acl.md
-        - Fast ACL Rule: commands/network_security/add-labels/fast_acl_rule.md
-        - Filter Set: commands/network_security/add-labels/filter_set.md
-        - Forward Proxy Policy: commands/network_security/add-labels/forward_proxy_policy.md
-        - NAT Policy: commands/network_security/add-labels/nat_policy.md
-        - Network Firewall: commands/network_security/add-labels/network_firewall.md
-        - Network Policy: commands/network_security/add-labels/network_policy.md
-        - Network Policy Rule: commands/network_security/add-labels/network_policy_rule.md
-        - Network Policy View: commands/network_security/add-labels/network_policy_view.md
-        - Policy Based Routing: commands/network_security/add-labels/policy_based_routing.md
-        - Segment: commands/network_security/add-labels/segment.md
-        - Service Policy: commands/network_security/add-labels/service_policy.md
-      - Apply:
-        - Apply Overview: commands/network_security/apply/index.md
-        - Fast ACL: commands/network_security/apply/fast_acl.md
-        - Fast ACL Rule: commands/network_security/apply/fast_acl_rule.md
-        - Filter Set: commands/network_security/apply/filter_set.md
-        - Forward Proxy Policy: commands/network_security/apply/forward_proxy_policy.md
-        - NAT Policy: commands/network_security/apply/nat_policy.md
-        - Network Firewall: commands/network_security/apply/network_firewall.md
-        - Network Policy: commands/network_security/apply/network_policy.md
-        - Network Policy Rule: commands/network_security/apply/network_policy_rule.md
-        - Network Policy View: commands/network_security/apply/network_policy_view.md
-        - Policy Based Routing: commands/network_security/apply/policy_based_routing.md
-        - Segment: commands/network_security/apply/segment.md
-        - Service Policy: commands/network_security/apply/service_policy.md
-      - Create:
-        - Create Overview: commands/network_security/create/index.md
-        - Fast ACL: commands/network_security/create/fast_acl.md
-        - Fast ACL Rule: commands/network_security/create/fast_acl_rule.md
-        - Filter Set: commands/network_security/create/filter_set.md
-        - Forward Proxy Policy: commands/network_security/create/forward_proxy_policy.md
-        - NAT Policy: commands/network_security/create/nat_policy.md
-        - Network Firewall: commands/network_security/create/network_firewall.md
-        - Network Policy: commands/network_security/create/network_policy.md
-        - Network Policy Rule: commands/network_security/create/network_policy_rule.md
-        - Network Policy View: commands/network_security/create/network_policy_view.md
-        - Policy Based Routing: commands/network_security/create/policy_based_routing.md
-        - Segment: commands/network_security/create/segment.md
-        - Service Policy: commands/network_security/create/service_policy.md
-      - Delete:
-        - Delete Overview: commands/network_security/delete/index.md
-        - Fast ACL: commands/network_security/delete/fast_acl.md
-        - Fast ACL Rule: commands/network_security/delete/fast_acl_rule.md
-        - Filter Set: commands/network_security/delete/filter_set.md
-        - Forward Proxy Policy: commands/network_security/delete/forward_proxy_policy.md
-        - NAT Policy: commands/network_security/delete/nat_policy.md
-        - Network Firewall: commands/network_security/delete/network_firewall.md
-        - Network Policy: commands/network_security/delete/network_policy.md
-        - Network Policy Rule: commands/network_security/delete/network_policy_rule.md
-        - Network Policy View: commands/network_security/delete/network_policy_view.md
-        - Policy Based Routing: commands/network_security/delete/policy_based_routing.md
-        - Segment: commands/network_security/delete/segment.md
-        - Service Policy: commands/network_security/delete/service_policy.md
-      - Get:
-        - Get Overview: commands/network_security/get/index.md
-        - Fast ACL: commands/network_security/get/fast_acl.md
-        - Fast ACL Rule: commands/network_security/get/fast_acl_rule.md
-        - Filter Set: commands/network_security/get/filter_set.md
-        - Forward Proxy Policy: commands/network_security/get/forward_proxy_policy.md
-        - NAT Policy: commands/network_security/get/nat_policy.md
-        - Network Firewall: commands/network_security/get/network_firewall.md
-        - Network Policy: commands/network_security/get/network_policy.md
-        - Network Policy Rule: commands/network_security/get/network_policy_rule.md
-        - Network Policy View: commands/network_security/get/network_policy_view.md
-        - Policy Based Routing: commands/network_security/get/policy_based_routing.md
-        - Segment: commands/network_security/get/segment.md
-        - Service Policy: commands/network_security/get/service_policy.md
-      - List:
-        - List Overview: commands/network_security/list/index.md
-        - Fast ACL: commands/network_security/list/fast_acl.md
-        - Fast ACL Rule: commands/network_security/list/fast_acl_rule.md
-        - Filter Set: commands/network_security/list/filter_set.md
-        - Forward Proxy Policy: commands/network_security/list/forward_proxy_policy.md
-        - NAT Policy: commands/network_security/list/nat_policy.md
-        - Network Firewall: commands/network_security/list/network_firewall.md
-        - Network Policy: commands/network_security/list/network_policy.md
-        - Network Policy Rule: commands/network_security/list/network_policy_rule.md
-        - Network Policy View: commands/network_security/list/network_policy_view.md
-        - Policy Based Routing: commands/network_security/list/policy_based_routing.md
-        - Segment: commands/network_security/list/segment.md
-        - Service Policy: commands/network_security/list/service_policy.md
-      - Patch:
-        - Patch Overview: commands/network_security/patch/index.md
-        - Fast ACL: commands/network_security/patch/fast_acl.md
-        - Fast ACL Rule: commands/network_security/patch/fast_acl_rule.md
-        - Filter Set: commands/network_security/patch/filter_set.md
-        - Forward Proxy Policy: commands/network_security/patch/forward_proxy_policy.md
-        - NAT Policy: commands/network_security/patch/nat_policy.md
-        - Network Firewall: commands/network_security/patch/network_firewall.md
-        - Network Policy: commands/network_security/patch/network_policy.md
-        - Network Policy Rule: commands/network_security/patch/network_policy_rule.md
-        - Network Policy View: commands/network_security/patch/network_policy_view.md
-        - Policy Based Routing: commands/network_security/patch/policy_based_routing.md
-        - Segment: commands/network_security/patch/segment.md
-        - Service Policy: commands/network_security/patch/service_policy.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/network_security/remove-labels/index.md
-        - Fast ACL: commands/network_security/remove-labels/fast_acl.md
-        - Fast ACL Rule: commands/network_security/remove-labels/fast_acl_rule.md
-        - Filter Set: commands/network_security/remove-labels/filter_set.md
-        - Forward Proxy Policy: commands/network_security/remove-labels/forward_proxy_policy.md
-        - NAT Policy: commands/network_security/remove-labels/nat_policy.md
-        - Network Firewall: commands/network_security/remove-labels/network_firewall.md
-        - Network Policy: commands/network_security/remove-labels/network_policy.md
-        - Network Policy Rule: commands/network_security/remove-labels/network_policy_rule.md
-        - Network Policy View: commands/network_security/remove-labels/network_policy_view.md
-        - Policy Based Routing: commands/network_security/remove-labels/policy_based_routing.md
-        - Segment: commands/network_security/remove-labels/segment.md
-        - Service Policy: commands/network_security/remove-labels/service_policy.md
-      - Replace:
-        - Replace Overview: commands/network_security/replace/index.md
-        - Fast ACL: commands/network_security/replace/fast_acl.md
-        - Fast ACL Rule: commands/network_security/replace/fast_acl_rule.md
-        - Filter Set: commands/network_security/replace/filter_set.md
-        - Forward Proxy Policy: commands/network_security/replace/forward_proxy_policy.md
-        - NAT Policy: commands/network_security/replace/nat_policy.md
-        - Network Firewall: commands/network_security/replace/network_firewall.md
-        - Network Policy: commands/network_security/replace/network_policy.md
-        - Network Policy Rule: commands/network_security/replace/network_policy_rule.md
-        - Network Policy View: commands/network_security/replace/network_policy_view.md
-        - Policy Based Routing: commands/network_security/replace/policy_based_routing.md
-        - Segment: commands/network_security/replace/segment.md
-        - Service Policy: commands/network_security/replace/service_policy.md
-      - Status:
-        - Status Overview: commands/network_security/status/index.md
-        - Fast ACL: commands/network_security/status/fast_acl.md
-        - Fast ACL Rule: commands/network_security/status/fast_acl_rule.md
-        - Filter Set: commands/network_security/status/filter_set.md
-        - Forward Proxy Policy: commands/network_security/status/forward_proxy_policy.md
-        - NAT Policy: commands/network_security/status/nat_policy.md
-        - Network Firewall: commands/network_security/status/network_firewall.md
-        - Network Policy: commands/network_security/status/network_policy.md
-        - Network Policy Rule: commands/network_security/status/network_policy_rule.md
-        - Network Policy View: commands/network_security/status/network_policy_view.md
-        - Policy Based Routing: commands/network_security/status/policy_based_routing.md
-        - Segment: commands/network_security/status/segment.md
-        - Service Policy: commands/network_security/status/service_policy.md
+      - Add Labels: commands/network_security/add-labels/index.md
+      - Apply: commands/network_security/apply/index.md
+      - Create: commands/network_security/create/index.md
+      - Delete: commands/network_security/delete/index.md
+      - Get: commands/network_security/get/index.md
+      - List: commands/network_security/list/index.md
+      - Patch: commands/network_security/patch/index.md
+      - Remove Labels: commands/network_security/remove-labels/index.md
+      - Replace: commands/network_security/replace/index.md
+      - Status: commands/network_security/status/index.md
     - Nginx One:
       - Nginx One Overview: commands/nginx_one/index.md
       - Add Labels: commands/nginx_one/add-labels/index.md
@@ -1403,364 +414,40 @@ nav:
       - Status: commands/observability/status/index.md
     - Rate Limiting:
       - Rate Limiting Overview: commands/rate_limiting/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/rate_limiting/add-labels/index.md
-        - Policer: commands/rate_limiting/add-labels/policer.md
-        - Protocol Policer: commands/rate_limiting/add-labels/protocol_policer.md
-        - Rate Limiter: commands/rate_limiting/add-labels/rate_limiter.md
-      - Apply:
-        - Apply Overview: commands/rate_limiting/apply/index.md
-        - Policer: commands/rate_limiting/apply/policer.md
-        - Protocol Policer: commands/rate_limiting/apply/protocol_policer.md
-        - Rate Limiter: commands/rate_limiting/apply/rate_limiter.md
-      - Create:
-        - Create Overview: commands/rate_limiting/create/index.md
-        - Policer: commands/rate_limiting/create/policer.md
-        - Protocol Policer: commands/rate_limiting/create/protocol_policer.md
-        - Rate Limiter: commands/rate_limiting/create/rate_limiter.md
-      - Delete:
-        - Delete Overview: commands/rate_limiting/delete/index.md
-        - Policer: commands/rate_limiting/delete/policer.md
-        - Protocol Policer: commands/rate_limiting/delete/protocol_policer.md
-        - Rate Limiter: commands/rate_limiting/delete/rate_limiter.md
-      - Get:
-        - Get Overview: commands/rate_limiting/get/index.md
-        - Policer: commands/rate_limiting/get/policer.md
-        - Protocol Policer: commands/rate_limiting/get/protocol_policer.md
-        - Rate Limiter: commands/rate_limiting/get/rate_limiter.md
-      - List:
-        - List Overview: commands/rate_limiting/list/index.md
-        - Policer: commands/rate_limiting/list/policer.md
-        - Protocol Policer: commands/rate_limiting/list/protocol_policer.md
-        - Rate Limiter: commands/rate_limiting/list/rate_limiter.md
-      - Patch:
-        - Patch Overview: commands/rate_limiting/patch/index.md
-        - Policer: commands/rate_limiting/patch/policer.md
-        - Protocol Policer: commands/rate_limiting/patch/protocol_policer.md
-        - Rate Limiter: commands/rate_limiting/patch/rate_limiter.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/rate_limiting/remove-labels/index.md
-        - Policer: commands/rate_limiting/remove-labels/policer.md
-        - Protocol Policer: commands/rate_limiting/remove-labels/protocol_policer.md
-        - Rate Limiter: commands/rate_limiting/remove-labels/rate_limiter.md
-      - Replace:
-        - Replace Overview: commands/rate_limiting/replace/index.md
-        - Policer: commands/rate_limiting/replace/policer.md
-        - Protocol Policer: commands/rate_limiting/replace/protocol_policer.md
-        - Rate Limiter: commands/rate_limiting/replace/rate_limiter.md
-      - Status:
-        - Status Overview: commands/rate_limiting/status/index.md
-        - Policer: commands/rate_limiting/status/policer.md
-        - Protocol Policer: commands/rate_limiting/status/protocol_policer.md
-        - Rate Limiter: commands/rate_limiting/status/rate_limiter.md
-    - Request:
-      - Request Overview: commands/request/index.md
-      - Command Sequence: commands/request/command-sequence/index.md
-      - RPC:
-        - RPC Overview: commands/request/rpc/index.md
-        - Addon Service: commands/request/rpc/addon_service.md
-        - Alert: commands/request/rpc/alert.md
-        - Alert Gen Policy: commands/request/rpc/alert_gen_policy.md
-        - Alert Policy: commands/request/rpc/alert_policy.md
-        - Alert Receiver: commands/request/rpc/alert_receiver.md
-        - Alert Template: commands/request/rpc/alert_template.md
-        - Allowed Tenant: commands/request/rpc/allowed_tenant.md
-        - API Credential: commands/request/rpc/api_credential.md
-        - API Definition: commands/request/rpc/api_definition.md
-        - APM: commands/request/rpc/apm.md
-        - App API Group: commands/request/rpc/app_api_group.md
-        - App Firewall: commands/request/rpc/app_firewall.md
-        - App Security: commands/request/rpc/app_security.md
-        - App Setting: commands/request/rpc/app_setting.md
-        - App Type: commands/request/rpc/app_type.md
-        - AWS Account: commands/request/rpc/aws_account.md
-        - AWS TGW Site: commands/request/rpc/aws_tgw_site.md
-        - AWS VPC Site: commands/request/rpc/aws_vpc_site.md
-        - Azure VNET Site: commands/request/rpc/azure_vnet_site.md
-        - Bfdp: commands/request/rpc/bfdp.md
-        - BGP: commands/request/rpc/bgp.md
-        - BIG-IP Virtual Server: commands/request/rpc/bigip_virtual_server.md
-        - Bot Allowlist Policy: commands/request/rpc/bot_allowlist_policy.md
-        - Bot Detection Rule: commands/request/rpc/bot_detection_rule.md
-        - Bot Detection Update: commands/request/rpc/bot_detection_update.md
-        - Bot Endpoint Policy: commands/request/rpc/bot_endpoint_policy.md
-        - Bot Infrastructure: commands/request/rpc/bot_infrastructure.md
-        - Bot Network Policy: commands/request/rpc/bot_network_policy.md
-        - Catalog: commands/request/rpc/catalog.md
-        - CDN Load Balancer: commands/request/rpc/cdn_loadbalancer.md
-        - Child Tenant: commands/request/rpc/child_tenant.md
-        - Child Tenant Manager: commands/request/rpc/child_tenant_manager.md
-        - Client Side Defense: commands/request/rpc/client_side_defense.md
-        - Cloud Connect: commands/request/rpc/cloud_connect.md
-        - Cloud Elastic IP: commands/request/rpc/cloud_elastic_ip.md
-        - Cloud Link: commands/request/rpc/cloud_link.md
-        - Connectivity: commands/request/rpc/connectivity.md
-        - CRL: commands/request/rpc/crl.md
-        - Customer Support: commands/request/rpc/customer_support.md
-        - Data Delivery: commands/request/rpc/data_delivery.md
-        - Dc Cluster Group: commands/request/rpc/dc_cluster_group.md
-        - Debug: commands/request/rpc/debug.md
-        - Device ID: commands/request/rpc/device_id.md
-        - DHCP: commands/request/rpc/dhcp.md
-        - Discovered Service: commands/request/rpc/discovered_service.md
-        - Discovery: commands/request/rpc/discovery.md
-        - DNS Domain: commands/request/rpc/dns_domain.md
-        - DNS Load Balancer: commands/request/rpc/dns_load_balancer.md
-        - DNS Zone: commands/request/rpc/dns_zone.md
-        - Enhanced Firewall Policy: commands/request/rpc/enhanced_firewall_policy.md
-        - Fast ACL: commands/request/rpc/fast_acl.md
-        - Filter Set: commands/request/rpc/filter_set.md
-        - Flow: commands/request/rpc/flow.md
-        - Forward Proxy Policy: commands/request/rpc/forward_proxy_policy.md
-        - GCP VPC Site: commands/request/rpc/gcp_vpc_site.md
-        - Gia: commands/request/rpc/gia.md
-        - Global Log Receiver: commands/request/rpc/global_log_receiver.md
-        - HTTP Load Balancer: commands/request/rpc/http_loadbalancer.md
-        - Implicit Label: commands/request/rpc/implicit_label.md
-        - Infraprotect: commands/request/rpc/infraprotect.md
-        - Infraprotect ASN: commands/request/rpc/infraprotect_asn.md
-        - Infraprotect ASN Prefix: commands/request/rpc/infraprotect_asn_prefix.md
-        - Infraprotect Internet Prefix Advertisement: commands/request/rpc/infraprotect_internet_prefix_advertisement.md
-        - Infraprotect Tunnel: commands/request/rpc/infraprotect_tunnel.md
-        - Invoice: commands/request/rpc/invoice.md
-        - Known Label: commands/request/rpc/known_label.md
-        - Known Label Key: commands/request/rpc/known_label_key.md
-        - L3l4: commands/request/rpc/l3l4.md
-        - Log: commands/request/rpc/log.md
-        - Log Receiver: commands/request/rpc/log_receiver.md
-        - Lte: commands/request/rpc/lte.md
-        - Maintenance Status: commands/request/rpc/maintenance_status.md
-        - Managed Tenant: commands/request/rpc/managed_tenant.md
-        - Mobile Base Config: commands/request/rpc/mobile_base_config.md
-        - Mobile Sdk: commands/request/rpc/mobile_sdk.md
-        - Namespace: commands/request/rpc/namespace.md
-        - Network Policy: commands/request/rpc/network_policy.md
-        - Network Policy View: commands/request/rpc/network_policy_view.md
-        - Nfv Service: commands/request/rpc/nfv_service.md
-        - Nginx Server: commands/request/rpc/nginx_server.md
-        - OIDC Provider: commands/request/rpc/oidc_provider.md
-        - Payment Method: commands/request/rpc/payment_method.md
-        - Ping: commands/request/rpc/ping.md
-        - Plan: commands/request/rpc/plan.md
-        - Plan Transition: commands/request/rpc/plan_transition.md
-        - Protected Application: commands/request/rpc/protected_application.md
-        - Proxy: commands/request/rpc/proxy.md
-        - Quota: commands/request/rpc/quota.md
-        - Recognize: commands/request/rpc/recognize.md
-        - Registration: commands/request/rpc/registration.md
-        - Report: commands/request/rpc/report.md
-        - Report Config: commands/request/rpc/report_config.md
-        - Reporting: commands/request/rpc/reporting.md
-        - Role: commands/request/rpc/role.md
-        - Route: commands/request/rpc/route.md
-        - Rrset: commands/request/rpc/rrset.md
-        - Rule Suggestion: commands/request/rpc/rule_suggestion.md
-        - Safe: commands/request/rpc/safe.md
-        - Safeap: commands/request/rpc/safeap.md
-        - Scim: commands/request/rpc/scim.md
-        - Secret Management: commands/request/rpc/secret_management.md
-        - Secret Policy: commands/request/rpc/secret_policy.md
-        - Segment: commands/request/rpc/segment.md
-        - Service: commands/request/rpc/service.md
-        - Service Policy: commands/request/rpc/service_policy.md
-        - Setting: commands/request/rpc/setting.md
-        - Signup: commands/request/rpc/signup.md
-        - Site: commands/request/rpc/site.md
-        - Status At Site: commands/request/rpc/status_at_site.md
-        - Stored Object: commands/request/rpc/stored_object.md
-        - Subscription: commands/request/rpc/subscription.md
-        - Synthetic Monitor: commands/request/rpc/synthetic_monitor.md
-        - TCP Load Balancer: commands/request/rpc/tcp_loadbalancer.md
-        - Tcpdump: commands/request/rpc/tcpdump.md
-        - Tenant: commands/request/rpc/tenant.md
-        - Tenant Management: commands/request/rpc/tenant_management.md
-        - Terraform Parameters: commands/request/rpc/terraform_parameters.md
-        - Third Party Application: commands/request/rpc/third_party_application.md
-        - Ticket Tracking System: commands/request/rpc/ticket_tracking_system.md
-        - Token: commands/request/rpc/token.md
-        - Topology: commands/request/rpc/topology.md
-        - Tpm Provision: commands/request/rpc/tpm_provision.md
-        - Traceroute: commands/request/rpc/traceroute.md
-        - UDP Load Balancer: commands/request/rpc/udp_loadbalancer.md
-        - Usage: commands/request/rpc/usage.md
-        - Usb: commands/request/rpc/usb.md
-        - User: commands/request/rpc/user.md
-        - User Group: commands/request/rpc/user_group.md
-        - User Token: commands/request/rpc/user_token.md
-        - V1 DNS Monitor: commands/request/rpc/v1_dns_monitor.md
-        - V1 HTTP Monitor: commands/request/rpc/v1_http_monitor.md
-        - View Internal: commands/request/rpc/view_internal.md
-        - Virtual Host: commands/request/rpc/virtual_host.md
-        - Virtual K8S: commands/request/rpc/virtual_k8s.md
-        - Virtual Network: commands/request/rpc/virtual_network.md
-        - Virtual Site: commands/request/rpc/virtual_site.md
-        - Voltshare: commands/request/rpc/voltshare.md
-        - WAF: commands/request/rpc/waf.md
-        - WAF Signatures Changelog: commands/request/rpc/waf_signatures_changelog.md
-        - Wifi: commands/request/rpc/wifi.md
-        - Workload: commands/request/rpc/workload.md
-        - XC Saas: commands/request/rpc/xc_saas.md
-      - Secrets:
-        - Secrets Overview: commands/request/secrets/index.md
-        - Build Blindfold Bundle: commands/request/secrets/build-blindfold-bundle.md
-        - Encrypt: commands/request/secrets/encrypt.md
-        - Get Policy Document: commands/request/secrets/get-policy-document.md
-        - Get Public Key: commands/request/secrets/get-public-key.md
-        - Secret Info: commands/request/secrets/secret-info.md
+      - Add Labels: commands/rate_limiting/add-labels/index.md
+      - Apply: commands/rate_limiting/apply/index.md
+      - Create: commands/rate_limiting/create/index.md
+      - Delete: commands/rate_limiting/delete/index.md
+      - Get: commands/rate_limiting/get/index.md
+      - List: commands/rate_limiting/list/index.md
+      - Patch: commands/rate_limiting/patch/index.md
+      - Remove Labels: commands/rate_limiting/remove-labels/index.md
+      - Replace: commands/rate_limiting/replace/index.md
+      - Status: commands/rate_limiting/status/index.md
     - Secops And Incident Response:
       - Secops And Incident Response Overview: commands/secops_and_incident_response/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/secops_and_incident_response/add-labels/index.md
-        - Malicious User Mitigation: commands/secops_and_incident_response/add-labels/malicious_user_mitigation.md
-        - Secret Management Access: commands/secops_and_incident_response/add-labels/secret_management_access.md
-      - Apply:
-        - Apply Overview: commands/secops_and_incident_response/apply/index.md
-        - Malicious User Mitigation: commands/secops_and_incident_response/apply/malicious_user_mitigation.md
-        - Secret Management Access: commands/secops_and_incident_response/apply/secret_management_access.md
-      - Create:
-        - Create Overview: commands/secops_and_incident_response/create/index.md
-        - Malicious User Mitigation: commands/secops_and_incident_response/create/malicious_user_mitigation.md
-        - Secret Management Access: commands/secops_and_incident_response/create/secret_management_access.md
-      - Delete:
-        - Delete Overview: commands/secops_and_incident_response/delete/index.md
-        - Malicious User Mitigation: commands/secops_and_incident_response/delete/malicious_user_mitigation.md
-        - Secret Management Access: commands/secops_and_incident_response/delete/secret_management_access.md
-      - Get:
-        - Get Overview: commands/secops_and_incident_response/get/index.md
-        - Malicious User Mitigation: commands/secops_and_incident_response/get/malicious_user_mitigation.md
-        - Secret Management Access: commands/secops_and_incident_response/get/secret_management_access.md
-      - List:
-        - List Overview: commands/secops_and_incident_response/list/index.md
-        - Malicious User Mitigation: commands/secops_and_incident_response/list/malicious_user_mitigation.md
-        - Secret Management Access: commands/secops_and_incident_response/list/secret_management_access.md
-      - Patch:
-        - Patch Overview: commands/secops_and_incident_response/patch/index.md
-        - Malicious User Mitigation: commands/secops_and_incident_response/patch/malicious_user_mitigation.md
-        - Secret Management Access: commands/secops_and_incident_response/patch/secret_management_access.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/secops_and_incident_response/remove-labels/index.md
-        - Malicious User Mitigation: commands/secops_and_incident_response/remove-labels/malicious_user_mitigation.md
-        - Secret Management Access: commands/secops_and_incident_response/remove-labels/secret_management_access.md
-      - Replace:
-        - Replace Overview: commands/secops_and_incident_response/replace/index.md
-        - Malicious User Mitigation: commands/secops_and_incident_response/replace/malicious_user_mitigation.md
-        - Secret Management Access: commands/secops_and_incident_response/replace/secret_management_access.md
-      - Status:
-        - Status Overview: commands/secops_and_incident_response/status/index.md
-        - Malicious User Mitigation: commands/secops_and_incident_response/status/malicious_user_mitigation.md
-        - Secret Management Access: commands/secops_and_incident_response/status/secret_management_access.md
+      - Add Labels: commands/secops_and_incident_response/add-labels/index.md
+      - Apply: commands/secops_and_incident_response/apply/index.md
+      - Create: commands/secops_and_incident_response/create/index.md
+      - Delete: commands/secops_and_incident_response/delete/index.md
+      - Get: commands/secops_and_incident_response/get/index.md
+      - List: commands/secops_and_incident_response/list/index.md
+      - Patch: commands/secops_and_incident_response/patch/index.md
+      - Remove Labels: commands/secops_and_incident_response/remove-labels/index.md
+      - Replace: commands/secops_and_incident_response/replace/index.md
+      - Status: commands/secops_and_incident_response/status/index.md
     - Service Mesh:
       - Service Mesh Overview: commands/service_mesh/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/service_mesh/add-labels/index.md
-        - App Setting: commands/service_mesh/add-labels/app_setting.md
-        - App Type: commands/service_mesh/add-labels/app_type.md
-        - Discovery: commands/service_mesh/add-labels/discovery.md
-        - Endpoint: commands/service_mesh/add-labels/endpoint.md
-        - Fleet: commands/service_mesh/add-labels/fleet.md
-        - Nfv Service: commands/service_mesh/add-labels/nfv_service.md
-        - Site Mesh Group: commands/service_mesh/add-labels/site_mesh_group.md
-        - Virtual Host: commands/service_mesh/add-labels/virtual_host.md
-        - Virtual Network: commands/service_mesh/add-labels/virtual_network.md
-      - Apply:
-        - Apply Overview: commands/service_mesh/apply/index.md
-        - App Setting: commands/service_mesh/apply/app_setting.md
-        - App Type: commands/service_mesh/apply/app_type.md
-        - Discovery: commands/service_mesh/apply/discovery.md
-        - Endpoint: commands/service_mesh/apply/endpoint.md
-        - Fleet: commands/service_mesh/apply/fleet.md
-        - Nfv Service: commands/service_mesh/apply/nfv_service.md
-        - Site Mesh Group: commands/service_mesh/apply/site_mesh_group.md
-        - Virtual Host: commands/service_mesh/apply/virtual_host.md
-        - Virtual Network: commands/service_mesh/apply/virtual_network.md
-      - Create:
-        - Create Overview: commands/service_mesh/create/index.md
-        - App Setting: commands/service_mesh/create/app_setting.md
-        - App Type: commands/service_mesh/create/app_type.md
-        - Discovery: commands/service_mesh/create/discovery.md
-        - Endpoint: commands/service_mesh/create/endpoint.md
-        - Fleet: commands/service_mesh/create/fleet.md
-        - Nfv Service: commands/service_mesh/create/nfv_service.md
-        - Site Mesh Group: commands/service_mesh/create/site_mesh_group.md
-        - Virtual Host: commands/service_mesh/create/virtual_host.md
-        - Virtual Network: commands/service_mesh/create/virtual_network.md
-      - Delete:
-        - Delete Overview: commands/service_mesh/delete/index.md
-        - App Setting: commands/service_mesh/delete/app_setting.md
-        - App Type: commands/service_mesh/delete/app_type.md
-        - Discovery: commands/service_mesh/delete/discovery.md
-        - Endpoint: commands/service_mesh/delete/endpoint.md
-        - Fleet: commands/service_mesh/delete/fleet.md
-        - Nfv Service: commands/service_mesh/delete/nfv_service.md
-        - Site Mesh Group: commands/service_mesh/delete/site_mesh_group.md
-        - Virtual Host: commands/service_mesh/delete/virtual_host.md
-        - Virtual Network: commands/service_mesh/delete/virtual_network.md
-      - Get:
-        - Get Overview: commands/service_mesh/get/index.md
-        - App Setting: commands/service_mesh/get/app_setting.md
-        - App Type: commands/service_mesh/get/app_type.md
-        - Discovery: commands/service_mesh/get/discovery.md
-        - Endpoint: commands/service_mesh/get/endpoint.md
-        - Fleet: commands/service_mesh/get/fleet.md
-        - Nfv Service: commands/service_mesh/get/nfv_service.md
-        - Site Mesh Group: commands/service_mesh/get/site_mesh_group.md
-        - Virtual Host: commands/service_mesh/get/virtual_host.md
-        - Virtual Network: commands/service_mesh/get/virtual_network.md
-      - List:
-        - List Overview: commands/service_mesh/list/index.md
-        - App Setting: commands/service_mesh/list/app_setting.md
-        - App Type: commands/service_mesh/list/app_type.md
-        - Discovery: commands/service_mesh/list/discovery.md
-        - Endpoint: commands/service_mesh/list/endpoint.md
-        - Fleet: commands/service_mesh/list/fleet.md
-        - Nfv Service: commands/service_mesh/list/nfv_service.md
-        - Site Mesh Group: commands/service_mesh/list/site_mesh_group.md
-        - Virtual Host: commands/service_mesh/list/virtual_host.md
-        - Virtual Network: commands/service_mesh/list/virtual_network.md
-      - Patch:
-        - Patch Overview: commands/service_mesh/patch/index.md
-        - App Setting: commands/service_mesh/patch/app_setting.md
-        - App Type: commands/service_mesh/patch/app_type.md
-        - Discovery: commands/service_mesh/patch/discovery.md
-        - Endpoint: commands/service_mesh/patch/endpoint.md
-        - Fleet: commands/service_mesh/patch/fleet.md
-        - Nfv Service: commands/service_mesh/patch/nfv_service.md
-        - Site Mesh Group: commands/service_mesh/patch/site_mesh_group.md
-        - Virtual Host: commands/service_mesh/patch/virtual_host.md
-        - Virtual Network: commands/service_mesh/patch/virtual_network.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/service_mesh/remove-labels/index.md
-        - App Setting: commands/service_mesh/remove-labels/app_setting.md
-        - App Type: commands/service_mesh/remove-labels/app_type.md
-        - Discovery: commands/service_mesh/remove-labels/discovery.md
-        - Endpoint: commands/service_mesh/remove-labels/endpoint.md
-        - Fleet: commands/service_mesh/remove-labels/fleet.md
-        - Nfv Service: commands/service_mesh/remove-labels/nfv_service.md
-        - Site Mesh Group: commands/service_mesh/remove-labels/site_mesh_group.md
-        - Virtual Host: commands/service_mesh/remove-labels/virtual_host.md
-        - Virtual Network: commands/service_mesh/remove-labels/virtual_network.md
-      - Replace:
-        - Replace Overview: commands/service_mesh/replace/index.md
-        - App Setting: commands/service_mesh/replace/app_setting.md
-        - App Type: commands/service_mesh/replace/app_type.md
-        - Discovery: commands/service_mesh/replace/discovery.md
-        - Endpoint: commands/service_mesh/replace/endpoint.md
-        - Fleet: commands/service_mesh/replace/fleet.md
-        - Nfv Service: commands/service_mesh/replace/nfv_service.md
-        - Site Mesh Group: commands/service_mesh/replace/site_mesh_group.md
-        - Virtual Host: commands/service_mesh/replace/virtual_host.md
-        - Virtual Network: commands/service_mesh/replace/virtual_network.md
-      - Status:
-        - Status Overview: commands/service_mesh/status/index.md
-        - App Setting: commands/service_mesh/status/app_setting.md
-        - App Type: commands/service_mesh/status/app_type.md
-        - Discovery: commands/service_mesh/status/discovery.md
-        - Endpoint: commands/service_mesh/status/endpoint.md
-        - Fleet: commands/service_mesh/status/fleet.md
-        - Nfv Service: commands/service_mesh/status/nfv_service.md
-        - Site Mesh Group: commands/service_mesh/status/site_mesh_group.md
-        - Virtual Host: commands/service_mesh/status/virtual_host.md
-        - Virtual Network: commands/service_mesh/status/virtual_network.md
+      - Add Labels: commands/service_mesh/add-labels/index.md
+      - Apply: commands/service_mesh/apply/index.md
+      - Create: commands/service_mesh/create/index.md
+      - Delete: commands/service_mesh/delete/index.md
+      - Get: commands/service_mesh/get/index.md
+      - List: commands/service_mesh/list/index.md
+      - Patch: commands/service_mesh/patch/index.md
+      - Remove Labels: commands/service_mesh/remove-labels/index.md
+      - Replace: commands/service_mesh/replace/index.md
+      - Status: commands/service_mesh/status/index.md
     - Shape:
       - Shape Overview: commands/shape/index.md
       - Add Labels: commands/shape/add-labels/index.md
@@ -1773,294 +460,42 @@ nav:
       - Remove Labels: commands/shape/remove-labels/index.md
       - Replace: commands/shape/replace/index.md
       - Status: commands/shape/status/index.md
-    - Site:
-      - Site Overview: commands/site/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/site/add-labels/index.md
-        - Virtual K8S: commands/site/add-labels/virtual_k8s.md
-      - Apply:
-        - Apply Overview: commands/site/apply/index.md
-        - Virtual K8S: commands/site/apply/virtual_k8s.md
-      - AWS VPC:
-        - AWS VPC Overview: commands/site/aws_vpc/index.md
-        - Create: commands/site/aws_vpc/create.md
-        - Delete: commands/site/aws_vpc/delete.md
-        - Replace: commands/site/aws_vpc/replace.md
-        - Run: commands/site/aws_vpc/run.md
-      - Azure VNET:
-        - Azure VNET Overview: commands/site/azure_vnet/index.md
-        - Create: commands/site/azure_vnet/create.md
-        - Delete: commands/site/azure_vnet/delete.md
-        - Replace: commands/site/azure_vnet/replace.md
-        - Run: commands/site/azure_vnet/run.md
-      - Create:
-        - Create Overview: commands/site/create/index.md
-        - Virtual K8S: commands/site/create/virtual_k8s.md
-      - Delete:
-        - Delete Overview: commands/site/delete/index.md
-        - Virtual K8S: commands/site/delete/virtual_k8s.md
-      - Get:
-        - Get Overview: commands/site/get/index.md
-        - Virtual K8S: commands/site/get/virtual_k8s.md
-      - List:
-        - List Overview: commands/site/list/index.md
-        - Virtual K8S: commands/site/list/virtual_k8s.md
-      - Patch:
-        - Patch Overview: commands/site/patch/index.md
-        - Virtual K8S: commands/site/patch/virtual_k8s.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/site/remove-labels/index.md
-        - Virtual K8S: commands/site/remove-labels/virtual_k8s.md
-      - Replace:
-        - Replace Overview: commands/site/replace/index.md
-        - Virtual K8S: commands/site/replace/virtual_k8s.md
-      - Status:
-        - Status Overview: commands/site/status/index.md
-        - Virtual K8S: commands/site/status/virtual_k8s.md
-    - Site Management:
-      - Site Management Overview: commands/site_management/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/site_management/add-labels/index.md
-        - AWS TGW Site: commands/site_management/add-labels/aws_tgw_site.md
-        - AWS VPC Site: commands/site_management/add-labels/aws_vpc_site.md
-        - Azure VNET Site: commands/site_management/add-labels/azure_vnet_site.md
-        - GCP VPC Site: commands/site_management/add-labels/gcp_vpc_site.md
-        - K8S Cluster: commands/site_management/add-labels/k8s_cluster.md
-        - K8S Cluster Role: commands/site_management/add-labels/k8s_cluster_role.md
-        - K8S Cluster Role Binding: commands/site_management/add-labels/k8s_cluster_role_binding.md
-        - Securemesh Site: commands/site_management/add-labels/securemesh_site.md
-        - Securemesh Site V2: commands/site_management/add-labels/securemesh_site_v2.md
-        - Virtual Site: commands/site_management/add-labels/virtual_site.md
-        - Voltstack Site: commands/site_management/add-labels/voltstack_site.md
-      - Apply:
-        - Apply Overview: commands/site_management/apply/index.md
-        - AWS TGW Site: commands/site_management/apply/aws_tgw_site.md
-        - AWS VPC Site: commands/site_management/apply/aws_vpc_site.md
-        - Azure VNET Site: commands/site_management/apply/azure_vnet_site.md
-        - GCP VPC Site: commands/site_management/apply/gcp_vpc_site.md
-        - K8S Cluster: commands/site_management/apply/k8s_cluster.md
-        - K8S Cluster Role: commands/site_management/apply/k8s_cluster_role.md
-        - K8S Cluster Role Binding: commands/site_management/apply/k8s_cluster_role_binding.md
-        - Securemesh Site: commands/site_management/apply/securemesh_site.md
-        - Securemesh Site V2: commands/site_management/apply/securemesh_site_v2.md
-        - Virtual Site: commands/site_management/apply/virtual_site.md
-        - Voltstack Site: commands/site_management/apply/voltstack_site.md
-      - Create:
-        - Create Overview: commands/site_management/create/index.md
-        - AWS TGW Site: commands/site_management/create/aws_tgw_site.md
-        - AWS VPC Site: commands/site_management/create/aws_vpc_site.md
-        - Azure VNET Site: commands/site_management/create/azure_vnet_site.md
-        - GCP VPC Site: commands/site_management/create/gcp_vpc_site.md
-        - K8S Cluster: commands/site_management/create/k8s_cluster.md
-        - K8S Cluster Role: commands/site_management/create/k8s_cluster_role.md
-        - K8S Cluster Role Binding: commands/site_management/create/k8s_cluster_role_binding.md
-        - Securemesh Site: commands/site_management/create/securemesh_site.md
-        - Securemesh Site V2: commands/site_management/create/securemesh_site_v2.md
-        - Virtual Site: commands/site_management/create/virtual_site.md
-        - Voltstack Site: commands/site_management/create/voltstack_site.md
-      - Delete:
-        - Delete Overview: commands/site_management/delete/index.md
-        - AWS TGW Site: commands/site_management/delete/aws_tgw_site.md
-        - AWS VPC Site: commands/site_management/delete/aws_vpc_site.md
-        - Azure VNET Site: commands/site_management/delete/azure_vnet_site.md
-        - GCP VPC Site: commands/site_management/delete/gcp_vpc_site.md
-        - K8S Cluster: commands/site_management/delete/k8s_cluster.md
-        - K8S Cluster Role: commands/site_management/delete/k8s_cluster_role.md
-        - K8S Cluster Role Binding: commands/site_management/delete/k8s_cluster_role_binding.md
-        - Securemesh Site: commands/site_management/delete/securemesh_site.md
-        - Securemesh Site V2: commands/site_management/delete/securemesh_site_v2.md
-        - Virtual Site: commands/site_management/delete/virtual_site.md
-        - Voltstack Site: commands/site_management/delete/voltstack_site.md
-      - Get:
-        - Get Overview: commands/site_management/get/index.md
-        - AWS TGW Site: commands/site_management/get/aws_tgw_site.md
-        - AWS VPC Site: commands/site_management/get/aws_vpc_site.md
-        - Azure VNET Site: commands/site_management/get/azure_vnet_site.md
-        - GCP VPC Site: commands/site_management/get/gcp_vpc_site.md
-        - K8S Cluster: commands/site_management/get/k8s_cluster.md
-        - K8S Cluster Role: commands/site_management/get/k8s_cluster_role.md
-        - K8S Cluster Role Binding: commands/site_management/get/k8s_cluster_role_binding.md
-        - Securemesh Site: commands/site_management/get/securemesh_site.md
-        - Securemesh Site V2: commands/site_management/get/securemesh_site_v2.md
-        - Virtual Site: commands/site_management/get/virtual_site.md
-        - Voltstack Site: commands/site_management/get/voltstack_site.md
-      - List:
-        - List Overview: commands/site_management/list/index.md
-        - AWS TGW Site: commands/site_management/list/aws_tgw_site.md
-        - AWS VPC Site: commands/site_management/list/aws_vpc_site.md
-        - Azure VNET Site: commands/site_management/list/azure_vnet_site.md
-        - GCP VPC Site: commands/site_management/list/gcp_vpc_site.md
-        - K8S Cluster: commands/site_management/list/k8s_cluster.md
-        - K8S Cluster Role: commands/site_management/list/k8s_cluster_role.md
-        - K8S Cluster Role Binding: commands/site_management/list/k8s_cluster_role_binding.md
-        - Securemesh Site: commands/site_management/list/securemesh_site.md
-        - Securemesh Site V2: commands/site_management/list/securemesh_site_v2.md
-        - Virtual Site: commands/site_management/list/virtual_site.md
-        - Voltstack Site: commands/site_management/list/voltstack_site.md
-      - Patch:
-        - Patch Overview: commands/site_management/patch/index.md
-        - AWS TGW Site: commands/site_management/patch/aws_tgw_site.md
-        - AWS VPC Site: commands/site_management/patch/aws_vpc_site.md
-        - Azure VNET Site: commands/site_management/patch/azure_vnet_site.md
-        - GCP VPC Site: commands/site_management/patch/gcp_vpc_site.md
-        - K8S Cluster: commands/site_management/patch/k8s_cluster.md
-        - K8S Cluster Role: commands/site_management/patch/k8s_cluster_role.md
-        - K8S Cluster Role Binding: commands/site_management/patch/k8s_cluster_role_binding.md
-        - Securemesh Site: commands/site_management/patch/securemesh_site.md
-        - Securemesh Site V2: commands/site_management/patch/securemesh_site_v2.md
-        - Virtual Site: commands/site_management/patch/virtual_site.md
-        - Voltstack Site: commands/site_management/patch/voltstack_site.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/site_management/remove-labels/index.md
-        - AWS TGW Site: commands/site_management/remove-labels/aws_tgw_site.md
-        - AWS VPC Site: commands/site_management/remove-labels/aws_vpc_site.md
-        - Azure VNET Site: commands/site_management/remove-labels/azure_vnet_site.md
-        - GCP VPC Site: commands/site_management/remove-labels/gcp_vpc_site.md
-        - K8S Cluster: commands/site_management/remove-labels/k8s_cluster.md
-        - K8S Cluster Role: commands/site_management/remove-labels/k8s_cluster_role.md
-        - K8S Cluster Role Binding: commands/site_management/remove-labels/k8s_cluster_role_binding.md
-        - Securemesh Site: commands/site_management/remove-labels/securemesh_site.md
-        - Securemesh Site V2: commands/site_management/remove-labels/securemesh_site_v2.md
-        - Virtual Site: commands/site_management/remove-labels/virtual_site.md
-        - Voltstack Site: commands/site_management/remove-labels/voltstack_site.md
-      - Replace:
-        - Replace Overview: commands/site_management/replace/index.md
-        - AWS TGW Site: commands/site_management/replace/aws_tgw_site.md
-        - AWS VPC Site: commands/site_management/replace/aws_vpc_site.md
-        - Azure VNET Site: commands/site_management/replace/azure_vnet_site.md
-        - GCP VPC Site: commands/site_management/replace/gcp_vpc_site.md
-        - K8S Cluster: commands/site_management/replace/k8s_cluster.md
-        - K8S Cluster Role: commands/site_management/replace/k8s_cluster_role.md
-        - K8S Cluster Role Binding: commands/site_management/replace/k8s_cluster_role_binding.md
-        - Securemesh Site: commands/site_management/replace/securemesh_site.md
-        - Securemesh Site V2: commands/site_management/replace/securemesh_site_v2.md
-        - Virtual Site: commands/site_management/replace/virtual_site.md
-        - Voltstack Site: commands/site_management/replace/voltstack_site.md
-      - Status:
-        - Status Overview: commands/site_management/status/index.md
-        - AWS TGW Site: commands/site_management/status/aws_tgw_site.md
-        - AWS VPC Site: commands/site_management/status/aws_vpc_site.md
-        - Azure VNET Site: commands/site_management/status/azure_vnet_site.md
-        - GCP VPC Site: commands/site_management/status/gcp_vpc_site.md
-        - K8S Cluster: commands/site_management/status/k8s_cluster.md
-        - K8S Cluster Role: commands/site_management/status/k8s_cluster_role.md
-        - K8S Cluster Role Binding: commands/site_management/status/k8s_cluster_role_binding.md
-        - Securemesh Site: commands/site_management/status/securemesh_site.md
-        - Securemesh Site V2: commands/site_management/status/securemesh_site_v2.md
-        - Virtual Site: commands/site_management/status/virtual_site.md
-        - Voltstack Site: commands/site_management/status/voltstack_site.md
+    - Sites:
+      - Sites Overview: commands/sites/index.md
+      - Add Labels: commands/sites/add-labels/index.md
+      - Apply: commands/sites/apply/index.md
+      - Create: commands/sites/create/index.md
+      - Delete: commands/sites/delete/index.md
+      - Get: commands/sites/get/index.md
+      - List: commands/sites/list/index.md
+      - Patch: commands/sites/patch/index.md
+      - Remove Labels: commands/sites/remove-labels/index.md
+      - Replace: commands/sites/replace/index.md
+      - Status: commands/sites/status/index.md
     - Statistics:
       - Statistics Overview: commands/statistics/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/statistics/add-labels/index.md
-        - Alert Policy: commands/statistics/add-labels/alert_policy.md
-        - Alert Receiver: commands/statistics/add-labels/alert_receiver.md
-        - Global Log Receiver: commands/statistics/add-labels/global_log_receiver.md
-        - Log Receiver: commands/statistics/add-labels/log_receiver.md
-        - Report Config: commands/statistics/add-labels/report_config.md
-      - Apply:
-        - Apply Overview: commands/statistics/apply/index.md
-        - Alert Policy: commands/statistics/apply/alert_policy.md
-        - Alert Receiver: commands/statistics/apply/alert_receiver.md
-        - Global Log Receiver: commands/statistics/apply/global_log_receiver.md
-        - Log Receiver: commands/statistics/apply/log_receiver.md
-        - Report Config: commands/statistics/apply/report_config.md
-      - Create:
-        - Create Overview: commands/statistics/create/index.md
-        - Alert Policy: commands/statistics/create/alert_policy.md
-        - Alert Receiver: commands/statistics/create/alert_receiver.md
-        - Global Log Receiver: commands/statistics/create/global_log_receiver.md
-        - Log Receiver: commands/statistics/create/log_receiver.md
-        - Report Config: commands/statistics/create/report_config.md
-      - Delete:
-        - Delete Overview: commands/statistics/delete/index.md
-        - Alert Policy: commands/statistics/delete/alert_policy.md
-        - Alert Receiver: commands/statistics/delete/alert_receiver.md
-        - Global Log Receiver: commands/statistics/delete/global_log_receiver.md
-        - Log Receiver: commands/statistics/delete/log_receiver.md
-        - Report Config: commands/statistics/delete/report_config.md
-      - Get:
-        - Get Overview: commands/statistics/get/index.md
-        - Alert Policy: commands/statistics/get/alert_policy.md
-        - Alert Receiver: commands/statistics/get/alert_receiver.md
-        - Global Log Receiver: commands/statistics/get/global_log_receiver.md
-        - Log Receiver: commands/statistics/get/log_receiver.md
-        - Report Config: commands/statistics/get/report_config.md
-      - List:
-        - List Overview: commands/statistics/list/index.md
-        - Alert Policy: commands/statistics/list/alert_policy.md
-        - Alert Receiver: commands/statistics/list/alert_receiver.md
-        - Global Log Receiver: commands/statistics/list/global_log_receiver.md
-        - Log Receiver: commands/statistics/list/log_receiver.md
-        - Report Config: commands/statistics/list/report_config.md
-      - Patch:
-        - Patch Overview: commands/statistics/patch/index.md
-        - Alert Policy: commands/statistics/patch/alert_policy.md
-        - Alert Receiver: commands/statistics/patch/alert_receiver.md
-        - Global Log Receiver: commands/statistics/patch/global_log_receiver.md
-        - Log Receiver: commands/statistics/patch/log_receiver.md
-        - Report Config: commands/statistics/patch/report_config.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/statistics/remove-labels/index.md
-        - Alert Policy: commands/statistics/remove-labels/alert_policy.md
-        - Alert Receiver: commands/statistics/remove-labels/alert_receiver.md
-        - Global Log Receiver: commands/statistics/remove-labels/global_log_receiver.md
-        - Log Receiver: commands/statistics/remove-labels/log_receiver.md
-        - Report Config: commands/statistics/remove-labels/report_config.md
-      - Replace:
-        - Replace Overview: commands/statistics/replace/index.md
-        - Alert Policy: commands/statistics/replace/alert_policy.md
-        - Alert Receiver: commands/statistics/replace/alert_receiver.md
-        - Global Log Receiver: commands/statistics/replace/global_log_receiver.md
-        - Log Receiver: commands/statistics/replace/log_receiver.md
-        - Report Config: commands/statistics/replace/report_config.md
-      - Status:
-        - Status Overview: commands/statistics/status/index.md
-        - Alert Policy: commands/statistics/status/alert_policy.md
-        - Alert Receiver: commands/statistics/status/alert_receiver.md
-        - Global Log Receiver: commands/statistics/status/global_log_receiver.md
-        - Log Receiver: commands/statistics/status/log_receiver.md
-        - Report Config: commands/statistics/status/report_config.md
-    - Subscription:
-      - Subscription Overview: commands/subscription/index.md
-      - Activate: commands/subscription/activate/index.md
-      - Activation Status: commands/subscription/activation-status/index.md
-      - Addons: commands/subscription/addons/index.md
-      - Quota: commands/subscription/quota/index.md
-      - Show: commands/subscription/show/index.md
-      - Validate: commands/subscription/validate/index.md
+      - Add Labels: commands/statistics/add-labels/index.md
+      - Apply: commands/statistics/apply/index.md
+      - Create: commands/statistics/create/index.md
+      - Delete: commands/statistics/delete/index.md
+      - Get: commands/statistics/get/index.md
+      - List: commands/statistics/list/index.md
+      - Patch: commands/statistics/patch/index.md
+      - Remove Labels: commands/statistics/remove-labels/index.md
+      - Replace: commands/statistics/replace/index.md
+      - Status: commands/statistics/status/index.md
     - Support:
       - Support Overview: commands/support/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/support/add-labels/index.md
-        - Customer Support: commands/support/add-labels/customer_support.md
-      - Apply:
-        - Apply Overview: commands/support/apply/index.md
-        - Customer Support: commands/support/apply/customer_support.md
-      - Create:
-        - Create Overview: commands/support/create/index.md
-        - Customer Support: commands/support/create/customer_support.md
-      - Delete:
-        - Delete Overview: commands/support/delete/index.md
-        - Customer Support: commands/support/delete/customer_support.md
-      - Get:
-        - Get Overview: commands/support/get/index.md
-        - Customer Support: commands/support/get/customer_support.md
-      - List:
-        - List Overview: commands/support/list/index.md
-        - Customer Support: commands/support/list/customer_support.md
-      - Patch:
-        - Patch Overview: commands/support/patch/index.md
-        - Customer Support: commands/support/patch/customer_support.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/support/remove-labels/index.md
-        - Customer Support: commands/support/remove-labels/customer_support.md
-      - Replace:
-        - Replace Overview: commands/support/replace/index.md
-        - Customer Support: commands/support/replace/customer_support.md
-      - Status:
-        - Status Overview: commands/support/status/index.md
-        - Customer Support: commands/support/status/customer_support.md
+      - Add Labels: commands/support/add-labels/index.md
+      - Apply: commands/support/apply/index.md
+      - Create: commands/support/create/index.md
+      - Delete: commands/support/delete/index.md
+      - Get: commands/support/get/index.md
+      - List: commands/support/list/index.md
+      - Patch: commands/support/patch/index.md
+      - Remove Labels: commands/support/remove-labels/index.md
+      - Replace: commands/support/replace/index.md
+      - Status: commands/support/status/index.md
     - Telemetry And Insights:
       - Telemetry And Insights Overview: commands/telemetry_and_insights/index.md
       - Add Labels: commands/telemetry_and_insights/add-labels/index.md
@@ -2075,86 +510,16 @@ nav:
       - Status: commands/telemetry_and_insights/status/index.md
     - Tenant And Identity:
       - Tenant And Identity Overview: commands/tenant_and_identity/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/tenant_and_identity/add-labels/index.md
-        - Authentication: commands/tenant_and_identity/add-labels/authentication.md
-        - Contact: commands/tenant_and_identity/add-labels/contact.md
-        - Namespace: commands/tenant_and_identity/add-labels/namespace.md
-        - Role: commands/tenant_and_identity/add-labels/role.md
-        - Tenant Configuration: commands/tenant_and_identity/add-labels/tenant_configuration.md
-        - User Identification: commands/tenant_and_identity/add-labels/user_identification.md
-      - Apply:
-        - Apply Overview: commands/tenant_and_identity/apply/index.md
-        - Authentication: commands/tenant_and_identity/apply/authentication.md
-        - Contact: commands/tenant_and_identity/apply/contact.md
-        - Namespace: commands/tenant_and_identity/apply/namespace.md
-        - Role: commands/tenant_and_identity/apply/role.md
-        - Tenant Configuration: commands/tenant_and_identity/apply/tenant_configuration.md
-        - User Identification: commands/tenant_and_identity/apply/user_identification.md
-      - Create:
-        - Create Overview: commands/tenant_and_identity/create/index.md
-        - Authentication: commands/tenant_and_identity/create/authentication.md
-        - Contact: commands/tenant_and_identity/create/contact.md
-        - Namespace: commands/tenant_and_identity/create/namespace.md
-        - Role: commands/tenant_and_identity/create/role.md
-        - Tenant Configuration: commands/tenant_and_identity/create/tenant_configuration.md
-        - User Identification: commands/tenant_and_identity/create/user_identification.md
-      - Delete:
-        - Delete Overview: commands/tenant_and_identity/delete/index.md
-        - Authentication: commands/tenant_and_identity/delete/authentication.md
-        - Contact: commands/tenant_and_identity/delete/contact.md
-        - Namespace: commands/tenant_and_identity/delete/namespace.md
-        - Role: commands/tenant_and_identity/delete/role.md
-        - Tenant Configuration: commands/tenant_and_identity/delete/tenant_configuration.md
-        - User Identification: commands/tenant_and_identity/delete/user_identification.md
-      - Get:
-        - Get Overview: commands/tenant_and_identity/get/index.md
-        - Authentication: commands/tenant_and_identity/get/authentication.md
-        - Contact: commands/tenant_and_identity/get/contact.md
-        - Namespace: commands/tenant_and_identity/get/namespace.md
-        - Role: commands/tenant_and_identity/get/role.md
-        - Tenant Configuration: commands/tenant_and_identity/get/tenant_configuration.md
-        - User Identification: commands/tenant_and_identity/get/user_identification.md
-      - List:
-        - List Overview: commands/tenant_and_identity/list/index.md
-        - Authentication: commands/tenant_and_identity/list/authentication.md
-        - Contact: commands/tenant_and_identity/list/contact.md
-        - Namespace: commands/tenant_and_identity/list/namespace.md
-        - Role: commands/tenant_and_identity/list/role.md
-        - Tenant Configuration: commands/tenant_and_identity/list/tenant_configuration.md
-        - User Identification: commands/tenant_and_identity/list/user_identification.md
-      - Patch:
-        - Patch Overview: commands/tenant_and_identity/patch/index.md
-        - Authentication: commands/tenant_and_identity/patch/authentication.md
-        - Contact: commands/tenant_and_identity/patch/contact.md
-        - Namespace: commands/tenant_and_identity/patch/namespace.md
-        - Role: commands/tenant_and_identity/patch/role.md
-        - Tenant Configuration: commands/tenant_and_identity/patch/tenant_configuration.md
-        - User Identification: commands/tenant_and_identity/patch/user_identification.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/tenant_and_identity/remove-labels/index.md
-        - Authentication: commands/tenant_and_identity/remove-labels/authentication.md
-        - Contact: commands/tenant_and_identity/remove-labels/contact.md
-        - Namespace: commands/tenant_and_identity/remove-labels/namespace.md
-        - Role: commands/tenant_and_identity/remove-labels/role.md
-        - Tenant Configuration: commands/tenant_and_identity/remove-labels/tenant_configuration.md
-        - User Identification: commands/tenant_and_identity/remove-labels/user_identification.md
-      - Replace:
-        - Replace Overview: commands/tenant_and_identity/replace/index.md
-        - Authentication: commands/tenant_and_identity/replace/authentication.md
-        - Contact: commands/tenant_and_identity/replace/contact.md
-        - Namespace: commands/tenant_and_identity/replace/namespace.md
-        - Role: commands/tenant_and_identity/replace/role.md
-        - Tenant Configuration: commands/tenant_and_identity/replace/tenant_configuration.md
-        - User Identification: commands/tenant_and_identity/replace/user_identification.md
-      - Status:
-        - Status Overview: commands/tenant_and_identity/status/index.md
-        - Authentication: commands/tenant_and_identity/status/authentication.md
-        - Contact: commands/tenant_and_identity/status/contact.md
-        - Namespace: commands/tenant_and_identity/status/namespace.md
-        - Role: commands/tenant_and_identity/status/role.md
-        - Tenant Configuration: commands/tenant_and_identity/status/tenant_configuration.md
-        - User Identification: commands/tenant_and_identity/status/user_identification.md
+      - Add Labels: commands/tenant_and_identity/add-labels/index.md
+      - Apply: commands/tenant_and_identity/apply/index.md
+      - Create: commands/tenant_and_identity/create/index.md
+      - Delete: commands/tenant_and_identity/delete/index.md
+      - Get: commands/tenant_and_identity/get/index.md
+      - List: commands/tenant_and_identity/list/index.md
+      - Patch: commands/tenant_and_identity/patch/index.md
+      - Remove Labels: commands/tenant_and_identity/remove-labels/index.md
+      - Replace: commands/tenant_and_identity/replace/index.md
+      - Status: commands/tenant_and_identity/status/index.md
     - Threat Campaign:
       - Threat Campaign Overview: commands/threat_campaign/index.md
       - Add Labels: commands/threat_campaign/add-labels/index.md
@@ -2169,178 +534,28 @@ nav:
       - Status: commands/threat_campaign/status/index.md
     - Users:
       - Users Overview: commands/users/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/users/add-labels/index.md
-        - Known Label: commands/users/add-labels/known_label.md
-        - Known Label Key: commands/users/add-labels/known_label_key.md
-        - Token: commands/users/add-labels/token.md
-      - Apply:
-        - Apply Overview: commands/users/apply/index.md
-        - Known Label: commands/users/apply/known_label.md
-        - Known Label Key: commands/users/apply/known_label_key.md
-        - Token: commands/users/apply/token.md
-      - Create:
-        - Create Overview: commands/users/create/index.md
-        - Known Label: commands/users/create/known_label.md
-        - Known Label Key: commands/users/create/known_label_key.md
-        - Token: commands/users/create/token.md
-      - Delete:
-        - Delete Overview: commands/users/delete/index.md
-        - Known Label: commands/users/delete/known_label.md
-        - Known Label Key: commands/users/delete/known_label_key.md
-        - Token: commands/users/delete/token.md
-      - Get:
-        - Get Overview: commands/users/get/index.md
-        - Known Label: commands/users/get/known_label.md
-        - Known Label Key: commands/users/get/known_label_key.md
-        - Token: commands/users/get/token.md
-      - List:
-        - List Overview: commands/users/list/index.md
-        - Known Label: commands/users/list/known_label.md
-        - Known Label Key: commands/users/list/known_label_key.md
-        - Token: commands/users/list/token.md
-      - Patch:
-        - Patch Overview: commands/users/patch/index.md
-        - Known Label: commands/users/patch/known_label.md
-        - Known Label Key: commands/users/patch/known_label_key.md
-        - Token: commands/users/patch/token.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/users/remove-labels/index.md
-        - Known Label: commands/users/remove-labels/known_label.md
-        - Known Label Key: commands/users/remove-labels/known_label_key.md
-        - Token: commands/users/remove-labels/token.md
-      - Replace:
-        - Replace Overview: commands/users/replace/index.md
-        - Known Label: commands/users/replace/known_label.md
-        - Known Label Key: commands/users/replace/known_label_key.md
-        - Token: commands/users/replace/token.md
-      - Status:
-        - Status Overview: commands/users/status/index.md
-        - Known Label: commands/users/status/known_label.md
-        - Known Label Key: commands/users/status/known_label_key.md
-        - Token: commands/users/status/token.md
+      - Add Labels: commands/users/add-labels/index.md
+      - Apply: commands/users/apply/index.md
+      - Create: commands/users/create/index.md
+      - Delete: commands/users/delete/index.md
+      - Get: commands/users/get/index.md
+      - List: commands/users/list/index.md
+      - Patch: commands/users/patch/index.md
+      - Remove Labels: commands/users/remove-labels/index.md
+      - Replace: commands/users/replace/index.md
+      - Status: commands/users/status/index.md
     - Virtual:
       - Virtual Overview: commands/virtual/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/virtual/add-labels/index.md
-        - Geo Location Set: commands/virtual/add-labels/geo_location_set.md
-        - Health Check: commands/virtual/add-labels/healthcheck.md
-        - HTTP Load Balancer: commands/virtual/add-labels/http_loadbalancer.md
-        - Origin Pool: commands/virtual/add-labels/origin_pool.md
-        - Proxy: commands/virtual/add-labels/proxy.md
-        - Rate Limiter Policy: commands/virtual/add-labels/rate_limiter_policy.md
-        - Service Policy: commands/virtual/add-labels/service_policy.md
-        - Service Policy Rule: commands/virtual/add-labels/service_policy_rule.md
-        - TCP Load Balancer: commands/virtual/add-labels/tcp_loadbalancer.md
-        - UDP Load Balancer: commands/virtual/add-labels/udp_loadbalancer.md
-      - Apply:
-        - Apply Overview: commands/virtual/apply/index.md
-        - Geo Location Set: commands/virtual/apply/geo_location_set.md
-        - Health Check: commands/virtual/apply/healthcheck.md
-        - HTTP Load Balancer: commands/virtual/apply/http_loadbalancer.md
-        - Origin Pool: commands/virtual/apply/origin_pool.md
-        - Proxy: commands/virtual/apply/proxy.md
-        - Rate Limiter Policy: commands/virtual/apply/rate_limiter_policy.md
-        - Service Policy: commands/virtual/apply/service_policy.md
-        - Service Policy Rule: commands/virtual/apply/service_policy_rule.md
-        - TCP Load Balancer: commands/virtual/apply/tcp_loadbalancer.md
-        - UDP Load Balancer: commands/virtual/apply/udp_loadbalancer.md
-      - Create:
-        - Create Overview: commands/virtual/create/index.md
-        - Geo Location Set: commands/virtual/create/geo_location_set.md
-        - Health Check: commands/virtual/create/healthcheck.md
-        - HTTP Load Balancer: commands/virtual/create/http_loadbalancer.md
-        - Origin Pool: commands/virtual/create/origin_pool.md
-        - Proxy: commands/virtual/create/proxy.md
-        - Rate Limiter Policy: commands/virtual/create/rate_limiter_policy.md
-        - Service Policy: commands/virtual/create/service_policy.md
-        - Service Policy Rule: commands/virtual/create/service_policy_rule.md
-        - TCP Load Balancer: commands/virtual/create/tcp_loadbalancer.md
-        - UDP Load Balancer: commands/virtual/create/udp_loadbalancer.md
-      - Delete:
-        - Delete Overview: commands/virtual/delete/index.md
-        - Geo Location Set: commands/virtual/delete/geo_location_set.md
-        - Health Check: commands/virtual/delete/healthcheck.md
-        - HTTP Load Balancer: commands/virtual/delete/http_loadbalancer.md
-        - Origin Pool: commands/virtual/delete/origin_pool.md
-        - Proxy: commands/virtual/delete/proxy.md
-        - Rate Limiter Policy: commands/virtual/delete/rate_limiter_policy.md
-        - Service Policy: commands/virtual/delete/service_policy.md
-        - Service Policy Rule: commands/virtual/delete/service_policy_rule.md
-        - TCP Load Balancer: commands/virtual/delete/tcp_loadbalancer.md
-        - UDP Load Balancer: commands/virtual/delete/udp_loadbalancer.md
-      - Get:
-        - Get Overview: commands/virtual/get/index.md
-        - Geo Location Set: commands/virtual/get/geo_location_set.md
-        - Health Check: commands/virtual/get/healthcheck.md
-        - HTTP Load Balancer: commands/virtual/get/http_loadbalancer.md
-        - Origin Pool: commands/virtual/get/origin_pool.md
-        - Proxy: commands/virtual/get/proxy.md
-        - Rate Limiter Policy: commands/virtual/get/rate_limiter_policy.md
-        - Service Policy: commands/virtual/get/service_policy.md
-        - Service Policy Rule: commands/virtual/get/service_policy_rule.md
-        - TCP Load Balancer: commands/virtual/get/tcp_loadbalancer.md
-        - UDP Load Balancer: commands/virtual/get/udp_loadbalancer.md
-      - List:
-        - List Overview: commands/virtual/list/index.md
-        - Geo Location Set: commands/virtual/list/geo_location_set.md
-        - Health Check: commands/virtual/list/healthcheck.md
-        - HTTP Load Balancer: commands/virtual/list/http_loadbalancer.md
-        - Origin Pool: commands/virtual/list/origin_pool.md
-        - Proxy: commands/virtual/list/proxy.md
-        - Rate Limiter Policy: commands/virtual/list/rate_limiter_policy.md
-        - Service Policy: commands/virtual/list/service_policy.md
-        - Service Policy Rule: commands/virtual/list/service_policy_rule.md
-        - TCP Load Balancer: commands/virtual/list/tcp_loadbalancer.md
-        - UDP Load Balancer: commands/virtual/list/udp_loadbalancer.md
-      - Patch:
-        - Patch Overview: commands/virtual/patch/index.md
-        - Geo Location Set: commands/virtual/patch/geo_location_set.md
-        - Health Check: commands/virtual/patch/healthcheck.md
-        - HTTP Load Balancer: commands/virtual/patch/http_loadbalancer.md
-        - Origin Pool: commands/virtual/patch/origin_pool.md
-        - Proxy: commands/virtual/patch/proxy.md
-        - Rate Limiter Policy: commands/virtual/patch/rate_limiter_policy.md
-        - Service Policy: commands/virtual/patch/service_policy.md
-        - Service Policy Rule: commands/virtual/patch/service_policy_rule.md
-        - TCP Load Balancer: commands/virtual/patch/tcp_loadbalancer.md
-        - UDP Load Balancer: commands/virtual/patch/udp_loadbalancer.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/virtual/remove-labels/index.md
-        - Geo Location Set: commands/virtual/remove-labels/geo_location_set.md
-        - Health Check: commands/virtual/remove-labels/healthcheck.md
-        - HTTP Load Balancer: commands/virtual/remove-labels/http_loadbalancer.md
-        - Origin Pool: commands/virtual/remove-labels/origin_pool.md
-        - Proxy: commands/virtual/remove-labels/proxy.md
-        - Rate Limiter Policy: commands/virtual/remove-labels/rate_limiter_policy.md
-        - Service Policy: commands/virtual/remove-labels/service_policy.md
-        - Service Policy Rule: commands/virtual/remove-labels/service_policy_rule.md
-        - TCP Load Balancer: commands/virtual/remove-labels/tcp_loadbalancer.md
-        - UDP Load Balancer: commands/virtual/remove-labels/udp_loadbalancer.md
-      - Replace:
-        - Replace Overview: commands/virtual/replace/index.md
-        - Geo Location Set: commands/virtual/replace/geo_location_set.md
-        - Health Check: commands/virtual/replace/healthcheck.md
-        - HTTP Load Balancer: commands/virtual/replace/http_loadbalancer.md
-        - Origin Pool: commands/virtual/replace/origin_pool.md
-        - Proxy: commands/virtual/replace/proxy.md
-        - Rate Limiter Policy: commands/virtual/replace/rate_limiter_policy.md
-        - Service Policy: commands/virtual/replace/service_policy.md
-        - Service Policy Rule: commands/virtual/replace/service_policy_rule.md
-        - TCP Load Balancer: commands/virtual/replace/tcp_loadbalancer.md
-        - UDP Load Balancer: commands/virtual/replace/udp_loadbalancer.md
-      - Status:
-        - Status Overview: commands/virtual/status/index.md
-        - Geo Location Set: commands/virtual/status/geo_location_set.md
-        - Health Check: commands/virtual/status/healthcheck.md
-        - HTTP Load Balancer: commands/virtual/status/http_loadbalancer.md
-        - Origin Pool: commands/virtual/status/origin_pool.md
-        - Proxy: commands/virtual/status/proxy.md
-        - Rate Limiter Policy: commands/virtual/status/rate_limiter_policy.md
-        - Service Policy: commands/virtual/status/service_policy.md
-        - Service Policy Rule: commands/virtual/status/service_policy_rule.md
-        - TCP Load Balancer: commands/virtual/status/tcp_loadbalancer.md
-        - UDP Load Balancer: commands/virtual/status/udp_loadbalancer.md
+      - Add Labels: commands/virtual/add-labels/index.md
+      - Apply: commands/virtual/apply/index.md
+      - Create: commands/virtual/create/index.md
+      - Delete: commands/virtual/delete/index.md
+      - Get: commands/virtual/get/index.md
+      - List: commands/virtual/list/index.md
+      - Patch: commands/virtual/patch/index.md
+      - Remove Labels: commands/virtual/remove-labels/index.md
+      - Replace: commands/virtual/replace/index.md
+      - Status: commands/virtual/status/index.md
     - Vpm And Node Management:
       - Vpm And Node Management Overview: commands/vpm_and_node_management/index.md
       - Add Labels: commands/vpm_and_node_management/add-labels/index.md
@@ -2355,66 +570,16 @@ nav:
       - Status: commands/vpm_and_node_management/status/index.md
     - WAF:
       - WAF Overview: commands/waf/index.md
-      - Add Labels:
-        - Add Labels Overview: commands/waf/add-labels/index.md
-        - App Firewall: commands/waf/add-labels/app_firewall.md
-        - Enhanced Firewall Policy: commands/waf/add-labels/enhanced_firewall_policy.md
-        - Protocol Inspection: commands/waf/add-labels/protocol_inspection.md
-        - WAF Exclusion Policy: commands/waf/add-labels/waf_exclusion_policy.md
-      - Apply:
-        - Apply Overview: commands/waf/apply/index.md
-        - App Firewall: commands/waf/apply/app_firewall.md
-        - Enhanced Firewall Policy: commands/waf/apply/enhanced_firewall_policy.md
-        - Protocol Inspection: commands/waf/apply/protocol_inspection.md
-        - WAF Exclusion Policy: commands/waf/apply/waf_exclusion_policy.md
-      - Create:
-        - Create Overview: commands/waf/create/index.md
-        - App Firewall: commands/waf/create/app_firewall.md
-        - Enhanced Firewall Policy: commands/waf/create/enhanced_firewall_policy.md
-        - Protocol Inspection: commands/waf/create/protocol_inspection.md
-        - WAF Exclusion Policy: commands/waf/create/waf_exclusion_policy.md
-      - Delete:
-        - Delete Overview: commands/waf/delete/index.md
-        - App Firewall: commands/waf/delete/app_firewall.md
-        - Enhanced Firewall Policy: commands/waf/delete/enhanced_firewall_policy.md
-        - Protocol Inspection: commands/waf/delete/protocol_inspection.md
-        - WAF Exclusion Policy: commands/waf/delete/waf_exclusion_policy.md
-      - Get:
-        - Get Overview: commands/waf/get/index.md
-        - App Firewall: commands/waf/get/app_firewall.md
-        - Enhanced Firewall Policy: commands/waf/get/enhanced_firewall_policy.md
-        - Protocol Inspection: commands/waf/get/protocol_inspection.md
-        - WAF Exclusion Policy: commands/waf/get/waf_exclusion_policy.md
-      - List:
-        - List Overview: commands/waf/list/index.md
-        - App Firewall: commands/waf/list/app_firewall.md
-        - Enhanced Firewall Policy: commands/waf/list/enhanced_firewall_policy.md
-        - Protocol Inspection: commands/waf/list/protocol_inspection.md
-        - WAF Exclusion Policy: commands/waf/list/waf_exclusion_policy.md
-      - Patch:
-        - Patch Overview: commands/waf/patch/index.md
-        - App Firewall: commands/waf/patch/app_firewall.md
-        - Enhanced Firewall Policy: commands/waf/patch/enhanced_firewall_policy.md
-        - Protocol Inspection: commands/waf/patch/protocol_inspection.md
-        - WAF Exclusion Policy: commands/waf/patch/waf_exclusion_policy.md
-      - Remove Labels:
-        - Remove Labels Overview: commands/waf/remove-labels/index.md
-        - App Firewall: commands/waf/remove-labels/app_firewall.md
-        - Enhanced Firewall Policy: commands/waf/remove-labels/enhanced_firewall_policy.md
-        - Protocol Inspection: commands/waf/remove-labels/protocol_inspection.md
-        - WAF Exclusion Policy: commands/waf/remove-labels/waf_exclusion_policy.md
-      - Replace:
-        - Replace Overview: commands/waf/replace/index.md
-        - App Firewall: commands/waf/replace/app_firewall.md
-        - Enhanced Firewall Policy: commands/waf/replace/enhanced_firewall_policy.md
-        - Protocol Inspection: commands/waf/replace/protocol_inspection.md
-        - WAF Exclusion Policy: commands/waf/replace/waf_exclusion_policy.md
-      - Status:
-        - Status Overview: commands/waf/status/index.md
-        - App Firewall: commands/waf/status/app_firewall.md
-        - Enhanced Firewall Policy: commands/waf/status/enhanced_firewall_policy.md
-        - Protocol Inspection: commands/waf/status/protocol_inspection.md
-        - WAF Exclusion Policy: commands/waf/status/waf_exclusion_policy.md
+      - Add Labels: commands/waf/add-labels/index.md
+      - Apply: commands/waf/apply/index.md
+      - Create: commands/waf/create/index.md
+      - Delete: commands/waf/delete/index.md
+      - Get: commands/waf/get/index.md
+      - List: commands/waf/list/index.md
+      - Patch: commands/waf/patch/index.md
+      - Remove Labels: commands/waf/remove-labels/index.md
+      - Replace: commands/waf/replace/index.md
+      - Status: commands/waf/status/index.md
   - Guides:
     - guides/index.md
     - Load Balancers: guides/load-balancer.md

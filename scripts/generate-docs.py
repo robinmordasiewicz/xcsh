@@ -465,13 +465,21 @@ class VesctlDocsGenerator:
         print(f"Loading spec from {self.xcsh_path}...")
 
         try:
-            result = subprocess.run(
-                [str(self.xcsh_path), "--spec"],
-                capture_output=True,
-                text=True,
-                check=True,
-            )
-            self.spec = json.loads(result.stdout)
+            # Use a temporary file to handle large JSON output
+            # (subprocess.PIPE has 64KB buffer limitation)
+            import tempfile
+
+            with tempfile.NamedTemporaryFile(mode="w+", suffix=".json", delete=True) as tmp:
+                subprocess.run(
+                    [str(self.xcsh_path), "--spec"],
+                    stdout=tmp,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    check=True,
+                )
+                tmp.flush()
+                tmp.seek(0)
+                self.spec = json.load(tmp)
         except subprocess.CalledProcessError as e:
             print(f"Error running xcsh --spec: {e.stderr}")
             sys.exit(1)

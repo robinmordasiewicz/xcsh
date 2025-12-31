@@ -4,6 +4,45 @@
  */
 
 import type { CommandSpec, ExampleSpec, FlagSpec } from "./types.js";
+import { CLI_VERSION } from "../branding/index.js";
+import { customDomains } from "../domains/registry.js";
+import { domainRegistry, validActions } from "../types/domains.js";
+
+/**
+ * Full CLI specification for documentation generation
+ * Matches the format expected by scripts/generate-docs.py
+ */
+export interface CLISpec {
+	version: string;
+	global_flags: GlobalFlagSpec[];
+	commands: CLICommandSpec[];
+}
+
+/**
+ * Global flag specification for CLI documentation
+ */
+export interface GlobalFlagSpec {
+	name: string;
+	type: string;
+	description: string;
+	shorthand: string;
+	default: string;
+}
+
+/**
+ * Command specification for CLI documentation
+ * Matches Python dataclass structure in generate-docs.py
+ */
+export interface CLICommandSpec {
+	path: string[];
+	use: string;
+	short: string;
+	long: string;
+	example: string;
+	aliases: string[];
+	flags: GlobalFlagSpec[];
+	subcommands: CLICommandSpec[];
+}
 
 /**
  * Build a command specification object
@@ -394,4 +433,156 @@ export function listAllCommandSpecs(): CommandSpec[] {
 		...Object.values(buildCloudstatusSpecs()),
 		...Object.values(buildLoginSpecs()),
 	];
+}
+
+/**
+ * Convert FlagSpec to GlobalFlagSpec format
+ */
+function toGlobalFlagSpec(flag: FlagSpec): GlobalFlagSpec {
+	return {
+		name: flag.name,
+		type: flag.type ?? "string",
+		description: flag.description,
+		shorthand: flag.alias ?? "",
+		default: flag.default ?? "",
+	};
+}
+
+/**
+ * Build spec for a custom domain from the registry
+ */
+function buildCustomDomainSpec(domainName: string): CLICommandSpec | null {
+	const domain = customDomains.get(domainName);
+	if (!domain) return null;
+
+	const subcommands: CLICommandSpec[] = [];
+
+	// Add direct commands
+	for (const [cmdName, cmd] of domain.commands) {
+		subcommands.push({
+			path: [domainName, cmdName],
+			use: cmd.usage ?? cmdName,
+			short: cmd.descriptionShort,
+			long: cmd.description,
+			example: "",
+			aliases: cmd.aliases ?? [],
+			flags: [],
+			subcommands: [],
+		});
+	}
+
+	// Add subcommand groups
+	for (const [groupName, group] of domain.subcommands) {
+		const groupSubcommands: CLICommandSpec[] = [];
+
+		for (const [cmdName, cmd] of group.commands) {
+			groupSubcommands.push({
+				path: [domainName, groupName, cmdName],
+				use: cmd.usage ?? cmdName,
+				short: cmd.descriptionShort,
+				long: cmd.description,
+				example: "",
+				aliases: cmd.aliases ?? [],
+				flags: [],
+				subcommands: [],
+			});
+		}
+
+		subcommands.push({
+			path: [domainName, groupName],
+			use: groupName,
+			short: group.descriptionShort,
+			long: group.description,
+			example: "",
+			aliases: [],
+			flags: [],
+			subcommands: groupSubcommands,
+		});
+	}
+
+	return {
+		path: [domainName],
+		use: domainName,
+		short: domain.descriptionShort,
+		long: domain.description,
+		example: "",
+		aliases: [],
+		flags: [],
+		subcommands,
+	};
+}
+
+/**
+ * Build spec for an API-generated domain
+ */
+function buildApiDomainSpec(domainName: string): CLICommandSpec | null {
+	const info = domainRegistry.get(domainName);
+	if (!info) return null;
+
+	// API domains have standard CRUD actions
+	const actions = Array.from(validActions);
+	const subcommands: CLICommandSpec[] = actions.map((action) => ({
+		path: [domainName, action],
+		use: action,
+		short: `${action.charAt(0).toUpperCase() + action.slice(1)} ${info.displayName} resources`,
+		long: `${action.charAt(0).toUpperCase() + action.slice(1)} ${info.displayName} resources in F5 Distributed Cloud`,
+		example: `xcsh ${domainName} ${action}`,
+		aliases: [],
+		flags: [],
+		subcommands: [],
+	}));
+
+	return {
+		path: [domainName],
+		use: domainName,
+		short: info.descriptionShort,
+		long: info.description,
+		example: "",
+		aliases: info.aliases,
+		flags: [],
+		subcommands,
+	};
+}
+
+/**
+ * Build the complete CLI specification for documentation generation
+ * This is used by scripts/generate-docs.py when running `xcsh --spec`
+ */
+export function buildFullCLISpec(): CLISpec {
+	const commands: CLICommandSpec[] = [];
+
+	// Add custom domains first
+	for (const domain of customDomains.all()) {
+		const spec = buildCustomDomainSpec(domain.name);
+		if (spec) {
+			commands.push(spec);
+		}
+	}
+
+	// Add API-generated domains (skip if already added as custom domain)
+	const customDomainNames = new Set(customDomains.list());
+	for (const [domainName] of domainRegistry) {
+		if (!customDomainNames.has(domainName)) {
+			const spec = buildApiDomainSpec(domainName);
+			if (spec) {
+				commands.push(spec);
+			}
+		}
+	}
+
+	// Sort commands by name for consistent output
+	commands.sort((a, b) => (a.path[0] ?? "").localeCompare(b.path[0] ?? ""));
+
+	return {
+		version: CLI_VERSION,
+		global_flags: GLOBAL_FLAGS.map(toGlobalFlagSpec),
+		commands,
+	};
+}
+
+/**
+ * Format the full CLI spec as JSON string
+ */
+export function formatFullCLISpec(): string {
+	return JSON.stringify(buildFullCLISpec(), null, 2);
 }
