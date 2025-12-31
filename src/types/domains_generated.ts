@@ -1,6 +1,6 @@
 /**
  * AUTO-GENERATED FILE - DO NOT EDIT
- * Generated from .specs/index.json v1.0.78
+ * Generated from .specs/index.json v1.0.82
  * Run: npx tsx scripts/generate-domains.ts
  */
 
@@ -9,7 +9,7 @@ import type { DomainInfo } from "./domains.js";
 /**
  * Spec version used for generation
  */
-export const SPEC_VERSION = "1.0.78";
+export const SPEC_VERSION = "1.0.82";
 
 /**
  * Generated domain data from upstream API specifications

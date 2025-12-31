@@ -42,7 +42,8 @@
     "generate:descriptions": "tsx scripts/generate-descriptions.ts",
     "generate:description-loader": "tsx scripts/generate-description-loader.ts",
     "generate": "npm run generate:domains && npm run generate:completions && npm run generate:logo && npm run generate:description-loader",
-    "prebuild": "npm run generate"
+    "reconcile:specs": "./scripts/download-specs.sh",
+    "prebuild": "npm run reconcile:specs && npm run generate"
   },
   "keywords": [
     "f5",

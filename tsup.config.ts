@@ -1,53 +1,61 @@
 import { defineConfig } from "tsup";
 import { readFileSync } from "fs";
-import { execSync } from "child_process";
 
-// Read package.json version
-const packageJson = JSON.parse(readFileSync("./package.json", "utf-8"));
-
-// Fetch latest release version from GitHub
-function fetchLatestRelease(): string | null {
+// Get upstream API version from specs
+// Priority: .specs/index.json > .specs/.version > fallback
+function getUpstreamApiVersion(): string {
+	// Primary: Read from .specs/index.json
 	try {
-		const result = execSync(
-			'curl -s --connect-timeout 3 "https://api.github.com/repos/robinmordasiewicz/f5xc-xcsh/releases/latest" | grep \'"tag_name":\' | sed -E \'s/.*"v?([^"]+)".*/\\1/\'',
-			{ encoding: "utf-8", timeout: 5000 },
-		).trim();
-		// Validate we got a version-like string (e.g., "6.9.0")
-		if (result && /^\d+\.\d+\.\d+/.test(result)) {
-			return result;
+		const indexJson = JSON.parse(readFileSync("./.specs/index.json", "utf-8"));
+		if (indexJson.version) {
+			return indexJson.version; // e.g., "1.0.78"
 		}
-		return null;
 	} catch {
-		// Network unavailable or timeout
-		return null;
+		// File not found or invalid JSON
 	}
+
+	// Fallback: Read from .specs/.version
+	try {
+		const version = readFileSync("./.specs/.version", "utf-8").trim();
+		return version.replace(/^v/, ""); // Strip leading v if present
+	} catch {
+		// File not found
+	}
+
+	// Ultimate fallback
+	return "0.0.0";
+}
+
+// Detect if running in CI environment
+function isCI(): boolean {
+	return Boolean(process.env.CI || process.env.GITHUB_ACTIONS);
 }
 
 // Generate build version
-// Priority: XCSH_VERSION env var > latest release + timestamp > DEV + timestamp
+// Format: v{upstream}-YYMMDDHHMM[-BETA]
+// Priority: XCSH_VERSION env var > generated version
 function getBuildVersion(): string {
+	// Environment override (for CI or explicit version)
 	if (process.env.XCSH_VERSION) {
 		return process.env.XCSH_VERSION;
 	}
 
-	// Generate YYYYMMDDHHMM timestamp for dev builds
+	const upstreamVersion = getUpstreamApiVersion();
+
+	// Generate YYMMDDHHMM timestamp (10 digits, UTC)
 	const now = new Date();
 	const timestamp = [
-		now.getFullYear(),
-		String(now.getMonth() + 1).padStart(2, "0"),
-		String(now.getDate()).padStart(2, "0"),
-		String(now.getHours()).padStart(2, "0"),
-		String(now.getMinutes()).padStart(2, "0"),
+		String(now.getUTCFullYear()).slice(-2), // YY
+		String(now.getUTCMonth() + 1).padStart(2, "0"), // MM
+		String(now.getUTCDate()).padStart(2, "0"), // DD
+		String(now.getUTCHours()).padStart(2, "0"), // HH
+		String(now.getUTCMinutes()).padStart(2, "0"), // MM
 	].join("");
 
-	// Try to fetch latest release version
-	const latestRelease = fetchLatestRelease();
-	if (latestRelease) {
-		return `${latestRelease}-${timestamp}`;
-	}
+	// CI builds get no suffix, local builds get -BETA
+	const suffix = isCI() ? "" : "-BETA";
 
-	// Offline fallback
-	return `DEV-${timestamp}`;
+	return `v${upstreamVersion}-${timestamp}${suffix}`;
 }
 
 export default defineConfig({

@@ -54,53 +54,53 @@ jobs:
         run: npm run typecheck
 
   version:
-    name: Bump Version
+    name: Generate Version
     runs-on: ubuntu-latest
     needs: test
     outputs:
-      version: ${{ steps.bump.outputs.version }}
+      version: ${{ steps.version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Get latest tag and bump version
-        id: bump
+      - name: Download latest specs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./scripts/download-specs.sh
+
+      - name: Generate version from upstream API version
+        id: version
         run: |
-          # Get latest tag, default to v0.0.0 if none
-          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-          echo "Latest tag: $LATEST_TAG"
+          # Get upstream API version from specs
+          UPSTREAM_VERSION=$(jq -r '.version' .specs/index.json)
+          echo "Upstream API version: $UPSTREAM_VERSION"
 
-          # Extract version numbers from tag
-          TAG_VERSION=${LATEST_TAG#v}
-          TAG_MAJOR=$(echo $TAG_VERSION | cut -d. -f1)
-          TAG_MINOR=$(echo $TAG_VERSION | cut -d. -f2)
+          # Generate YYMMDDHHMM timestamp (UTC)
+          TIMESTAMP=$(date -u +"%y%m%d%H%M")
+          echo "Timestamp: $TIMESTAMP"
 
-          # Read major version from package.json (source of truth for major versions)
-          PKG_VERSION=$(node -p "require('./package.json').version")
-          PKG_MAJOR=$(echo $PKG_VERSION | cut -d. -f1)
-          echo "Package.json version: $PKG_VERSION (major: $PKG_MAJOR)"
+          # Construct version: v{upstream}-{timestamp}
+          VERSION="v${UPSTREAM_VERSION}-${TIMESTAMP}"
+          echo "Generated version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-          # If package.json major version is higher, use it (major version bump)
-          if [ "$PKG_MAJOR" -gt "$TAG_MAJOR" ]; then
-            echo "Major version bump detected from package.json"
-            NEW_VERSION="${PKG_MAJOR}.0.0"
-          else
-            # Normal minor version increment
-            NEW_MINOR=$((TAG_MINOR + 1))
-            NEW_VERSION="${TAG_MAJOR}.${NEW_MINOR}.0"
+      - name: Verify version is unique
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if git tag -l "$VERSION" | grep -q "$VERSION"; then
+            echo "Error: Tag $VERSION already exists"
+            exit 1
           fi
-
-          echo "New version: v$NEW_VERSION"
-          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "Tag $VERSION is unique, proceeding..."
 
       - name: Create and push tag
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "v${{ steps.bump.outputs.version }}" -m "Release v${{ steps.bump.outputs.version }}"
-          git push origin "v${{ steps.bump.outputs.version }}"
+          git tag -a "${{ steps.version.outputs.version }}" -m "Release ${{ steps.version.outputs.version }}"
+          git push origin "${{ steps.version.outputs.version }}"
 
   # Build binaries on native platforms to avoid cross-compilation issues
   # Bun cross-compilation does not work reliably (especially for macOS)
@@ -419,7 +419,12 @@ jobs:
           XCSH_VERSION: ${{ needs.create-release.outputs.version }}
 
       - name: Set package version
-        run: npm version ${{ needs.create-release.outputs.version }} --no-git-tag-version
+        run: |
+          # Strip leading 'v' for npm (v1.0.78-2501010830 -> 1.0.78-2501010830)
+          VERSION="${{ needs.create-release.outputs.version }}"
+          NPM_VERSION="${VERSION#v}"
+          echo "Setting npm version to: $NPM_VERSION"
+          npm version "$NPM_VERSION" --no-git-tag-version
 
       - name: Publish to npm
         run: npm publish --access public
