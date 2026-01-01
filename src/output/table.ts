@@ -13,6 +13,7 @@ import type {
 } from "./types.js";
 import { DEFAULT_TABLE_STYLE, PLAIN_TABLE_STYLE } from "./types.js";
 import { shouldUseColors } from "./resolver.js";
+import { getTerminalWidth } from "./terminal.js";
 
 /**
  * Unicode box drawing characters (rounded corners)
@@ -205,8 +206,13 @@ export function formatBeautifulTable(
 	const box = getBoxCharacters(style);
 	const borderColor = style.borderColor ?? colors.red;
 
-	// Calculate column widths
-	const widths = calculateColumnWidths(config.columns, data, config.maxWidth);
+	// Calculate column widths using terminal width if maxWidth not explicitly set
+	const effectiveMaxWidth = config.maxWidth ?? getTerminalWidth();
+	const widths = calculateColumnWidths(
+		config.columns,
+		data,
+		effectiveMaxWidth,
+	);
 
 	// Build table lines
 	const lines: string[] = [];
