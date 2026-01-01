@@ -5,6 +5,10 @@
 import type { CommandDefinition } from "../../registry.js";
 import { successResult, errorResult } from "../../registry.js";
 import { getProfileManager } from "../../../profile/index.js";
+import {
+	parseDomainOutputFlags,
+	formatKeyValueOutput,
+} from "../../../output/domain-formatter.js";
 
 export const showCommand: CommandDefinition = {
 	name: "show",
@@ -16,9 +20,13 @@ export const showCommand: CommandDefinition = {
 	usage: "<name>",
 	aliases: ["get", "view"],
 
-	async execute(args, _session) {
+	async execute(args, session) {
+		const { options, remainingArgs } = parseDomainOutputFlags(
+			args,
+			session.getOutputFormat(),
+		);
 		const manager = getProfileManager();
-		const name = args[0];
+		const name = remainingArgs[0];
 
 		if (!name) {
 			return errorResult("Usage: login profile show <name>");
@@ -35,6 +43,39 @@ export const showCommand: CommandDefinition = {
 			const activeProfile = await manager.getActive();
 			const isActive = profile.name === activeProfile;
 
+			// Handle none format
+			if (options.format === "none") {
+				return successResult([]);
+			}
+
+			// Build data object for unified formatter
+			const data: Record<string, string | boolean | undefined> = {
+				name: profile.name,
+				apiUrl: masked.apiUrl,
+				active: isActive,
+			};
+			if (masked.apiToken) data.apiToken = masked.apiToken;
+			if (masked.p12Bundle) data.p12Bundle = masked.p12Bundle;
+			if (masked.cert) data.cert = masked.cert;
+			if (masked.key) data.key = masked.key;
+			if (masked.defaultNamespace)
+				data.namespace = masked.defaultNamespace;
+
+			// Use unified formatter for json/yaml/tsv
+			if (
+				options.format === "json" ||
+				options.format === "yaml" ||
+				options.format === "tsv"
+			) {
+				return successResult(
+					formatKeyValueOutput(data, {
+						...options,
+						title: "Profile",
+					}),
+				);
+			}
+
+			// Table format (default) - custom text output
 			const output: string[] = [
 				`Profile: ${profile.name}${isActive ? " [active]" : ""}`,
 				``,

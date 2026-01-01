@@ -5,6 +5,10 @@
 import type { CommandDefinition } from "../../registry.js";
 import { successResult, errorResult } from "../../registry.js";
 import { getProfileManager } from "../../../profile/index.js";
+import {
+	parseDomainOutputFlags,
+	formatListOutput,
+} from "../../../output/domain-formatter.js";
 
 export const listCommand: CommandDefinition = {
 	name: "list",
@@ -15,7 +19,11 @@ export const listCommand: CommandDefinition = {
 		"Show all profiles with tenant URLs, auth types, and active status indicator.",
 	aliases: ["ls"],
 
-	async execute(_args, _session) {
+	async execute(args, session) {
+		const { options } = parseDomainOutputFlags(
+			args,
+			session.getOutputFormat(),
+		);
 		const manager = getProfileManager();
 
 		try {
@@ -23,6 +31,10 @@ export const listCommand: CommandDefinition = {
 			const activeProfile = await manager.getActive();
 
 			if (profiles.length === 0) {
+				// Handle none format
+				if (options.format === "none") {
+					return successResult([]);
+				}
 				return successResult([
 					"No profiles configured.",
 					"",
@@ -30,11 +42,9 @@ export const listCommand: CommandDefinition = {
 				]);
 			}
 
-			const output: string[] = ["Saved profiles:"];
-
-			for (const profile of profiles) {
+			// Build data array for unified formatter
+			const data = profiles.map((profile) => {
 				const isActive = profile.name === activeProfile;
-				const marker = isActive ? " [active]" : "";
 				const authType = profile.apiToken
 					? "token"
 					: profile.cert
@@ -42,8 +52,35 @@ export const listCommand: CommandDefinition = {
 						: profile.p12Bundle
 							? "p12"
 							: "none";
+				return {
+					name: profile.name,
+					apiUrl: profile.apiUrl,
+					authType,
+					active: isActive,
+				};
+			});
+
+			// Handle none format
+			if (options.format === "none") {
+				return successResult([]);
+			}
+
+			// Use unified formatter for json/yaml/tsv
+			if (
+				options.format === "json" ||
+				options.format === "yaml" ||
+				options.format === "tsv"
+			) {
+				return successResult(formatListOutput(data, options));
+			}
+
+			// Table format (default) - custom text output
+			const output: string[] = ["Saved profiles:"];
+
+			for (const item of data) {
+				const marker = item.active ? " [active]" : "";
 				output.push(
-					`  ${profile.name}${marker} - ${profile.apiUrl} (${authType})`,
+					`  ${item.name}${marker} - ${item.apiUrl} (${item.authType})`,
 				);
 			}
 

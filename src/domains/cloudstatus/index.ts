@@ -24,48 +24,48 @@ import {
 import type { SummaryResponse } from "../../cloudstatus/index.js";
 import {
 	type OutputFormat,
-	parseOutputFormat,
 	getCommandSpec,
 	formatSpec,
 } from "../../output/index.js";
+import {
+	parseDomainOutputFlags,
+	formatDomainOutput,
+	formatListOutput,
+} from "../../output/domain-formatter.js";
 import type { REPLSession } from "../../repl/session.js";
 
 /**
- * Parse output format and spec flag from command args
- * Returns the effective output format and whether --spec was requested
+ * Parse output format, spec flag, and command-specific flags from args
  */
 function parseOutputArgs(
 	args: string[],
 	session: REPLSession,
-): { format: OutputFormat; spec: boolean; filteredArgs: string[] } {
-	let format: OutputFormat | undefined;
+): {
+	format: OutputFormat;
+	spec: boolean;
+	noColor: boolean;
+	filteredArgs: string[];
+} {
+	// Use unified domain formatter for output flags
+	const { options, remainingArgs } = parseDomainOutputFlags(
+		args,
+		session.getOutputFormat(),
+	);
+
+	// Check for --spec flag separately
 	let spec = false;
 	const filteredArgs: string[] = [];
-
-	for (let i = 0; i < args.length; i++) {
-		const arg = args[i] ?? "";
-		const nextArg = args[i + 1];
-
-		if (arg === "--output" || arg === "-o") {
-			if (nextArg) {
-				format = parseOutputFormat(nextArg);
-				i++; // Skip the value
-			}
-		} else if (arg === "--spec") {
+	for (const arg of remainingArgs) {
+		if (arg === "--spec") {
 			spec = true;
-		} else if (arg.startsWith("--output=")) {
-			// Handle --output=json style
-			format = parseOutputFormat(arg.split("=")[1] ?? "table");
-		} else if (arg.startsWith("-o=")) {
-			// Handle -o=json style
-			format = parseOutputFormat(arg.split("=")[1] ?? "table");
 		} else {
 			filteredArgs.push(arg);
 		}
 	}
 
 	return {
-		format: format ?? session.getOutputFormat(),
+		format: options.format,
+		noColor: options.noColor,
 		spec,
 		filteredArgs,
 	};
@@ -95,7 +95,10 @@ const statusCommand: CommandDefinition = {
 	aliases: ["st"],
 
 	async execute(args, session): Promise<DomainCommandResult> {
-		const { format, spec, filteredArgs } = parseOutputArgs(args, session);
+		const { format, noColor, spec, filteredArgs } = parseOutputArgs(
+			args,
+			session,
+		);
 		const quiet =
 			filteredArgs.includes("--quiet") || filteredArgs.includes("-q");
 
@@ -121,27 +124,19 @@ const statusCommand: CommandDefinition = {
 				]);
 			}
 
-			// Format based on output format
-			if (format === "json") {
-				return successResult([JSON.stringify(response, null, 2)]);
+			// Handle none format - return empty
+			if (format === "none") {
+				return successResult([]);
 			}
 
-			if (format === "yaml") {
-				// Simple YAML formatting
-				const yaml = [
-					"page:",
-					`  id: ${response.page.id}`,
-					`  name: ${response.page.name}`,
-					`  url: ${response.page.url}`,
-					`  updated_at: ${response.page.updated_at}`,
-					"status:",
-					`  indicator: ${response.status.indicator}`,
-					`  description: ${response.status.description}`,
-				].join("\n");
-				return successResult([yaml]);
+			// Use unified formatter for json/yaml/tsv
+			if (format === "json" || format === "yaml" || format === "tsv") {
+				return successResult(
+					formatDomainOutput(response, { format, noColor }),
+				);
 			}
 
-			// Table format (default)
+			// Table format (default) - use custom formatting for visual display
 			const lines: string[] = [
 				"┌────────────────┬────────────────────────────────────┐",
 				"│ STATUS         │ DESCRIPTION                        │",
@@ -173,7 +168,10 @@ const summaryCommand: CommandDefinition = {
 	aliases: ["sum"],
 
 	async execute(args, session): Promise<DomainCommandResult> {
-		const { format, spec, filteredArgs } = parseOutputArgs(args, session);
+		const { format, noColor, spec, filteredArgs } = parseOutputArgs(
+			args,
+			session,
+		);
 		const brief =
 			filteredArgs.includes("--brief") || filteredArgs.includes("-b");
 
@@ -189,17 +187,19 @@ const summaryCommand: CommandDefinition = {
 			const client = getClient();
 			const response = await client.getSummary();
 
-			// Format based on output format
-			if (format === "json") {
-				return successResult([JSON.stringify(response, null, 2)]);
+			// Handle none format - return empty
+			if (format === "none") {
+				return successResult([]);
 			}
 
-			if (format === "yaml") {
-				// Return structured YAML
-				return successResult([formatSummaryYaml(response)]);
+			// Use unified formatter for json/yaml/tsv
+			if (format === "json" || format === "yaml" || format === "tsv") {
+				return successResult(
+					formatDomainOutput(response, { format, noColor }),
+				);
 			}
 
-			// Brief or full summary
+			// Brief or full summary (table format)
 			if (brief) {
 				return successResult(formatBriefSummary(response));
 			}
@@ -227,7 +227,10 @@ const componentsCommand: CommandDefinition = {
 	aliases: ["comp"],
 
 	async execute(args, session): Promise<DomainCommandResult> {
-		const { format, spec, filteredArgs } = parseOutputArgs(args, session);
+		const { format, noColor, spec, filteredArgs } = parseOutputArgs(
+			args,
+			session,
+		);
 		const degradedOnly =
 			filteredArgs.includes("--degraded-only") ||
 			filteredArgs.includes("-d");
@@ -249,15 +252,23 @@ const componentsCommand: CommandDefinition = {
 				components = components.filter((c) => isComponentDegraded(c));
 			}
 
-			if (format === "json") {
-				return successResult([JSON.stringify(components, null, 2)]);
+			// Handle none format - return empty
+			if (format === "none") {
+				return successResult([]);
+			}
+
+			// Use unified formatter for json/yaml/tsv
+			if (format === "json" || format === "yaml" || format === "tsv") {
+				return successResult(
+					formatListOutput(components, { format, noColor }),
+				);
 			}
 
 			if (components.length === 0) {
 				return successResult(["No components found."]);
 			}
 
-			// Table format
+			// Table format - custom visual display
 			const lines: string[] = [
 				"┌─────────────────────────────────────────┬────────────────────┐",
 				"│ NAME                                    │ STATUS             │",
@@ -297,7 +308,10 @@ const incidentsCommand: CommandDefinition = {
 	aliases: ["inc"],
 
 	async execute(args, session): Promise<DomainCommandResult> {
-		const { format, spec, filteredArgs } = parseOutputArgs(args, session);
+		const { format, noColor, spec, filteredArgs } = parseOutputArgs(
+			args,
+			session,
+		);
 		const activeOnly =
 			filteredArgs.includes("--active-only") ||
 			filteredArgs.includes("-a");
@@ -316,16 +330,23 @@ const incidentsCommand: CommandDefinition = {
 				? await client.getUnresolvedIncidents()
 				: await client.getIncidents();
 
-			if (format === "json") {
-				return successResult([
-					JSON.stringify(response.incidents, null, 2),
-				]);
+			// Handle none format - return empty
+			if (format === "none") {
+				return successResult([]);
+			}
+
+			// Use unified formatter for json/yaml/tsv
+			if (format === "json" || format === "yaml" || format === "tsv") {
+				return successResult(
+					formatListOutput(response.incidents, { format, noColor }),
+				);
 			}
 
 			if (response.incidents.length === 0) {
 				return successResult(["No incidents found."]);
 			}
 
+			// Table format - custom visual display
 			const lines: string[] = [];
 			for (const inc of response.incidents) {
 				const status = isIncidentActive(inc)
@@ -365,7 +386,10 @@ const maintenanceCommand: CommandDefinition = {
 	aliases: ["maint"],
 
 	async execute(args, session): Promise<DomainCommandResult> {
-		const { format, spec, filteredArgs } = parseOutputArgs(args, session);
+		const { format, noColor, spec, filteredArgs } = parseOutputArgs(
+			args,
+			session,
+		);
 		const upcomingOnly =
 			filteredArgs.includes("--upcoming") || filteredArgs.includes("-u");
 
@@ -383,16 +407,26 @@ const maintenanceCommand: CommandDefinition = {
 				? await client.getUpcomingMaintenances()
 				: await client.getMaintenances();
 
-			if (format === "json") {
-				return successResult([
-					JSON.stringify(response.scheduled_maintenances, null, 2),
-				]);
+			// Handle none format - return empty
+			if (format === "none") {
+				return successResult([]);
+			}
+
+			// Use unified formatter for json/yaml/tsv
+			if (format === "json" || format === "yaml" || format === "tsv") {
+				return successResult(
+					formatListOutput(response.scheduled_maintenances, {
+						format,
+						noColor,
+					}),
+				);
 			}
 
 			if (response.scheduled_maintenances.length === 0) {
 				return successResult(["No scheduled maintenance."]);
 			}
 
+			// Table format - custom visual display
 			const lines: string[] = [];
 			for (const maint of response.scheduled_maintenances) {
 				if (!isMaintenanceCompleted(maint)) {
@@ -546,21 +580,6 @@ function formatFullSummary(summary: SummaryResponse): string[] {
 	}
 
 	return lines;
-}
-
-function formatSummaryYaml(summary: SummaryResponse): string {
-	const lines: string[] = [];
-	lines.push("status:");
-	lines.push(`  indicator: ${summary.status.indicator}`);
-	lines.push(`  description: ${summary.status.description}`);
-	lines.push("page:");
-	lines.push(`  id: ${summary.page.id}`);
-	lines.push(`  name: ${summary.page.name}`);
-	lines.push(`  updated_at: ${summary.page.updated_at}`);
-	lines.push(`components_count: ${summary.components.length}`);
-	lines.push(`incidents_count: ${summary.incidents.length}`);
-	lines.push(`maintenances_count: ${summary.scheduled_maintenances.length}`);
-	return lines.join("\n");
 }
 
 /**
