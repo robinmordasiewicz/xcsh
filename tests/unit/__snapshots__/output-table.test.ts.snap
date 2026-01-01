@@ -1,0 +1,68 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Unicode handling > matches snapshot for unicode table > unicode-table 1`] = `
+"+----------------------+-----------------+
+|         NAME         |     STATUS      |
++----------------------+-----------------+
+| Resource 🚀          | ✅ Active        |
+| 日本語リソース              | ⏳ Pending       |
+| 中文资源                 | ❌ Error         |
++----------------------+-----------------+"
+`;
+
+exports[`formatBeautifulTable > snapshot tests > matches snapshot for custom columns > custom-columns-table 1`] = `
+"+------------+-------------------------------+---------+-------+
+|     ID     |             NAME              | STATUS  | COUNT |
++------------+-------------------------------+---------+-------+
+| 001        | First Resource                | Active  |    42 |
+| 002        | Second Resource               | Pending |    17 |
+| 003        | Third Resource with Long Name |  Error  |     0 |
++------------+-------------------------------+---------+-------+"
+`;
+
+exports[`formatBeautifulTable > snapshot tests > matches snapshot for single row > single-row-table 1`] = `
+"+-----------+-------------+---------------------+
+| NAMESPACE |    NAME     |       LABELS        |
++-----------+-------------+---------------------+
+| system    | single-item | map[component:core] |
++-----------+-------------+---------------------+"
+`;
+
+exports[`formatBeautifulTable > snapshot tests > matches snapshot for standard table > standard-table 1`] = `
+"+-----------+------------+-----------------------------+
+| NAMESPACE |    NAME    |           LABELS            |
++-----------+------------+-----------------------------+
+| default   | resource-1 | map[env:prod team:platform] |
+| staging   | resource-2 | map[env:staging]            |
+| default   | resource-3 | <None>                      |
++-----------+------------+-----------------------------+"
+`;
+
+exports[`formatBeautifulTable > snapshot tests > matches snapshot for table with title > table-with-title 1`] = `
+"+- Test Resources -------------------------------------+
+| NAMESPACE |    NAME    |           LABELS            |
++-----------+------------+-----------------------------+
+| default   | resource-1 | map[env:prod team:platform] |
+| staging   | resource-2 | map[env:staging]            |
+| default   | resource-3 | <None>                      |
++-----------+------------+-----------------------------+"
+`;
+
+exports[`formatKeyValueBox > matches snapshot > key-value-box 1`] = `
+"+- Session Info ----------------------+
+| User     :  admin@example.com       |
+| Tenant   :  acme-corp               |
+| Namespace:  default                 |
+| API URL  :  https://api.example.com |
++-------------------------------------+"
+`;
+
+exports[`formatResourceTable > matches snapshot > resource-table 1`] = `
+"+-----------+------------+-----------------------------+
+| NAMESPACE |    NAME    |           LABELS            |
++-----------+------------+-----------------------------+
+| default   | resource-1 | map[env:prod team:platform] |
+| staging   | resource-2 | map[env:staging]            |
+| default   | resource-3 | <None>                      |
++-----------+------------+-----------------------------+"
+`;
