@@ -18,6 +18,7 @@ import { executeCommand } from "./executor.js";
 import { isCustomDomain } from "../domains/index.js";
 import { domainRegistry } from "../types/domains.js";
 import { extensionRegistry } from "../extensions/index.js";
+import { setTerminalWidth } from "../output/terminal.js";
 
 /**
  * Props for the App component
@@ -177,13 +178,20 @@ export function App({ initialSession }: AppProps = {}): React.ReactElement {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [session]);
 
-	// Handle terminal resize
+	// Handle terminal resize - sync to both local state and global context
 	useEffect(() => {
 		const handleResize = () => {
 			if (stdout) {
-				setWidth(stdout.columns ?? 80);
+				const newWidth = stdout.columns ?? 80;
+				setWidth(newWidth);
+				setTerminalWidth(newWidth);
 			}
 		};
+
+		// Initialize terminal width context on mount
+		if (stdout) {
+			setTerminalWidth(stdout.columns ?? 80);
+		}
 
 		stdout?.on("resize", handleResize);
 		return () => {
