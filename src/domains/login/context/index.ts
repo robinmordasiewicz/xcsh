@@ -9,6 +9,11 @@ import type { CommandDefinition, SubcommandGroup } from "../../registry.js";
 import { successResult, errorResult } from "../../registry.js";
 import { ENV_PREFIX } from "../../../branding/index.js";
 import type { REPLSession } from "../../../repl/session.js";
+import {
+	parseDomainOutputFlags,
+	formatKeyValueOutput,
+	formatListOutput,
+} from "../../../output/domain-formatter.js";
 
 /**
  * Show command - Display current default namespace
@@ -23,10 +28,40 @@ const showCommand: CommandDefinition = {
 	usage: "",
 	aliases: ["current", "get"],
 
-	async execute(_args, session) {
+	async execute(args, session) {
+		const { options } = parseDomainOutputFlags(
+			args,
+			session.getOutputFormat(),
+		);
 		const namespace = session.getNamespace();
 		const source = determineNamespaceSource(namespace);
 
+		// Handle none format
+		if (options.format === "none") {
+			return successResult([]);
+		}
+
+		// Build data object for unified formatter
+		const data = {
+			namespace,
+			source,
+		};
+
+		// Use unified formatter for json/yaml/tsv
+		if (
+			options.format === "json" ||
+			options.format === "yaml" ||
+			options.format === "tsv"
+		) {
+			return successResult(
+				formatKeyValueOutput(data, {
+					...options,
+					title: "Context",
+				}),
+			);
+		}
+
+		// Table format (default) - custom text output
 		const lines: string[] = [
 			`Current namespace: ${namespace}`,
 			`Source: ${source}`,
@@ -144,7 +179,11 @@ const listCommand: CommandDefinition = {
 	usage: "",
 	aliases: ["ls"],
 
-	async execute(_args, session) {
+	async execute(args, session) {
+		const { options } = parseDomainOutputFlags(
+			args,
+			session.getOutputFormat(),
+		);
 		const currentNamespace = session.getNamespace();
 
 		// Check if we have API connection
@@ -180,6 +219,27 @@ const listCommand: CommandDefinition = {
 			// Cache the namespaces for tab completion
 			session.setNamespaceCache(namespaces);
 
+			// Handle none format
+			if (options.format === "none") {
+				return successResult([]);
+			}
+
+			// Build data array for unified formatter
+			const data = namespaces.map((ns) => ({
+				name: ns,
+				current: ns === currentNamespace,
+			}));
+
+			// Use unified formatter for json/yaml/tsv
+			if (
+				options.format === "json" ||
+				options.format === "yaml" ||
+				options.format === "tsv"
+			) {
+				return successResult(formatListOutput(data, options));
+			}
+
+			// Table format (default) - custom text output
 			const lines: string[] = ["Available namespaces:", ""];
 			for (const ns of namespaces) {
 				if (ns === currentNamespace) {
