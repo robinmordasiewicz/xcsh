@@ -15,6 +15,13 @@ export {
 } from "./formatter.js";
 export type { FormatterConfig } from "./formatter.js";
 
+// Domain-specific formatting (for unified output handling)
+export {
+	formatDomainOutput,
+	parseDomainOutputFlags,
+	type DomainFormatOptions,
+} from "./domain-formatter.js";
+
 // Types
 export type {
 	OutputFormat,

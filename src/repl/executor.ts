@@ -22,7 +22,7 @@ import { extensionRegistry } from "../extensions/index.js";
 import { getWhoamiInfo, formatWhoami } from "../domains/login/whoami/index.js";
 import { APIError } from "../api/index.js";
 import {
-	formatOutput,
+	formatDomainOutput,
 	formatAPIError,
 	parseOutputFormat,
 	getCommandSpec,
@@ -1139,10 +1139,13 @@ async function executeAPICommand(
 		// Format output
 		// Priority: CLI flag (--output) > session format (from env var or default)
 		const effectiveFormat = outputFormat ?? session.getOutputFormat();
-		const formatted = formatOutput(result, effectiveFormat, noColor);
+		const formatted = formatDomainOutput(result, {
+			format: effectiveFormat,
+			noColor: noColor ?? false,
+		});
 
 		return {
-			output: formatted ? [formatted] : ["(no output)"],
+			output: formatted.length > 0 ? formatted : ["(no output)"],
 			shouldExit: false,
 			shouldClear: false,
 			contextChanged: false,
