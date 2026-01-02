@@ -44,7 +44,7 @@ _xcsh() {
             'data_intelligence:Data Intelligence API'
             'ddos:Volumetric attack mitigation and traffic scrubbing.'
             'dns:Zones, record types, and load balancing.'
-            'generative_ai:AI assistant queries and feedback collection.'
+            'generative_ai:AI assistant queries and feedback'
             'login:Authentication and session management'
             'managed_kubernetes:Cluster RBAC, pod security, and container registries.'
             'marketplace:Add-on services, connectors, and TPM policies.'
@@ -113,9 +113,6 @@ _xcsh() {
             'ddos-protect:Alias for ddos'
             'dns-zone:Alias for dns'
             'zones:Alias for dns'
-            'ai:Alias for generative_ai'
-            'genai:Alias for generative_ai'
-            'assistant:Alias for generative_ai'
             'mk8s:Alias for managed_kubernetes'
             'appstack:Alias for managed_kubernetes'
             'k8s-mgmt:Alias for managed_kubernetes'
@@ -192,6 +189,9 @@ _xcsh() {
             ;;
         (completion)
             _values 'command' 'bash:Generate bash completion script' 'zsh:Generate zsh completion script' 'fish:Generate fish completion script'
+            ;;
+        (generative_ai)
+            _values 'command' 'query:Query the AI assistant' 'chat:Interactive AI chat mode' 'feedback:Submit feedback for AI responses' 'eval:RBAC testing mode commands'
             ;;
         (login)
             _values 'command' 'banner:Display xcsh banner with logo' 'profile:Manage saved connection profiles' 'context:Manage default namespace context'

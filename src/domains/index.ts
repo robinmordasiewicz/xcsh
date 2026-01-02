@@ -6,6 +6,10 @@ import { customDomains } from "./registry.js";
 import { loginDomain } from "./login/index.js";
 import { cloudstatusDomain, cloudstatusAliases } from "./cloudstatus/index.js";
 import { completionDomain } from "./completion/index.js";
+import {
+	generativeAiDomain,
+	generativeAiAliases,
+} from "./generative_ai/index.js";
 import { domainRegistry } from "../types/domains.js";
 import {
 	completionRegistry,
@@ -18,6 +22,7 @@ import {
 customDomains.register(loginDomain);
 customDomains.register(cloudstatusDomain);
 customDomains.register(completionDomain);
+customDomains.register(generativeAiDomain);
 
 // Populate unified completion registry
 // Custom domains first (higher priority)
@@ -41,6 +46,11 @@ for (const alias of cloudstatusAliases) {
 	domainAliases.set(alias, "cloudstatus");
 }
 
+// Register generative_ai aliases
+for (const alias of generativeAiAliases) {
+	domainAliases.set(alias, "generative_ai");
+}
+
 // Export registry and types
 export { customDomains } from "./registry.js";
 export type {
@@ -60,6 +70,7 @@ export { completionRegistry } from "../completion/index.js";
 export { loginDomain } from "./login/index.js";
 export { cloudstatusDomain } from "./cloudstatus/index.js";
 export { completionDomain } from "./completion/index.js";
+export { generativeAiDomain } from "./generative_ai/index.js";
 
 /**
  * Resolve domain alias to canonical name
