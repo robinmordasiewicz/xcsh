@@ -712,9 +712,46 @@ function escapeYamlMultiline(str: string): string {
 }
 
 /**
+ * Load API spec info for CLI description source
+ */
+function loadApiSpecInfo(): { title: string; description: string; version: string } | null {
+	const projectRoot = join(__dirname, "..");
+	const specPath = join(projectRoot, ".specs", "openapi.json");
+
+	try {
+		if (!existsSync(specPath)) {
+			console.warn(`API spec not found at ${specPath}`);
+			return null;
+		}
+		const specContent = readFileSync(specPath, "utf-8");
+		const spec = JSON.parse(specContent);
+		return spec.info || null;
+	} catch (error) {
+		console.warn(`Failed to load API spec: ${error}`);
+		return null;
+	}
+}
+
+/**
  * Get CLI root context for generating CLI-level descriptions
+ * Sources description from upstream API spec's info.description field
  */
 function getCliRootContext(): DomainContext {
+	// Read description from upstream API spec (single source of truth)
+	const apiInfo = loadApiSpecInfo();
+
+	if (apiInfo?.description) {
+		console.log("  Using API spec info.description as source");
+		return {
+			name: "xcsh",
+			type: "cli_root",
+			existingDescription: apiInfo.description,
+			features: [], // Features derived from API description
+		};
+	}
+
+	// Fallback only if API spec is unavailable
+	console.warn("  API spec unavailable, using fallback context");
 	return {
 		name: "xcsh",
 		type: "cli_root",

@@ -32,47 +32,47 @@ export interface GeneratedDescriptionsData {
 /**
  * Generated Descriptions Data
  * Auto-generated from config/custom-domain-descriptions.yaml
- * Generated at: 2025-12-30T03:58:36.781Z
+ * Generated at: 2026-01-02T03:29:16.852Z
  *
  * DO NOT EDIT MANUALLY - Regenerate with: npm run generate:descriptions
  */
 export const generatedDescriptions: GeneratedDescriptionsData = {
 	version: "1.0.0",
-	generatedAt: "2025-12-30T03:58:36.781Z",
+	generatedAt: "2026-01-02T03:29:16.852Z",
 	cli: {
 		xcsh: {
-			short: "Navigate cloud services via interactive shell",
-			medium: "Manage multi-tenant connections, execute domain operations across 100+ services, and output results in JSON, YAML, or table format.",
-			long: "Interact with cloud services through an intelligent shell environment. Navigate over 100 domain operations using tab completion for commands, flags, and values. Organize multiple tenant connections with named profiles and switch contexts without re-authenticating. Execute commands directly from scripts or explore interactively with history and suggestions. Configure output format as JSON, YAML, or formatted tables. Set behavior through environment variables or persistent profile settings. Generate shell completions for bash, zsh, and fish terminals.",
+			short: "Configure multi-cloud application delivery services",
+			medium: "Manage load balancers, security policies, DNS routing, and cloud site provisioning across hybrid environments.",
+			long: "Deploy distributed application infrastructure spanning AWS, Azure, GCP, and edge locations. Create origin pools with health monitoring and traffic management. Apply WAF rules, bot mitigation, and DDoS protection. Set up DNS zones supporting geographic and weighted routing strategies. Establish network segmentation and service mesh configurations. Monitor performance through observability dashboards. Validate subscription quotas before resource creation. Generate JSON output for CI/CD pipeline integration.",
 		},
 	},
 	domains: {
 		login: {
-			short: "Configure session credentials and environment profiles",
-			medium: "Set up authentication tokens, organize named profiles for multiple tenants, and switch between target environments for CLI operations.",
-			long: "Control authentication and session state across multiple environments. Run 'show' to display current connection details and token status. Organize credentials with 'profile' to maintain separate configurations for development, staging, and production tenants. Switch active targets via 'context' without re-authenticating. Run 'banner' for visual confirmation of the active environment. Profiles persist locally with token-based and certificate authentication support.",
+			short: "Configure credentials, profiles, and session context",
+			medium: "Set up authentication credentials, organize named profiles for different environments, and control which connection applies to subsequent operations.",
+			long: "Handle authentication and session configuration for CLI operations. Create named profiles to maintain separate credentials for development, staging, and production environments. View current authentication status with 'show', organize credentials using 'profile', switch active connections with 'context', and display session information via 'banner'. Profiles store tokens and target URLs, enabling quick environment switching without re-entering credentials.",
 			subcommands: {
 				profile: {
-					short: "Manage saved connection configurations for authentication",
-					medium: "Store and switch between multiple tenant connection settings. Create, list, and activate named configurations to avoid repeated credential entry.",
-					long: "Organize tenant connections as reusable named entries for rapid environment switching. Each entry persists URLs and authentication tokens, removing manual reconfiguration overhead. Available operations: 'list' enumerates saved entries, 'show' reveals configuration details, 'create' registers new connections, 'delete' purges obsolete ones, 'active' identifies the current selection, and 'use' changes context. Ideal for workflows spanning development, staging, and production tiers.",
+					short: "Manage saved authentication credentials for tenants",
+					medium: "Store named configurations with URLs and tokens for quick switching between staging, production, and development environments.",
+					long: "Organize credentials and tenant configurations in named entries for streamlined environment management. Create entries to store connection URLs and tokens, list available configurations, switch between active contexts, and remove outdated items. Settings persist across sessions, eliminating repeated credential entry when working with multiple tenants. Use the active command to display the current selection, or switch contexts with the use command for immediate environment changes.",
 				},
 				context: {
-					short: "Manage default namespace for scoping operations",
-					medium: "Configure and display the active namespace used to scope commands. Set, view, or list available namespaces for your session.",
-					long: "Control which namespace subsequent operations target by default. Namespaces partition resources and configurations, ensuring commands affect only the intended area. Use 'show' to display the current selection, 'set' to switch contexts, and 'list' to enumerate accessible options. Once configured, the choice persists across commands until explicitly changed, eliminating repeated namespace flag usage.",
+					short: "Manage default namespace scope for CLI operations",
+					medium: "Configure and switch between namespace settings that control the default boundary for all commands.",
+					long: "Organize resources into logical groupings through namespace scope management. Setting a default namespace eliminates the need to pass --namespace on every command, streamlining workflows when operating within a single boundary for extended periods. Use 'show' to display current settings, 'set' to change the active namespace, and 'list' to view available options. These preferences persist across sessions until explicitly changed.",
 				},
 			},
 		},
 		cloudstatus: {
-			short: "Check infrastructure health and active incidents",
-			medium: "Query service availability, component health, ongoing incidents, and scheduled maintenance windows across infrastructure regions.",
-			long: "Display real-time operational state for infrastructure components and services. Track ongoing incidents with severity levels and resolution timelines. View upcoming maintenance windows affecting particular regions or deployments. Filter results by component type, severity, time range, or operational condition. Retrieve incident history and outage notifications. Commands support monitoring degraded performance indicators and uptime metrics useful for operations teams.",
+			short: "Track service health and operational incidents",
+			medium: "Display real-time platform availability, active incident reports, scheduled maintenance windows, and component status across global regions.",
+			long: "Query operational health for infrastructure components and services. Retrieve active incident details with severity levels and resolution timelines. List upcoming maintenance windows and generate status summaries. Filter results by component type, geographic region, or time range. Output formats support automation workflows and alerting integrations. Commands include status overview, component breakdown, incident history, and maintenance schedules.",
 		},
 		completion: {
-			short: "Generate tab-assist scripts for supported shells",
-			medium: "Create shell scripts enabling tab-triggered suggestions for commands, subcommands, flags, and option values in bash, zsh, and fish.",
-			long: "Output autocomplete functionality for your terminal environment. Bash, zsh, and fish are fully supported with context-aware prompts covering command names, nested subcommands, available flags, and valid argument values. Installation requires sourcing the generated content in your shell's configuration file (.bashrc, .zshrc, or config.fish). Execute the appropriate subcommand to produce the script, then follow shell-specific setup instructions to activate intelligent tab behavior.",
+			short: "Generate tab-completion scripts for popular shells",
+			medium: "Create autocompletion support for bash, zsh, and fish terminals enabling tab-triggered command and flag discovery.",
+			long: "Build shell integration scripts that activate tab-triggered suggestions in your terminal environment. Supports bash, zsh, and fish with automatic command discovery, flag hints, and argument recommendations. Install the generated output in your shell's configuration directory to enable this functionality. Each supported shell includes tailored setup instructions and behaviors matching its native conventions for seamless integration.",
 		},
 	},
 };
