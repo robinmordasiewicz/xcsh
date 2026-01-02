@@ -744,7 +744,27 @@ async function handleDomainNavigation(
 		};
 	}
 
+	// Set domain context first
 	ctx.setDomain(domain);
+
+	// If there are remaining args, check if first is an action to execute
+	if (args.length > 0) {
+		const firstArg = args[0]?.toLowerCase() ?? "";
+		const resourceActions = new Set(["list", "get", "delete", "status"]);
+
+		if (resourceActions.has(firstArg)) {
+			// Create a ParsedCommand from the args and execute API command
+			const cmd: ParsedCommand = {
+				raw: args.join(" "),
+				args: args,
+				isBuiltin: false,
+				isDirectNavigation: false,
+			};
+			return await executeAPICommand(session, ctx, cmd);
+		}
+	}
+
+	// No action args - just return context change
 	return {
 		output: [`Entered ${domain} context`],
 		shouldExit: false,
@@ -802,22 +822,7 @@ export async function executeCommand(
 		}
 	}
 
-	// In domain context, check if first word is an action
-	if (ctx.isDomain() && !ctx.isAction()) {
-		const firstWord = cmd.args[0] ?? "";
-		// Set the action context - validation occurs at execution time
-		// via API response (invalid actions get clear 404/400 errors)
-		if (firstWord && !firstWord.startsWith("-")) {
-			ctx.setAction(firstWord);
-			return {
-				output: [`Entered ${ctx.domain} > ${firstWord} context`],
-				shouldExit: false,
-				shouldClear: false,
-				contextChanged: true,
-			};
-		}
-	}
-
+	// In domain context, execute API command directly (no action sub-context)
 	// Execute API command
 	return await executeAPICommand(session, ctx, cmd);
 }
@@ -829,9 +834,9 @@ function domainToResourcePath(domain: string): string {
 	// Resolve alias to canonical name
 	const canonical = resolveDomain(domain) ?? domain;
 
-	// Convert snake_case to kebab-case for API paths
-	// e.g., http_loadbalancer → http-loadbalancers (plural)
-	const resourceName = canonical.replace(/_/g, "-");
+	// F5 XC API uses snake_case for resource paths (not kebab-case)
+	// e.g., http_loadbalancer → http_loadbalancers (plural)
+	const resourceName = canonical;
 
 	// Add 's' for plural form (most F5 XC resources are plural in API)
 	return resourceName.endsWith("s") ? resourceName : `${resourceName}s`;
@@ -841,6 +846,7 @@ function domainToResourcePath(domain: string): string {
  * Parsed command arguments
  */
 interface ParsedArgs {
+	resourceType: string | undefined;
 	name: string | undefined;
 	namespace: string | undefined;
 	outputFormat: OutputFormat | undefined;
@@ -849,14 +855,21 @@ interface ParsedArgs {
 }
 
 /**
- * Parse command arguments for name, namespace, output format, and other flags
+ * Parse command arguments for resource type, name, namespace, output format, and other flags
+ * @param args - Command arguments to parse
+ * @param domainResourceTypes - Set of valid resource type names for the current domain
  */
-function parseCommandArgs(args: string[]): ParsedArgs {
+function parseCommandArgs(
+	args: string[],
+	domainResourceTypes?: Set<string>,
+): ParsedArgs {
+	let resourceType: string | undefined;
 	let name: string | undefined;
 	let namespace: string | undefined;
 	let outputFormat: OutputFormat | undefined;
 	let spec = false;
 	let noColor = false;
+	let positionalIndex = 0;
 
 	for (let i = 0; i < args.length; i++) {
 		const arg = args[i] ?? "";
@@ -915,13 +928,26 @@ function parseCommandArgs(args: string[]): ParsedArgs {
 						i++;
 					}
 			}
-		} else if (!name) {
-			// First non-flag argument is the resource name
-			name = arg;
+		} else {
+			// Positional argument
+			if (positionalIndex === 0) {
+				// First positional arg: could be resource type or resource name
+				if (domainResourceTypes?.has(arg.toLowerCase())) {
+					// It's a valid resource type for this domain
+					resourceType = arg.toLowerCase();
+				} else {
+					// Not a resource type, treat as resource name
+					name = arg;
+				}
+			} else if (positionalIndex === 1 && resourceType && !name) {
+				// Second positional arg after resource type: resource name
+				name = arg;
+			}
+			positionalIndex++;
 		}
 	}
 
-	return { name, namespace, outputFormat, spec, noColor };
+	return { resourceType, name, namespace, outputFormat, spec, noColor };
 }
 
 /**
@@ -994,10 +1020,21 @@ async function executeAPICommand(
 	// Resolve domain alias
 	const canonicalDomain = resolveDomain(domain) ?? domain;
 
-	// Parse arguments
-	const { name, namespace, outputFormat, spec, noColor } =
-		parseCommandArgs(args);
+	// Get valid resource types for this domain
+	const domainInfo = getDomainInfo(canonicalDomain);
+	const domainResourceTypes = new Set(
+		domainInfo?.primaryResources?.map((r) => r.name) ?? [],
+	);
+
+	// Parse arguments (with resource type detection)
+	const { resourceType, name, namespace, outputFormat, spec, noColor } =
+		parseCommandArgs(args, domainResourceTypes);
 	const effectiveNamespace = namespace ?? session.getNamespace();
+
+	// Determine which resource to use for the API path
+	// If a resource type was specified (e.g., "list http_loadbalancer"), use it
+	// Otherwise, fall back to the domain name
+	const effectiveResource = resourceType ?? canonicalDomain;
 
 	// Validate namespace scope (from upstream enrichment)
 	const nsValidation = validateNamespaceScope(
@@ -1074,8 +1111,8 @@ async function executeAPICommand(
 		};
 	}
 
-	// Build API path
-	const resourcePath = domainToResourcePath(canonicalDomain);
+	// Build API path using the effective resource (explicit resource type or domain)
+	const resourcePath = domainToResourcePath(effectiveResource);
 	let apiPath = `/api/config/namespaces/${effectiveNamespace}/${resourcePath}`;
 
 	// Execute based on action

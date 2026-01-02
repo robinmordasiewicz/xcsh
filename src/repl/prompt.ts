@@ -8,9 +8,18 @@ import { CLI_NAME } from "../branding/index.js";
 
 /**
  * Build a plain text prompt string.
- * Shows CLI name with ">" suffix (e.g., "xcsh> ")
+ * Shows context-aware prompt based on current navigation state:
+ * - Root: "xcsh> "
+ * - Domain: "xcsh:virtual> "
+ * Note: Actions don't create sub-contexts - they execute immediately
  */
-export function buildPlainPrompt(_session: REPLSession): string {
+export function buildPlainPrompt(session: REPLSession): string {
+	const ctx = session.getContextPath();
+
+	if (ctx.isDomain()) {
+		return `${CLI_NAME}:${ctx.domain}> `;
+	}
+
 	return `${CLI_NAME}> `;
 }
 
@@ -31,18 +40,19 @@ export interface PromptParts {
 	profile: string | null; // Active profile name
 	prefix: string; // "xc"
 	domain: string | null; // e.g., "http_loadbalancer"
-	action: string | null; // e.g., "list"
-	separator: string; // "."
+	separator: string; // ":"
 	wrapper: { open: string; close: string }; // "<" and ">"
 }
 
-export function getPromptParts(_session: REPLSession): PromptParts {
+export function getPromptParts(session: REPLSession): PromptParts {
+	const ctx = session.getContextPath();
+	const profile = session.getActiveProfileName();
+
 	return {
-		profile: null,
-		prefix: "",
-		domain: null,
-		action: null,
-		separator: "",
+		profile: profile,
+		prefix: CLI_NAME,
+		domain: ctx.domain || null,
+		separator: ctx.isDomain() ? ":" : "",
 		wrapper: { open: "", close: ">" },
 	};
 }

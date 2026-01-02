@@ -17,7 +17,9 @@ export interface CompletionSuggestion {
 		| "value"
 		| "argument"
 		| "subcommand"
-		| "command";
+		| "command"
+		| "resource"
+		| "resource-name";
 }
 
 /**

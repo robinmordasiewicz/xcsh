@@ -13,6 +13,24 @@ import {
 	getActionDescriptions,
 } from "../../completion/index.js";
 import { ALL_OUTPUT_FORMATS, OUTPUT_FORMAT_HELP } from "../../output/types.js";
+import { getDomainInfo } from "../../types/domains.js";
+import { resourceFetcher } from "./resource-fetcher.js";
+
+/**
+ * Context for resource completion
+ * Tracks where we are in the completion chain: domain → action → resourceType → resourceName
+ */
+interface ResourceContext {
+	domain: string | null;
+	action: string | null;
+	resourceType: string | null;
+	resourceNamePartial: string;
+}
+
+/**
+ * Actions that can operate on resource types
+ */
+const RESOURCE_ACTIONS = new Set(["list", "get", "delete", "status"]);
 
 /**
  * Parse input text into args array, handling quoted strings
@@ -78,27 +96,30 @@ export function parseInput(text: string): ParsedInput {
 	const isCompletingFlag = currentWord.startsWith("-");
 
 	// Check if completing a flag value
-	// Patterns: "--flag " or "--flag=value"
+	// Patterns: "--flag " or "--flag=value" or "--flag val"
 	let isCompletingFlagValue = false;
 	let currentFlag: string | null = null;
 
-	if (args.length >= 2 && !currentWord.startsWith("-")) {
-		// Check if previous arg is a flag that expects a value
-		const prevArg = args[args.length - 2];
+	// Flags that expect values (not boolean flags)
+	const valueFlagPatterns = [
+		"--namespace",
+		"-ns",
+		"--output",
+		"-o",
+		"--name",
+		"-n",
+		"--file",
+		"-f",
+		"--limit",
+		"--label",
+	];
+
+	if (args.length >= 1 && !currentWord.startsWith("-")) {
+		// When there's a trailing space (currentWord is ""), check if the LAST arg is a value flag
+		// When typing a value (currentWord is partial), check if the SECOND-TO-LAST arg is a value flag
+		const flagIndex = endsWithSpace ? args.length - 1 : args.length - 2;
+		const prevArg = args[flagIndex];
 		if (prevArg && prevArg.startsWith("-") && !prevArg.includes("=")) {
-			// Check if it's a flag that expects a value (not a boolean flag)
-			const valueFlagPatterns = [
-				"--namespace",
-				"-ns",
-				"--output",
-				"-o",
-				"--name",
-				"-n",
-				"--file",
-				"-f",
-				"--limit",
-				"--label",
-			];
 			if (valueFlagPatterns.some((f) => prevArg === f)) {
 				isCompletingFlagValue = true;
 				currentFlag = prevArg;
@@ -172,6 +193,9 @@ export class Completer {
 			);
 		}
 
+		// Check for resource context (domain/action/resourceType/resourceName chain)
+		const resourceCtx = this.parseResourceContext(parsed);
+
 		// Completing a flag value (e.g., "--output json" or "--output=json")
 		if (parsed.isCompletingFlagValue && parsed.currentFlag) {
 			return await this.getFlagValueCompletions(
@@ -180,9 +204,57 @@ export class Completer {
 			);
 		}
 
-		// Completing a flag
+		// Completing a flag - pass detected action for action-specific flags
 		if (parsed.isCompletingFlag) {
-			return this.getFlagCompletions(parsed.currentWord);
+			return this.getFlagCompletions(
+				parsed.currentWord,
+				resourceCtx.action ?? undefined,
+			);
+		}
+
+		// If we have a resource type, complete resource names from API
+		if (resourceCtx.resourceType) {
+			const resourceNames = await this.getResourceNameSuggestions(
+				resourceCtx.resourceType,
+				resourceCtx.resourceNamePartial,
+			);
+			if (resourceNames.length > 0) {
+				return resourceNames;
+			}
+			// Resource type is specified but no resources exist - show flags only, not actions
+			return this.getActionFlagSuggestions(
+				resourceCtx.action ?? undefined,
+			);
+		}
+
+		// If in domain context with an action that supports resources, show resource types
+		if (
+			resourceCtx.domain &&
+			resourceCtx.action &&
+			RESOURCE_ACTIONS.has(resourceCtx.action) &&
+			!resourceCtx.resourceType
+		) {
+			const resourceTypes = this.getResourceTypeSuggestions(
+				resourceCtx.domain,
+			);
+			if (resourceTypes.length > 0) {
+				// If typing a word, filter resource types
+				if (parsed.currentWord && !parsed.currentWord.startsWith("-")) {
+					const filtered = this.filterSuggestions(
+						resourceTypes,
+						parsed.currentWord,
+					);
+					if (filtered.length > 0) {
+						return filtered;
+					}
+				} else if (!parsed.currentWord) {
+					// Just typed action + space, show all resource types plus flags
+					return [
+						...resourceTypes,
+						...this.getActionFlagSuggestions(resourceCtx.action),
+					];
+				}
+			}
 		}
 
 		// Get base suggestions based on context
@@ -322,6 +394,7 @@ export class Completer {
 
 	/**
 	 * Get suggestions based on current navigation context
+	 * Note: Actions don't create sub-contexts - only domain-level navigation exists
 	 */
 	async getContextualSuggestions(): Promise<CompletionSuggestion[]> {
 		if (!this.session) {
@@ -330,16 +403,8 @@ export class Completer {
 
 		const ctx = this.session.getContextPath();
 
-		if (ctx.isRoot()) {
-			return this.getRootContextSuggestions();
-		}
-
 		if (ctx.isDomain()) {
 			return this.getDomainContextSuggestions();
-		}
-
-		if (ctx.isAction()) {
-			return await this.getActionContextSuggestions();
 		}
 
 		return this.getRootContextSuggestions();
@@ -483,49 +548,44 @@ export class Completer {
 	}
 
 	/**
-	 * Get suggestions when in an action context
+	 * Get resource-related suggestions for a domain with an action
+	 * Called when user types an action (list, get, delete) followed by space
 	 */
-	async getActionContextSuggestions(): Promise<CompletionSuggestion[]> {
+	getResourceSuggestionsForAction(
+		domain: string,
+		action: string,
+	): CompletionSuggestion[] {
 		const suggestions: CompletionSuggestion[] = [];
 
-		// Add flags for current action
-		suggestions.push(...this.getActionFlagSuggestions());
+		// If action operates on resource types, add resource type suggestions
+		if (RESOURCE_ACTIONS.has(action)) {
+			const resourceTypes = this.getResourceTypeSuggestions(domain);
+			suggestions.push(...resourceTypes);
+		}
 
-		// Add navigation commands
-		suggestions.push(
-			{
-				text: "exit",
-				description: "Go up to domain context",
-				category: "navigation",
-			},
-			{
-				text: "back",
-				description: "Go up to domain context",
-				category: "navigation",
-			},
-			{
-				text: "..",
-				description: "Go up to domain context",
-				category: "navigation",
-			},
-			{
-				text: "root",
-				description: "Go to root context",
-				category: "navigation",
-			},
-			{
-				text: "/",
-				description: "Go to root context",
-				category: "navigation",
-			},
-			{
-				text: "help",
-				description: "Show context help",
-				category: "builtin",
-			},
-		);
+		// Add common flags for the action
+		suggestions.push(...this.getCommonFlagSuggestions());
 
 		return suggestions;
+	}
+
+	/**
+	 * Get common flag suggestions (for use within domain context)
+	 */
+	getCommonFlagSuggestions(): CompletionSuggestion[] {
+		return [
+			{ text: "--namespace", description: "Namespace", category: "flag" },
+			{
+				text: "--output",
+				description: `Output format (${OUTPUT_FORMAT_HELP})`,
+				category: "flag",
+			},
+			{
+				text: "-o",
+				description: "Output format (short)",
+				category: "flag",
+			},
+		];
 	}
 
 	/**
@@ -552,9 +612,131 @@ export class Completer {
 	}
 
 	/**
-	 * Get flag suggestions for current action
+	 * Get resource type suggestions for a domain
+	 * Returns the primaryResources from domain metadata
 	 */
-	getActionFlagSuggestions(): CompletionSuggestion[] {
+	getResourceTypeSuggestions(domain: string): CompletionSuggestion[] {
+		const domainInfo = getDomainInfo(domain);
+		if (!domainInfo?.primaryResources) {
+			return [];
+		}
+
+		return domainInfo.primaryResources.map((resource) => ({
+			text: resource.name,
+			description: resource.descriptionShort || resource.description,
+			category: "resource" as const,
+		}));
+	}
+
+	/**
+	 * Get resource name suggestions from live API
+	 * Fetches actual resource names for a given resource type
+	 */
+	async getResourceNameSuggestions(
+		resourceType: string,
+		partial: string = "",
+	): Promise<CompletionSuggestion[]> {
+		if (!this.session) return [];
+
+		const namespace = this.session.getNamespace();
+		const client = this.session.getAPIClient();
+
+		const names = await resourceFetcher.fetchResourceNames(
+			client,
+			namespace,
+			resourceType,
+			partial,
+		);
+
+		return names.map((name) => ({
+			text: name,
+			description: `${resourceType} resource`,
+			category: "resource-name" as const,
+		}));
+	}
+
+	/**
+	 * Parse resource context from input
+	 * Detects: domain → action → resourceType → resourceName
+	 * Note: Actions are detected from input args, not navigation context
+	 *
+	 * Key distinction:
+	 * - "list http_loadbalancer" (no space) → still typing resource type
+	 * - "list http_loadbalancer " (with space) → resource type complete, ready for resource name
+	 */
+	parseResourceContext(parsed: ParsedInput): ResourceContext {
+		const ctx: ResourceContext = {
+			domain: null,
+			action: null,
+			resourceType: null,
+			resourceNamePartial: "",
+		};
+
+		// Get current navigation context from session
+		if (!this.session) {
+			return ctx;
+		}
+
+		const navCtx = this.session.getContextPath();
+
+		// Only domain from navigation context - actions are detected from input
+		ctx.domain = navCtx.domain || null;
+
+		// Check if first arg is an action (actions are always from input, not navigation)
+		if (parsed.args.length > 0) {
+			const firstArg = parsed.args[0]?.toLowerCase() ?? "";
+			if (RESOURCE_ACTIONS.has(firstArg)) {
+				ctx.action = firstArg;
+			}
+		}
+
+		// If we have domain + action that supports resources, check for resource type
+		if (ctx.domain && ctx.action && RESOURCE_ACTIONS.has(ctx.action)) {
+			const domainInfo = getDomainInfo(ctx.domain);
+			const resourceNames = new Set(
+				domainInfo?.primaryResources?.map((r) => r.name) ?? [],
+			);
+
+			// Find which arg might be a resource type (skip first arg which is the action)
+			for (let i = 1; i < parsed.args.length; i++) {
+				const arg = parsed.args[i]?.toLowerCase() ?? "";
+				if (resourceNames.has(arg)) {
+					// Check if this is the last arg AND equals currentWord (user still typing)
+					const isLastArg = i === parsed.args.length - 1;
+					const isStillTyping =
+						isLastArg && parsed.currentWord.toLowerCase() === arg;
+
+					if (isStillTyping) {
+						// User is still typing the resource type (no trailing space)
+						// Don't set resourceType - let it fall through to resource type suggestions
+						break;
+					}
+
+					ctx.resourceType = arg;
+					// The next arg or current word is the resource name partial (but NOT if it's a flag)
+					if (i < parsed.args.length - 1) {
+						const nextArg = parsed.args[i + 1]?.toLowerCase() ?? "";
+						// Only treat as resource name partial if it's not a flag
+						if (!nextArg.startsWith("-")) {
+							ctx.resourceNamePartial = nextArg;
+						}
+					} else if (!parsed.currentWord) {
+						// Trailing space after resource type - ready for resource name
+						ctx.resourceNamePartial = "";
+					}
+					break;
+				}
+			}
+		}
+
+		return ctx;
+	}
+
+	/**
+	 * Get flag suggestions for a given action
+	 * @param action - The action to get flags for (optional, uses common flags if not provided)
+	 */
+	getActionFlagSuggestions(action?: string): CompletionSuggestion[] {
 		// Common flags that apply to most actions
 		const commonFlags: CompletionSuggestion[] = [
 			{ text: "--name", description: "Resource name", category: "flag" },
@@ -576,12 +758,9 @@ export class Completer {
 			},
 		];
 
-		if (!this.session) {
+		if (!action) {
 			return commonFlags;
 		}
-
-		const ctx = this.session.getContextPath();
-		const action = ctx.action;
 
 		// Add action-specific flags
 		const actionFlags: CompletionSuggestion[] = [...commonFlags];
@@ -644,9 +823,14 @@ export class Completer {
 
 	/**
 	 * Get flag completions filtered by prefix
+	 * @param prefix - The prefix to filter by
+	 * @param action - Optional action for action-specific flags
 	 */
-	getFlagCompletions(prefix: string): CompletionSuggestion[] {
-		const allFlags = this.getActionFlagSuggestions();
+	getFlagCompletions(
+		prefix: string,
+		action?: string,
+	): CompletionSuggestion[] {
+		const allFlags = this.getActionFlagSuggestions(action);
 		return this.filterSuggestions(allFlags, prefix);
 	}
 
