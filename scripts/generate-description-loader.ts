@@ -16,6 +16,39 @@ import { parse as parseYaml } from "yaml";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+interface SpecInfo {
+	title: string | null;
+	description: string | null;
+}
+
+/**
+ * Extract CLI info from upstream OpenAPI spec (build-time)
+ * No local enrichment - use upstream verbatim as single source of truth
+ * Returns both title (short) and description (long) from spec
+ */
+function extractSpecInfo(): SpecInfo {
+	const specPath = join(__dirname, "..", ".specs", "openapi.json");
+	if (!existsSync(specPath)) {
+		console.warn("  Warning: API spec not found, CLI info will use fallback");
+		return { title: null, description: null };
+	}
+	try {
+		const content = readFileSync(specPath, "utf-8");
+		const spec = JSON.parse(content);
+		const title = spec.info?.title || null;
+		const description = spec.info?.description || null;
+		if (title || description) {
+			console.log("  Extracted CLI info from .specs/openapi.json");
+			if (title) console.log(`    title: "${title}"`);
+			if (description) console.log(`    description: ${description.length} chars`);
+		}
+		return { title, description };
+	} catch (error) {
+		console.warn(`  Warning: Failed to parse API spec: ${error}`);
+		return { title: null, description: null };
+	}
+}
+
 interface DescriptionTiers {
 	short: string;
 	medium: string;
@@ -191,7 +224,27 @@ ${indent}}`;
 function generateModule(data: GeneratedDescriptions): string {
 	const interfaces = generateInterfaces();
 
-	// Generate CLI entries if present
+	// Extract CLI info from upstream spec (single source of truth)
+	const specInfo = extractSpecInfo();
+
+	// Generate exports for both title (short) and description (long)
+	const specInfoExport = `
+/**
+ * CLI Title from upstream OpenAPI spec (short description)
+ * Extracted at build time from .specs/openapi.json info.title
+ * This is the single source of truth - no local enrichment
+ */
+export const CLI_TITLE_FROM_SPEC: string | null = ${JSON.stringify(specInfo.title)};
+
+/**
+ * CLI Description from upstream OpenAPI spec (long description)
+ * Extracted at build time from .specs/openapi.json info.description
+ * This is the single source of truth - no local enrichment
+ */
+export const CLI_DESCRIPTION_FROM_SPEC: string | null = ${JSON.stringify(specInfo.description)};
+`;
+
+	// Generate CLI entries if present (for backwards compatibility)
 	let cliSection = "";
 	if (data.cli && Object.keys(data.cli).length > 0) {
 		const cliEntries = Object.entries(data.cli).map(([name, cli]) => {
@@ -207,6 +260,7 @@ ${cliEntries.join("\n")}
 	});
 
 	return `${interfaces}
+${specInfoExport}
 
 /**
  * Generated Descriptions Data

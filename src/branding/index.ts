@@ -4,7 +4,11 @@
  * Update this file to rebrand the entire application.
  */
 
-import { getCliDescriptions } from "../domains/descriptions.generated.js";
+import {
+	getCliDescriptions,
+	CLI_TITLE_FROM_SPEC,
+	CLI_DESCRIPTION_FROM_SPEC,
+} from "../domains/descriptions.generated.js";
 
 // CLI identification
 export const CLI_NAME = "xcsh";
@@ -45,11 +49,16 @@ export const CLI_VERSION = getVersion();
 // Load CLI descriptions from generated data
 const cliDescs = getCliDescriptions();
 
-// 3-tier CLI descriptions with fallbacks
+// CLI descriptions - upstream spec is single source of truth (compiled at build time)
+// SHORT/MEDIUM: Use spec title (shorter, suitable for banner)
+// LONG: Use spec description (full paragraph)
+// Fallback to generated descriptions if spec not available
 export const CLI_DESCRIPTION_SHORT =
-	cliDescs?.short ?? "Navigate cloud services via interactive shell";
-export const CLI_DESCRIPTION_MEDIUM = cliDescs?.medium ?? CLI_DESCRIPTION_SHORT;
-export const CLI_DESCRIPTION_LONG = cliDescs?.long ?? CLI_DESCRIPTION_MEDIUM;
+	CLI_TITLE_FROM_SPEC ?? cliDescs?.short ?? "F5 Distributed Cloud Shell";
+export const CLI_DESCRIPTION_MEDIUM =
+	CLI_TITLE_FROM_SPEC ?? cliDescs?.medium ?? CLI_DESCRIPTION_SHORT;
+export const CLI_DESCRIPTION_LONG =
+	CLI_DESCRIPTION_FROM_SPEC ?? cliDescs?.long ?? CLI_DESCRIPTION_MEDIUM;
 
 // Configuration
 export const ENV_PREFIX = "F5XC";
