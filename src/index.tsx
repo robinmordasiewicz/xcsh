@@ -17,7 +17,12 @@ import { CLI_NAME, CLI_VERSION, colors, ENV_PREFIX } from "./branding/index.js";
 import { executeCommand } from "./repl/executor.js";
 import { REPLSession } from "./repl/session.js";
 import { formatRootHelp } from "./repl/help.js";
-import { isValidLogoMode, type LogoDisplayMode } from "./config/index.js";
+import {
+	isValidLogoMode,
+	type LogoDisplayMode,
+	LOGO_MODE_HELP,
+} from "./config/index.js";
+import { OUTPUT_FORMAT_HELP } from "./output/types.js";
 import { renderBanner } from "./domains/login/banner/display.js";
 import { debugProtocol, emitSessionState } from "./debug/protocol.js";
 import { formatFullCLISpec } from "./output/spec.js";
@@ -35,8 +40,8 @@ program
 	.description("F5 Distributed Cloud Shell - Interactive CLI for F5 XC")
 	.version(CLI_VERSION, "-v, --version", "Show version number")
 	.option("--no-color", "Disable color output")
-	.option("--logo <mode>", "Logo display mode: image, ascii, none")
-	.option("-o, --output <format>", "Output format (json, yaml, table)")
+	.option("--logo <mode>", `Logo display mode: ${LOGO_MODE_HELP}`)
+	.option("-o, --output <format>", `Output format (${OUTPUT_FORMAT_HELP})`)
 	.option("--spec", "Output command specification as JSON (for AI)")
 	.option("--headless", "Run in headless JSON protocol mode (for AI agents)")
 	.option("-h, --help", "Show help") // Manual help option to prevent auto-exit

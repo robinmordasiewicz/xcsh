@@ -4,16 +4,30 @@
  */
 
 /**
- * Supported output format types
+ * All valid output formats (runtime array for validation/help)
+ * This is the single source of truth - type is derived from this constant
  */
-export type OutputFormat =
-	| "json"
-	| "yaml"
-	| "table"
-	| "text"
-	| "tsv"
-	| "none"
-	| "spec";
+export const ALL_OUTPUT_FORMATS = [
+	"json",
+	"yaml",
+	"table",
+	"text",
+	"tsv",
+	"none",
+	"spec",
+] as const;
+
+/**
+ * Helper string for help text generation
+ * Automatically derived from ALL_OUTPUT_FORMATS
+ */
+export const OUTPUT_FORMAT_HELP = ALL_OUTPUT_FORMATS.join(", ");
+
+/**
+ * Supported output format types
+ * Derived from ALL_OUTPUT_FORMATS constant for type safety
+ */
+export type OutputFormat = (typeof ALL_OUTPUT_FORMATS)[number];
 
 /**
  * Table styling configuration
@@ -175,9 +189,10 @@ export const PLAIN_TABLE_STYLE: TableStyle = {
 
 /**
  * Check if a string is a valid output format
+ * Uses ALL_OUTPUT_FORMATS as single source of truth
  */
 export function isValidOutputFormat(format: string): format is OutputFormat {
-	return ["json", "yaml", "table", "text", "tsv", "none", "spec"].includes(
+	return (ALL_OUTPUT_FORMATS as readonly string[]).includes(
 		format.toLowerCase(),
 	);
 }

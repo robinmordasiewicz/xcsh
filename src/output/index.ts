@@ -38,6 +38,8 @@ export {
 	isValidOutputFormat,
 	DEFAULT_TABLE_STYLE,
 	PLAIN_TABLE_STYLE,
+	ALL_OUTPUT_FORMATS,
+	OUTPUT_FORMAT_HELP,
 } from "./types.js";
 
 // Format resolution

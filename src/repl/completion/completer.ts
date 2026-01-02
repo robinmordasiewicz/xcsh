@@ -12,6 +12,7 @@ import {
 	completionRegistry,
 	getActionDescriptions,
 } from "../../completion/index.js";
+import { ALL_OUTPUT_FORMATS, OUTPUT_FORMAT_HELP } from "../../output/types.js";
 
 /**
  * Parse input text into args array, handling quoted strings
@@ -565,7 +566,7 @@ export class Completer {
 			{ text: "--namespace", description: "Namespace", category: "flag" },
 			{
 				text: "--output",
-				description: "Output format (json, yaml, table)",
+				description: `Output format (${OUTPUT_FORMAT_HELP})`,
 				category: "flag",
 			},
 			{
@@ -667,23 +668,13 @@ export class Completer {
 		switch (flag) {
 			case "--output":
 			case "-o":
-				return [
-					{
-						text: "json",
-						description: "JSON format",
-						category: "value" as const,
-					},
-					{
-						text: "yaml",
-						description: "YAML format",
-						category: "value" as const,
-					},
-					{
-						text: "table",
-						description: "Table format",
-						category: "value" as const,
-					},
-				].filter((s) => s.text.toLowerCase().startsWith(lowerPartial));
+				return ALL_OUTPUT_FORMATS.map((fmt) => ({
+					text: fmt,
+					description: `${fmt.toUpperCase()} format`,
+					category: "value" as const,
+				})).filter((s) =>
+					s.text.toLowerCase().startsWith(lowerPartial),
+				);
 
 			case "--namespace":
 			case "-ns":

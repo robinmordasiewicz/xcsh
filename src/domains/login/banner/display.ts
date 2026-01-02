@@ -512,7 +512,7 @@ export type RenderContext = "startup" | "repl";
  * Render banner with specified logo mode
  * Exported for use by main entry point during REPL startup
  *
- * @param logoMode - Logo display mode (auto, image, ascii, both, none)
+ * @param logoMode - Logo display mode (see LOGO_MODES constant)
  * @param context - Rendering context:
  *   - "startup": Write directly to stdout (before Ink takes over)
  *   - "repl": Return lines as array (for Ink's output system)

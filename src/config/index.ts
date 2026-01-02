@@ -17,6 +17,7 @@ export {
 	getLogoModeDescription,
 	DEFAULT_SETTINGS,
 	LOGO_MODES,
+	LOGO_MODE_HELP,
 	type AppSettings,
 	type LogoDisplayMode,
 	type LogoModeDefinition,

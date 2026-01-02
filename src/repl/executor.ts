@@ -27,6 +27,8 @@ import {
 	parseOutputFormat,
 	getCommandSpec,
 	formatSpec,
+	ALL_OUTPUT_FORMATS,
+	OUTPUT_FORMAT_HELP,
 	type OutputFormat,
 } from "../output/index.js";
 import { CLI_NAME, CLI_VERSION } from "../branding/index.js";
@@ -1054,7 +1056,7 @@ async function executeAPICommand(
 					name: "--output",
 					alias: "-o",
 					type: "string",
-					description: "Output format (json, yaml, table)",
+					description: `Output format (${OUTPUT_FORMAT_HELP})`,
 				},
 				{
 					name: "--name",
@@ -1062,7 +1064,7 @@ async function executeAPICommand(
 					description: "Resource name",
 				},
 			],
-			outputFormats: ["table", "json", "yaml"],
+			outputFormats: [...ALL_OUTPUT_FORMATS],
 		};
 		return {
 			output: [JSON.stringify(basicSpec, null, 2)],

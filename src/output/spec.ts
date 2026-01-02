@@ -4,7 +4,9 @@
  */
 
 import type { CommandSpec, ExampleSpec, FlagSpec } from "./types.js";
+import { ALL_OUTPUT_FORMATS } from "./types.js";
 import { CLI_VERSION } from "../branding/index.js";
+import { EXIT_CODE_HELP } from "../cloudstatus/types.js";
 import { customDomains } from "../domains/registry.js";
 import { domainRegistry, validActions } from "../types/domains.js";
 
@@ -63,7 +65,7 @@ export function buildCommandSpec(options: {
 		usage: options.usage ?? `xcsh ${options.command} [options]`,
 		flags: options.flags ?? [],
 		examples: options.examples ?? [],
-		outputFormats: options.outputFormats ?? ["table", "json", "yaml"],
+		outputFormats: options.outputFormats ?? [...ALL_OUTPUT_FORMATS],
 	};
 
 	// Only add optional properties if they have values (exactOptionalPropertyTypes)
@@ -94,7 +96,7 @@ export const GLOBAL_FLAGS: FlagSpec[] = [
 		description: "Output format",
 		type: "string",
 		default: "table",
-		choices: ["table", "json", "yaml", "tsv"],
+		choices: [...ALL_OUTPUT_FORMATS],
 	},
 	{
 		name: "--namespace",
@@ -141,8 +143,7 @@ export function buildCloudstatusSpecs(): Record<string, CommandSpec> {
 				{
 					name: "--quiet",
 					alias: "-q",
-					description:
-						"Return exit code only (0=operational, 1=degraded, 2=outage)",
+					description: `Return exit code only (${EXIT_CODE_HELP})`,
 					type: "boolean",
 				},
 			],

@@ -77,6 +77,15 @@ export const ExitCode = {
 
 export type ExitCodeType = (typeof ExitCode)[keyof typeof ExitCode];
 
+/**
+ * Helper string for help text generation
+ * Automatically derived from ExitCode constant (status codes only, excludes error codes)
+ */
+export const EXIT_CODE_HELP = Object.entries(ExitCode)
+	.filter(([, v]) => typeof v === "number" && v < 10) // Exclude error codes
+	.map(([k, v]) => `${v}=${k.toLowerCase()}`)
+	.join(", ");
+
 // Page info metadata
 export interface PageInfo {
 	id: string;

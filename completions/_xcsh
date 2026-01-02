@@ -11,7 +11,7 @@ _xcsh() {
         '(-h --help)'{-h,--help}'[Show help information]'
         '(-v --version)'{-v,--version}'[Show version number]'
         '--no-color[Disable color output]'
-        '(-o --output)'{-o,--output}'[Output format]:format:(json yaml table)'
+        '(-o --output)'{-o,--output}'[Output format]:format:(json yaml table text tsv none spec)'
         '(-ns --namespace)'{-ns,--namespace}'[Namespace]:namespace:_xcsh_namespaces'
         '--spec[Output command specification as JSON for AI assistants]'
     )
@@ -221,7 +221,7 @@ _xcsh() {
             action_opts=(
                 '(-n --name)'{-n,--name}'[Resource name]:name:'
                 '(-ns --namespace)'{-ns,--namespace}'[Namespace]:namespace:_xcsh_namespaces'
-                '(-o --output)'{-o,--output}'[Output format]:format:(json yaml table)'
+                '(-o --output)'{-o,--output}'[Output format]:format:(json yaml table text tsv none spec)'
                 '--limit[Maximum results]:limit:'
                 '--label[Filter by label]:label:'
                 '(-f --file)'{-f,--file}'[Configuration file]:file:_files'
