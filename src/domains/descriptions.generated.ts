@@ -37,12 +37,20 @@ export interface GeneratedDescriptionsData {
 export const CLI_TITLE_FROM_SPEC: string | null = "F5 Distributed Cloud API";
 
 /**
+ * CLI Summary from upstream OpenAPI spec (medium description)
+ * Extracted at build time from .specs/openapi.json info.summary
+ * This is the single source of truth - no local enrichment
+ */
+export const CLI_SUMMARY_FROM_SPEC: string | null =
+	"Multi-cloud application services with load balancing, WAF, DNS, and edge infrastructure. Unified platform for security and connectivity.";
+
+/**
  * CLI Description from upstream OpenAPI spec (long description)
  * Extracted at build time from .specs/openapi.json info.description
  * This is the single source of truth - no local enrichment
  */
 export const CLI_DESCRIPTION_FROM_SPEC: string | null =
-	"F5 Distributed Cloud delivers unified application services across multi-cloud, edge, and hybrid environments. Deploy load balancers with origin pools and health checks. Protect applications with web application firewall and bot defense. Manage DNS zones with geographic routing. Provision cloud sites on AWS, Azure, and GCP. Configure service policies, network security, and observability dashboards from a single control plane.";
+	"Unified application services across multi-cloud, edge, and hybrid environments. Load balancers with origin pools and health checks for traffic distribution. Web application firewall and bot defense for application protection. DNS zones with geographic routing for name resolution. Cloud sites on AWS, Azure, and GCP for infrastructure deployment. Service policies, network security, and observability dashboards from a single control plane.";
 
 /**
  * Generated Descriptions Data

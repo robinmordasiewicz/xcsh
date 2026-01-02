@@ -7,6 +7,7 @@
 import {
 	getCliDescriptions,
 	CLI_TITLE_FROM_SPEC,
+	CLI_SUMMARY_FROM_SPEC,
 	CLI_DESCRIPTION_FROM_SPEC,
 } from "../domains/descriptions.generated.js";
 
@@ -50,13 +51,14 @@ export const CLI_VERSION = getVersion();
 const cliDescs = getCliDescriptions();
 
 // CLI descriptions - upstream spec is single source of truth (compiled at build time)
-// SHORT/MEDIUM: Use spec title (shorter, suitable for banner)
+// SHORT: Use spec title (24 chars)
+// MEDIUM: Use spec summary (136 chars, suitable for banner)
 // LONG: Use spec description (full paragraph)
 // Fallback to generated descriptions if spec not available
 export const CLI_DESCRIPTION_SHORT =
 	CLI_TITLE_FROM_SPEC ?? cliDescs?.short ?? "F5 Distributed Cloud Shell";
 export const CLI_DESCRIPTION_MEDIUM =
-	CLI_TITLE_FROM_SPEC ?? cliDescs?.medium ?? CLI_DESCRIPTION_SHORT;
+	CLI_SUMMARY_FROM_SPEC ?? cliDescs?.medium ?? CLI_DESCRIPTION_SHORT;
 export const CLI_DESCRIPTION_LONG =
 	CLI_DESCRIPTION_FROM_SPEC ?? cliDescs?.long ?? CLI_DESCRIPTION_MEDIUM;
 
