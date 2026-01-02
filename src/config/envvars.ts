@@ -6,6 +6,8 @@
 
 import { ENV_PREFIX, DOCS_URL } from "../branding/index.js";
 import { paths } from "./paths.js";
+import { OUTPUT_FORMAT_HELP } from "../output/types.js";
+import { LOGO_MODE_HELP } from "./settings.js";
 
 export interface EnvVar {
 	name: string;
@@ -38,12 +40,12 @@ export const EnvVarRegistry: EnvVar[] = [
 	},
 	{
 		name: `${ENV_PREFIX}_OUTPUT_FORMAT`,
-		description: "Output format (json, yaml, table)",
+		description: `Output format (${OUTPUT_FORMAT_HELP})`,
 		relatedFlag: "-o",
 	},
 	{
 		name: `${ENV_PREFIX}_LOGO`,
-		description: "Logo display mode (auto, image, ascii, both, none)",
+		description: `Logo display mode (${LOGO_MODE_HELP})`,
 		relatedFlag: "--logo",
 	},
 	{

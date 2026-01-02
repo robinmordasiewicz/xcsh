@@ -21,6 +21,7 @@ import {
 	formatEnvVarsSection,
 	formatConfigSection,
 } from "../config/envvars.js";
+import { OUTPUT_FORMAT_HELP } from "../output/types.js";
 import {
 	type DomainInfo,
 	domainRegistry,
@@ -118,7 +119,7 @@ export function formatGlobalFlags(): string[] {
 		"  -v, --version         Show version number",
 		"  -h, --help            Show this help",
 		"  --no-color            Disable color output",
-		"  -o, --output <fmt>    Output format (json, yaml, table)",
+		`  -o, --output <fmt>    Output format (${OUTPUT_FORMAT_HELP})`,
 		"  -ns, --namespace <ns> Target namespace",
 		"  --spec                Output command specification as JSON (for AI)",
 	];
@@ -415,7 +416,9 @@ export function formatActionHelp(domainName: string, action: string): string[] {
 	output.push("OPTIONS");
 	output.push("  -n, --name <name>     Resource name");
 	output.push("  -ns, --namespace <ns> Target namespace");
-	output.push("  -o, --output <fmt>    Output format (json, yaml, table)");
+	output.push(
+		`  -o, --output <fmt>    Output format (${OUTPUT_FORMAT_HELP})`,
+	);
 	output.push("  -f, --file <path>     Configuration file");
 	output.push("");
 

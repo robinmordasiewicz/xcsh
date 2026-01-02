@@ -15,6 +15,7 @@ import {
 	escapeForFish,
 	getActionDescriptions,
 } from "../../completion/index.js";
+import { ALL_OUTPUT_FORMATS } from "../../output/types.js";
 
 /**
  * Generate Bash completion script
@@ -181,7 +182,7 @@ _xcsh() {
         '(-h --help)'{-h,--help}'[Show help information]'
         '(-v --version)'{-v,--version}'[Show version number]'
         '--no-color[Disable color output]'
-        '(-o --output)'{-o,--output}'[Output format]:format:(json yaml table)'
+        '(-o --output)'{-o,--output}'[Output format]:format:(${ALL_OUTPUT_FORMATS.join(" ")})'
         '(-ns --namespace)'{-ns,--namespace}'[Namespace]:namespace:_xcsh_namespaces'
         '--spec[Output command specification as JSON for AI assistants]'
     )
@@ -230,7 +231,7 @@ ${customDomainCompletions.join("\n")}
             action_opts=(
                 '(-n --name)'{-n,--name}'[Resource name]:name:'
                 '(-ns --namespace)'{-ns,--namespace}'[Namespace]:namespace:_xcsh_namespaces'
-                '(-o --output)'{-o,--output}'[Output format]:format:(json yaml table)'
+                '(-o --output)'{-o,--output}'[Output format]:format:(${ALL_OUTPUT_FORMATS.join(" ")})'
                 '--limit[Maximum results]:limit:'
                 '--label[Filter by label]:label:'
                 '(-f --file)'{-f,--file}'[Configuration file]:file:_files'
@@ -323,7 +324,7 @@ complete -c xcsh -f
 complete -c xcsh -s h -l help -d 'Show help information'
 complete -c xcsh -s v -l version -d 'Show version number'
 complete -c xcsh -l no-color -d 'Disable color output'
-complete -c xcsh -s o -l output -d 'Output format' -xa 'json yaml table'
+complete -c xcsh -s o -l output -d 'Output format' -xa '${ALL_OUTPUT_FORMATS.join(" ")}'
 complete -c xcsh -l namespace -s ns -d 'Namespace' -xa 'default system shared'
 complete -c xcsh -l spec -d 'Output command specification as JSON for AI assistants'
 

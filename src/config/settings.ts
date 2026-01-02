@@ -40,6 +40,12 @@ export const LOGO_MODES: readonly LogoModeDefinition[] = [
 export type LogoDisplayMode = (typeof LOGO_MODES)[number]["mode"];
 
 /**
+ * Helper string for help text generation
+ * Automatically derived from LOGO_MODES constant
+ */
+export const LOGO_MODE_HELP = LOGO_MODES.map((m) => m.mode).join(", ");
+
+/**
  * Application settings from .xcshconfig file.
  */
 export interface AppSettings {

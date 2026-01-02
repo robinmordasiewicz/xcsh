@@ -13,7 +13,7 @@ import { parseOutputFlag, shouldUseColors } from "./resolver.js";
  * Format options for domain commands
  */
 export interface DomainFormatOptions {
-	/** Output format (json, yaml, table, tsv, none) */
+	/** Output format (see ALL_OUTPUT_FORMATS) */
 	format: OutputFormat;
 	/** Disable colors (for piped output) */
 	noColor: boolean;
