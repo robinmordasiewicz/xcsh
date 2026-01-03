@@ -1,5 +1,5 @@
 /**
- * XDG Base Directory compliant paths for xcsh
+ * XDG Base Directory compliant paths for f5xc
  * See: https://specifications.freedesktop.org/basedir/latest/
  *
  * This is the single source of truth for all application paths.
@@ -9,12 +9,12 @@
 import { homedir } from "os";
 import { join } from "path";
 
-const APP_NAME = "xcsh";
+const APP_NAME = "f5xc";
 
 /**
  * Get XDG-compliant config directory
  * Config files: settings, profiles, preferences
- * Default: ~/.config/xcsh
+ * Default: ~/.config/f5xc
  */
 export function getConfigDir(): string {
 	const xdgConfig = process.env.XDG_CONFIG_HOME;
@@ -27,7 +27,7 @@ export function getConfigDir(): string {
 /**
  * Get XDG-compliant state directory
  * State files: history, logs, undo history, session state
- * Default: ~/.local/state/xcsh
+ * Default: ~/.local/state/f5xc
  */
 export function getStateDir(): string {
 	const xdgState = process.env.XDG_STATE_HOME;
