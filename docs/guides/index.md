@@ -6,6 +6,7 @@ Real-world examples for common xcsh use cases.
 
 | Example | Description |
 |---------|-------------|
+| [AI Assistant Guide](ai-services-guide.md) | Using the AI assistant for natural language queries |
 | [Load Balancers](load-balancer.md) | HTTP and TCP load balancer configuration |
 | [Cloud Sites](cloud-sites.md) | AWS and Azure site deployment |
 
