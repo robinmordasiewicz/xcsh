@@ -7,6 +7,10 @@ import { loginDomain } from "./login/index.js";
 import { cloudstatusDomain, cloudstatusAliases } from "./cloudstatus/index.js";
 import { completionDomain } from "./completion/index.js";
 import { aiServicesDomain, aiServicesAliases } from "./ai_services/index.js";
+import {
+	subscriptionDomain,
+	subscriptionAliases,
+} from "./subscription/index.js";
 import { domainRegistry } from "../types/domains.js";
 import {
 	completionRegistry,
@@ -20,6 +24,7 @@ customDomains.register(loginDomain);
 customDomains.register(cloudstatusDomain);
 customDomains.register(completionDomain);
 customDomains.register(aiServicesDomain);
+customDomains.register(subscriptionDomain);
 
 // Populate unified completion registry
 // Custom domains first (higher priority)
@@ -55,6 +60,11 @@ for (const alias of aiServicesAliases) {
 	domainAliases.set(alias, "ai_services");
 }
 
+// Register subscription aliases
+for (const alias of subscriptionAliases) {
+	domainAliases.set(alias, "subscription");
+}
+
 // Export registry and types
 export { customDomains } from "./registry.js";
 export type {
@@ -75,6 +85,7 @@ export { loginDomain } from "./login/index.js";
 export { cloudstatusDomain } from "./cloudstatus/index.js";
 export { completionDomain } from "./completion/index.js";
 export { aiServicesDomain } from "./ai_services/index.js";
+export { subscriptionDomain } from "./subscription/index.js";
 
 /**
  * Resolve domain alias to canonical name

@@ -40,3 +40,34 @@ domains:
     short: "Generate tab-completion scripts for supported shells"
     medium: "Create shell-specific scripts enabling tab-assisted input for commands, subcommands, and flags in bash, zsh, or fish environments."
     long: "Output completion scripts that integrate with native shell mechanisms for context-aware suggestions. Supports bash, zsh, and fish with format-specific output suitable for sourcing directly or saving to configuration files. After installation, pressing Tab auto-suggests partial command names, displays available options, and recommends valid flag values. Select the subcommand matching your environment to generate properly formatted output."
+
+  subscription:
+    source_patterns_hash: "subscription_domain_v1"
+    short: "Subscription and billing management"
+    medium: "Manage subscription tier, addon services, quota limits, usage metrics, and billing information."
+    long: "Manage F5 Distributed Cloud subscription, billing, quotas, and usage. View plan details, addon services, resource limits, usage metrics, payment methods, invoices, and generate comprehensive reports. Monitor tenant-level quota utilization and current billing period costs. Access historical usage data and download invoices for accounting purposes."
+    subcommands:
+      plan:
+        short: "Manage subscription plans"
+        medium: "View current plan, list available options, and manage plan transitions."
+        long: "View and manage subscription plan information. Show current plan details including tier, features, and limits. List all available plans for comparison. Initiate plan transitions to upgrade or modify subscription level."
+      addon:
+        short: "Manage addon services"
+        medium: "List, view, and manage addon service subscriptions and activation status."
+        long: "Manage addon services for your subscription. List available addons with their status and access level. View detailed addon information including features, pricing, and requirements. Check activation status for all subscribed addons. Subscribe to new addons or manage existing subscriptions."
+      quota:
+        short: "View quota limits and usage"
+        medium: "Display tenant-level quota limits and current usage with utilization metrics."
+        long: "View tenant-level quota limits and current usage. Monitor resource utilization to avoid quota exhaustion. Display all quota limits defined by your subscription plan. Track current usage against limits with utilization percentages. Identify critical quotas approaching their limits."
+      usage:
+        short: "View usage metrics"
+        medium: "Display usage metrics, cost breakdowns, and historical billing data."
+        long: "View usage metrics and cost data for current and historical billing periods. Display current billing period usage with itemized costs and projected totals. Access monthly usage summaries with cost breakdowns. Analyze usage trends and plan for future capacity needs."
+      billing:
+        short: "Manage billing"
+        medium: "View and manage payment methods, invoices, and billing details."
+        long: "Manage billing information including payment methods and invoices. List configured payment methods with their status. View invoice history and download invoice PDFs. Manage primary and secondary payment method designations."
+      report:
+        short: "Generate reports"
+        medium: "Create detailed subscription reports combining multiple data sources."
+        long: "Generate comprehensive subscription reports for analysis and planning. Create summary reports combining plan details, addon status, quota utilization, usage metrics, and billing information. Export reports in various formats for stakeholder communication and compliance documentation."

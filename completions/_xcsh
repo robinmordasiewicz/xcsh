@@ -59,6 +59,7 @@ _xcsh() {
             'shape:Bot defense, fraud prevention, and client integrity.'
             'sites:Cloud and edge node deployments.'
             'statistics:Alerts, logs, flow analytics, and reporting.'
+            'subscription:Subscription and billing management'
             'support:Tickets, escalations, and network diagnostics.'
             'telemetry_and_insights:Telemetry And Insights API'
             'tenant_and_identity:User profiles, sessions, and OTP settings.'
@@ -196,6 +197,9 @@ _xcsh() {
             ;;
         (login)
             _values 'command' 'banner:Display xcsh banner with logo' 'profile:Manage saved connection profiles' 'context:Manage default namespace context'
+            ;;
+        (subscription)
+            _values 'command' 'show:Display subscription overview' 'plan:Manage subscription plans' 'addon:Manage addon services' 'quota:View quota limits and usage' 'usage:View usage metrics' 'billing:Manage billing' 'report:Generate reports'
             ;;
                 (help|quit|exit|clear|history|refresh|context|ctx)
                     ;;
