@@ -24,8 +24,10 @@ from naming import normalize_acronyms, to_human_readable, to_title_case
 def load_spec(cli_binary_path: str) -> dict:
     """Run xcsh --spec and return the full CLI spec."""
     try:
+        # Use --spec without --output-format json for compatibility with older binaries
+        # (--spec already outputs JSON by default)
         result = subprocess.run(
-            [cli_binary_path, "--spec", "--output-format", "json"],
+            [cli_binary_path, "--spec"],
             capture_output=True,
             text=True,
             check=True,
@@ -42,8 +44,9 @@ def load_spec(cli_binary_path: str) -> dict:
 def load_cloudstatus_spec(cli_binary_path: str) -> dict:
     """Run xcsh cloudstatus --spec for extended cloudstatus-specific data."""
     try:
+        # Use --spec without --output-format json for compatibility with older binaries
         result = subprocess.run(
-            [cli_binary_path, "cloudstatus", "--spec", "--output-format", "json"],
+            [cli_binary_path, "cloudstatus", "--spec"],
             capture_output=True,
             text=True,
             check=True,
