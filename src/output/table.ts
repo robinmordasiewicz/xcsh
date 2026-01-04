@@ -423,11 +423,13 @@ function extractItems(data: unknown): Record<string, unknown>[] {
 /**
  * Format a simple key-value box (like whoami)
  * Uses F5 brand red borders with title
+ * Supports optional maxWidth for constraining box to terminal width
  */
 export function formatKeyValueBox(
 	data: Array<{ label: string; value: string }>,
 	title: string,
 	noColor: boolean = false,
+	maxWidth?: number,
 ): string {
 	if (data.length === 0) {
 		return "";
@@ -443,17 +445,39 @@ export function formatKeyValueBox(
 	// Find max label width for alignment
 	const maxLabelWidth = Math.max(...data.map((d) => d.label.length));
 
-	// Format content lines
-	const contentLines = data.map((d) => {
-		const paddedLabel = d.label.padEnd(maxLabelWidth);
-		return `${paddedLabel}:  ${d.value}`;
-	});
+	// Calculate effective max width (terminal width or explicit)
+	// Box structure: "│ " + label + ":  " + value + " │"
+	// That's 2 (left border + space) + label + 3 (":  ") + value + 2 (space + right border)
+	const effectiveMaxWidth = maxWidth ?? getTerminalWidth();
+	const boxOverhead = 7; // "│ " + ":  " + " │"
+	const maxValueWidth = Math.max(
+		20,
+		effectiveMaxWidth - maxLabelWidth - boxOverhead,
+	);
 
-	// Calculate box width
+	// Format content lines with value wrapping
+	const contentLines: string[] = [];
+	for (const d of data) {
+		const paddedLabel = d.label.padEnd(maxLabelWidth);
+
+		// Wrap value if it exceeds max width
+		const wrappedValueLines = wrapText(d.value, maxValueWidth);
+
+		// First line includes the label
+		contentLines.push(`${paddedLabel}:  ${wrappedValueLines[0] ?? ""}`);
+
+		// Continuation lines are indented to align with value column
+		const indent = " ".repeat(maxLabelWidth + 3); // align with value after ":  "
+		for (let i = 1; i < wrappedValueLines.length; i++) {
+			contentLines.push(`${indent}${wrappedValueLines[i]}`);
+		}
+	}
+
+	// Calculate box width - use min of content width and effective max
 	const titleText = ` ${title} `;
-	const maxContentWidth = Math.max(
-		...contentLines.map((l) => l.length),
-		titleText.length,
+	const maxContentWidth = Math.min(
+		Math.max(...contentLines.map((l) => l.length), titleText.length),
+		effectiveMaxWidth - 4, // 4 = borders + padding on each side
 	);
 	const innerWidth = maxContentWidth + 2;
 
@@ -471,10 +495,12 @@ export function formatKeyValueBox(
 
 	// Content lines
 	for (const text of contentLines) {
-		const padding = innerWidth - text.length;
+		// Truncate if still too long (shouldn't happen with wrapping, but safety)
+		const displayText = text.slice(0, innerWidth - 2);
+		const padding = innerWidth - displayText.length;
 		lines.push(
 			colorBorder(box.vertical) +
-				` ${text}${" ".repeat(Math.max(0, padding - 1))}` +
+				` ${displayText}${" ".repeat(Math.max(0, padding - 1))}` +
 				colorBorder(box.vertical),
 		);
 	}

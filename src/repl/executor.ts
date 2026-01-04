@@ -835,19 +835,22 @@ export async function executeCommand(
 		return executeBuiltin(cmd, session, ctx);
 	}
 
-	// At root context, check if first word is a domain (custom, extension, or API-generated)
-	if (ctx.isRoot()) {
-		const firstWord = cmd.args[0]?.toLowerCase() ?? "";
-		const hasExtension = extensionRegistry.hasExtension(firstWord);
-		if (
-			isValidDomain(firstWord) ||
-			isCustomDomain(firstWord) ||
-			hasExtension
-		) {
-			// Pass remaining args for domain execution
-			const domainArgs = cmd.args.slice(1);
-			return handleDomainNavigation(firstWord, domainArgs, ctx, session);
+	// Check if first word is a domain (custom, extension, or API-generated)
+	// This applies at root OR when user types a full domain command from any context
+	const firstWord = cmd.args[0]?.toLowerCase() ?? "";
+	const hasExtension = extensionRegistry.hasExtension(firstWord);
+	const isDomainCommand =
+		isValidDomain(firstWord) || isCustomDomain(firstWord) || hasExtension;
+
+	if (isDomainCommand) {
+		// Reset context when user explicitly types a domain command
+		// This ensures "virtual get ..." always works, regardless of current context
+		if (!ctx.isRoot()) {
+			ctx.reset();
 		}
+		// Pass remaining args for domain execution
+		const domainArgs = cmd.args.slice(1);
+		return handleDomainNavigation(firstWord, domainArgs, ctx, session);
 	}
 
 	// In domain context, execute API command directly (no action sub-context)
